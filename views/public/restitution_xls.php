@@ -9,17 +9,37 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 
 //print_r($response);
 ?>"Question";"Catégorie/Compétence";"Degré";"Réponse utilisateur";"Réponse correcte";"Réussite"<?php
- foreach($response['details']['questions'] as $detail)
-                {
-				$detail['categories'][0]['nom_cat'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat'] );
-				if (!empty($detail['reponse_user_qcm']) ) 
-				{
-					echo "\n".'"'.$detail['num_ordre'].'";"'.utf8_decode($detail['categories'][0]['nom_cat']).'";"'.$detail['nom_degre'].'";"'.$detail['reponse_user_qcm'].'";"'.$detail['reponse_qcm_correcte'].'";"'.$detail['reussite'].'"';
-				}
-				else if (!empty($detail['reponse_user_champ']))
-				{
-					echo "\n".'"'.$detail['num_ordre'].'";"'.utf8_decode($detail['categories'][0]['nom_cat']).'";"'.$detail['nom_degre'].'";"'.utf8_decode($detail['reponse_user_champ']).'";"'.$detail['reponse_qcm_correcte'].'";"'.$detail['reussite'].'"';
-				}
 
-}
+	$content = "";
+
+	foreach($response['details']['questions'] as $detail)
+    {
+		$detail['categories'][0]['nom_cat'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat'] );
+
+		$content .= "\n";
+		$content .= '"';
+		$content .= $detail['num_ordre'].'";"';
+		$content .= utf8_decode($detail['categories'][0]['nom_cat']).'";"';
+		$content .= utf8_decode($detail['nom_degre']).'";"';
+
+		if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
+		{
+			$content .= utf8_decode($detail['reponse_user_qcm']).'";"';
+		}
+		else if (!empty($detail['reponse_user_champ']) && $detail['reponse_user_champ'] != "-")
+		{
+			$content .= utf8_decode($detail['reponse_user_champ']).'";"';
+		}
+		else
+		{
+			$content .= '-'.'";"';
+		}
+
+		$content .= utf8_decode($detail['reponse_qcm_correcte']).'";"';
+		$content .= utf8_decode($detail['reussite']);
+		$content .= '"';
+
+	}
+
+	echo $content;
 ?>

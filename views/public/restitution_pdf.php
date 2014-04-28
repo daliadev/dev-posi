@@ -171,12 +171,11 @@
 
 
 
-<page backleft="10mm" backright="10mm" backtop="5mm" backbottom="20mm" footer="date; pagination">
+<page backleft="10mm" backright="10mm" backtop="5mm" backbottom="20mm">
     
     
     <div id="content">
-        
-        
+
         <table>
             <tr>
                 <!--<td rowspan="2"><img class="logo" src="<?php //echo ROOT; ?>media/images/logo.png" /></td>-->
@@ -346,7 +345,7 @@
                 
                 <tbody>
                 <?php
-		$i = 0;
+                $i = 0;
                 foreach($response['details']['questions'] as $detail)
                 {
                     if($i % 2 == 0)
@@ -426,18 +425,7 @@
             <?php endif; ?>
                 
         </table>
-       
-        <br/><hr/>
 
     </div>
-
-    <page_footer>
-    <!--
-        <div id="footer">
-            <div class="txt-footer">Education et formation <?php //echo date("Y"); ?></div>
-        </div>
-    -->
-    </page_footer>
-    
 
 </page>

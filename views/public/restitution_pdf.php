@@ -43,7 +43,7 @@
         background-color: #48dcbf;
         color: #ffffff;
         font-size: 12pt;
-	font-weight: bold;
+        font-weight: bold;
         text-align: center;
         vertical-align: middle;
     }
@@ -63,7 +63,7 @@
         width: 170mm;
         background-color: #2C3E50; /* #34495e (+clair) */
         font-size: 10pt;
-	font-weight: bold;
+        font-weight: bold;
         color: #ffffff;
     }
     
@@ -128,14 +128,14 @@
         }
 
         .resultats th {
-        border: 1px solid #ffffff;
-        color: #ffffff;
-        cursor: pointer;
-		background-color: #F7A22F;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            cursor: pointer;
+    		background-color: #F7A22F;
         }
 
         .resultats td {
-           border: 1px solid #ffffff;
+            border: 1px solid #ffffff;
         }
 
 

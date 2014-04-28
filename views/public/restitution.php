@@ -203,7 +203,7 @@ if (Config::DEBUG_MODE)
 
                         <div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
                         <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
-                        <div class="info">Code de l'organisme : <a href="<?php echo $form_url.$infos_user['code_organ']; ?>"><?php echo $infos_user['code_organ']; ?></a></div>
+                        <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>">ici</a> pour acceder à la restitution publique de cet organisme)</div>
                         <?php endif; ?>
                         <div class="info">Nom de l'intervenant - responsable : <strong><?php echo $infos_user['nom_intervenant']; ?></strong></div>
                         <div class="info">Email de l'intervenant : <strong><?php echo $infos_user['email_intervenant']; ?></strong></div>

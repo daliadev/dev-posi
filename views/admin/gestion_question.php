@@ -193,7 +193,7 @@ $form_url = WEBROOT."admin/question/";
                                 <div id="intitules_reponses" style="float:right;">
                                     <div id="responses-items">
                                         <?php
-                                        for ($i = 0; $i < 4; $i++) 
+                                        for ($i = 0; $i < 5; $i++) 
                                         {
                                             echo '<p class="response-item">';
 

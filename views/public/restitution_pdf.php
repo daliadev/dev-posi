@@ -31,7 +31,7 @@
     
     
     
-    #content {
+    table {
         font-family: Helvetica, Arial, sans-serif;
         font-size: 9pt;
     }
@@ -174,7 +174,7 @@
 <page backleft="10mm" backright="10mm" backtop="5mm" backbottom="20mm">
     
     
-    <div id="content">
+    <!-- <div id="content"> -->
 
         <table>
             <tr>
@@ -356,58 +356,59 @@
                     {
                         echo '<tr style="background-color:#FFF6EA;">';
                     }
-                        echo '<td style="width:15%;">';
-                                echo 'Question n°'.$detail['num_ordre'];
-                        echo '</td>';
+
+                    echo '<td style="width:15%;">';
+                            echo 'Question n°'.$detail['num_ordre'];
+                    echo '</td>';
+                    
+                    echo '<td style="width:30%; font-size:8pt; text-align:left;">';
+                        if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
+                        {
+                            echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
+                        }
+                        echo $detail['categories'][0]['nom_cat'];
+                    echo '</td>';
+                                        
+
+                    echo '<td style="width: 8%;">';
+                        echo $detail['nom_degre'];
+                    echo '</td>';
+
+                    if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
+                    {
+                        echo '<td style="width: 30%;">'.$detail['reponse_user_qcm'].'</td>';
+                    }
+                    else if (!empty($detail['reponse_user_champ']))
+                    {
+                        if ($detail['reponse_user_champ'] == "-")
+                        {
+                            echo '<td style="width: 30%; text-align: center;">'.$detail['reponse_user_champ'].'</td>';
+                        }
+                        else 
+                        {
+                            echo '<td style="width: 30%; text-align: left;">'.$detail['reponse_user_champ'].'</td>';
+                        }
                         
-                        echo '<td style="width:30%; font-size:8pt; text-align:left;">';
-                            if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
-                            {
-                                echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
-                            }
-                            echo $detail['categories'][0]['nom_cat'];
-                        echo '</td>';
-                                            
+                    }
+                    else
+                    {
+                        echo '<td style="width: 30%; text-align: center;">-</td>';
+                    }
 
-                        echo '<td style="width: 8%;">';
-                            echo $detail['nom_degre'];
-                        echo '</td>';
+                    echo '<td style="width: 9%;">'.$detail['reponse_qcm_correcte'].'</td>';
 
-                        if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
-                        {
-                            echo '<td style="width: 30%;">'.$detail['reponse_user_qcm'].'</td>';
-                        }
-                        else if (!empty($detail['reponse_user_champ']))
-                        {
-                            if ($detail['reponse_user_champ'] == "-")
-                            {
-                                echo '<td style="width: 30%; text-align: center;">'.$detail['reponse_user_champ'].'</td>';
-                            }
-                            else 
-                            {
-                                echo '<td style="width: 30%; text-align: left;">'.$detail['reponse_user_champ'].'</td>';
-                            }
-                            
-                        }
-                        else
-                        {
-                            echo '<td style="width: 30%; text-align: center;">-</td>';
-                        }
-
-                        echo '<td style="width: 9%;">'.$detail['reponse_qcm_correcte'].'</td>';
-
-                        if ($detail['reussite'] === 1)
-                        {
-                            echo '<td  style="width:8%;"><img src="'.SERVER_URL.'media/images/valide.png"></td>';
-                        }
-                        else if ($detail['reussite'] === 0)
-                        {
-                            echo '<td class="red-cell"  style="width:8%;"><img src="'.SERVER_URL.'media/images/faux.png"></td>';
-                        }
-                        else
-                        {
-                            echo '<td class="white-cell"  style="width:8%;"><img src="'.SERVER_URL.'media/images/stylo.png"></td>';
-                        }
+                    if ($detail['reussite'] === 1)
+                    {
+                        echo '<td  style="width:8%;"><img src="'.SERVER_URL.'media/images/valide.png"></td>';
+                    }
+                    else if ($detail['reussite'] === 0)
+                    {
+                        echo '<td class="red-cell"  style="width:8%;"><img src="'.SERVER_URL.'media/images/faux.png"></td>';
+                    }
+                    else
+                    {
+                        echo '<td class="white-cell"  style="width:8%;"><img src="'.SERVER_URL.'media/images/stylo.png"></td>';
+                    }
 
 
                     echo '</tr>';  
@@ -426,6 +427,6 @@
                 
         </table>
 
-    </div>
+    <!-- </div> -->
 
 </page>

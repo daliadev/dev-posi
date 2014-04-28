@@ -19,10 +19,6 @@ define('THUMBS_PATH', "uploads/img/thumbs/");
 define('AUDIO_PATH', "uploads/audio/");
 
 
-
-// Inclusion des services d'authentification
-//require_once(ROOT.'controls/services_auth.php');
-
 // Inclusion da la classe Config
 require_once(ROOT.'config.php');
 
@@ -34,6 +30,7 @@ require_once('models/dao/model_dao.php');
 
 // Définition du fuseau horiaire
 date_default_timezone_set('Europe/Paris');
+
 
 
 // On recupère les paramètres passés dans l'entête HTTP sous forme de tableau si elle existe

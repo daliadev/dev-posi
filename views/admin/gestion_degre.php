@@ -169,10 +169,11 @@ $form_url = WEBROOT."admin/degre/";
             // Demande de suppression
             $('input[name="del"]').click(function(event) {
 
-                $('input[name="delete"]').val("true");
-                
+                event.preventDefault();
+
                 if (confirm("Voulez-vous réellement supprimer ce degré ?"))
                 {
+                    $('input[name="delete"]').val("true");
                     $('#form-degre').submit();
                 }
             });

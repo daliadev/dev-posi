@@ -562,12 +562,11 @@ $form_url = WEBROOT."admin/question/";
             // Demande de suppression
             $('.bt-admin-menu-sup').click(function(event) {
 
-                //event.preventDefault();
+                event.preventDefault();
 
-                $('input[name="delete"]').val("true");
-                
                 if (confirm("Voulez-vous réellement supprimer cette question ?"))
                 {
+                    $('input[name="delete"]').val("true");
                     $('#form-question').submit();
                 }
             });

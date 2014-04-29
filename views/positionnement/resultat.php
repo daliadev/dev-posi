@@ -4,6 +4,29 @@
     $percentGlobal = $response['percent_global'];
     $totalGlobal = $response['total_global'];
     $totalCorrectGlobal = $response['total_correct_global'];
+
+    function getColor($percent)
+    {
+        $percent = intval($percent);
+        
+        $color = "gris";
+
+        if ($percent <= 50)
+        {
+            $color = "rouge";
+        }
+        else if ($percent > 50 && $percent < 80)
+        {
+            $color = "orange2";
+        }
+        else if ($percent >= 80)
+        {
+            $color = "vert";
+        }
+
+        return $color;
+    }
+
 ?>
 
 
@@ -42,11 +65,13 @@
                             if ($correction['parent'])
                             {
                                 $percent = $correction['percent'];
-                                $color = "gris";
 
 
                                 if ($correction['total'] > 0)
                                 {
+                                    $color = getColor($correction['percent']);
+
+                                    /*
                                     $color = "rouge";
 
                                     if ($percent > 50 && $percent < 80)
@@ -57,7 +82,8 @@
                                     {
                                         $color = "vert";
                                     }
-                                    
+                                    */
+
                                     $title = "";
                                     
                                     if (!empty($correction['children']))
@@ -83,7 +109,7 @@
                     </div>
                     
                     <div>
-                        <p>Taux de réussite globale : <strong class="<?php echo $color; ?>"><?php echo $percentGlobal; ?> %</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
+                        <p>Taux de réussite globale : <strong class="<?php echo getColor($percentGlobal); ?>"><?php echo $percentGlobal; ?> %</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
                     </div>
                     <div>
                         <p>Temps total : <strong><?php echo $time; ?></strong></p>

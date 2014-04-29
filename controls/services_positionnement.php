@@ -408,7 +408,7 @@ class ServicesPositionnement extends Main
     public function resultat()
     {
         /*** Test d'authentification de l'intervenant/utilisateur ***/
-        ServicesAuth::checkAuthentication("user");
+        //ServicesAuth::checkAuthentication("user");
 
 
         // On commence par récupérer la liste complète des categories.

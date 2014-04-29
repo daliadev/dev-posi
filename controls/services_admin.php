@@ -56,7 +56,7 @@ class ServicesAdmin extends Main
 
         $this->initialize();
  
-        // Récupération des identifiants s'ils ont été saisi
+        // Récupération des identifiants s'ils ont été saisis.
         if (isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['password']) && !empty($_POST['password']))
         {
             $this->formData['login'] = $_POST['login'];
@@ -140,23 +140,25 @@ class ServicesAdmin extends Main
     public function question($requestParams = array())
     {  
 
-        // Authentification de l'admin necessaire
+        /*** Authentification avec les droits admin ***/
         ServicesAuth::checkAuthentication("admin");
         
         $this->initialize();
         
         $this->url = SERVER_URL."admin/question/";
         
-        // Initialisation du tableau des données qui seront inserés ou mis à jour dans la base
+        // Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
         $dataQuestion = array();
 
         if (Config::DEBUG_MODE)
         {
+            // Affichage des données du formulaire
             echo "\$_POST = ";
             var_dump($_POST);
         }
         
-        /*** Définition du mode précédent du formulaire ***/
+
+        /*** Définition du mode précédent du formulaire (permet de connaître l'action précédemment choisie par l'utilisateur) ***/
 
         if (isset($_POST['mode']) && !empty($_POST['mode']))
         {
@@ -171,17 +173,13 @@ class ServicesAdmin extends Main
             $previousMode = "new";
         }
         
+
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
+
         
-        
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$this->formData['mode'] = ".$this->formData['mode']."<br/>";
-        }
-        
-        /*** On récupère l'identifiant de la question et on initialise les données qui vont être validées et renvoyées au formulaire ***/
+        /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         
         $initializedData = array(
             "ref_question_cbox" => "select",
@@ -200,6 +198,9 @@ class ServicesAdmin extends Main
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
+
+        /*** Récupération de la question par la méthode GET ***/
+
         if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
         {
             $this->formData['ref_question_cbox'] = $requestParams[0];
@@ -207,18 +208,24 @@ class ServicesAdmin extends Main
         
         $this->formData['ref_question'] = $this->formData['ref_question_cbox'];
 
+
         /*** Initialisation des boutons ***/
+
         $this->servicesGestion->switchFormButtons($this->formData, "init");
         
         
-        /*-----   Mode "visualisation" et "édition"  -----*/
+
+        /*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
         
+
+        /*** Mode "visualisation" et "édition" ***/
+
         if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
         {
-            /* view */
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
 
+            // Avec la référence, on va chercher toutes les infos sur la question 
             if (!empty($this->formData['ref_question']))
             {
                 if ($this->formData['mode'] == "view")
@@ -239,59 +246,39 @@ class ServicesAdmin extends Main
             }
         }
         
+
+        /*** Mode "nouvelle question" ***/
         
         else if ($this->formData['mode'] == "new")
         {      
-            // Verrouillage des boutons
+            // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "new");
 
-            // On recherche le numero d'ordre de la dernière question enregistrée
+            // On recherche le numero d'ordre de la dernière question enregistrée.
             if (empty($this->formData['ref_question']))
             {
                 $this->formData['num_ordre_question'] = 1;
             }
             else 
             {
-                // On récupère dans la bdd le numero d'ordre de la question courante
+                // On récupère dans la bdd le numero d'ordre de la question courante.
                 $resultset = $this->servicesQuestion->getQuestion($this->formData['ref_question']);
                 $questionCourante = $resultset['response']['question'];
                 
-                // On place la question juste après la question courante
+                // On place la question juste après la question courante.
                 $this->formData['num_ordre_question'] = $questionCourante->getNumeroOrdre() + 1;
             }
         }
-        
-        
-        /*-----   Mode "edition"   -----*/
-        /*
-        else if ($this->formData['mode'] == "edit")
-        {
-            // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "edit");
 
-            if (!empty($this->formData['ref_question']))
-            {
-                $questionDetails = array();
-                $questionDetails = $this->servicesQuestion->getQuestionDetails($this->formData['ref_question']);
-
-                $this->formData = array_merge($this->formData, $questionDetails);
-            }
-            else 
-            {
-                $this->registerError("form_empty", "Cette question n'existe pas");
-            }
-        }
-        */
         
-        /*-----   Mode "enregistrement"   -----*/
+        /*** Mode "enregistrement" ***/
         
         else if ($this->formData['mode'] == "save")
         { 
-            // Verrouillage des boutons
+            // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "save");
 
-            /*** Récupèration de l'id de la question s'il y en a une ***/
-
+            // Récupèration de l'id de la question s'il y en a une.
             if (!empty($this->formData['ref_question']))
             {
                 if ($previousMode == "edit")
@@ -300,28 +287,26 @@ class ServicesAdmin extends Main
                 }
             }
             
-            /*-----  Traitement des infos saisies   -----*/
-            
+            // Traitement des infos saisies.
             $dataQuestion = $this->servicesQuestion->filterQuestionData($this->formData, $_POST);
 
-            /*----- Sauvegarde ou mise à jour des données ***/
-            
-            // Aucune erreur ne doit être enregistrée
+
+            // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors)) 
             {
                 $this->servicesQuestion->setQuestionProperties($previousMode, $dataQuestion, $this->formData);
             }
 
             
-            /*** S'il n'y a pas d'erreur, on recharge la page avec l'identifiant récupéré ***/
-            
+            // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors))
             {
-                // On recharge la page en mode view
+                // On recharge la page en mode visualisation.
                 header("Location: ".$this->url.$this->formData['ref_question']);
             }
             else 
             {
+                // Sinon mode nouveau ou édition.
                 if ($previousMode == "new")
                 {
                     $this->formData['mode'] = "new";
@@ -334,32 +319,35 @@ class ServicesAdmin extends Main
         }
         
         
-        /*-----   Mode "suppression"   -----*/
+        /*** Mode "suppression" ***/
         
         else if ($this->formData['mode'] == "delete")
         {
-            // Verrouillage des boutons
+            // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "delete");
             
-            // On récupère l'id de la question active
+            // Si l'id de la question active existe :
             if (!empty($this->formData['ref_question']))
             {
-                // Ensuite on récupère les données de la question
+                // On récupère les données de la question.
                 $resultsetQuestion = $this->servicesQuestion->getQuestion($this->formData['ref_question']);
+
+                // On récupère le numero d'ordre de la question à supprimer.
                 $this->formData['num_ordre_question'] = $resultsetQuestion['response']['question']->getNumeroOrdre();
 
-                // Enfin, on supprime la question dans la base
+                // Enfin, on supprime la question dans la base.
                 $resultsetQuestion = $this->servicesQuestion->deleteQuestion($this->formData['ref_question']);
                 
-                // Si la suppression a fonctionnée
+                // Si la suppression a fonctionnée :
                 if ($resultsetQuestion)
                 {   
-                    // On décale l'ordre des questions avec n-1 pour toutes les questions supérieures à la question active 
+                    // On décale l'ordre des questions avec n-1 pour toutes les questions supérieures à la question active. 
                     $shiftOrdre = $this->servicesQuestion->shiftNumsOrdre($this->formData['num_ordre_question'], -1);
                     $this->registerSuccess("La question a été supprimée avec succès.");
                 }
                 else
                 {
+                    // Sinon on renvoi une erreur.
                     $this->registerError("form_valid", "La question n'a pas pu être completement supprimée.");
                 }
             }
@@ -368,29 +356,33 @@ class ServicesAdmin extends Main
                 $this->registerError("form_valid", "La question n'existe pas.");
             }
             
-            // On recharge la page
+            // On recharge la page (sans aucune information).
             header("Location: ".$this->url);
             exit();
         }
         
-        
+
+        /*** Erreur : aucun mode ***/
+
         else  
         {
-            // Sinon, renvoi vers le template 404
+            // Renvoi vers le template 404 (page inconnue).
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }   
         
         
+        // Debuggage
         if (Config::DEBUG_MODE)
         {
+            // Liste des données traitées et renvoyées au formulaire.
             echo "\$this->formData = <br/>";
             var_dump($this->formData);
         }
             
             
         
-        /*--- Retour des données traitées du formulaire ---*/
+        /*** Retour des données traitées du formulaire ***/
 
         $this->returnData['response']['form_data'] = array();
         $this->returnData['response']['form_data'] = $this->formData;
@@ -416,30 +408,33 @@ class ServicesAdmin extends Main
         }
         
         
-        /*** Ensemble des requêtes permettant de récupèrer les données permettant d'afficher les éléments du formulaire (liste déroulante, checkbox, radio, ...). ***/
+        /*** Ensemble des requêtes permettant de récupèrer les données pour l'affichage des éléments du formulaire (liste déroulante, checkbox, radio, ...). ***/
         
-        // Requete pour obtenir la liste des questions
+        // Requete pour obtenir la liste des questions.
         $listeQuestions = $this->servicesQuestion->getQuestions();
-        // On assemble toutes les données
-        $this->returnData['response'] = array_merge($listeQuestions['response'], $this->returnData['response']);
+        
 
-        // Requete pour obtenir la liste des réponses pour la question en cours si le type est "qcm"
+        // Requete pour obtenir la liste des réponses pour la question en cours si le type est "qcm".
+        $listeReponses = array();
         if (!empty($this->formData['ref_question']) && !empty($this->formData['type_question']) && $this->formData['type_question'] == "qcm")
         {
             $listeReponses['reponses'] = $this->servicesQuestion->getReponses($this->formData['ref_question']);
-            $this->returnData['response'] = array_merge($listeReponses, $this->returnData['response']);
+            //$this->returnData['response'] = array_merge($listeReponses, $this->returnData['response']);
         }
         
-        // Requete pour obtenir la liste des degres
+        // Requete pour obtenir la liste des degres.
         $listeDegres = $this->servicesDegre->getDegresList();
-        $this->returnData['response'] = array_merge($listeDegres['response'], $this->returnData['response']);
         
-        // Requete pour obtenir la liste des catégories
+        // Requete pour obtenir la liste des catégories.
         $listeCategories = $this->servicesCategorie->getCategories();
+        
+        // Assemblage de toutes les données de la réponse
+        $this->returnData['response'] = array_merge($listeQuestions['response'], $this->returnData['response']);
+        $this->returnData['response'] = array_merge($listeReponses, $this->returnData['response']);
+        $this->returnData['response'] = array_merge($listeDegres['response'], $this->returnData['response']);
         $this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
         
-        
-        
+
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);

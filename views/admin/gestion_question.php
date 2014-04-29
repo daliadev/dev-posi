@@ -367,40 +367,10 @@ $form_url = WEBROOT."admin/question/";
                         </fieldset>
                     </div>
 
-                    <?php
-                    if (Config::ALLOW_ACTIVITES):
-                    ?>
-                        <div class="formdiv" id="activites">
-                            <fieldset>
-                                <div id="titre-question-h3">Activités</div>
-                                <div id="ref_activites" class="datalist">
-                                    <p>
-                                        <input type="checkbox" name="ref_activite" value="1" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Prendre un billet</span>
-                                    </p>
-                                    <p>
-                                        <input type="checkbox" name="ref_activite" value="2" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Embarquer</span>
-                                    </p>
-                                    <p>
-                                        <input type="checkbox" name="ref_activite" value="3" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Repérage et fiches de douane</span>
-                                    </p>
-                                    <p>
-                                        <input type="checkbox" name="ref_activite" value="4" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Se déplacer en bus</span>
-                                    </p>
-                                    <p>
-                                        <input type="checkbox" name="ref_activite" value="5" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Préparer son trajet Rouen-Lyon</span>
-                                    </p>
-
-                                </div>
-                            </fieldset>
-                        </div>
-                    }
-                    <?php
-                    endif;
-                    ?>
-
+                    
                     <div id="niveau" class="formdiv">
                         <fieldset>
-                            <div id="titre-question-h3">Degrés d'aptitude</div>
+                            <div id="titre-question-h3">Degrés d'aptitude (facultatif)</div>
 
                             <?php 
 
@@ -412,16 +382,50 @@ $form_url = WEBROOT."admin/question/";
                                     $checked = "checked";
                                 }
                                 echo '<p>';
-                                echo '<input type="radio" name="ref_degre"  value="'.$degre->getId().'" title="'.$degre->getDescription().'" '.$checked.' '.$formData['disabled'].' /> <span class="checkbox-<?php echo '.$formData['disabled'].'">'.$degre->getNom().'</span>';
+                                echo '<input type="radio" name="ref_degre" class="radio_degre" value="'.$degre->getId().'" title="'.$degre->getDescription().'" '.$checked.' '.$formData['disabled'].' /> <span class="checkbox-<?php echo '.$formData['disabled'].'">'.$degre->getNom().'</span>';
                                 echo '</p>';
                             }
 
                             ?>
 
+                            <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php echo $formData['disabled']; ?> value="Tout déselectionner" /></p>
                         </fieldset>
                     </div>
 
                 </div>
+
+                
+                <?php
+                if (Config::ALLOW_ACTIVITES):
+                ?>
+                    <div class="formdiv" id="activites">
+                        <fieldset>
+                            <div id="titre-question-h3">Activités</div>
+                            <div id="ref_activites" class="datalist">
+                                <p>
+                                    <input type="checkbox" name="ref_activite" value="1" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Prendre un billet</span>
+                                </p>
+                                <p>
+                                    <input type="checkbox" name="ref_activite" value="2" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Embarquer</span>
+                                </p>
+                                <p>
+                                    <input type="checkbox" name="ref_activite" value="3" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Repérage et fiches de douane</span>
+                                </p>
+                                <p>
+                                    <input type="checkbox" name="ref_activite" value="4" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Se déplacer en bus</span>
+                                </p>
+                                <p>
+                                    <input type="checkbox" name="ref_activite" value="5" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Préparer son trajet Rouen-Lyon</span>
+                                </p>
+
+                            </div>
+                        </fieldset>
+                    </div>
+                }
+                <?php
+                endif;
+                ?>
+
 
 
                 <div style="clear:both"></div>
@@ -553,6 +557,20 @@ $form_url = WEBROOT."admin/question/";
  
                     if ($input.attr('type') == "radio") {
                         $input.prop('checked', false);
+                    }
+                });
+            });
+
+            
+
+            // Bouton de déselection de tous les radio buttons de la partie degrés
+            $('input[name=remove-degrees]').click(function(event) {
+
+                $('.radio_degre').each(function() {
+
+                    if ($(this).attr("checked", true))
+                    {
+                        $(this).removeProp("checked");
                     }
                 });
             });

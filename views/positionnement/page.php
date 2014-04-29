@@ -123,8 +123,9 @@
                 if (getPlayerPosition() === 0)
                 {
                     $(this).removeProp("readonly");
-                    $(this).attr("placeholder", "Cliquez ici pour écrire votre réponse.");
-                    $(this).focus();
+                    //$(this).blur();
+                    $(this).attr("placeholder", "Vous pouvez écrire votre réponse.");
+                    
                     //$("#submit_suite").css("visibility", "visible");
                     $("#submit_suite").removeProp("disabled");
                 }

@@ -150,9 +150,10 @@ class ServicesAdmin extends Main
         // Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
         $dataQuestion = array();
 
+        // Débuggage
         if (Config::DEBUG_MODE)
         {
-            // Affichage des données du formulaire
+            // Affichage des données du formulaire.
             echo "\$_POST = ";
             var_dump($_POST);
         }

@@ -230,6 +230,13 @@ $form_url = WEBROOT."admin/question/";
                                         ?>
 
                                     </div>
+
+                                    <div id="responses-btn">
+                                        <p>
+                                            <input type="button" name="add_response" id="add_response" value="Ajouter une réponse" <?php echo $formData['disabled']; ?> />
+                                        </p>
+                                    </div>
+                                
                                 </div>
 
                                 <div style="clear:both"></div>
@@ -502,7 +509,7 @@ $form_url = WEBROOT."admin/question/";
                         input.val(cacheInputs[i].value);
 
                         if (cacheInputs[i].type == "radio") {
-                            
+
                             if (cacheInputs[i].check == true) {
                                 input.prop('checked', true);
                             }
@@ -557,9 +564,9 @@ $form_url = WEBROOT."admin/question/";
                         checked = true;
                     }
 
-                    console.log(checked);
-
+                    // On met en cache la type, la valeur et la sélection de la réponse correcte
                     cacheInputs.push({type: input.attr("type"), value: value, check: checked});
+
 
                     // On efface tous les champs
                     input.val("");

@@ -15,12 +15,14 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 	foreach($response['details']['questions'] as $detail)
     {
 		$detail['categories'][0]['nom_cat'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat'] );
+		$detail['categories'][0]['nom_cat_parent'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat_parent'] );
 
 		$content .= "\n";
 		$content .= '"';
 		$content .= $detail['num_ordre'].'";"';
+		$content .= utf8_decode($detail['categories'][0]['nom_cat_parent']).' // ';
 		$content .= utf8_decode($detail['categories'][0]['nom_cat']).'";"';
-		$content .= utf8_decode($detail['nom_degre']).'";"';
+		$content .= $detail['nom_degre'].'";"';
 
 		if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
 		{

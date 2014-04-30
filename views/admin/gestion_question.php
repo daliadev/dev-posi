@@ -475,33 +475,38 @@ $form_url = WEBROOT."admin/question/";
         });
         */
        
-       $(function() { 
+
+        $(function() { 
             
 
-            var $cacheInputs = new Array();
+            var cacheInputs = new Array();
 
-            // Si on clique sur le type "qcm"
+
+            /*** Gestion du clic sur le type "qcm" ***/
+
             $('#type-qcm').click(function(event) {
 
                 // Pour tous les input des réponses
-                var $tabInputs = $('#responses-items').find('input');
+                var tabInputs = $('#responses-items').find('input');
 
                 var i = 0;
-                $tabInputs.each(function() {
+                tabInputs.each(function() {
 
-                    var $input = $(this);
+                    var input = $(this);
 
                     // On réactive tous les champs et les radio buttons s'ils étaient bloqués
-                    $input.prop('disabled', false);
+                    input.prop('disabled', false);
 
-                    if ($cacheInputs.length > 0)
-                    {
-                        if ($input.attr('type') == "radio" && $input.val() != "") {
-                            $input.prop('checked', true);
+                    if (cacheInputs.length > 0) {
+
+                        input.val(cacheInputs[i].value);
+
+                        if (cacheInputs[i].type == "radio") {
+                            
+                            if (cacheInputs[i].check == true) {
+                                input.prop('checked', true);
+                            }
                         }
-
-                        //console.log($cacheInputs[i]);
-                        $input.val($cacheInputs[i]);
                     }
 
                     i++;
@@ -509,61 +514,70 @@ $form_url = WEBROOT."admin/question/";
                 
             });
             
-            
-            // Si on clique sur le type "champ-saisi"
+
+
+
+            /*** Gestion du clic sur le type "champ-saisi" ***/
+
             $('#type-champ').click(function(event) {
 
-                $cacheInputs = new Array();
+                cacheInputs = new Array();
 
                 // Pour tous les champs input
-                var $tabInputs = $('#responses-items').find('input');
-                
-                //console.log($tabInputs);
+                var tabInputs = $('#responses-items').find('input');
 
                 // On vide les réponses (on garde le contenu en cache ?)
-                $tabInputs.each(function() {
+                tabInputs.each(function() {
 
-                    var $input = $(this);
-                    var $value = null;
+                    var input = $(this);
+                    var value = null;
 
-                    // On met en cache toutes les valeurs des input
-                    if ($input.attr('type') == "text") {
+                    // On met en cache toutes les valeurs des inputs
+                    if (input.attr('type') == "text") {
 
-                        if ($input.prop('value') != "" || $input.prop('value') != undefined) {
+                        if (input.prop('value') != "" || input.prop('value') != undefined) {
 
-                            $value = $input.prop('value');
+                            value = input.prop('value');
                         }
                         else
                         {
-                            //$value = $input.attr('value');
-                            $value = $input.val();
+                            value = input.val();
                         }
-
                     }
                     else {
 
-                        //$value = $input.attr('value');
-                        $value = $input.val();
+                        value = input.val();
                     }
                     
-                    console.log($input.val());
-                    $cacheInputs.push($value);
+
+                    var checked = false;
+                    
+                    if (input.attr('type') == "radio" && input.prop('checked')) {
+
+                        checked = true;
+                    }
+
+                    console.log(checked);
+
+                    cacheInputs.push({type: input.attr("type"), value: value, check: checked});
 
                     // On efface tous les champs
-                    $input.val("");
+                    input.val("");
 
                     // On désactive tous les champs et les radio buttons
-                    $input.prop('disabled', true);
+                    input.prop('disabled', true);
  
-                    if ($input.attr('type') == "radio") {
-                        $input.prop('checked', false);
+                    if (input.attr('type') == "radio") {
+
+                        input.removeProp('checked');
                     }
                 });
             });
-
             
 
-            // Bouton de déselection de tous les radio buttons de la partie degrés
+
+            /*** Bouton de déselection de tous les radio buttons de la partie degrés ***/
+
             $('input[name=remove-degrees]').click(function(event) {
 
                 $('.radio_degre').each(function() {
@@ -577,7 +591,8 @@ $form_url = WEBROOT."admin/question/";
 
 
 
-            // Demande de suppression
+            /*** Gestion de la demande de suppression ***/
+
             $('.bt-admin-menu-sup').click(function(event) {
 
                 event.preventDefault();

@@ -193,7 +193,15 @@ $form_url = WEBROOT."admin/question/";
                                 <div id="intitules_reponses" style="float:right;">
                                     <div id="responses-items">
                                         <?php
-                                        for ($i = 0; $i < 5; $i++) 
+
+                                        $nbReponses = 1;
+
+                                        if (isset($formData['reponses']) && is_array($formData['reponses']) && count($formData['reponses']) > 0)
+                                        {
+                                            $nbReponses = count($formData['reponses']);
+                                        }
+
+                                        for ($i = 0; $i < count($nbReponses); $i++) 
                                         {
                                             echo '<p class="response-item">';
 
@@ -233,7 +241,8 @@ $form_url = WEBROOT."admin/question/";
 
                                     <div id="responses-btn">
                                         <p>
-                                            <input type="button" name="add_response" id="add_response" value="Ajouter une réponse" <?php echo $formData['disabled']; ?> />
+                                            <input type="button" class="bt-admin-simple-button" name="add_response" id="add_response" value="Ajouter" <?php echo $formData['disabled']; ?> /> 
+                                            <input type="button" class="bt-admin-simple-button" name="delete_response" id="delete_response" value="Supprimer" <?php echo $formData['disabled']; ?> />
                                         </p>
                                     </div>
                                 
@@ -466,25 +475,39 @@ $form_url = WEBROOT."admin/question/";
     </div>
     
     
+
+
+
     <script type="text/javascript">
         
-        /* Ajoute des réponses vides */
-        /*
-        $(function() {
-            
-            var $responseItem = $("#responses-items").first().html();
-            
-            $("#add_response").click(function() {
-                
-                $("#responses-items").append($responseItem);
-            });
-            
-        });
-        */
-       
 
         $(function() { 
             
+
+            /*** Ajout de réponse automatique ***/
+
+            var $responseItem = $("#responses-items").first().html();
+
+            $("#add_response").click(function() {
+                    
+                $("#responses-items").append($responseItem);
+            });
+
+            $("#delete_response").click(function() {
+
+                if ($(".response-item").length > 1)
+                {
+                    $(".response-item:last").remove();
+                }
+                else
+                {
+                    $(".response-item > input[type=text]").val("");
+                }
+            });
+
+
+
+            /*** Tableau des éléments du cache des réponses ***/
 
             var cacheInputs = new Array();
 
@@ -521,7 +544,6 @@ $form_url = WEBROOT."admin/question/";
                 
             });
             
-
 
 
             /*** Gestion du clic sur le type "champ-saisi" ***/
@@ -583,6 +605,7 @@ $form_url = WEBROOT."admin/question/";
             
 
 
+
             /*** Bouton de déselection de tous les radio buttons de la partie degrés ***/
 
             $('input[name=remove-degrees]').click(function(event) {
@@ -595,6 +618,7 @@ $form_url = WEBROOT."admin/question/";
                     }
                 });
             });
+
 
 
 

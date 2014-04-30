@@ -715,6 +715,9 @@ select {
     overflow-y: scroll; 
 }
 
+#code_comp_cbox {
+	width: 100%;
+}
 
 
 #zone-erreur{

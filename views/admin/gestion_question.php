@@ -109,6 +109,7 @@ $form_url = WEBROOT."admin/question/";
                         if (isset($response['errors']) && !empty($response['errors']))
                         {
                             echo '<div id="zone-erreur">';
+                            echo '<p><strong>Une erreur s\'est produite :</strong></p>';
                             echo '<ul>';
                             foreach($response['errors'] as $error)
                             {

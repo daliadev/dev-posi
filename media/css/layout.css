@@ -723,15 +723,15 @@ select {
 #zone-erreur{
 	background: #fce3e0;
 	margin: 20px 0 0 0;
-    padding: 5px;
-	margin:20px;
+    padding: 0 0 0 20px;
+	/*margin: 20px;*/
 	border: 1px solid #ff786a;
 	color:#c0392b;
     font-size: 12px;
 }
 
 #zone-erreur li{
-	margin-left: -20px;
+	margin-left: -30px;
 }
 
     

@@ -27,13 +27,13 @@ body{
 }
 
 #content{
-	width:650px;
+	width: 640px;
     margin: 20px auto;
     min-height: 100%;
 }
 
 #content-large{
-    width:960px;
+    width: 960px;
     margin: 20px auto;
 }
 
@@ -44,7 +44,7 @@ body{
 
 
 #titre-page{
-	width:260px;
+	width: 260px;
 	float:left;
 }
 
@@ -56,36 +56,35 @@ body{
 }
 
 #posi-titre{
-	width:260px;
-	height:86px;
-	margin-top:20px;
-	background:url(../images/img-vert-titre-posi.jpg) top left no-repeat;
-    background-color:#1fbba6;
+	width: 220px;
+	height: 40px;
+	margin-top: 20px;
+	padding: 20px;
+	background: url(../images/img-vert-titre-posi.jpg) 20px 20px no-repeat #1fbba6;
 }
 
 #posi-titre-admin{
-	width:260px;
-	height:86px;
-	margin-top:20px;
-	background:url(../images/img-rouge-titre-posi.png) top left no-repeat;
-    background-color:#f75556;
+	width: 260px;
+	height: 80px;
+
+	margin-top: 20px;
+	background: url(../images/img-rouge-titre-posi.png) top left no-repeat #f75556;
 }
 
 .placeholder { color: #999999; }
 
 #txt-titre{
-	width:172px;
-	height:50px;
-	padding-left:75px;
-	padding-top:29px;
-	color:#FFF;
-	font-weight:bold;
-    line-height: 25px;
+	width: 160px;
+	height: 40px;
+	padding-left: 60px;
+	padding-top: 0px;
+	color: #FFF;
+	text-align: left;
+	font-weight: bold;
+    line-height: 40px;
 }
 
-#zone-formu input:required{
-    background-color:#ffffff;
-}
+
 
 #ico-orga, #ico-utili{
 	border-bottom: 1px solid #ebebeb;
@@ -93,26 +92,74 @@ body{
 }
 
 
-#zone-formu input:focus:required:valid{
-    background-color:#eff8f3;
-	border:1px solid #88d7a6;outline:medium none;
-}
-
-#zone-formu input:focus:required:invalid{
-    background-color:#f9f6f6;
-	border:1px solid #db8f8f;outline:medium none;
-}
-
 
 
 /*-----------------------------------------------------------------------*/
 
-#zone-formu form{display:inline-block;vertical-align:top;width:545px;margin:0;}
-#zone-formu label{color:#6a6a6a;display:block;font-family:Amaranth,Tahoma,sans-serif;font-size:12px;margin-left:5px;font-weight:260;}
-#zone-formu input{background:none repeat scroll 0 0 #ffffff ;border:1px solid #C3C9CF;border-radius:5px 5px 5px 5px;font-size:12px;height:30px;line-height:20px;width:260px;padding:0 10px;}
-#zone-formu select{background:none repeat scroll 0 0 ;border:1px solid #C3C9CF;border-radius:5px 5px 5px 5px;font-size:12px;height:30px;line-height:20px;width:280px; margin-bottom:10px;}
-#zone-formu input:focus,#contact textarea:focus{border:1px solid #cccccc;outline:medium none; background-color:#FFF;}
-.asterix { color:#F00; display:inline;}
+#zone-formu {
+	padding: 30px;	
+}
+
+#zone-formu form {
+	/*display:inline-block;*/
+	/*vertical-align:top;*/
+	width: 300px;
+	/*margin:0;*/
+}
+
+#zone-formu label {
+	color:#6a6a6a;
+	display:block;
+	font-family:Amaranth,Tahoma,sans-serif;
+	font-size:12px;
+	margin-left:5px;
+	font-weight:260;
+}
+
+#zone-formu input {
+	width: 300px;
+	height: 30px;
+	padding: 0 10px;
+	background:none repeat scroll 0 0 #ffffff;
+	border:1px solid #C3C9CF;
+	border-radius:5px 5px 5px 5px;
+	font-size:12px;
+	line-height:20px;
+}
+	
+	#zone-formu input:required{
+	    background-color:#ffffff;
+	}
+
+	#zone-formu input:focus:required:valid{
+	    background-color:#eff8f3;
+		border:1px solid #88d7a6;
+		outline:medium none;
+	}
+
+	#zone-formu input:focus:required:invalid{
+	    background-color:#f9f6f6;
+		border:1px solid #db8f8f;
+		outline:medium none;
+	}
+
+
+#zone-formu select {
+	width: 300px;
+	height: 30px;
+	background:none repeat scroll 0 0 ;
+	border:1px solid #C3C9CF;
+	border-radius:5px 5px 5px 5px;
+	font-size:12px;
+	line-height:20px; 
+	margin-bottom:10px;
+}
+
+#zone-formu input:focus, #contact textarea:focus {
+	border:1px solid #cccccc;
+	outline:medium none; background-color:#FFF;
+}
+
 
 
 #zone-formu #submit input {
@@ -150,18 +197,20 @@ body{
 	background-color: #f3a842;
 }
 
+.asterix { 
+	color:#F00;
+	/*display:inline;*/
+}
 
 /*------------------------------ORGANISME----------------------------------*/
 
-#organisme{
-	background-color:#FFF;
-	width:363px;
-	float:right;
+#organisme {
+	background-color: #FFF;
+	width: 360px;
+	float: right;
 }
 
-#zone-formu{
-	padding:35px;	
-}
+
 
 #ico-orga{
 	background-image:url(../images/ico-orga.jpg);
@@ -198,10 +247,10 @@ body{
 /*------------------------------Utilisateur-----------------------*/
 
 #utilisateur{
-	background-color:#FFF;
-	width:363px;
-	float:right;
-	margin-bottom:15px;
+	background-color: #FFF;
+	width: 360px;
+	float: right;
+	margin-bottom: 15px;
 }
 
 #ico-utili{

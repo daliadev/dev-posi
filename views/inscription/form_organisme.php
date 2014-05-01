@@ -55,11 +55,14 @@ if (isset($response['form_data']) && !empty($response['form_data']))
     <!--********************************* Formulaire ********************************************-->
 
 
-        <form action="<?php echo $form_url; ?>" method="POST" name="form_organisme">
-            <div id="organisme">
-                <div id="zone-formu">
+        
+        <div id="organisme">
+            <div id="zone-formu">
 
-                    <div id="ico-orga">Organisme</div>
+                <div id="ico-orga">Organisme</div>
+
+                <form action="<?php echo $form_url; ?>" method="POST" name="form_organisme">
+                    
                     <div class="formu">
 
                         <input type="hidden" value="<?php echo $formData['ref_organ']; ?>" name="ref_organ">
@@ -150,16 +153,18 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                             echo '</div>';
                         }
                         ?>
-                        
+                    
                         <div id="submit">
                             <input type="submit" value="Envoyer" name="valid_form_organ" onclick="verifOrgan();" />
                         </div>
 
                     </div>
 
-                </div>
+                </form>
+
             </div>
-        </form>
+        </div>
+        
         
     
         <div style="clear:both;"></div>

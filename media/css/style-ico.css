@@ -64,7 +64,7 @@
 }
 
 
-[data-icon]:befor3e {
+[data-icon]:before {
 	font-family: 'icomoon';
 	speak: none;
 	content : attr(data-icon);

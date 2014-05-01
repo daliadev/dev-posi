@@ -18,7 +18,7 @@ class Config
     const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...)
  
 
-    const POSI_NAME = "Chantier-Ecole"; // Nom du positionnement
+    const POSI_NAME = "Positionnement Chantier-Ecole"; // Nom du positionnement
     
     const POSI_TITLE = "Positionnement Chantier-Ecole"; // Titre/accroche du positionnement
 

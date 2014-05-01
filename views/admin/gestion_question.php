@@ -152,30 +152,39 @@ $form_url = WEBROOT."admin/question/";
                         <fieldset>
                             <div>
                                 <div id="titre-question-h3">Question
+
+                                    <!--Numero d'ordre -->
+
                                     <div id="num_ordre">
 
-                                            <?php
-                                            $numOrdre = $formData['num_ordre_question'];
+                                        <?php
+                                        $numOrdre = $formData['num_ordre_question'];
 
-                                            if (!empty($numOrdre))
-                                            {
-                                                echo $numOrdre;
-                                            }
-                                            else 
-                                            {
-                                                echo "-"; 
-                                            } 
-                                            ?>				
+                                        if (!empty($numOrdre))
+                                        {
+                                            echo $numOrdre;
+                                        }
+                                        else 
+                                        {
+                                            echo "-"; 
+                                        } 
+                                        ?>				
 
                                     </div>
                                 </div>
                             </div>
+
+
+                            <!-- Intitulé -->
 
                             <div id="intitule">
                                 <p>
                                     <textarea name="intitule_question"  cols="62" rows="6" maxlength="391" placeholder="480 caractères maximum" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
                                 </p>
                             </div>
+
+
+                            <!-- Réponses qcm -->
 
                             <div id="response-qcm" style="background:#ECF0F1; padding:10px">
                                 <div id="type_qcm" style="float:left">
@@ -202,8 +211,10 @@ $form_url = WEBROOT."admin/question/";
                                             $nbReponses = count($formData['reponses']);
                                         }
 
-                                        for ($i = 0; $i < count($nbReponses); $i++) 
+
+                                        for ($i = 0; $i < $nbReponses; $i++) 
                                         {
+                                            
                                             echo '<p class="response-item">';
 
                                             if (isset($formData['reponses'][$i]) && !empty($formData['reponses'][$i]))
@@ -252,6 +263,10 @@ $form_url = WEBROOT."admin/question/";
                                 <div style="clear:both"></div>
                             </div>
                             <br />
+
+
+                            <!-- Réponses champ saisie -->
+
                             <div id="response-champ" style="background:#ECF0F1; padding:10px">
                                 <div>
                                     <p>
@@ -270,6 +285,9 @@ $form_url = WEBROOT."admin/question/";
 
                         </fieldset>
                     </div>
+
+
+                    <!-- Médias -->
 
                     <div class="formdiv">
                         <fieldset>
@@ -346,8 +364,11 @@ $form_url = WEBROOT."admin/question/";
 
                 <div id="proprietes" class="part-right">
 
+                    <!-- Catégories -->
+
                     <div id="competences" class="formdiv" >
                         <fieldset>
+
                             <div id="titre-question-h3">Catégories / compétences</div>
                             <p>
                                 <select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?> >
@@ -384,6 +405,8 @@ $form_url = WEBROOT."admin/question/";
                         </fieldset>
                     </div>
 
+
+                    <!-- Degrés d'aptitude -->
                     
                     <div id="niveau" class="formdiv">
                         <fieldset>
@@ -412,6 +435,8 @@ $form_url = WEBROOT."admin/question/";
                 </div>
 
                 
+                <!-- Activités (Préconisation de parcours) -->
+
                 <?php
                 if (Config::ALLOW_ACTIVITES):
                 ?>
@@ -484,14 +509,19 @@ $form_url = WEBROOT."admin/question/";
 
         $(function() { 
             
-
             /*** Ajout de réponse automatique ***/
+            
+            var responseItem = $('#responses-items').first().html();
 
-            var $responseItem = $("#responses-items").first().html();
+            $(responseItem + ' input[type=text]').each(function() {
+
+                $(this).val("");
+            });
+            
 
             $("#add_response").click(function() {
                     
-                $("#responses-items").append($responseItem);
+                $("#responses-items").append(responseItem);
             });
 
             $("#delete_response").click(function() {
@@ -505,7 +535,7 @@ $form_url = WEBROOT."admin/question/";
                     $(".response-item > input[type=text]").val("");
                 }
             });
-
+            
 
 
             /*** Tableau des éléments du cache des réponses ***/

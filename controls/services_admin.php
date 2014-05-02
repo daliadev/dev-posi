@@ -515,36 +515,38 @@ class ServicesAdmin extends Main
 
 
 
+        /*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
         
-        /*-----   Mode "visualisation"   -----*/
 
-        if ($this->formData['mode'] == "view")
-        { 
-            
+        /*** Mode "visualisation" et "édition" ***/
+
+        if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
+        {
             // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "view");
-            
+            $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
+
+            // Avec la référence, on va chercher toutes les infos sur la question 
             if (!empty($this->formData['code_cat']))
             {
-                // Verrouillage des boutons "modifier" et "supprimer"
-                $this->formData['edit_disabled'] = "";
-                $this->formData['delete_disabled'] = "";
-                
-                $resultset = $this->servicesCategorie->getCategorie($this->formData['code_cat']);
-                
-                if (!$resultset)
+                if ($this->formData['mode'] == "view")
                 {
-                    $this->registerError("form_request", "Impossible de visualiser la catégorie.");
+                    // Déverrouillage des boutons "modifier" et "supprimer"
+                    $this->formData['edit_disabled'] = "";
+                    $this->formData['delete_disabled'] = "";
                 }
-                else 
-                {
-                    $this->formData['nom_cat'] = $resultset['response']['categorie']->getNom();
-                    $this->formData['descript_cat'] = $resultset['response']['categorie']->getDescription();
-                    $this->formData['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
-                }
+                
+                $catDetails = array();
+                $catDetails = $this->servicesQuestion->getCategorieDetails($this->formData['code_cat']);
+                
+                $this->formData = array_merge($this->formData, $questionDetails);
+            }
+            else if ($this->formData['mode'] == "edit")
+            {
+                $this->registerError("form_empty", "Cette categorie n'existe pas.");
             }
         }
-        
+
+
         
         /*-----   Mode "nouvelle catégorie"   -----*/
         
@@ -832,7 +834,6 @@ class ServicesAdmin extends Main
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
-        
         
         if (Config::DEBUG_MODE)
         {

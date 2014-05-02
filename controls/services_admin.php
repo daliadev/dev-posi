@@ -195,7 +195,7 @@ class ServicesAdmin extends Main
             "audio_question" => "text",
             "code_cat_cbox" => "select",
             "ref_activites" => "multi",
-            "ref_degre" => "text",
+            "ref_degre" => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
@@ -454,18 +454,19 @@ class ServicesAdmin extends Main
      */
     public function categorie($requestParams = array())
     {
-        // Authentification de l'admin necessaire
+
+        /*** Authentification avec les droits admin ***/
         ServicesAuth::checkAuthentication("admin");
         
         $this->initialize();
         
-        $this->url = SERVER_URL."admin/categorie";
+        $this->url = SERVER_URL."admin/categorie/";
         
-        // Initialisation du tableau des données qui seront inserés ou mis à jour dans la base
+        // Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
         $dataCategorie = array();
 
 
-        /*** Définition du mode précédent du formulaire ***/
+        /*** Définition du mode précédent du formulaire (permet de connaître l'action précédemment choisie par l'utilisateur) ***/
 
         if (isset($_POST['mode']) && !empty($_POST['mode']))
         {
@@ -479,28 +480,41 @@ class ServicesAdmin extends Main
         {
             $previousMode = "new";
         }
-
         
+
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
         
-        
-        /*** On récupère le code de la catégorie et on initialise les données qui vont être validées et renvoyées au formulaire***/
 
-        $this->servicesGestion->initializeFormData($this->formData, $_POST, array("code_cat_cbox" => "select", "nom" => "text", "descript_cat" => "text", "actif" => "text"));
+        /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         
-        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['code_cat_cbox'] == null)
+        $initializedData = array(
+            "code_cat_cbox" => "select", 
+            "nom" => "text", 
+            "descript_cat" => "text", 
+            "actif" => "text"
+        );
+        $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
+        
+
+        /*** Récupération du code de la catégorie par la méthode GET ***/
+
+        if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
         {
             $this->formData['code_cat_cbox'] = $requestParams[0];
         }
+        
         $this->formData['code_cat'] = $this->formData['code_cat_cbox'];
 
-        
-        /*** Initialisation des données qui vont être validées et renvoyées au formulaire ***/
+
+        /*** Initialisation des boutons ***/
 
         $this->servicesGestion->switchFormButtons($this->formData, "init");
        
+
+
+
         
         /*-----   Mode "visualisation"   -----*/
 

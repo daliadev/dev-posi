@@ -254,7 +254,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
             
             if ($('#second-part #ref_organ_cbox').val() == "new")
             {
-                $('#third-part').show(300);
+                $('#third-part').show();
             }
             else {
                 $('#third-part').hide();
@@ -264,11 +264,11 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                 if ($(this).val() == "new") {
 
-                  $('#third-part').show(300);
+                  $('#third-part').show(200);
                 }
                 else {
 
-                  $('#third-part').hide(300);
+                  $('#third-part').hide(200);
                 }
             });
 

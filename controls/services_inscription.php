@@ -782,7 +782,25 @@ class ServicesInscription extends Main
         }
   
     }
- 
+
+
+
+
+    /*
+    public function organisme($requestParams = array())
+    {
+
+
+    }
+    */
+
+    /*
+    public function utilisateur($requestParams = array())
+    {
+
+
+    }
+    */
 }
 
 ?>

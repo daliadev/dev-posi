@@ -55,41 +55,54 @@ body{
     background-color:#FFF;
 }
 
-#posi-titre{
+#posi-titre {
 	width: 220px;
 	height: 40px;
 	margin-top: 20px;
 	padding: 20px;
 	background: url(../images/img-vert-titre-posi.jpg) 20px 20px no-repeat #1fbba6;
+	line-height: 40px;
+	text-align: center;
 }
 
 #posi-titre-admin{
-	width: 260px;
-	height: 80px;
-
+	width: 220px;
+	height: 40px;
 	margin-top: 20px;
-	background: url(../images/img-rouge-titre-posi.png) top left no-repeat #f75556;
+	padding: 20px;
+	background: url(../images/img-rouge-titre-posi.jpg) 20px 20px no-repeat #f75556;
+	line-height: 40px;
+	text-align: center;
 }
 
+
+
+#titre-organ, #titre-utili{
+	border-bottom: 1px solid #ebebeb;
+}
 
 
 #txt-titre{
+	display: inline-block;
 	width: 160px;
-	height: 40px;
-	padding-left: 60px;
-	padding-top: 0px;
+	/*height: 30px;*/
+	margin-left: 50px;
+	padding: 5px;
 	color: #FFF;
-	text-align: left;
+	font-size: 12px;
 	font-weight: bold;
-    line-height: 40px;
+	text-align: left;
+    vertical-align: middle;
+    line-height: normal;
 }
 
 
-
-#ico-orga, #ico-utili{
-	border-bottom: 1px solid #ebebeb;
-	width:242px;
+.txt-info {
+	font-size:10px;
+	color:#f9ab2e;
+	margin-bottom:10px;
 }
+
 
 
 
@@ -98,11 +111,9 @@ body{
 
 
 /*#zone-formu label {
-    //margin-top: 10px;
 }
 
 #zone-formu select{
-    padding: 5px;
 }
 
 #zone-formu textarea {
@@ -119,26 +130,13 @@ body{
 }
 
 #zone-formu input[type=text] {
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
+
 }
 
 #zone-formu input[type=radio] {
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    line-height: 15px;
-    margin: 0;
+
 }
 
-#zone-formu ul {
-    list-style: none;
-}
-
-#zone-formu li{
-    margin-left: -30px;
-}
 
 #zone-formu input[type=submit] {
     cursor: pointer;
@@ -182,30 +180,32 @@ body{
 	width: 300px;
 	margin-top: 20px;
 	/*margin:0;*/
-	font-family: Amaranth, Tahoma, sans-serif;
+	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
 }
 
 #zone-formu label {
-	
 	/*display:block;*/
 	/*margin-left: 5px;*/
-	margin-top: 10px;
-	/*font-family: Amaranth, Tahoma, sans-serif;*/
+	/*margin-top: 10px;*/
 	color:#6a6a6a;
 	font-size:12px;
 	font-weight:260;
 }
 
+
+#zone-formu .input {
+	margin: 10px 0;
+}
+
+
 #zone-formu input {
-	/*height: 20px;*/
-	width: 280px;
+	width: 288px;
 	height: 20px;
-	margin-top: 5px;
+	margin: 5px 0;
 	padding: 5px;
 	/*padding: 0 10px;*/
 	border: 1px solid #c3c9cf;
     border-radius: 5px 5px 5px 5px;
-	background:none repeat scroll 0 0 #ffffff;
 	font-size: 12px;
 	line-height: 20px;
 }
@@ -226,67 +226,92 @@ body{
 		outline:medium none;
 	}
 
-
-#zone-formu select {
-	width: 300px;
-	height: 30px;
-	background:none repeat scroll 0 0 ;
-	border:1px solid #C3C9CF;
-	border-radius:5px 5px 5px 5px;
-	font-size:12px;
-	line-height:20px; 
-	margin-bottom:10px;
-}
-
-#zone-formu input:focus, #contact textarea:focus {
-	border:1px solid #cccccc;
-	outline:medium none; background-color:#FFF;
-}
+	#zone-formu input:focus, #contact textarea:focus {
+		border:1px solid #cccccc;
+		outline:medium none; 
+		background-color:#FFF;
+	}
 
 
-
-#zone-formu #submit input {
+#zone-formu input[type=text], input[type=email], input[type=tel], input[type=password]   {
+	/*height: 30px;
 	cursor:pointer;
-	background-color:#f7a22f;
-	font-weight:bold;
-	color:#FFF;
-	width:196px;
-	height:40px;
-	border:0;
-	margin-top:45px;
-	margin-left:50px;
-	font-size:16px;
+	margin-bottom:1px;*/
 }
-
-#zone-formu #submit input[type="submit"]:hover {
-	cursor:pointer;
-	background-color:#f3a842;
-	font-weight:bold;
-	color:#FFF;
-	width:196px;
-	height:40px;
-	border:0;
-	margin-top:45px;
-	margin-left:50px;
-	font-size:16px;
-}
-
 
 #zone-formu input[type="radio"] {
-	border:1px solid #C3C9CF;
 	height: 30px;
 	width: 30px;
+	margin: 0;
 	padding: 0 10px;
+	background-color: #f3a842;
+	border:1px solid #C3C9CF;
+	line-height: 15px;
+}
+
+
+#zone-formu input[type=text] {
+    /*height: 20px;*/
+    /*line-height: 20px;*/
+    /*padding: 5px;*/
+}
+
+
+#zone-formu #submit {
+	width: 300px;
+}
+
+#zone-formu #submit input {
+	cursor: pointer;
+	width: 200px;
+	height: 40px;
+	margin: 30px 50px 20px 50px;
+	background-color: #f7a22f;
+	border: 0;
+	color: #FFF;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+#zone-formu #submit input:hover {
+	cursor: pointer;
 	background-color: #f3a842;
 }
 
 
+#zone-formu select {
+	cursor:pointer;
+	width: 300px;
+	height: 32px;
+	margin: 5px 0;
+	padding: 5px;;
+	border: 1px solid #C3C9CF;
+	border-radius: 5px 5px 5px 5px;
+	font-size: 12px;
+}
+
+	#zone-formu option {
+		font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+		padding: 2px;
+	}
+
+
+#zone-formu ul {
+    list-style: none;
+}
+
+#zone-formu li{
+    margin-left: -30px;
+}
+
 .placeholder { color: #999999; }
 
 .asterix { 
-	color:#F00;
-	/*display:inline;*/
+	color:#FF0000;
 }
+
+
+
 
 /*------------------------------ORGANISME----------------------------------*/
 
@@ -296,36 +321,48 @@ body{
 	float: right;
 }
 
-
-
-#ico-orga{
-	background-image:url(../images/ico-orga.jpg);
-	background-repeat:no-repeat;
-	padding-left:40px;
-	padding-top:5px;
-	height:34px;
-	color:#8d8d8d;
-	text-transform:uppercase;
-	font-size:16px;
-	font-weight:bold;
-	margin-bottom:10px;
-}
-
-#zone-formu input[type=text], input[type=email], input[type=tel], input[type=password]   {
-	height: 30px;
-	cursor:pointer;
-	margin-bottom:1px;
+#titre-organ {
+	width : 260px;
+	height : 30px;
+	padding-left: 40px;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	background: url(../images/ico-organ.jpg) 0 0 no-repeat;
+	color: #8d8d8d;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 30px;
 }
 
 
-.txt-info{
-	font-size:10px;
-	color:#f9ab2e;
-	margin-bottom:10px;
+
+/*--------------------------- formulaire détail organisme  -----------------------------------------*/
+
+#third-part {
+	width: 270px;
+	display: none;
+	margin-bottom: 20px; 
+	padding: 10px;
+	background-color: #f5fbfa; 
+	border: #1fbba6 1px solid;  
+	border-radius: 5px 5px 5px 5px;
 }
 
+#third-part .input {
+	margin: 0;
+}
 
-/*------------------------------------------------------------------*/
+#third-part label { 
+	color: #1e6a60; 
+	font-weight: bold;
+}
+
+#third-part input { 
+	width: 255px;
+	border: #1fbba6 1px solid;
+    border-radius: 5px 5px 5px 5px;
+}
 
 
 
@@ -336,20 +373,20 @@ body{
 	background-color: #FFF;
 	width: 360px;
 	float: right;
-	margin-bottom: 15px;
 }
 
-#ico-utili{
-	background-image:url(../images/ico-utili.jpg);
-	background-repeat:no-repeat;
-	padding-left:40px;
-	padding-top:5px;
-	height:34px;
-	color:#8d8d8d;
-	text-transform:uppercase;
-	font-size:16px;
-	font-weight:bold;
-	margin-bottom:10px;
+#titre-utili{
+	width : 260px;
+	height : 30px;
+	padding-left: 40px;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
+	color: #8d8d8d;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 30px;
 }
 
 
@@ -378,10 +415,6 @@ body{
 
 
 
-/*-----------------------------------------CSS-liste-deroulante-organisme-----------------------------------------*/
-
-#second-form{ display:none; padding:5px; background-color:#f5fbfa; border:#1fbba6 1px solid;  border-radius:5px 5px 5px 5px;margin-bottom:10px;}
-#second-form label { color:#1e6a60; font-weight:bold;}
 
 
 
@@ -619,7 +652,7 @@ input[type="submit"][disabled]{
 	cursor:default;  
 }
 
-
+/*
 input[type=checkbox][disabled]{
 	color:#ff0000;
 }
@@ -632,6 +665,7 @@ input[type=radio][disabled]{
 input[type=select][disabled]{
 	color:#ff0000;
 }
+*/
 
 .checkbox-disabled {
 	color:#BDC3C7;
@@ -855,12 +889,16 @@ select {
 }
 
 
+
+
+
 #zone-erreur{
 	background: #fce3e0;
 	margin: 20px 0 0 0;
     padding: 0 0 0 20px;
 	/*margin: 20px;*/
 	border: 1px solid #ff786a;
+	border-radius: 5px 5px 5px 5px;
 	color:#c0392b;
     font-size: 12px;
 }
@@ -875,6 +913,7 @@ select {
     margin: 20px 0 0 0;
     padding: 10px;
     border: 1px solid #1FBBA6;
+    border-radius: 5px 5px 5px 5px;
     color: #039b87;
     font-size: 12px;
 }

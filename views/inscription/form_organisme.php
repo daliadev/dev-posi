@@ -59,85 +59,94 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         <div id="organisme">
             <div id="zone-formu">
 
-                <div id="ico-orga">Organisme</div>
+                <div id="titre-organ">Organisme</div>
 
                 <form action="<?php echo $form_url; ?>" method="POST" name="form_organisme">
                     
                     <div class="formu">
 
-                        <input type="hidden" value="<?php echo $formData['ref_organ']; ?>" name="ref_organ">
-                        <input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">
+                        <div id="first-part">
+                            <input type="hidden" value="<?php echo $formData['ref_organ']; ?>" name="ref_organ">
+                            <input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">
 
-                        <div class="input"> 
-                            <label for="code_identification">Code organisme <span class="asterix">*</span></label>
-                            <input type="password" name="code_identification" id="code_identification" value="" required title="Entrer votre code organisme" />
-                        </div>
-                        <!--
-                        <div class="input">
-                            <label for="date_inscription">Date <div class="asterix">*</div></label>
-                            <input type="text" title="Veuillez entrer la date" value="<?php //echo $formData['date_inscription']; ?>" name="date_inscription" id="date_inscription" required />
-                        </div>
-                        -->
-                        <fieldset id="main-form">
-                            <label for="ref_organ_cbox">Organisme <span class="asterix">*</span></label>
-                            <select name="ref_organ_cbox" id="ref_organ_cbox">
-                                <option value="select_cbox">---</option>
+                            <div class="input"> 
+                                <label for="code_identification">Code organisme <span class="asterix">*</span></label><br/>
+                                <input type="password" name="code_identification" id="code_identification" value="" required title="Entrer votre code organisme" />
+                            </div>
 
-                                <?php 
-                                if (!empty($response['organisme']) && is_array($response['organisme']))
-                                {
-                                    foreach($response['organisme'] as $organisme)
-                                    {  
-                                        $selected = "";
-                                        if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] != "select_cbox" && $formData['ref_organ_cbox'] == $organisme->getId())
-                                        {
-                                            $selected = "selected";
+                            <!--
+                            <div class="input">
+                                <label for="date_inscription">Date <div class="asterix">*</div></label><br/>
+                                <input type="text" title="Veuillez entrer la date" value="<?php //echo $formData['date_inscription']; ?>" name="date_inscription" id="date_inscription" required />
+                            </div>
+                            -->
+                        </div>
+
+                        <div id="second-part">
+
+                            <div class="input"> 
+                                <label for="ref_organ_cbox">Organisme <span class="asterix">*</span></label><br/>
+                                <select name="ref_organ_cbox" id="ref_organ_cbox">
+                                    <option value="select_cbox">---</option>
+
+                                    <?php 
+                                    if (!empty($response['organisme']) && is_array($response['organisme']))
+                                    {
+                                        foreach($response['organisme'] as $organisme)
+                                        {  
+                                            $selected = "";
+                                            if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] != "select_cbox" && $formData['ref_organ_cbox'] == $organisme->getId())
+                                            {
+                                                $selected = "selected";
+                                            }
+                                            echo '<option value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
                                         }
-                                        echo '<option value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
                                     }
-                                }
 
-                                $selected = "";
-                                if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] == "new")
-                                {
-                                    $selected = "selected";
-                                }
+                                    $selected = "";
+                                    if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] == "new")
+                                    {
+                                        $selected = "selected";
+                                    }
 
-                                echo '<option value="new" '.$selected.'>Autre</option>';
+                                    echo '<option value="new" '.$selected.'>Autre</option>';
 
-                                ?>
+                                    ?>
 
-                            </select>
-                        </fieldset>
-
-                        <fieldset id="second-form">
-
-                            <div class="input">
-                                <label for="nom_organ">Veuillez entrer votre organisme <span class="asterix">*</span></label>
-                                <input value="<?php echo $formData['nom_organ']; ?>" name="nom_organ" id="nom_organ" type="text"  />
+                                </select>
                             </div>
-
-                            <div class="input">
-                                <label for="code_postal_organ">Code postal <span class="asterix">*</span></label>
-                                <input type="tel" value="<?php echo $formData['code_postal_organ']; ?>" name="code_postal_organ" id="code_postal_organ"  pattern="[0-9]{5}" title="Ex:76000"   />
-                            </div>
-
-                            <div class="input">
-                                <label for="tel_organ">Téléphone <span class="asterix">*</span></label>
-                                <input type="tel" value="<?php echo $formData['tel_organ']; ?>" name="tel_organ" id="tel_organ" pattern="[0-9]{10}"  />
-                            </div>
-
-                        </fieldset>
-
-                        
-                        <div class="input">
-                            <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label>
-                            <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format Email requis(exemple@xxx.yy)" />
-                            <label class="texte-petit"></label>
                         </div>
-                        
-                        <?php
 
+                        <div id="third-part">
+
+                            <div class="input">
+                                <label for="nom_organ">Veuillez entrer votre organisme <span class="asterix">*</span></label><br/>
+                                <input value="<?php echo $formData['nom_organ']; ?>" name="nom_organ" id="nom_organ" type="text" />
+                            </div>
+
+                            <div class="input">
+                                <label for="code_postal_organ">Code postal <span class="asterix">*</span></label><br/>
+                                <input type="tel" value="<?php echo $formData['code_postal_organ']; ?>" name="code_postal_organ" id="code_postal_organ"  pattern="[0-9]{5}" title="Ex:76000" />
+                            </div>
+
+                            <div class="input">
+                                <label for="tel_organ">Téléphone <span class="asterix">*</span></label><br/>
+                                <input type="tel" value="<?php echo $formData['tel_organ']; ?>" name="tel_organ" id="tel_organ" pattern="[0-9]{10}" />
+                            </div>
+
+                        </div>
+
+                        <div id="fourth-part">
+
+                            <div class="input">
+                                <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
+                                <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format Email requis(exemple@xxx.yy)" />
+                                <!-- <label class="texte-petit"></label> -->
+                            </div>
+
+                        </div>
+
+                        <?php
                         if (isset($response['errors']) && !empty($response['errors']))
                         {
                             echo '<div id="zone-erreur">';
@@ -243,15 +252,17 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         // jQuery object
         $(function() {
             
-            $('#main-form #ref_organ_cbox').change(function() {
+            $('#third-part').hide();
 
-                if ( $( this ).val() === "new" ) {
+            $('#second-part #ref_organ_cbox').change(function() {
 
-                  $('#second-form').show();
+                if ($(this).val() == "new") {
+
+                  $('#third-part').show(500);
                 }
                 else {
 
-                  $('#second-form').hide();
+                  $('#third-part').hide(500);
                 }
             });
 

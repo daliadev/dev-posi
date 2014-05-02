@@ -49,13 +49,15 @@ if (isset($response['form_data']) && !empty($response['form_data']))
             require_once(ROOT.'views/templates/header_posi.php');
         ?>
 
+
         <!-- Formulaire -->
 
-        <form action="<?php echo $form_url; ?>" method="POST">
-            <div id="utilisateur">
-                <div id="zone-formu">
+        <div id="utilisateur">
+            <div id="zone-formu">
 
-                    <div id="ico-utili">Utilisateur</div>
+                <div id="titre-utili">Utilisateur</div>
+
+                <form action="<?php echo $form_url; ?>" method="POST">
                     <div class="formu">
 
                         <input type="hidden" value="<?php echo $formData['ref_user']; ?>" name="ref_user">
@@ -116,9 +118,10 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                         </div>
 
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+        </div>
+        
   
         
         <div style="clear:both;"></div>

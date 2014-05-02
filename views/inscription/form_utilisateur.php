@@ -146,12 +146,14 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         
         // jQuery object
         $(function() {
+
             $( "#date_naiss_user" ).datepicker({
                 dateFormat: "dd/mm/yy",
                 changeMonth: true, 
                 changeYear: true, 
-                yearRange: "1953:2014"
+                yearRange: "1950:2014"
             });
+
         });
 
     </script>

@@ -340,7 +340,7 @@ body{
 /*--------------------------- formulaire détail organisme  -----------------------------------------*/
 
 #third-part {
-	width: 270px;
+	width: 278px;
 	display: none;
 	margin-bottom: 20px; 
 	padding: 10px;
@@ -359,7 +359,7 @@ body{
 }
 
 #third-part input { 
-	width: 255px;
+	width: 263px;
 	border: #1fbba6 1px solid;
     border-radius: 5px 5px 5px 5px;
 }
@@ -369,7 +369,7 @@ body{
 
 /*------------------------------Utilisateur-----------------------*/
 
-#utilisateur{
+#utilisateur {
 	background-color: #FFF;
 	width: 360px;
 	float: right;
@@ -391,13 +391,14 @@ body{
 
 
 
+
 /*------------------------------Login Administrateur-----------------------*/
 
 #administrateur-login{
 	background-color:#FFF;
-	width:363px;
+	width:360px;
 	float:right;
-	margin-bottom:15px;
+	/*margin-bottom:15px;*/
 }
 
 #ico-utili{

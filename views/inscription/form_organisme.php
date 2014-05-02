@@ -252,17 +252,23 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         // jQuery object
         $(function() {
             
-            $('#third-part').hide();
+            if ($('#second-part #ref_organ_cbox').val() == "new")
+            {
+                $('#third-part').show(300);
+            }
+            else {
+                $('#third-part').hide();
+            }
 
             $('#second-part #ref_organ_cbox').change(function() {
 
                 if ($(this).val() == "new") {
 
-                  $('#third-part').show(500);
+                  $('#third-part').show(300);
                 }
                 else {
 
-                  $('#third-part').hide(500);
+                  $('#third-part').hide(300);
                 }
             });
 

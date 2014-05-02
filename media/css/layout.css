@@ -71,7 +71,7 @@ body{
 	background: url(../images/img-rouge-titre-posi.png) top left no-repeat #f75556;
 }
 
-.placeholder { color: #999999; }
+
 
 #txt-titre{
 	width: 160px;
@@ -94,37 +94,120 @@ body{
 
 
 
-/*-----------------------------------------------------------------------*/
+/*---------------------   Formulaires   --------------------------*/
+
+
+/*#zone-formu label {
+    //margin-top: 10px;
+}
+
+#zone-formu select{
+    padding: 5px;
+}
+
+#zone-formu textarea {
+    height: 90px;
+    padding: 5px;
+    margin-top: 5px;
+    width: 280px;
+    border: 1px solid #c3c9cf;
+    border-radius: 5px 5px 5px 5px;
+}
+
+#zone-formu input {
+    
+}
+
+#zone-formu input[type=text] {
+    height: 20px;
+    line-height: 20px;
+    padding: 5px;
+}
+
+#zone-formu input[type=radio] {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    line-height: 15px;
+    margin: 0;
+}
+
+#zone-formu ul {
+    list-style: none;
+}
+
+#zone-formu li{
+    margin-left: -30px;
+}
+
+#zone-formu input[type=submit] {
+    cursor: pointer;
+    background-color: #f39c12;
+    color: #fff;
+    width: 143px;
+    height: 30px;
+    line-height: 20px;
+    padding: 5px;
+    margin-top: 8px;
+    margin-bottom :8px;
+    border: 0px;
+    border-radius: 0px;
+    font-size: 14px;
+}
+
+#zone-formu input[type="submit"][disabled]{
+    background-color: #bdc3c7;
+    cursor: default;  	
+}
+
+#zone-formu input[type="text"][disabled]{
+    background-color: #f0f0f0;
+    color: #797d80;
+    cursor: default;
+}
+
+#zone-formu textarea[disabled]{
+    color: #797d80;
+}
+*/
+
 
 #zone-formu {
-	padding: 30px;	
+	padding: 30px;
 }
 
 #zone-formu form {
 	/*display:inline-block;*/
 	/*vertical-align:top;*/
 	width: 300px;
+	margin-top: 20px;
 	/*margin:0;*/
+	font-family: Amaranth, Tahoma, sans-serif;
 }
 
 #zone-formu label {
+	
+	/*display:block;*/
+	/*margin-left: 5px;*/
+	margin-top: 10px;
+	/*font-family: Amaranth, Tahoma, sans-serif;*/
 	color:#6a6a6a;
-	display:block;
-	font-family:Amaranth,Tahoma,sans-serif;
 	font-size:12px;
-	margin-left:5px;
 	font-weight:260;
 }
 
 #zone-formu input {
-	width: 300px;
-	height: 30px;
-	padding: 0 10px;
+	/*height: 20px;*/
+	width: 280px;
+	height: 20px;
+	margin-top: 5px;
+	padding: 5px;
+	/*padding: 0 10px;*/
+	border: 1px solid #c3c9cf;
+    border-radius: 5px 5px 5px 5px;
 	background:none repeat scroll 0 0 #ffffff;
-	border:1px solid #C3C9CF;
-	border-radius:5px 5px 5px 5px;
-	font-size:12px;
-	line-height:20px;
+	font-size: 12px;
+	line-height: 20px;
 }
 	
 	#zone-formu input:required{
@@ -197,6 +280,9 @@ body{
 	background-color: #f3a842;
 }
 
+
+.placeholder { color: #999999; }
+
 .asterix { 
 	color:#F00;
 	/*display:inline;*/
@@ -225,8 +311,8 @@ body{
 	margin-bottom:10px;
 }
 
-#zone-formu input[type=text], input[type=email], input[type=tel], [type=password]   {
-	height:30px;
+#zone-formu input[type=text], input[type=email], input[type=tel], input[type=password]   {
+	height: 30px;
 	cursor:pointer;
 	margin-bottom:1px;
 }
@@ -800,7 +886,7 @@ select {
 
 
 /*--------------------------------------Page admin degré - categorie -------------------------------------------------*/
-
+/*
 #zone-formu label {
     margin-top: 10px;
 }
@@ -886,7 +972,7 @@ select {
 #buttons input[name='save'] { background: #3498db;}
 #buttons input[name='edit'] { background: #1fbba6;}
 #buttons input[name='del'] { background: #f75556;}  
-     
+*/ 
         
         
 

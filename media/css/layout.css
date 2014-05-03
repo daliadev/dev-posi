@@ -27,7 +27,7 @@ body{
 }
 
 
-/* Conteneur principale
+/* Conteneur principale */
 
 #content{
 	width: 640px;
@@ -82,14 +82,14 @@ body{
 
 
 
-#titre-form {
+.titre-form {
 	width : 260px;
 	height : 30px;
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
 	border-bottom: 1px solid #ebebeb;
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 	color: #8d8d8d;
 	text-transform: uppercase;
 	font-size: 16px;
@@ -257,15 +257,32 @@ body{
 }
 
 #zone-formu input[type="radio"] {
-	height: 30px;
-	width: 30px;
-	margin: 0;
-	padding: 0 10px;
+	height: 20px;
+	width: 20px;
+	/*margin: 0;*/
+	/*padding: 0 10px;*/
 	background-color: #f3a842;
 	border:1px solid #C3C9CF;
-	line-height: 15px;
+	line-height: 20px;
 }
 
+#zone-formu input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	margin: 10px 0;
+	padding: 5px;
+	background-color: #f3a842;
+	border: 1px solid #c3c9cf;
+	line-height: 20px;
+}
+
+#zone-formu p.descript {
+	width: 270px;
+	margin: 5px 0;
+	padding: 5px;
+	padding-left: 30px;
+
+}
 
 #zone-formu input[type=text] {
     /*height: 20px;*/
@@ -313,6 +330,18 @@ body{
 	}
 
 
+#zone-formu textarea {
+	width: 288px;
+    height: 90px;
+    margin: 5px 0;
+    padding: 5px;
+    border: 1px solid #c3c9cf;
+    border-radius: 5px 5px 5px 5px;
+    font-size: 12px;
+}
+
+
+
 #zone-formu ul {
     list-style: none;
 }
@@ -345,15 +374,13 @@ body{
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
-	*/
-	background: url(../images/ico-organ.jpg) 0 0 no-repeat;
-	/*
 	color: #8d8d8d;
 	text-transform: uppercase;
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 30px;
 	*/
+	background: url(../images/ico-organ.jpg) 0 0 no-repeat;
 }
 
 
@@ -396,21 +423,20 @@ body{
 	float: right;
 }
 
-#titre-utili{
+#titre-utili {
 	/*
 	width : 260px;
 	height : 30px;
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
-	*/
-	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
-	/*
 	color: #8d8d8d;
 	text-transform: uppercase;
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 30px;
+	*/
+	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
 }
 
 
@@ -425,7 +451,7 @@ body{
 	/*margin-bottom:15px;*/
 }
 
-#ico-utili{
+#titre-admin{
 	background-image: url(../images/ico-utili.jpg) 0 0 no-repeat;
 	/*
 	background-repeat:no-repeat;
@@ -960,15 +986,14 @@ select {
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
-	*/
-	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
-	/*
 	color: #8d8d8d;
 	text-transform: uppercase;
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 30px;
 	*/
+
+	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
 }
 
 /*
@@ -1071,13 +1096,14 @@ select {
 
 #zone-formu input[name='selection'] { background: #f39c12; margin-left: 25%;}
 
+
+
+*/
 #buttons input[name='add'] { background: #f39c12;}
 #buttons input[name='save'] { background: #3498db;}
 #buttons input[name='edit'] { background: #1fbba6;}
 #buttons input[name='del'] { background: #f75556;}
-
-*/
-        
+    
         
 
 /*--------------------------------------------------------POSI APPLI-----------------------------------------------------------------*/

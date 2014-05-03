@@ -54,8 +54,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
         <div id="utilisateur">
             <div id="zone-formu">
-
-                <div id="titre-form">Utilisateur</div>
+                
+                <div class="titre-form" id="titre-utili">Utilisateur</div>
 
                 <form action="<?php echo $form_url; ?>" method="POST">
                     <div class="formu">

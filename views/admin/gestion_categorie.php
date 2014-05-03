@@ -57,12 +57,10 @@ var_dump($formData);
         <!--**************************** Formulaire admin gestion catégories *************************************-->
 
         
-
-        
         <div id="organisme">
             <div id="zone-formu">
 
-                <div id="titre-form">Gestion des catégories</div>
+                <div class="titre-form" id="titre-cat">Gestion des catégories</div>
 
                 <form id="form-categorie" action="<?php echo $form_url; ?>" method="POST" name="form_admin_categorie">
 
@@ -71,7 +69,7 @@ var_dump($formData);
                         <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
                         <input type="hidden" name="code" value="<?php echo $formData['code_cat']; ?>" />
 
-                        <div>
+                        <!-- <div> -->
                             <fieldset>
                                 <label for="code_cat_cbox">Liste des catégories :</label>
                                 <select name="code_cat_cbox" id="ref_organ_cbox">
@@ -104,11 +102,14 @@ var_dump($formData);
 
                                 </select> &nbsp;
 
-                                <input type="submit" name="selection" value="Sélectionner" >
+                                <!-- <input type="submit" name="selection" value="Sélectionner" > -->
+                                <div id="submit">
+                                    <input type="submit" value="Envoyer" name="valid_form_cat" />
+                                </div>
                                 <hr>
                             </fieldset>
 
-                        </div>
+                        <!-- </div> -->
 
                         <?php
 
@@ -143,11 +144,11 @@ var_dump($formData);
 
                         ?>
 
-                        <div>
+                        <!-- <div> -->
                             <fieldset>
                                 
                                 <div class="input">
-                                    <label for="code_cat">Code * <a target="blank" class="lien-no-underline" rel="lightbox" href="<?php echo SERVER_URL; ?>media/images/code.jpg">"explication utilisation code"</a></label>
+                                    <label for="code_cat">Code * <a target="blank" class="lien-no-underline" rel="lightbox" href="<?php echo SERVER_URL; ?>media/images/code.jpg"><small>Mode d'emploi</small></a></label>
                                     <input type="text" name="code_cat" id="code_cat" value="<?php echo $formData['code_cat']; ?>" <?php echo $formData['disabled']; ?> />
                                 </div>
                                 
@@ -162,10 +163,8 @@ var_dump($formData);
                                 </div>
                                 
                                 <div class="input">
-                                    <label for="type_lien_cat">Type de categorie *</label>
-                                    <!-- </div>
-                                    <div class="input"> -->
-                                    
+                                    <label for="type_lien_cat">Type de categorie *</label><br/>
+
                                     <!--
                                     <ul>
                                     -->
@@ -186,8 +185,9 @@ var_dump($formData);
                                             $checked = "checked";
                                         }
                                         ?>
-                                            <input type="checkbox" name="type_lien_cat" id="type_lien_cat" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
-                                            <p>Si la case est cochée, cette categorie héritera des scores de ses sous-catégories et ne pourra pas posséder de score propre.</p>
+
+                                        <input type="checkbox" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
+                                        <p class="descript">Si la case est cochée, cette categorie héritera des scores de ses sous-catégories et ne pourra pas posséder de score propre.</p>
                                             
                                         <?php
                                         //endforeach;
@@ -198,19 +198,16 @@ var_dump($formData);
                                 </div>
                                 
                             </fieldset>
-                        </div>
-                        
+                        <!-- </div> -->
+                        <hr>
                         <!-- Boutons de gestion des catégories -->
 
                         <div id="buttons">
-                            <fieldset>
-                                <hr>
                                 <input type="hidden" name="delete" value="false" />
                                 <input type="submit" name="add"  value="Ajouter" <?php echo $formData['add_disabled']; ?> />
                                 <input type="submit" name="edit"  value="Modifier" <?php echo $formData['edit_disabled']; ?> />
                                 <input type="submit" name="save"  value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
                                 <input type="submit" name="del" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
-                            </fieldset>
                         </div>
 
                     </div>

@@ -31,30 +31,64 @@ class ServicesAdminCategorie extends Main
     {
         $resultset = $this->categorieDAO->selectAll();
         
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        if (!$this->filterDataErrors($resultset['response']))
+        {
 
-        if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-        { 
-            $categorie = $resultset['response']['categorie'];
-            $resultset['response']['categorie'] = array($categorie);
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
+            return $resultset;
         }
-
-        return $resultset;
+        
+        return false;
     }
     
     
+
     public function getCategorie($codeCat)
     {
         $resultset = $this->categorieDAO->selectByCode($codeCat);
         
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        return $resultset;
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            return $resultset;
+        }
+
+        return false;
     }
 
+
+
+    public function getCategorieDetails($codeCat)
+    {
+        $catDetails = array();
+        
+        $catDetails['code_cat'] = "";
+        $catDetails['nom_cat'] = "";
+        $catDetails['descript_cat'] = "";
+        $catDetails['image_question'] = "";
+        $catDetails['audio_question'] = "";
+        $catDetails['ref_degre'] = "";
+        
+        $resultset = $this->categorieDAO->selectByCode($codeCat);
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            $catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
+            $catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
+            $catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
+        }
+
+        return $catDetails;
+    }
+
+
     
+
     public function setCategorie($modeCategorie, $dataCategorie)
     {
         if (!empty($dataCategorie) && is_array($dataCategorie))

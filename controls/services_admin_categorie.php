@@ -84,7 +84,97 @@ class ServicesAdminCategorie extends Main
     }
 
 
-    
+
+    public function filterCategorieData(&$formData, $postData)
+    {
+        $dataCategorie = array();
+        
+
+        // Récupèration du code catégorie original s'il y en a un
+        if (isset($postData['code']) && !empty($postData['code']))
+        {
+            $formData['code'] = $postData['code'];
+            $dataCategorie['code'] = $formData['code'];
+        }
+        
+        // Formatage du code catégorie
+        $formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+        $dataCategorie['code_cat'] = $formData['code_cat'];
+        
+        // Formatage du nom de la catégorie
+        $formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
+        $dataCategorie['nom_cat'] = $formData['nom_cat'];
+        
+        // Formatage de l'intitule de la catégorie 
+        $formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
+        $dataCategorie['descript_cat'] = $formData['descript_cat'];
+        
+
+        // Formatage du type de lien de la catégorie
+        if (isset($_POST['type_lien_cat']))
+        {
+            $formData['type_lien_cat'] = "dynamic";
+            $dataCategorie['type_lien_cat'] = "dynamic";
+        }
+        else 
+        {
+            $formData['type_lien_cat'] = "static";
+            $dataCategorie['type_lien_cat'] = "static";
+        }
+
+        return $dataCategorie;
+    }
+
+
+
+
+    public function setQuestionProperties($previousMode, $dataCategorie, &$formData)
+    {
+
+        if ($previousMode == "new")
+        {
+            // Insertion de la catégorie dans la bdd
+            $resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
+
+            if (isset($resultsetCategorie['response']['categorie']['last_insert_id']) && !empty($resultsetCategorie['response']['categorie']['last_insert_id']))
+            {
+                $formData['code_cat'] = $resultsetCategorie['response']['categorie']['last_insert_id'];
+                $dataCategorie['code_cat'] = $formData['code_cat'];
+                $this->registerSuccess("La catégorie a été enregistrée.");
+            }
+            else 
+            {
+                $this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
+            }
+        }
+        else if ($previousMode == "edit"  || $previousMode == "save")
+        {
+            if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
+            {
+                $formData['code_cat'] = $dataCategorie['code_cat'];
+
+                // Mise à jour de la catégorie
+                $resultsetCategorie = $this->setCategorie("update", $dataCategorie);
+
+                if ($resultsetQuestion)
+                {
+                    $this->registerSuccess("La catégorie a été mise à jour.");
+                }
+                else
+                {
+                    $this->registerError("form_valid", "La mise à jour de la catégorie a échoué.");
+                }
+            }
+        }
+        else
+        {
+            header("Location: ".SERVER_URL."erreur/page404");
+            exit();
+        }
+    }
+
+
+
     public function setCategorie($modeCategorie, $dataCategorie)
     {
         if (!empty($dataCategorie) && is_array($dataCategorie))
@@ -148,7 +238,6 @@ class ServicesAdminCategorie extends Main
         
         if (!$this->filterDataErrors($resultsetSelect['response']))
         { 
-            //$question = $resultsetSelect['response']['categorie'];
             $resultsetDelete = $this->categorieDAO->delete($codeCat);
         
             if (!$this->filterDataErrors($resultsetDelete['response']))
@@ -168,10 +257,9 @@ class ServicesAdminCategorie extends Main
         return false;
     }
     
-    
-    
-    
-    
+
+
+
     
     public function getQuestionCategorie($refQuestion)
     {
@@ -182,6 +270,7 @@ class ServicesAdminCategorie extends Main
         
         return $resultset;
     }
+    
     
     
     public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
@@ -257,7 +346,7 @@ class ServicesAdminCategorie extends Main
 
         return false;
     }
-
+    
 }
 
 

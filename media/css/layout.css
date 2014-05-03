@@ -26,6 +26,9 @@ body{
         
 }
 
+
+/* Conteneur principale
+
 #content{
 	width: 640px;
     margin: 20px auto;
@@ -41,6 +44,8 @@ body{
     width: 360px;
     margin: 20px auto;
 }
+
+
 
 
 #titre-page{
@@ -77,8 +82,19 @@ body{
 
 
 
-#titre-organ, #titre-utili{
+#titre-form {
+	width : 260px;
+	height : 30px;
+	padding-left: 40px;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
 	border-bottom: 1px solid #ebebeb;
+	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	color: #8d8d8d;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 30px;
 }
 
 
@@ -172,6 +188,7 @@ body{
 
 #zone-formu {
 	padding: 30px;
+	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
 }
 
 #zone-formu form {
@@ -180,7 +197,7 @@ body{
 	width: 300px;
 	margin-top: 20px;
 	/*margin:0;*/
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	
 }
 
 #zone-formu label {
@@ -322,17 +339,21 @@ body{
 }
 
 #titre-organ {
+	/*
 	width : 260px;
 	height : 30px;
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
+	*/
 	background: url(../images/ico-organ.jpg) 0 0 no-repeat;
+	/*
 	color: #8d8d8d;
 	text-transform: uppercase;
 	font-size: 16px;
 	font-weight: bold;
 	line-height: 30px;
+	*/
 }
 
 
@@ -376,12 +397,15 @@ body{
 }
 
 #titre-utili{
+	/*
 	width : 260px;
 	height : 30px;
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
+	*/
 	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
+	/*
 	color: #8d8d8d;
 	text-transform: uppercase;
 	font-size: 16px;
@@ -402,7 +426,8 @@ body{
 }
 
 #ico-utili{
-	background-image:url(../images/ico-utili.jpg);
+	background-image: url(../images/ico-utili.jpg) 0 0 no-repeat;
+	/*
 	background-repeat:no-repeat;
 	padding-left:40px;
 	padding-top:5px;
@@ -412,6 +437,7 @@ body{
 	font-size:16px;
 	font-weight:bold;
 	margin-bottom:10px;
+	*/
 }
 
 
@@ -926,16 +952,39 @@ select {
 
 
 /*--------------------------------------Page admin degré - categorie -------------------------------------------------*/
+
+#titre-cat {
+	/*
+	width : 260px;
+	height : 30px;
+	padding-left: 40px;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+	*/
+	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
+	/*
+	color: #8d8d8d;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 30px;
+	*/
+}
+
 /*
-#zone-formu label {
+#zone-formu label 
+{
     margin-top: 10px;
 }
 
-#zone-formu select{
+#zone-formu select
+{
     padding: 5px;
 }
 
-#zone-formu textarea {
+
+#zone-formu textarea 
+{
     height: 90px;
     padding: 5px;
     margin-top: 5px;
@@ -944,7 +993,9 @@ select {
     border-radius: 5px 5px 5px 5px;
 }
 
-#zone-formu input {
+
+#zone-formu input 
+{
     height: 20px;
     line-height: 20px;
     padding: 5px;
@@ -954,13 +1005,17 @@ select {
     border-radius: 5px 5px 5px 5px;
 }
 
-#zone-formu input[type=text] {
+
+#zone-formu input[type=text]
+{
     height: 20px;
     line-height: 20px;
     padding: 5px;
 }
 
-#zone-formu input[type=radio] {
+
+#zone-formu input[type=radio]
+{
     width: 30px;
     height: 30px;
     padding: 0;
@@ -968,15 +1023,20 @@ select {
     margin: 0;
 }
 
-#zone-formu ul {
+
+#zone-formu ul
+{
     list-style: none;
 }
+    
+    #zone-formu li
+    {
+        margin-left: -30px;
+    }
 
-#zone-formu li{
-    margin-left: -30px;
-}
-
-#zone-formu input[type=submit] {
+    
+#zone-formu input[type=submit] 
+{
     cursor: pointer;
     background-color: #f39c12;
     color: #fff;
@@ -991,18 +1051,21 @@ select {
     font-size: 14px;
 }
 
-#zone-formu input[type="submit"][disabled]{
+#zone-formu input[type="submit"][disabled]
+{
     background-color: #bdc3c7;
     cursor: default;  	
 }
 
-#zone-formu input[type="text"][disabled]{
+#zone-formu input[type="text"][disabled]
+{
     background-color: #f0f0f0;
     color: #797d80;
     cursor: default;
 }
 
-#zone-formu textarea[disabled]{
+#zone-formu textarea[disabled]
+{
     color: #797d80;
 }
 
@@ -1011,8 +1074,9 @@ select {
 #buttons input[name='add'] { background: #f39c12;}
 #buttons input[name='save'] { background: #3498db;}
 #buttons input[name='edit'] { background: #1fbba6;}
-#buttons input[name='del'] { background: #f75556;}  
-*/ 
+#buttons input[name='del'] { background: #f75556;}
+
+*/
         
         
 

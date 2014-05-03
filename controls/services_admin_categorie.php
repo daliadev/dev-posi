@@ -61,47 +61,26 @@ class ServicesAdminCategorie extends Main
 
     public function getCategorieDetails($codeCat)
     {
-        $questionDetails = array();
+        $catDetails = array();
         
-        $questionDetails['num_ordre_question'] = "";
-        $questionDetails['intitule_question'] = "";
-        $questionDetails['type_question'] = "";
-        $questionDetails['image_question'] = "";
-        $questionDetails['audio_question'] = "";
-        $questionDetails['ref_degre'] = "";
+        $catDetails['code_cat'] = "";
+        $catDetails['nom_cat'] = "";
+        $catDetails['descript_cat'] = "";
+        $catDetails['type_lien_cat'] = "";
+
         
         $resultset = $this->categorieDAO->selectByCode($codeCat);
         
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
-            $questionDetails['num_ordre_question'] = $resultset['response']['question']->getNumeroOrdre();
-            $questionDetails['intitule_question'] = $resultset['response']['question']->getIntitule();
-            $questionDetails['type_question'] = $resultset['response']['question']->getType();
-            $questionDetails['image_question'] = $resultset['response']['question']->getImage();
-            $questionDetails['audio_question'] = $resultset['response']['question']->getSon();
-            $questionDetails['ref_degre'] = $resultset['response']['question']->getRefDegre();
-
-            $categories = $this->getQuestionCategories($codeCat);
-            $questionDetails['categories'] = $categories;
-            $questionDetails['code_cat'] = $categories[0]['code_cat'];
-            
-            if ($questionDetails['type_question'] == "qcm")
-            {
-                // On récupére le tableau des réponses correspondant à la question
-                $reponses = $this->getReponses($codeCat);
-                if ($reponses)
-                {
-                    $questionDetails['reponses'] = $reponses;
-                }
-                else 
-                {
-                    $this->registerError("form_empty", "Il n'y a pas de réponses pour cette question.");
-                }
-            }
+            $catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
+            $catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
+            $catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
+            $catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
         }
 
-        return $questionDetails;
+        return $catDetails;
     }
 
 

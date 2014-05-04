@@ -16,7 +16,7 @@
         
         <div id="administrateur-login">
             <div id="zone-formu">
-                <div id="ico-utili"> administration</div>
+                <div class="titre-form" id="titre-menu">Administration</div>
 
                 <div id="menu-admin">
                    
@@ -27,12 +27,11 @@
 					<hr>
 					<?php
 					foreach(Config::$menu_gestion as $menuElement)
-					
 					{
 						if ($menuElement['type_lien_menu'] == "dynamic") {
 					?>		
-							 <a href="<?php echo SERVER_URL.'admin/'.$menuElement['url_menu'];  ?>">
-							 <div id="bt-menu-visible"><?php echo $menuElement['label_menu']; ?></div>
+							<a href="<?php echo SERVER_URL.'admin/'.$menuElement['url_menu'];  ?>">
+							<div id="bt-menu-visible"><?php echo $menuElement['label_menu']; ?></div>
 							</a>
 					<?php 
 							}

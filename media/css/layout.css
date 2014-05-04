@@ -221,6 +221,7 @@ body{
 	margin: 5px 0;
 	padding: 5px;
 	/*padding: 0 10px;*/
+	/*background-color: ##EAEDF1;*/
 	border: 1px solid #c3c9cf;
     border-radius: 5px 5px 5px 5px;
 	font-size: 12px;
@@ -282,7 +283,7 @@ body{
 	height: 20px;
 	margin: 10px 0;
 	padding: 5px;
-	background-color: #f3a842;
+	background-color: #f3a842; 
 	border: 1px solid #c3c9cf;
 	line-height: 20px;
 }
@@ -327,7 +328,7 @@ body{
 		cursor: pointer;
 		width: 200px;
 		height: 40px;
-		margin: 30px 50px 20px 50px;
+		margin: 22px 50px 20px 50px;
 		background-color: #f7a22f;
 		border: 0;
 		color: #FFF;
@@ -343,12 +344,12 @@ body{
 	#zone-formu input[type=submit] 
 	{
 		/*float: left;*/
-		display: inline;
+		/*display: inline;*/
 		cursor: pointer;
-		width: 120px;
+		width: 140px;
 		height: 30px;
 		padding: 5px;
-	    margin: 10px;
+	    margin: 10px 0;
 		background-color: #f7a22f;
 		border: 0;
 	    border-radius: 5px 5px 5px 5px; 
@@ -372,7 +373,7 @@ body{
 	width: 300px;
 	height: 32px;
 	margin: 5px 0;
-	padding: 5px;;
+	padding: 5px;
 	border: 1px solid #C3C9CF;
 	border-radius: 5px 5px 5px 5px;
 	font-size: 12px;
@@ -511,14 +512,14 @@ body{
 /*------------------------------Login Administrateur-----------------------*/
 
 #administrateur-login{
-	background-color:#FFF;
-	width:360px;
-	float:right;
-	/*margin-bottom:15px;*/
+	background-color: #FFF;
+	width: 360px;
+	float: right;
 }
 
 #titre-admin{
-	background-image: url(../images/ico-utili.jpg) 0 0 no-repeat;
+
+	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
 	/*
 	background-repeat:no-repeat;
 	padding-left:40px;
@@ -844,6 +845,21 @@ input[type=select][disabled]{
 
 /*-------------------------------------- Page admin menu -------------------------------------------------*/
 
+#titre-menu{
+
+	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
+	/*
+	background-repeat:no-repeat;
+	padding-left:40px;
+	padding-top:5px;
+	height:34px;
+	color:#8d8d8d;
+	text-transform:uppercase;
+	font-size:16px;
+	font-weight:bold;
+	margin-bottom:10px;
+	*/
+}
 
 #menu-admin .button
 {
@@ -865,14 +881,14 @@ input[type=select][disabled]{
     -webkit-box-shadow: 3px 3px 2px 0px rgba(119, 119, 119, 0.2);
 }
 
-
+/*
 #menu-admin #bt-menu_1 { background: #f39c12; }
 #menu-admin #bt-menu_2 { background: #f39c12; }
 #menu-admin #bt-menu_3 { background: #f39c12; }
 #menu-admin #bt-menu_4 { background: #dbdbdb; color:#9C9A9A; }
 #menu-admin #bt-menu_5 { background: #f39c12; }
 #menu-admin #bt-menu_6 { background: #dbdbdb; color:#9C9A9A;}
-
+*/
 
 #menu-admin a {
     color: #FFF;
@@ -1063,10 +1079,10 @@ select {
 }
 
 
-#buttons input[name='add'] { background: #f39c12;}
-#buttons input[name='save'] { background: #3498db;}
-#buttons input[name='edit'] { background: #1fbba6;}
-#buttons input[name='del'] { background: #f75556;}
+#buttons input[name='add'] { background: #f39c12; }
+#buttons input[name='save'] { background: #3498db; }
+#buttons input[name='edit'] { background: #1fbba6; }
+#buttons input[name='del'] { background: #f75556; }
     
         
 

@@ -35,13 +35,6 @@ var_dump($formData);
 
 ?>
     
-    <style>
-        
-        
-    </style>
-    
-    
-    
     <div id="content">
         
         <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
@@ -75,16 +68,24 @@ var_dump($formData);
                                 <select name="code_cat_cbox" id="ref_organ_cbox">
                                     <option value="select_cbox">---</option>
 
-                                    <?php 
+                                    <?php
+                                    $optgroup = false;
+
                                     foreach($response['categorie'] as $categorie)
                                     {
                                         $selected = "";
+
                                         if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
                                         {
                                             $selected = "selected";
                                         }
 
-                                        if (strlen($categorie->getCode()) == 4)
+                                        if (strlen($categorie->getCode()) == 2)
+                                        {
+
+                                            echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+                                        }
+                                        else if (strlen($categorie->getCode()) == 4)
                                         {
                                             echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; - '.$categorie->getNom().'</option>';
                                         }
@@ -92,10 +93,8 @@ var_dump($formData);
                                         {
                                             echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; &nbsp; &nbsp; - '.$categorie->getNom().'</option>';
                                         }
-                                        else 
-                                        {
-                                            echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-                                        }
+
+                                        
                                     }
 
                                     ?>
@@ -204,10 +203,11 @@ var_dump($formData);
 
                         <div id="buttons">
                                 <input type="hidden" name="delete" value="false" />
-                                <input type="submit" class="add" name="add"  value="Ajouter" <?php echo $formData['add_disabled']; ?> />
-                                <input type="submit" class="edit" name="edit"  value="Modifier" <?php echo $formData['edit_disabled']; ?> />
-                                <input type="submit" class="save" name="save"  value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
-                                <input type="submit" class="del" name="del" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
+                                <input type="submit" class="add" name="add" style="float: left;" value="Ajouter" <?php echo $formData['add_disabled']; ?> />
+                                <input type="submit" class="edit" name="edit" style="float: right;" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
+                                <input type="submit" class="save" name="save" style="float: left;" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
+                                <input type="submit" class="del" name="del" style="float: right;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
+                                <div style="clear:both;"></div>
                         </div>
 
                     </div>

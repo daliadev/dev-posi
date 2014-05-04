@@ -30,15 +30,18 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         ?>
         
         
-<!----------------------------------- Formulaire login admin --------------------------------------->
+<!--*************************** Formulaire login admin **************************************-->
 
 
         <form action="<?php echo $form_url; ?>" method="POST" name="form_login_admin">
          
-            <div id="administrateur-login">
-                <div id="zone-formu">
+        <div id="administrateur-login">
+            <div id="zone-formu">
 
-                    <div id="ico-utili">Connexion administrateur</div>
+                <div class="titre-form" id="titre-admin">Connexion administrateur</div>
+
+                <form action="<?php echo $form_url; ?>" method="POST" name="form_login_admin">
+
                     <div class="formu">
                         
                         <div class="input">
@@ -73,11 +76,14 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                             <input type="submit" value="Envoyer" onclick="verifAdmin();" />
                         </div>
 
-                    </div> 
-                </div>
-            </div>
+                    </div>
 
-        </form>
+                </form>
+
+            </div>
+        </div>
+
+        
     
 
         <div style="clear:both;"></div>

@@ -64,58 +64,70 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                         <input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">
                         <input type="hidden" value="<?php echo $formData['date_inscription']; ?>" name="date_inscription">
 
-                        <div class="input">
-                            <label for="nom_user">Nom <span class="asterix">*</span></label>
-                            <input type="text" name="nom_user" id="nom_user" value="<?php echo $formData['nom_user']; ?>" required />
-                        </div>
+                        <fieldset>
+                            <legend>Informations utilisateur</legend>
 
-                        <div class="input">
-                            <label for="prenom_user">Prénom <span class="asterix">*</span></label>
-                            <input type="text" name="prenom_user" id="prenom_user" value="<?php echo $formData['prenom_user']; ?>" required />
-                        </div>
+                            <div class="input">
+                                <label for="nom_user">Nom <span class="asterix">*</span></label>
+                                <input type="text" name="nom_user" id="nom_user" value="<?php echo $formData['nom_user']; ?>" required />
+                            </div>
 
-                        <div class="input">
-                            <label for="date_naiss_user">Date de naissance <span class="asterix">*</span></label>
-                            <input type="text" name="date_naiss_user" id="date_naiss_user" title="Veuillez entrer votre date de naissance" value="<?php echo $formData['date_naiss_user']; ?>" required />
-                        </div>
+                            <div class="input">
+                                <label for="prenom_user">Prénom <span class="asterix">*</span></label>
+                                <input type="text" name="prenom_user" id="prenom_user" value="<?php echo $formData['prenom_user']; ?>" required />
+                            </div>
 
-                        <label for="niveau_etude">Niveau de formation <span class="asterix">*</span></label>
-                        <select name="ref_niveau_cbox" id="ref_niveau_cbox">
-                            <option value="select_cbox">---</option>
+                            <div class="input">
+                                <label for="date_naiss_user">Date de naissance <span class="asterix">*</span></label>
+                                <input type="text" name="date_naiss_user" id="date_naiss_user" title="Veuillez entrer votre date de naissance" value="<?php echo $formData['date_naiss_user']; ?>" required />
+                            </div>
+
+                            <div class="input">
+                                <label for="niveau_etude">Niveau de formation <span class="asterix">*</span></label>
+                                <select name="ref_niveau_cbox" id="ref_niveau_cbox">
+                                    <option value="select_cbox">---</option>
+                                    <?php
+                                    foreach($response['niveau_etudes'] as $niveau)
+                                    {
+                                        $selected = "";
+                                        if (!empty($formData['ref_niveau_cbox']) && $formData['ref_niveau_cbox'] != "select_cbox" && $formData['ref_niveau_cbox'] == $niveau->getId())
+                                        {
+                                            $selected = "selected";
+                                        }
+                                        echo '<option value="'.$niveau->getId().'" title="'.  htmlentities($niveau->getDescription()).'" '.$selected.'>'.$niveau->getNom().'</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Validation</legend>
+
                             <?php
-                            foreach($response['niveau_etudes'] as $niveau)
+
+                            if (isset($response['errors']) && !empty($response['errors']))
                             {
-                                $selected = "";
-                                if (!empty($formData['ref_niveau_cbox']) && $formData['ref_niveau_cbox'] != "select_cbox" && $formData['ref_niveau_cbox'] == $niveau->getId())
+                                echo '<div id="zone-erreur">';
+                                echo '<ul>';
+                                foreach($response['errors'] as $error)
                                 {
-                                    $selected = "selected";
+                                    if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                                    {
+                                        echo '<li>'.$error['message'].'</li>';
+                                    }
                                 }
-                                echo '<option value="'.$niveau->getId().'" title="'.  htmlentities($niveau->getDescription()).'" '.$selected.'>'.$niveau->getNom().'</option>';
+                                echo '</ul>';
+                                echo '</div>';
                             }
                             ?>
-                        </select>
 
-                        <?php
-
-                        if (isset($response['errors']) && !empty($response['errors']))
-                        {
-                            echo '<div id="zone-erreur">';
-                            echo '<ul>';
-                            foreach($response['errors'] as $error)
-                            {
-                                if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-                                {
-                                    echo '<li>'.$error['message'].'</li>';
-                                }
-                            }
-                            echo '</ul>';
-                            echo '</div>';
-                        }
-                        ?>
-
-                        <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();" />
-                        </div>
+                            <div id="submit">
+                                <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();" />
+                            </div>
+                            
+                        </fieldset>
 
                     </div>
                 </form>

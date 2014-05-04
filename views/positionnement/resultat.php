@@ -39,7 +39,9 @@
 
         <div id="administrateur-login">
             <div id="zone-formu">
-                <div id="ico-utili">Résultats</div>
+
+                <div class="titre-form" id="titre-utili">Résultats</div>
+
                 <div id="txt-intro">Voici vos résultats au test de positionnement. 
                     <p> </p>
 
@@ -70,19 +72,6 @@
                                 if ($correction['total'] > 0)
                                 {
                                     $color = getColor($correction['percent']);
-
-                                    /*
-                                    $color = "rouge";
-
-                                    if ($percent > 50 && $percent < 80)
-                                    {
-                                        $color = "orange2";
-                                    }
-                                    else if ($percent >= 80)
-                                    {
-                                        $color = "vert";
-                                    }
-                                    */
 
                                     $title = "";
                                     

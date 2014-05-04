@@ -15,7 +15,7 @@
         <div id="utilisateur">
             <div id="zone-formu">
 
-                <div id="titre-utili">Introduction</div>
+                <div class="titre-form" id="titre-utili">Introduction</div>
 
                 <form action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
 

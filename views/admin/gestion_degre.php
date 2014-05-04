@@ -50,41 +50,47 @@ $form_url = WEBROOT."admin/degre/";
     
         <!--******************** Formulaire admin gestion degrés **********************************-->
 
-        <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
-            <div id="organisme">
-                <div id="zone-formu">
+        
+        <div id="organisme">
+            <div id="zone-formu">
+
                     <div id="ico-utili">Gestion des degrés d'aptitude</div>
+
+                    <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
 
                     <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
 
-                    <div>
-                        <fieldset>
-                            <label for="ref_degre_cbox">Liste des degrés :</label>
-                            <select name="ref_degre_cbox" id="ref_degre_cbox">
-                                <option value="select_cbox">---</option>
+                    <div class="input">
+                        <label for="ref_degre_cbox">Liste des degrés :</label>
+                        <select name="ref_degre_cbox" id="ref_degre_cbox">
+                            <option value="select_cbox">---</option>
 
-                                <?php 
-                                foreach($response['degre'] as $degre)
+                            <?php 
+                            foreach($response['degre'] as $degre)
+                            {
+                                $selected = "";
+                                if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
                                 {
-                                    $selected = "";
-                                    if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
-                                    {
-                                        $selected = "selected";
-                                    }
-
-                                    echo '<option value="'.$degre->getId().'" '.$selected.'>'.$degre->getNom().'</option>';
+                                    $selected = "selected";
                                 }
 
-                                ?>
+                                echo '<option value="'.$degre->getId().'" '.$selected.'>'.$degre->getNom().'</option>';
+                            }
 
-                            </select> &nbsp;
-                            
-                            
-                            <input type="submit" name="selection" value="Sélectionner" >
-                            <hr>
+                            ?>
+
+                        </select> &nbsp;
+                    </div>
+
+                    <div id="submit">    
+                        <input type="submit" name="selection" value="Sélectionner" >
+                           
                         </fieldset>
                     </div>
+
+                    <hr/>
                     
+
                     <?php
 
                     if (isset($response['errors']) && !empty($response['errors']))
@@ -118,15 +124,14 @@ $form_url = WEBROOT."admin/degre/";
 
                     ?>
                     
-                    <div>
-                        <fieldset>
-                            <label for="nom_degre">Nom *</label>
-                            <input type="text" name="nom_degre" id="nom_degre" value="<?php echo $formData['nom_degre']; ?>" <?php echo $formData['disabled']; ?> />
 
-                            <label for="descript_degre">Description</label>
-                            <textarea name="descript_degre" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_degre']; ?></textarea>
-
-                        </fieldset>
+                    <div class="input">
+                        <label for="nom_degre">Nom *</label>
+                        <input type="text" name="nom_degre" id="nom_degre" value="<?php echo $formData['nom_degre']; ?>" <?php echo $formData['disabled']; ?> />
+                    </div>
+                    <div class="input">
+                        <label for="descript_degre">Description</label>
+                        <textarea name="descript_degre" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_degre']; ?></textarea>
                     </div>
                     
 
@@ -144,11 +149,11 @@ $form_url = WEBROOT."admin/degre/";
                     </div>
 
 
-
-                </div>
+                </form>
             </div>
+        </div>
 
-        </form>
+        
         
         
         <div style="clear:both;"></div>

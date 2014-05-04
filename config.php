@@ -11,16 +11,18 @@ class Config
 
     const DEBUG_MODE = 0; // Activer (1) / désactiver (0) l'affichage du débuguage
     
-    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) la gestion des activités dans la partie admin (prédiction d'un parcours d'orientation)
+    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) la gestion des activités dans la partie admin (prédiction d'un parcours, orientation)
     
     const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) le lecteur audio flash
 
     const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...)
  
 
-    const POSI_NAME = "Positionnement"; // Nom du positionnement
+    const POSI_NAME = "Positionnement Chantier-École"; // Nom du positionnement
     
-    const POSI_TITLE = "Positionnement Chantier-École"; // Titre/accroche du positionnement
+    const POSI_TITLE = "Test de positionnement"; // Titre/accroche du positionnement
+
+    const ADMIN_TITLE = "Gestion du positionnement"; // Titre de la partie admin
 
 
     const EMAIL_REFERENT = "xxx.xx@xxx.xx"; // Email de destination des positionnements éffectués

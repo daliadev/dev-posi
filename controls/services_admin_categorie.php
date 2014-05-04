@@ -69,15 +69,15 @@ class ServicesAdminCategorie extends Main
         $catDetails['code_cat'] = "";
         $catDetails['nom_cat'] = "";
         $catDetails['descript_cat'] = "";
-        $catDetails['image_question'] = "";
-        $catDetails['audio_question'] = "";
-        $catDetails['ref_degre'] = "";
+        $catDetails['type_lien_cat'] = "";
+
         
         $resultset = $this->categorieDAO->selectByCode($codeCat);
         
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
+            $catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
             $catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
             $catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
             $catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
@@ -87,7 +87,98 @@ class ServicesAdminCategorie extends Main
     }
 
 
-    
+
+    public function filterCategorieData(&$formData, $postData)
+    {
+        $dataCategorie = array();
+        
+
+        // Récupèration du code catégorie original s'il y en a un
+        if (isset($postData['code']) && !empty($postData['code']))
+        {
+            $formData['code'] = $postData['code'];
+            $dataCategorie['code'] = $formData['code'];
+        }
+        
+        // Formatage du code catégorie
+        $formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+        $dataCategorie['code_cat'] = $formData['code_cat'];
+        
+        // Formatage du nom de la catégorie
+        $formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
+        $dataCategorie['nom_cat'] = $formData['nom_cat'];
+        
+        // Formatage de l'intitule de la catégorie 
+        $formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
+        $dataCategorie['descript_cat'] = $formData['descript_cat'];
+        
+
+        // Formatage du type de lien de la catégorie
+        if (isset($_POST['type_lien_cat']))
+        {
+            $formData['type_lien_cat'] = "dynamic";
+            $dataCategorie['type_lien_cat'] = "dynamic";
+        }
+        else 
+        {
+            $formData['type_lien_cat'] = "static";
+            $dataCategorie['type_lien_cat'] = "static";
+        }
+
+        return $dataCategorie;
+    }
+
+
+
+
+    public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
+    {
+
+        if ($previousMode == "new")
+        {
+            // Insertion de la catégorie dans la bdd
+            $resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
+                    
+            // Traitement des erreurs de la requête
+            if ($resultsetCategorie['response'])
+            {
+                $formData['code_cat'] = $resultsetCategorie['response']['categorie']['code_cat'];
+                $dataCategorie['code_cat'] = $formData['code_cat'];
+                $this->registerSuccess("La catégorie a été enregistrée.");
+            }
+            else 
+            {
+                $this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
+            }
+        }
+        else if ($previousMode == "edit"  || $previousMode == "save")
+        {
+            if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
+            {
+                $formData['code_cat'] = $dataCategorie['code_cat'];
+
+                // Mise à jour de la catégorie
+                $resultsetCategorie = $this->setCategorie("update", $dataCategorie);
+
+                // Traitement des erreurs de la requête
+                if ($resultsetCategorie['response'])
+                {
+                    $this->registerSuccess("La catégorie a été mise à jour.");
+                }
+                else
+                {
+                    $this->registerError("form_valid", "La mise à jour de la catégorie a échoué.");
+                }
+            }
+        }
+        else
+        {
+            header("Location: ".SERVER_URL."erreur/page404");
+            exit();
+        }
+    }
+
+
 
     public function setCategorie($modeCategorie, $dataCategorie)
     {
@@ -124,10 +215,7 @@ class ServicesAdminCategorie extends Main
                         $this->registerError("form_request", "La catégorie n'a pu être mise à jour.");
                     }
                 }
-                else 
-                {
-                    return false;
-                }
+                
             }
             else 
             {
@@ -152,7 +240,6 @@ class ServicesAdminCategorie extends Main
         
         if (!$this->filterDataErrors($resultsetSelect['response']))
         { 
-            //$question = $resultsetSelect['response']['categorie'];
             $resultsetDelete = $this->categorieDAO->delete($codeCat);
         
             if (!$this->filterDataErrors($resultsetDelete['response']))
@@ -172,10 +259,9 @@ class ServicesAdminCategorie extends Main
         return false;
     }
     
-    
-    
-    
-    
+
+
+
     
     public function getQuestionCategorie($refQuestion)
     {
@@ -186,6 +272,7 @@ class ServicesAdminCategorie extends Main
         
         return $resultset;
     }
+    
     
     
     public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
@@ -261,7 +348,7 @@ class ServicesAdminCategorie extends Main
 
         return false;
     }
-
+    
 }
 
 

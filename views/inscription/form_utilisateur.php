@@ -54,8 +54,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
         <div id="utilisateur">
             <div id="zone-formu">
-
-                <div id="titre-utili">Utilisateur</div>
+                
+                <div class="titre-form" id="titre-utili">Utilisateur</div>
 
                 <form action="<?php echo $form_url; ?>" method="POST">
                     <div class="formu">
@@ -66,17 +66,17 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                         <div class="input">
                             <label for="nom_user">Nom <span class="asterix">*</span></label>
-                            <input type="text" name="nom_user" id="nom_user"   value="<?php echo $formData['nom_user']; ?>" required />
+                            <input type="text" name="nom_user" id="nom_user" value="<?php echo $formData['nom_user']; ?>" required />
                         </div>
 
                         <div class="input">
                             <label for="prenom_user">Prénom <span class="asterix">*</span></label>
-                            <input type="text" name="prenom_user" id="prenom_user"   value="<?php echo $formData['prenom_user']; ?>" required />
+                            <input type="text" name="prenom_user" id="prenom_user" value="<?php echo $formData['prenom_user']; ?>" required />
                         </div>
 
                         <div class="input">
                             <label for="date_naiss_user">Date de naissance <span class="asterix">*</span></label>
-                            <input type="text" name="date_naiss_user" id="date_naiss_user"   title="Veuillez entrer votre date de naissance" value="<?php echo $formData['date_naiss_user']; ?>" required />
+                            <input type="text" name="date_naiss_user" id="date_naiss_user" title="Veuillez entrer votre date de naissance" value="<?php echo $formData['date_naiss_user']; ?>" required />
                         </div>
 
                         <label for="niveau_etude">Niveau de formation <span class="asterix">*</span></label>

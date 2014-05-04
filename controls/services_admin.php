@@ -485,7 +485,7 @@ class ServicesAdmin extends Main
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
-        
+
 
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         
@@ -515,180 +515,88 @@ class ServicesAdmin extends Main
 
 
 
+        /*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
         
-        /*-----   Mode "visualisation"   -----*/
 
-        if ($this->formData['mode'] == "view")
-        { 
-            
+        /*** Mode "visualisation" et "édition" ***/
+
+        if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
+        {
             // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "view");
-            
+            $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
+
+            // Avec la référence, on va chercher toutes les infos sur la question 
             if (!empty($this->formData['code_cat']))
             {
-                // Verrouillage des boutons "modifier" et "supprimer"
-                $this->formData['edit_disabled'] = "";
-                $this->formData['delete_disabled'] = "";
-                
-                $resultset = $this->servicesCategorie->getCategorie($this->formData['code_cat']);
-                
-                if (!$resultset)
+                if ($this->formData['mode'] == "view")
                 {
-                    $this->registerError("form_request", "Impossible de visualiser la catégorie.");
+                    // Déverrouillage des boutons "modifier" et "supprimer"
+                    $this->formData['edit_disabled'] = "";
+                    $this->formData['delete_disabled'] = "";
                 }
-                else 
-                {
-                    $this->formData['nom_cat'] = $resultset['response']['categorie']->getNom();
-                    $this->formData['descript_cat'] = $resultset['response']['categorie']->getDescription();
-                    $this->formData['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
-                }
+                
+                $catDetails = array();
+                $catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['code_cat']);
+                
+                $this->formData = array_merge($this->formData, $catDetails);
+            }
+            else if ($this->formData['mode'] == "edit")
+            {
+                $this->registerError("form_empty", "Cette categorie n'existe pas.");
             }
         }
-        
-        
-        /*-----   Mode "nouvelle catégorie"   -----*/
+
+
+        /*** Mode "nouvelle question" ***/
         
         else if ($this->formData['mode'] == "new")
-        {   
-            
-            // Verrouillage des boutons
+        {      
+            // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "new");
-            
+
             $this->formData['code_cat'] = null;
             $this->formData['nom_cat'] = null;
             $this->formData['descript_cat'] = null;
             $this->formData['type_lien_cat'] = null;
         }
-        
-        
-        /*-----   Mode "édition"   -----*/
-        
-        else if ($this->formData['mode'] == "edit")
-        {
-            
-            // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "edit");
 
-            if (!empty($this->formData['code_cat']))
-            {
-                $resultset = $this->servicesCategorie->getCategorie($this->formData['code_cat']);
-                
-                $this->formData['nom_cat'] = $resultset['response']['categorie']->getNom();
-                $this->formData['descript_cat'] = $resultset['response']['categorie']->getDescription();
-                $this->formData['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
-            }
-            else 
-            {
-                $this->registerError("form_empty", "Cette question n'existe pas");
-            }
-        }
-        
-        
-        /*-----   Mode "enregistrement"   -----*/
 
+        /*** Mode "enregistrement" ***/
+        
         else if ($this->formData['mode'] == "save")
-        {
-            
-            // Vérrouillage des boutons
+        { 
+            // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "save");
-            
-            /*** Validation des infos saisies ***/
 
-            // Récupèration du code catégorie original s'il y en a un ***/
-            if (isset($_POST['code']) && !empty($_POST['code']))
+            // Récupèration de l'id de la question s'il y en a une.
+            if (!empty($this->formData['code']))
             {
-                $this->formData['code'] = $_POST['code'];
-                $dataCategorie['code'] = $this->formData['code'];
+                if ($previousMode == "edit")
+                {
+                    $dataCategorie['code'] = $this->formData['code'];
+                }
             }
-            
-            // Formatage du code catégorie
-            $this->formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
-            $dataCategorie['code_cat'] = $this->formData['code_cat'];
-            
-            // Formatage du nom de la catégorie
-            $this->formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
-            $dataCategorie['nom_cat'] = $this->formData['nom_cat'];
-            
-            // Formatage de l'intitule de la catégorie 
-            $this->formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
-            $dataCategorie['descript_cat'] = $this->formData['descript_cat'];
-            
-            // Formatage du type de lien de la catégorie
-            if (isset($_POST['type_lien_cat']))
-            {
-                $this->formData['type_lien_cat'] = "dynamic";
-                $dataCategorie['type_lien_cat'] = "dynamic";
-            }
-            else 
-            {
-                $this->formData['type_lien_cat'] = "static";
-                $dataCategorie['type_lien_cat'] = "static";
-            }
-            //$this->formData['type_lien_cat'] = $this->validatePostData($_POST['type_lien_cat'], "type_lien_cat", "string", true, "Aucun type n'a été coché", "Le type n'a été correctement saisi.");
-            //$dataCategorie['type_lien_cat'] = $this->formData['type_lien_cat'];
 
-            
-            /*** Sauvegarde ou mise à jour des données ***/
-            
-            // Aucune erreur ne doit être enregistrée
+            // Traitement des infos saisies.
+            $dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
+
+
+            // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesCategorie->errors) && empty($this->errors)) 
             {
-                $modeCategorie = "insert";
-                        
-                if ($previousMode == "new")
-                {
-                    // Insertion de la catégorie dans la bdd
-                    $resultset = $this->servicesCategorie->setCategorie($modeCategorie, $dataCategorie);
-                    
-                    if (!$resultset)
-                    {
-                        $this->registerError("form_data", "L'insertion de la catégorie a échouée.");
-                    }
-                }
-                else if ($previousMode == "edit"  || $previousMode == "save")
-                {
-                    $modeCategorie = "update";
-                    
-                    if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
-                    {
-                        $this->formData['code_cat'] = $dataCategorie['code_cat'];
-
-                        // Mise à jour de la catégorie
-                        $resultset = $this->servicesCategorie->setCategorie($modeCategorie, $dataCategorie);
-
-                        if (!$resultset)
-                        {
-                            $this->registerError("form_data", "La mise à jour de la catégorie a échouée.");
-                        }
-                    }
-                }
-                else
-                {
-                    // La page n'existe pas
-                    header("Location: ".SERVER_URL."erreur/page404");
-                    exit();
-                }
+                $this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
             }
 
             
-            if (Config::DEBUG_MODE)
-            {
-                echo "\$dataCategorie = <br/>";
-                var_dump($dataCategorie);
-
-                echo "\$previousMode = ".$previousMode."<br/>";
-            }
-            
-            
-            /*** S'il n'y a pas d'erreur, on recharge la page avec l'identifiant récupéré ***/
-            
+            // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesCategorie->errors) && empty($this->errors))
             {
-                // On recharge la page en mode view
-                header("Location: ".$this->url."/".$this->formData['code_cat']);
+                // On recharge la page en mode visualisation.
+                header("Location: ".$this->url.$this->formData['code_cat']);
             }
             else 
             {
+                // Sinon mode nouveau ou édition.
                 if ($previousMode == "new")
                 {
                     $this->formData['mode'] = "new";
@@ -697,57 +605,71 @@ class ServicesAdmin extends Main
                 {
                     $this->formData['mode'] = "edit";
                 }
-            } 
+            }
         }
-
+ 
         
-        /*-----   Mode "suppression"   -----*/
-
+        /*** Mode "suppression" ***/
+        
         else if ($this->formData['mode'] == "delete")
         {
-            $this->servicesGestion->switchFormButtons($this->formData, "save");
+            // Verrouillage des boutons.
+            $this->servicesGestion->switchFormButtons($this->formData, "delete");
             
-            // On récupère le code de la catégorie active
+            // Si le code de la catégorie active existe :
             if (!empty($this->formData['code_cat']))
             {
-                // On supprime la catégorie dans la base
+                // On supprime la catégorie dans la base.
                 $resultsetCat = $this->servicesCategorie->deleteCategorie($this->formData['code_cat']);
-
+                
+                // Si la suppression a fonctionnée :
                 if ($resultsetCat)
                 {   
                     $this->registerSuccess("La catégorie a été supprimée avec succès.");
                 }
                 else
                 {
-                    $this->registerError("form_data", "La catégorie n'a pas pu être supprimée.");
+                    // Sinon on renvoi une erreur.
+                    $this->registerError("form_valid", "La catégorie n'a pas pu être supprimée.");
                 }
             }
             else 
             {
-                $this->registerError("form_data", "La catégorie n'existe pas.");
+                $this->registerError("form_valid", "La catégorie n'existe pas.");
             }
             
-            // On recharge la page
+            // On recharge la page (sans aucune information).
             header("Location: ".$this->url);
+            exit();
         }
+
+
+        /*** Erreur : aucun mode ***/
+
         else  
         {
-            // Sinon, renvoi vers page inconnue (404)
+            // Renvoi vers le template 404 (page inconnue).
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }   
         
         
+        // Debuggage
         if (Config::DEBUG_MODE)
         {
+            // Liste des données traitées et renvoyées au formulaire.
             echo "\$this->formData = <br/>";
             var_dump($this->formData);
         }
             
             
-        /*-----   Retour des données traitées du formulaire   -----*/
         
+        /*** Retour des données traitées du formulaire ***/
+
+        $this->returnData['response']['form_data'] = array();
         $this->returnData['response']['form_data'] = $this->formData;
+
+
         
         /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
         
@@ -773,8 +695,9 @@ class ServicesAdmin extends Main
         
         // Requete pour obtenir la liste des catégories
         $listeCategories = $this->servicesCategorie->getCategories();
-        $this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
         
+        // Assemblage de toutes les données de la réponse
+        $this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
         
         /*** Envoi des données et rendu de la vue ***/
         
@@ -832,7 +755,6 @@ class ServicesAdmin extends Main
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
-        
         
         if (Config::DEBUG_MODE)
         {

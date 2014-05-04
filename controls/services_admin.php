@@ -592,7 +592,7 @@ class ServicesAdmin extends Main
             if (empty($this->servicesCategorie->errors) && empty($this->errors))
             {
                 // On recharge la page en mode visualisation.
-                header("Location: ".$this->url.$this->formData['ref_question']);
+                header("Location: ".$this->url.$this->formData['code_cat']);
             }
             else 
             {

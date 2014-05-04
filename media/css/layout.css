@@ -288,6 +288,10 @@ body{
 	line-height: 20px;
 }
 
+.checkbox-disabled {
+	color:#BDC3C7;
+}
+
 #zone-formu p.descript {
 	width: 270px;
 	margin: 5px 0;
@@ -328,7 +332,7 @@ body{
 		cursor: pointer;
 		width: 200px;
 		height: 40px;
-		margin: 22px 50px 20px 50px;
+		margin: 20px 50px 20px 50px;
 		background-color: #f7a22f;
 		border: 0;
 		color: #FFF;
@@ -379,9 +383,13 @@ body{
 	font-size: 12px;
 }
 
+	.select-disabled {
+		color: #BDC3C7;
+	}
+
 	#zone-formu option {
 		font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
-		padding: 2px;
+		padding: 1px;
 	}
 
 
@@ -424,6 +432,17 @@ body{
 .asterix { 
 	color:#FF0000;
 }
+
+
+/*
+input[type="submit"][disabled]{
+	background-color:#BDC3C7;
+	cursor:default;  
+}
+*/
+
+
+
 
 
 /*------------------------------ORGANISME----------------------------------*/
@@ -767,33 +786,6 @@ body{
 }
 
 
-input[type="submit"][disabled]{
-	background-color:#BDC3C7;
-	cursor:default;  
-}
-
-/*
-input[type=checkbox][disabled]{
-	color:#ff0000;
-}
-
-input[type=radio][disabled]{
-	color:#ff0000;
-}
-
-
-input[type=select][disabled]{
-	color:#ff0000;
-}
-*/
-
-.checkbox-disabled {
-	color:#BDC3C7;
-}
-
-.select-disabled {
-	color: #BDC3C7;
-}
 
 
 

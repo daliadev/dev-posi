@@ -128,17 +128,18 @@ class ServicesAdminCategorie extends Main
 
 
 
-    public function setQuestionProperties($previousMode, $dataCategorie, &$formData)
+    public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
     {
 
         if ($previousMode == "new")
         {
             // Insertion de la catégorie dans la bdd
             $resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
-
-            if (isset($resultsetCategorie['response']['categorie']['last_insert_id']) && !empty($resultsetCategorie['response']['categorie']['last_insert_id']))
+                    
+            // Traitement des erreurs de la requête
+            if ($resultsetCategorie['response'])
             {
-                $formData['code_cat'] = $resultsetCategorie['response']['categorie']['last_insert_id'];
+                $formData['code_cat'] = $resultsetCategorie['response']['categorie']['code_cat'];
                 $dataCategorie['code_cat'] = $formData['code_cat'];
                 $this->registerSuccess("La catégorie a été enregistrée.");
             }
@@ -156,7 +157,8 @@ class ServicesAdminCategorie extends Main
                 // Mise à jour de la catégorie
                 $resultsetCategorie = $this->setCategorie("update", $dataCategorie);
 
-                if ($resultsetQuestion)
+                // Traitement des erreurs de la requête
+                if ($resultsetCategorie['response'])
                 {
                     $this->registerSuccess("La catégorie a été mise à jour.");
                 }
@@ -210,10 +212,7 @@ class ServicesAdminCategorie extends Main
                         $this->registerError("form_request", "La catégorie n'a pu être mise à jour.");
                     }
                 }
-                else 
-                {
-                    return false;
-                }
+                
             }
             else 
             {

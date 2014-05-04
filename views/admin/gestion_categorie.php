@@ -31,8 +31,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 $form_url = WEBROOT."admin/categorie/";
 
 
-var_dump($formData);
-
 ?>
     
     <div id="content">
@@ -82,16 +80,23 @@ var_dump($formData);
 
                                         if (strlen($categorie->getCode()) == 2)
                                         {
-
                                             echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
                                         }
                                         else if (strlen($categorie->getCode()) == 4)
                                         {
-                                            echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; - '.$categorie->getNom().'</option>';
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:20px" '.$selected.'>- '.$categorie->getNom().'</option>';
                                         }
                                         else if (strlen($categorie->getCode()) == 6)
                                         {
-                                            echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; &nbsp; &nbsp; - '.$categorie->getNom().'</option>';
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:40px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+                                        else if (strlen($categorie->getCode()) == 8)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:60px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+                                        else
+                                        {
+                                            echo '<option value="">Impossible d\'afficher cette gatégorie</option>';
                                         }
 
                                         
@@ -101,9 +106,8 @@ var_dump($formData);
 
                                 </select> &nbsp;
 
-                                <!-- <input type="submit" name="selection" value="Sélectionner" > -->
                                 <div id="submit">
-                                    <input type="submit" value="Envoyer" name="valid_form_cat" />
+                                    <input type="submit" value="Sélectionner" name="valid_form_cat" />
                                 </div>
                                 <hr>
                             </fieldset>

@@ -226,7 +226,7 @@ body{
 	font-size: 12px;
 	line-height: 20px;
 }
-	
+
 	#zone-formu input:required{
 	    background-color:#ffffff;
 	}
@@ -266,6 +266,17 @@ body{
 	line-height: 20px;
 }
 
+/*
+#zone-formu input[type=radio]
+{
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    line-height: 15px;
+    margin: 0;
+}
+*/
+
 #zone-formu input[type="checkbox"] {
 	width: 20px;
 	height: 20px;
@@ -290,27 +301,70 @@ body{
     /*padding: 5px;*/
 }
 
+/*
+#zone-formu input[type=text]
+{
+    height: 20px;
+    line-height: 20px;
+    padding: 5px;
+}
+
+#zone-formu input[type="text"][disabled]
+{
+    background-color: #f0f0f0;
+    color: #797d80;
+    cursor: default;
+}
+
+*/
+
 
 #zone-formu #submit {
 	width: 300px;
 }
 
-#zone-formu #submit input {
-	cursor: pointer;
-	width: 200px;
-	height: 40px;
-	margin: 30px 50px 20px 50px;
-	background-color: #f7a22f;
-	border: 0;
-	color: #FFF;
-	font-size: 16px;
-	font-weight: bold;
-}
+	#zone-formu #submit input {
+		cursor: pointer;
+		width: 200px;
+		height: 40px;
+		margin: 30px 50px 20px 50px;
+		background-color: #f7a22f;
+		border: 0;
+		color: #FFF;
+		font-size: 16px;
+		font-weight: bold;
+	}
 
-#zone-formu #submit input:hover {
-	cursor: pointer;
-	background-color: #f3a842;
-}
+		#zone-formu #submit input:hover {
+			/*cursor: pointer;*/
+			background-color: #f3a842;
+		}
+
+	#zone-formu input[type=submit] 
+	{
+		/*float: left;*/
+		display: inline;
+		cursor: pointer;
+		width: 120px;
+		height: 30px;
+		padding: 5px;
+	    margin: 10px;
+		background-color: #f7a22f;
+		border: 0;
+	    border-radius: 5px 5px 5px 5px; 
+		color: #FFF;
+		font-size: 15px;
+
+	    /*background-color: #f39c12;*/
+
+	    line-height: 20px;
+	}
+
+		#zone-formu input[type="submit"][disabled]
+		{
+		    background-color: #bdc3c7;
+		    cursor: default;  	
+		}
 
 
 #zone-formu select {
@@ -339,24 +393,36 @@ body{
     border-radius: 5px 5px 5px 5px;
     font-size: 12px;
 }
+/*
+#zone-formu textarea 
+{
+    height: 90px;
+    padding: 5px;
+    margin-top: 5px;
+    width: 280px;
+    border: 1px solid #c3c9cf;
+    border-radius: 5px 5px 5px 5px;
+}
 
-
+	#zone-formu textarea[disabled]
+	{
+	    color: #797d80;
+	}
+*/
 
 #zone-formu ul {
     list-style: none;
 }
 
-#zone-formu li{
-    margin-left: -30px;
-}
+	#zone-formu li{
+	    margin-left: -30px;
+	}
 
 .placeholder { color: #999999; }
 
 .asterix { 
 	color:#FF0000;
 }
-
-
 
 
 /*------------------------------ORGANISME----------------------------------*/
@@ -996,109 +1062,7 @@ select {
 	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
 }
 
-/*
-#zone-formu label 
-{
-    margin-top: 10px;
-}
 
-#zone-formu select
-{
-    padding: 5px;
-}
-
-
-#zone-formu textarea 
-{
-    height: 90px;
-    padding: 5px;
-    margin-top: 5px;
-    width: 280px;
-    border: 1px solid #c3c9cf;
-    border-radius: 5px 5px 5px 5px;
-}
-
-
-#zone-formu input 
-{
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
-    margin-top: 5px;
-    width: 280px;
-    border: 1px solid #c3c9cf;
-    border-radius: 5px 5px 5px 5px;
-}
-
-
-#zone-formu input[type=text]
-{
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
-}
-
-
-#zone-formu input[type=radio]
-{
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    line-height: 15px;
-    margin: 0;
-}
-
-
-#zone-formu ul
-{
-    list-style: none;
-}
-    
-    #zone-formu li
-    {
-        margin-left: -30px;
-    }
-
-    
-#zone-formu input[type=submit] 
-{
-    cursor: pointer;
-    background-color: #f39c12;
-    color: #fff;
-    width: 143px;
-    height: 30px;
-    line-height: 20px;
-    padding: 5px;
-    margin-top: 8px;
-    margin-bottom :8px;
-    border: 0px;
-    border-radius: 0px;
-    font-size: 14px;
-}
-
-#zone-formu input[type="submit"][disabled]
-{
-    background-color: #bdc3c7;
-    cursor: default;  	
-}
-
-#zone-formu input[type="text"][disabled]
-{
-    background-color: #f0f0f0;
-    color: #797d80;
-    cursor: default;
-}
-
-#zone-formu textarea[disabled]
-{
-    color: #797d80;
-}
-
-#zone-formu input[name='selection'] { background: #f39c12; margin-left: 25%;}
-
-
-
-*/
 #buttons input[name='add'] { background: #f39c12;}
 #buttons input[name='save'] { background: #3498db;}
 #buttons input[name='edit'] { background: #1fbba6;}

@@ -204,10 +204,10 @@ var_dump($formData);
 
                         <div id="buttons">
                                 <input type="hidden" name="delete" value="false" />
-                                <input type="submit" name="add"  value="Ajouter" <?php echo $formData['add_disabled']; ?> />
-                                <input type="submit" name="edit"  value="Modifier" <?php echo $formData['edit_disabled']; ?> />
-                                <input type="submit" name="save"  value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
-                                <input type="submit" name="del" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
+                                <input type="submit" class="add" name="add"  value="Ajouter" <?php echo $formData['add_disabled']; ?> />
+                                <input type="submit" class="edit" name="edit"  value="Modifier" <?php echo $formData['edit_disabled']; ?> />
+                                <input type="submit" class="save" name="save"  value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
+                                <input type="submit" class="del" name="del" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
                         </div>
 
                     </div>

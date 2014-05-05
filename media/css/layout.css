@@ -542,7 +542,7 @@ body{
 
 /*----------------------------------------Page-admin-menu-BTN-----------------------------------------------*/
 
-/*
+
 .txt-btn-menu-admin{
 	color:#FFF;
 	padding-top:11px;
@@ -551,12 +551,12 @@ body{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size:15px;
 }
-*/
+
 
 
 /*----------MENU ADMIN--------------*/
 
-/*
+
 .bt-menu-ajout{
 	cursor:pointer;
 	background-color:#f7a22f;
@@ -594,7 +594,7 @@ body{
 	color:#FFF;
 	text-align:center;
 }
-*/
+
 
 /*-----------------------------------------------------------*/
 
@@ -612,7 +612,7 @@ body{
 	color: #BDC3C7;
 }
 
-/*
+
 .bt-admin-menu-ajout{
 	cursor:pointer;
 	background-color:#f7a22f;
@@ -726,7 +726,7 @@ body{
 	color:#FFF;
 	width:100px;	
 }
-*/
+
 
 #bt-menu-visible{
 	background: #f39c12;	

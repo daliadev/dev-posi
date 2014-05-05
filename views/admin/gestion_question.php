@@ -78,7 +78,7 @@ $form_url = WEBROOT."admin/question/";
                 <input type="hidden" name="num_ordre_question" value="<?php echo $formData['num_ordre_question']; ?>" />
 
                 <div id="liste_questions" class="zone-chx-question">
-                    <fieldset>
+                    
                         <select name="ref_question_cbox" id="ref_organ_cbox">
                             <option value="select_cbox">---</option>
 
@@ -138,7 +138,7 @@ $form_url = WEBROOT."admin/question/";
 
                         ?>
 
-                    </fieldset>
+                    
                 </div>
 
 
@@ -149,7 +149,7 @@ $form_url = WEBROOT."admin/question/";
                 
                 <div class="part-left">
                     <div class="formdiv">
-                        <fieldset>
+                        
                             <div>
                                 <div id="titre-question-h3">Question
 
@@ -283,14 +283,14 @@ $form_url = WEBROOT."admin/question/";
 
                             </div>
 
-                        </fieldset>
+                        
                     </div>
 
 
                     <!-- Médias -->
 
                     <div class="formdiv">
-                        <fieldset>
+                        
 
                             <div id="titre-question-h3">Medias</div>
                             <div id="medias">
@@ -320,7 +320,9 @@ $form_url = WEBROOT."admin/question/";
                                     ?>
                                     </p>
                                 </div>
+
                                 <hr/>
+
                                 <div id="audio-question">
                                     <p>
                                     <?php
@@ -353,7 +355,7 @@ $form_url = WEBROOT."admin/question/";
                                 </div>
                             </div>
 
-                        </fieldset>      
+                              
                     </div>
 
                 </div>

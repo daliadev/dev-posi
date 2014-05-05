@@ -150,138 +150,138 @@ $form_url = WEBROOT."admin/question/";
                 <div class="part-left">
                     <div class="formdiv">
                         
-                            <div>
-                                <div id="titre-question-h3">Question
+                        <div>
+                            <div id="titre-question-h3">Question
 
-                                    <!--Numero d'ordre -->
+                                <!--Numero d'ordre -->
 
-                                    <div id="num_ordre">
+                                <div id="num_ordre">
 
-                                        <?php
-                                        $numOrdre = $formData['num_ordre_question'];
+                                    <?php
+                                    $numOrdre = $formData['num_ordre_question'];
 
-                                        if (!empty($numOrdre))
-                                        {
-                                            echo $numOrdre;
-                                        }
-                                        else 
-                                        {
-                                            echo "-"; 
-                                        } 
-                                        ?>				
+                                    if (!empty($numOrdre))
+                                    {
+                                        echo $numOrdre;
+                                    }
+                                    else 
+                                    {
+                                        echo "-"; 
+                                    } 
+                                    ?>				
 
-                                    </div>
                                 </div>
                             </div>
+                        </div>
 
 
-                            <!-- Intitulé -->
+                        <!-- Intitulé -->
 
-                            <div id="intitule">
+                        <div id="intitule">
+                            <p>
+                                <textarea name="intitule_question"  cols="62" rows="6" maxlength="391" placeholder="480 caractères maximum" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
+                            </p>
+                        </div>
+
+
+                        <!-- Réponses qcm -->
+
+                        <div id="response-qcm" style="background:#ECF0F1; padding:10px">
+                            <div id="type_qcm" style="float:left">
                                 <p>
-                                    <textarea name="intitule_question"  cols="62" rows="6" maxlength="391" placeholder="480 caractères maximum" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
+                                    <?php
+                                    $checked = "";
+                                    if ($formData['type_question'] == "qcm") 
+                                    {
+                                        $checked = "checked";
+                                    }
+                                    ?>
+                                    <input type="radio" id="type-qcm" name="type_question" value="qcm" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> QCM
                                 </p>
                             </div>
 
+                            <div id="intitules_reponses" style="float:right;">
+                                <div id="responses-items">
+                                    <?php
 
-                            <!-- Réponses qcm -->
+                                    $nbReponses = 5;
+                                    /*
+                                    if (isset($formData['reponses']) && is_array($formData['reponses']) && count($formData['reponses']) > 0)
+                                    {
+                                        $nbReponses = count($formData['reponses']);
+                                    }
+                                    */
 
-                            <div id="response-qcm" style="background:#ECF0F1; padding:10px">
-                                <div id="type_qcm" style="float:left">
-                                    <p>
-                                        <?php
-                                        $checked = "";
-                                        if ($formData['type_question'] == "qcm") 
+                                    for ($i = 0; $i < $nbReponses; $i++) 
+                                    {
+                                        
+                                        echo '<p class="response-item">';
+
+                                        if (isset($formData['reponses'][$i]) && !empty($formData['reponses'][$i]))
                                         {
-                                            $checked = "checked";
-                                        }
-                                        ?>
-                                        <input type="radio" id="type-qcm" name="type_question" value="qcm" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> QCM
-                                    </p>
-                                </div>
-
-                                <div id="intitules_reponses" style="float:right;">
-                                    <div id="responses-items">
-                                        <?php
-
-                                        $nbReponses = 5;
-                                        /*
-                                        if (isset($formData['reponses']) && is_array($formData['reponses']) && count($formData['reponses']) > 0)
-                                        {
-                                            $nbReponses = count($formData['reponses']);
-                                        }
-                                        */
-
-                                        for ($i = 0; $i < $nbReponses; $i++) 
-                                        {
-                                            
-                                            echo '<p class="response-item">';
-
-                                            if (isset($formData['reponses'][$i]) && !empty($formData['reponses'][$i]))
+                                            $checked = "";
+                                            if ($formData['reponses'][$i]['est_correct'] == 1) 
                                             {
-                                                $checked = "";
-                                                if ($formData['reponses'][$i]['est_correct'] == 1) 
-                                                {
-                                                    $checked = "checked";
-                                                }
+                                                $checked = "checked";
+                                            }
 
-                                                if (!empty($formData['reponses'][$i]['ref_reponse']))
-                                                {
-                                                    echo '<input type="hidden" name="ref_reponses[]" value="'.$formData['reponses'][$i]['ref_reponse'].'" />';
-                                                }
-                                                else 
-                                                {
-                                                    echo '<input type="hidden" name="ref_reponses[]" value="" />';
-                                                }
-
-                                                echo '<input type="text" name="intitules_reponses[]" value="'.$formData['reponses'][$i]['intitule_reponse'].'" placeholder="Réponse" '.$formData['disabled'].' /> &nbsp;';
-                                                echo '<input type="radio" name="correct" value="'.$formData['reponses'][$i]['num_ordre_reponse'].'" '.$checked.' '.$formData['disabled'].' />';
+                                            if (!empty($formData['reponses'][$i]['ref_reponse']))
+                                            {
+                                                echo '<input type="hidden" name="ref_reponses[]" value="'.$formData['reponses'][$i]['ref_reponse'].'" />';
                                             }
                                             else 
                                             {
                                                 echo '<input type="hidden" name="ref_reponses[]" value="" />';
-                                                echo '<input type="text" name="intitules_reponses[]" value="" placeholder="Réponse" '.$formData['disabled'].' /> &nbsp;';
-                                                echo '<input type="radio" name="correct" value="'.($i + 1).'" '.$formData['disabled'].' />';
                                             }
 
-                                            echo '</p>';
+                                            echo '<input type="text" name="intitules_reponses[]" value="'.$formData['reponses'][$i]['intitule_reponse'].'" placeholder="Réponse" '.$formData['disabled'].' /> &nbsp;';
+                                            echo '<input type="radio" name="correct" value="'.$formData['reponses'][$i]['num_ordre_reponse'].'" '.$checked.' '.$formData['disabled'].' />';
                                         }
-
-                                        ?>
-
-                                    </div>
-                                    
-                                    <!-- <div id="responses-btn">
-                                        <p>
-                                            <input type="button" class="bt-admin-simple-button" name="add_response" id="add_response" value="Ajouter" <?php //echo $formData['disabled']; ?> /> 
-                                            <input type="button" class="bt-admin-simple-button" name="delete_response" id="delete_response" value="Supprimer" <?php //echo $formData['disabled']; ?> />
-                                        </p>
-                                    </div> -->
-                                
-                                </div>
-
-                                <div style="clear:both"></div>
-                            </div>
-                            <br />
-
-
-                            <!-- Réponses champ saisie -->
-
-                            <div id="response-champ" style="background:#ECF0F1; padding:10px">
-                                <div>
-                                    <p>
-                                        <?php
-                                        $checked = "";
-                                        if ($formData['type_question'] == "champ_saisie") 
+                                        else 
                                         {
-                                            $checked = "checked";
+                                            echo '<input type="hidden" name="ref_reponses[]" value="" />';
+                                            echo '<input type="text" name="intitules_reponses[]" value="" placeholder="Réponse" '.$formData['disabled'].' /> &nbsp;';
+                                            echo '<input type="radio" name="correct" value="'.($i + 1).'" '.$formData['disabled'].' />';
                                         }
-                                        ?>
-                                        <input type="radio" id="type-champ" name="type_question" value="champ_saisie" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> Réponse ouverte &nbsp;
-                                    </p>
-                                </div>
 
+                                        echo '</p>';
+                                    }
+
+                                    ?>
+
+                                </div>
+                                
+                                <!-- <div id="responses-btn">
+                                    <p>
+                                        <input type="button" class="bt-admin-simple-button" name="add_response" id="add_response" value="Ajouter" <?php //echo $formData['disabled']; ?> /> 
+                                        <input type="button" class="bt-admin-simple-button" name="delete_response" id="delete_response" value="Supprimer" <?php //echo $formData['disabled']; ?> />
+                                    </p>
+                                </div> -->
+                            
                             </div>
+
+                            <div style="clear:both"></div>
+                        </div>
+                        <br />
+
+
+                        <!-- Réponses champ saisie -->
+
+                        <div id="response-champ" style="background:#ECF0F1; padding:10px">
+                            <div>
+                                <p>
+                                    <?php
+                                    $checked = "";
+                                    if ($formData['type_question'] == "champ_saisie") 
+                                    {
+                                        $checked = "checked";
+                                    }
+                                    ?>
+                                    <input type="radio" id="type-champ" name="type_question" value="champ_saisie" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> Réponse ouverte &nbsp;
+                                </p>
+                            </div>
+
+                        </div>
 
                         
                     </div>
@@ -292,68 +292,68 @@ $form_url = WEBROOT."admin/question/";
                     <div class="formdiv">
                         
 
-                            <div id="titre-question-h3">Medias</div>
-                            <div id="medias">
-                                <div id="image-question">
-                                    <p>
-                                    <?php
-                                    if ($formData['image_question']) :
-                                        $imageName = $formData['image_question'];
-                                    ?>
-                                        <label for="image_file"><strong>Fichier image : </strong><?php echo $imageName; ?></label><br/>
-                                        <input type="file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> /> <?php //echo $formData['image_question']; ?>
-                                        <input type="hidden" name="image_question" value="<?php echo $formData['image_question']; ?>" />
-                                        
-                                        <div>
-                                            <a rel="lightbox" href="<?php echo WEBROOT.IMG_PATH.$imageName; ?>">
-                                                <img src="<?php echo WEBROOT.THUMBS_PATH; ?>thumb_<?php echo $imageName; ?>" />
-                                            </a>
-                                        </div>
-                                    <?php
-                                    else :
-                                    ?>
-                                        <label for="image_file">Sélectionner un fichier image (format "jpeg")</label><br/>
-                                        <input type="file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> /> <?php //echo $imageName; ?>
-                                        <!-- <input type="hidden" name="image_question" value="<?php //echo $imageName; ?>" /> -->
-                                    <?php
-                                    endif;
-                                    ?>
-                                    </p>
-                                </div>
-
-                                <hr/>
-
-                                <div id="audio-question">
-                                    <p>
-                                    <?php
-                                    if ($formData['audio_question']) :
-                                        $audioName = $formData['audio_question'];
-                                    ?>
-                                        <label for="audio_file"><strong>Fichier audio : </strong><?php echo $audioName; ?></label><br/>
-                                        <input type="file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?> /> <?php //echo $audioName; ?>
-                                        <input type="hidden" name="audio_question" value="<?php echo $audioName ?>" />
-                                        
-                                        <div>
-                                            <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                                            <param name="wmode" value="transparent" />
-                                            <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                                            <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />
-                                            <param name="wmode" value="transparent" />
-                                            </object>
-                                        </div>
-                                    <?php
-                                    else :
-                                    ?>
-                                        <label for="audio_file">Sélectionner un fichier audio (format "mp3")</label><br/>
-                                        <input type="file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?> /> <?php //echo $audioName; ?>
-                                        <!-- <input type="hidden" name="audio_question" value="<?php //echo $audioName ?>" /> -->
-                                    <?php
-                                    endif;
-                                    ?>
-                                    </p>
+                        <div id="titre-question-h3">Medias</div>
+                        <div id="medias">
+                            <div id="image-question">
+                                <p>
+                                <?php
+                                if ($formData['image_question']) :
+                                    $imageName = $formData['image_question'];
+                                ?>
+                                    <label for="image_file"><strong>Fichier image : </strong><?php echo $imageName; ?></label><br/>
+                                    <input type="file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> /> <?php //echo $formData['image_question']; ?>
+                                    <input type="hidden" name="image_question" value="<?php echo $formData['image_question']; ?>" />
                                     
-                                </div>
+                                    <div>
+                                        <a rel="lightbox" href="<?php echo WEBROOT.IMG_PATH.$imageName; ?>">
+                                            <img src="<?php echo WEBROOT.THUMBS_PATH; ?>thumb_<?php echo $imageName; ?>" />
+                                        </a>
+                                    </div>
+                                <?php
+                                else :
+                                ?>
+                                    <label for="image_file">Sélectionner un fichier image (format "jpeg")</label><br/>
+                                    <input type="file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> /> <?php //echo $imageName; ?>
+                                    <!-- <input type="hidden" name="image_question" value="<?php //echo $imageName; ?>" /> -->
+                                <?php
+                                endif;
+                                ?>
+                                </p>
                             </div>
+
+                            <hr/>
+
+                            <div id="audio-question">
+                                <p>
+                                <?php
+                                if ($formData['audio_question']) :
+                                    $audioName = $formData['audio_question'];
+                                ?>
+                                    <label for="audio_file"><strong>Fichier audio : </strong><?php echo $audioName; ?></label><br/>
+                                    <input type="file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?> /> <?php //echo $audioName; ?>
+                                    <input type="hidden" name="audio_question" value="<?php echo $audioName ?>" />
+                                    
+                                    <div>
+                                        <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
+                                        <param name="wmode" value="transparent" />
+                                        <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
+                                        <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />
+                                        <param name="wmode" value="transparent" />
+                                        </object>
+                                    </div>
+                                <?php
+                                else :
+                                ?>
+                                    <label for="audio_file">Sélectionner un fichier audio (format "mp3")</label><br/>
+                                    <input type="file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?> /> <?php //echo $audioName; ?>
+                                    <!-- <input type="hidden" name="audio_question" value="<?php //echo $audioName ?>" /> -->
+                                <?php
+                                endif;
+                                ?>
+                                </p>
+                                
+                            </div>
+                        </div>
 
                               
                     </div>
@@ -386,6 +386,31 @@ $form_url = WEBROOT."admin/question/";
                                             $selected = "selected";
                                         }
                                         
+                                        if (strlen($categorie->getCode()) == 2)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+                                        }
+                                        else if (strlen($categorie->getCode()) == 4)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:20px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+                                        else if (strlen($categorie->getCode()) == 6)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:40px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+                                        else if (strlen($categorie->getCode()) == 8)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:60px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+                                        else if (strlen($categorie->getCode()) == 10)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:80px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+                                        else
+                                        {
+                                            echo '<option value="">Impossible d\'afficher cette catégorie</option>';
+                                        }
+                                        /*
                                         if (strlen($categorie->getCode()) == 4)
                                         {
                                             echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; - '.$categorie->getNom().'</option>';
@@ -398,7 +423,7 @@ $form_url = WEBROOT."admin/question/";
                                         {
                                             echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
                                         }
-                                        
+                                        */
                                     }
 
                                     ?>
@@ -481,7 +506,7 @@ $form_url = WEBROOT."admin/question/";
                 <!-- Partie basse : Boutons de gestion de la question -->
 
 
-                <div class="formdiv" id="buttons" >
+                <div class="formdiv" id="buttons">
 
                     <input type="hidden" name="delete" value="false" />
                     <input type="submit" name="del" class="bt-admin-menu-sup" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />

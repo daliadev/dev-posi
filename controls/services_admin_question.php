@@ -175,12 +175,17 @@ class ServicesAdminQuestion extends Main
         }
         
         
-        /*** Récupèration de la référence du niveau(degre) d'aptitude *=*/
+        /*** Récupèration de la référence du degré d'aptitude ***/
             
         if (isset($postData['ref_degre']) && !empty($postData['ref_degre']))
         {
-            $formData['ref_degre'] = $this->validatePostData($postData['ref_degre'], "ref_degre", "integer", false, "Aucun degré d'aptitude n'a été coché.", "Le degré d'aptitude n'est pas correctement sélectionné.");
+            $formData['ref_degre'] = $postData['ref_degre'];
             $dataQuestion['ref_degre'] = $formData['ref_degre'];
+        }
+        else
+        {
+            $formData['ref_degre'] = NULL;
+            $dataQuestion['ref_degre'] = NULL;
         }
 
 
@@ -373,7 +378,6 @@ class ServicesAdminQuestion extends Main
     
     public function setQuestionProperties($previousMode, $dataQuestion, &$formData)
     {
-
 
         /*** Traitement de l'image ***/
 

@@ -67,7 +67,6 @@ $form_url = WEBROOT."admin/categorie/";
                                 <option value="select_cbox">---</option>
 
                                 <?php
-                                $optgroup = false;
 
                                 foreach($response['categorie'] as $categorie)
                                 {
@@ -94,20 +93,25 @@ $form_url = WEBROOT."admin/categorie/";
                                     {
                                         echo '<option value="'.$categorie->getCode().'" style="margin-left:60px" '.$selected.'>- '.$categorie->getNom().'</option>';
                                     }
+                                    else if (strlen($categorie->getCode()) == 10)
+                                    {
+                                        echo '<option value="'.$categorie->getCode().'" style="margin-left:80px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                    }
                                     else
                                     {
-                                        echo '<option value="">Impossible d\'afficher cette gatégorie</option>';
+                                        echo '<option value="">Impossible d\'afficher cette catégorie</option>';
                                     }
                                 }
 
                                 ?>
 
-                            </select> &nbsp;
+                            </select>
                         </div>
 
                         <div id="submit">
-                            <input type="submit" value="Sélectionner" name="valid_form_cat" />
+                            <input type="submit" name="selection" value="Sélectionner" />
                         </div>
+
 
                         <hr/>
 
@@ -232,15 +236,18 @@ $form_url = WEBROOT."admin/categorie/";
 
     <script type="text/javascript">
 
+        
         $(function() { 
 
-            // Demande de suppression
+            /*** Gestion de la demande de suppression ***/
+
             $('input[name="del"]').click(function(event) {
 
-                $('input[name="delete"]').val("true");
-                
-                if (confirm("Voulez-vous réellement supprimer ce degré ?"))
+                event.preventDefault();
+
+                if (confirm("Voulez-vous réellement supprimer cette catégorie ?"))
                 {
+                    $('input[name="delete"]').val("true");
                     $('#form-categorie').submit();
                 }
             });

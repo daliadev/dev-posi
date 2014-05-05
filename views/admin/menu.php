@@ -1,10 +1,4 @@
 
-    <style>
-        
-    
-
-    </style>
- 
     
     <div id="content">
 

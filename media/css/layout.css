@@ -336,8 +336,9 @@ body{
 		background-color: #f7a22f;
 		border: 0;
 		color: #FFF;
-		font-size: 16px;
+		font-size: 15px;
 		font-weight: bold;
+		line-height: 40px;
 	}
 
 		#zone-formu #submit input:hover {
@@ -347,8 +348,6 @@ body{
 
 	#zone-formu input[type=submit] 
 	{
-		/*float: left;*/
-		/*display: inline;*/
 		cursor: pointer;
 		width: 140px;
 		height: 30px;
@@ -359,9 +358,7 @@ body{
 	    border-radius: 5px 5px 5px 5px; 
 		color: #FFF;
 		font-size: 15px;
-
 	    /*background-color: #f39c12;*/
-
 	    line-height: 20px;
 	}
 
@@ -402,44 +399,33 @@ body{
     border-radius: 5px 5px 5px 5px;
     font-size: 12px;
 }
-/*
-#zone-formu textarea 
-{
-    height: 90px;
-    padding: 5px;
-    margin-top: 5px;
-    width: 280px;
-    border: 1px solid #c3c9cf;
-    border-radius: 5px 5px 5px 5px;
-}
 
-	#zone-formu textarea[disabled]
-	{
-	    color: #797d80;
-	}
-*/
+	#zone-formu textarea[disabled] { color: #797d80; }
 
-#zone-formu ul {
-    list-style: none;
-}
 
-	#zone-formu li{
-	    margin-left: -30px;
-	}
+#zone-formu ul { list-style: none; }
+
+	#zone-formu li{ margin-left: -30px; }
 
 .placeholder { color: #999999; }
 
-.asterix { 
-	color:#FF0000;
-}
+.asterix { color:#FF0000; }
 
 
-/*
-input[type="submit"][disabled]{
-	background-color:#BDC3C7;
-	cursor:default;  
+
+
+/*----------------------------------------------FOOTER-----------------------------------------*/
+
+#footer{  
+    width:100%;
+    background:url(../images/footer-page.jpg) repeat-x;  
+    text-align:center; 
+    color:#b3b3b3;
+    margin-top:20px;
+    margin-bottom:20px;
 }
-*/
+
+#txt-footer{ color:#b3b3b3; padding-top:15px; }
 
 
 
@@ -554,26 +540,9 @@ input[type="submit"][disabled]{
 
 
 
-
-
-
-/*----------------------------------------------FOOTER-----------------------------------------*/
-
-#footer{  
-    width:100%;
-    background:url(../images/footer-page.jpg) repeat-x;  
-    text-align:center; 
-    color:#b3b3b3;
-    margin-top:20px;
-    margin-bottom:20px;
-}
-
-#txt-footer{ color:#b3b3b3; padding-top:15px; }
-
-
-
 /*----------------------------------------Page-admin-menu-BTN-----------------------------------------------*/
 
+/*
 .txt-btn-menu-admin{
 	color:#FFF;
 	padding-top:11px;
@@ -582,11 +551,12 @@ input[type="submit"][disabled]{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size:15px;
 }
-
+*/
 
 
 /*----------MENU ADMIN--------------*/
 
+/*
 .bt-menu-ajout{
 	cursor:pointer;
 	background-color:#f7a22f;
@@ -624,6 +594,7 @@ input[type="submit"][disabled]{
 	color:#FFF;
 	text-align:center;
 }
+*/
 
 /*-----------------------------------------------------------*/
 
@@ -641,7 +612,7 @@ input[type="submit"][disabled]{
 	color: #BDC3C7;
 }
 
-
+/*
 .bt-admin-menu-ajout{
 	cursor:pointer;
 	background-color:#f7a22f;
@@ -755,7 +726,7 @@ input[type="submit"][disabled]{
 	color:#FFF;
 	width:100px;	
 }
-
+*/
 
 #bt-menu-visible{
 	background: #f39c12;	
@@ -764,7 +735,6 @@ input[type="submit"][disabled]{
 	border: 0px;
 	font-family: Helvetica, Arial, sans-serif;
 	font-size: 13px;
-	/*font-weight: bold;*/
 	text-align: center;
 	line-height: 40px;
 	border-radius: 5px;

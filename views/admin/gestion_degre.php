@@ -54,102 +54,104 @@ $form_url = WEBROOT."admin/degre/";
         <div id="organisme">
             <div id="zone-formu">
 
-                    <div id="ico-utili">Gestion des degrés d'aptitude</div>
+                <div class="titre-form" id="titre-cat">Gestion des degrés d'aptitude</div>
 
-                    <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
+                <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
 
-                    <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
+                    <div class="formu">
 
-                    <div class="input">
-                        <label for="ref_degre_cbox">Liste des degrés :</label>
-                        <select name="ref_degre_cbox" id="ref_degre_cbox">
-                            <option value="select_cbox">---</option>
+                        <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
 
-                            <?php 
-                            foreach($response['degre'] as $degre)
-                            {
-                                $selected = "";
-                                if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
+                        <div class="input">
+                            <label for="ref_degre_cbox">Liste des degrés :</label>
+                            <select name="ref_degre_cbox" id="ref_degre_cbox">
+                                <option value="select_cbox">---</option>
+
+                                <?php 
+                                foreach($response['degre'] as $degre)
                                 {
-                                    $selected = "selected";
+                                    $selected = "";
+                                    if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
+                                    {
+                                        $selected = "selected";
+                                    }
+
+                                    echo '<option value="'.$degre->getId().'" '.$selected.'>'.$degre->getNom().'</option>';
                                 }
 
-                                echo '<option value="'.$degre->getId().'" '.$selected.'>'.$degre->getNom().'</option>';
-                            }
+                                ?>
 
-                            ?>
+                            </select>
+                        </div>
 
-                        </select> &nbsp;
-                    </div>
+                        <div id="submit">    
+                            <input type="submit" name="selection" value="Sélectionner" >
+                        </div>
 
-                    <div id="submit">    
-                        <input type="submit" name="selection" value="Sélectionner" >
-                           
-                        </fieldset>
-                    </div>
 
-                    <hr/>
-                    
+                        <hr/>
+                        
 
-                    <?php
+                        <?php
 
-                    if (isset($response['errors']) && !empty($response['errors']))
-                    {
-                        echo '<div id="zone-erreur">';
-                        echo '<ul>';
-                        foreach($response['errors'] as $error)
+                        if (isset($response['errors']) && !empty($response['errors']))
                         {
-                            if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                            echo '<div id="zone-erreur">';
+                            echo '<ul>';
+                            foreach($response['errors'] as $error)
                             {
-                                echo '<li>'.$error['message'].'</li>';
+                                if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                                {
+                                    echo '<li>'.$error['message'].'</li>';
+                                }
                             }
+                            echo '</ul>';
+                            echo '</div>';
                         }
-                        echo '</ul>';
-                        echo '</div>';
-                    }
-                    else if (isset($response['success']) && !empty($response['success']))
-                    {
-                        echo '<div id="zone-success">';
-                        echo '<ul>';
-                        foreach($response['success'] as $message)
+                        else if (isset($response['success']) && !empty($response['success']))
                         {
-                            if ($message)
+                            echo '<div id="zone-success">';
+                            echo '<ul>';
+                            foreach($response['success'] as $message)
                             {
-                                echo '<li>'.$message.'</li>';
+                                if ($message)
+                                {
+                                    echo '<li>'.$message.'</li>';
+                                }
                             }
+                            echo '</ul>';
+                            echo '</div>';
                         }
-                        echo '</ul>';
-                        echo '</div>';
-                    }
 
-                    ?>
-                    
+                        ?>
+                        
 
-                    <div class="input">
-                        <label for="nom_degre">Nom *</label>
-                        <input type="text" name="nom_degre" id="nom_degre" value="<?php echo $formData['nom_degre']; ?>" <?php echo $formData['disabled']; ?> />
-                    </div>
-                    <div class="input">
-                        <label for="descript_degre">Description</label>
-                        <textarea name="descript_degre" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_degre']; ?></textarea>
-                    </div>
-                    
+                        <div class="input">
+                            <label for="nom_degre">Nom *</label>
+                            <input type="text" name="nom_degre" id="nom_degre" value="<?php echo $formData['nom_degre']; ?>" <?php echo $formData['disabled']; ?> />
+                        </div>
+                        <div class="input">
+                            <label for="descript_degre">Description</label>
+                            <textarea name="descript_degre" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_degre']; ?></textarea>
+                        </div>
+                        
 
-                    <!-- Boutons de gestion des compétenecs -->
+                        <hr/>
 
-                    <div id="buttons">
-                        <fieldset>
-                            <hr>
+                        <!-- Boutons de gestion des degrés -->
+
+                        <div id="buttons">
                             <input type="hidden" name="delete" value="false" />
                             <input type="submit" name="add" value="Ajouter" <?php echo $formData['add_disabled']; ?> />
                             <input type="submit" name="edit" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
                             <input type="submit" name="save" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
                             <input type="submit" name="del" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
-                        </fieldset>
+                        </div>
+
                     </div>
 
-
                 </form>
+
             </div>
         </div>
 
@@ -168,10 +170,11 @@ $form_url = WEBROOT."admin/degre/";
 
 
     <script type="text/javascript">
-
+        
         $(function() { 
 
-            // Demande de suppression
+            /*** Gestion de la demande de suppression ***/
+
             $('input[name="del"]').click(function(event) {
 
                 event.preventDefault();

@@ -204,13 +204,13 @@ $form_url = WEBROOT."admin/question/";
                                     <div id="responses-items">
                                         <?php
 
-                                        $nbReponses = 1;
-
+                                        $nbReponses = 5;
+                                        /*
                                         if (isset($formData['reponses']) && is_array($formData['reponses']) && count($formData['reponses']) > 0)
                                         {
                                             $nbReponses = count($formData['reponses']);
                                         }
-
+                                        */
 
                                         for ($i = 0; $i < $nbReponses; $i++) 
                                         {
@@ -250,13 +250,13 @@ $form_url = WEBROOT."admin/question/";
                                         ?>
 
                                     </div>
-
-                                    <div id="responses-btn">
+                                    
+                                    <!-- <div id="responses-btn">
                                         <p>
-                                            <input type="button" class="bt-admin-simple-button" name="add_response" id="add_response" value="Ajouter" <?php echo $formData['disabled']; ?> /> 
-                                            <input type="button" class="bt-admin-simple-button" name="delete_response" id="delete_response" value="Supprimer" <?php echo $formData['disabled']; ?> />
+                                            <input type="button" class="bt-admin-simple-button" name="add_response" id="add_response" value="Ajouter" <?php //echo $formData['disabled']; ?> /> 
+                                            <input type="button" class="bt-admin-simple-button" name="delete_response" id="delete_response" value="Supprimer" <?php //echo $formData['disabled']; ?> />
                                         </p>
-                                    </div>
+                                    </div> -->
                                 
                                 </div>
 
@@ -428,7 +428,11 @@ $form_url = WEBROOT."admin/question/";
 
                             ?>
 
-                            <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php echo $formData['disabled']; ?> value="Tout déselectionner" /></p>
+                            <p>
+                                <input type="radio" name="ref_degre" class="radio_degre" value="Aucun" title="" <?php echo $formData['disabled']; ?> /> <span class="checkbox-<?php echo $formData['disabled']; ?>">Aucun</span>
+                            </p>
+
+                            <!-- <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php //echo $formData['disabled']; ?> value="Tout déselectionner" /></p> -->
                         </fieldset>
                     </div>
 
@@ -510,7 +514,7 @@ $form_url = WEBROOT."admin/question/";
         $(function() { 
             
             /*** Ajout de réponse automatique ***/
-            
+            /*
             var responseItem = $('#responses-items').first().html();
 
             $(responseItem + ' input[type=text]').each(function() {
@@ -535,7 +539,7 @@ $form_url = WEBROOT."admin/question/";
                     $(".response-item > input[type=text]").val("");
                 }
             });
-            
+            */
 
 
             /*** Tableau des éléments du cache des réponses ***/
@@ -638,7 +642,7 @@ $form_url = WEBROOT."admin/question/";
 
 
             /*** Bouton de déselection de tous les radio buttons de la partie degrés ***/
-
+            /*
             $('input[name=remove-degrees]').click(function(event) {
 
                 $('.radio_degre').each(function() {
@@ -649,7 +653,7 @@ $form_url = WEBROOT."admin/question/";
                     }
                 });
             });
-
+            */
 
 
 

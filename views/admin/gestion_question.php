@@ -409,31 +409,30 @@ $form_url = WEBROOT."admin/question/";
                     <!-- Degrés d'aptitude -->
                     
                     <div id="niveau" class="formdiv">
-                        <fieldset>
-                            <div id="titre-question-h3">Degrés d'aptitude (facultatif)</div>
+                        <div id="titre-question-h3">Degrés d'aptitude (facultatif)</div>
 
-                            <?php 
+                        <?php 
 
-                            foreach($response['degre'] as $degre)
+                        foreach($response['degre'] as $degre)
+                        {
+                            $checked = "";
+                            if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
                             {
-                                $checked = "";
-                                if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
-                                {
-                                    $checked = "checked";
-                                }
-                                echo '<p>';
-                                echo '<input type="radio" name="ref_degre" class="radio_degre" value="'.$degre->getId().'" title="'.$degre->getDescription().'" '.$checked.' '.$formData['disabled'].' /> <span class="checkbox-<?php echo '.$formData['disabled'].'">'.$degre->getNom().'</span>';
-                                echo '</p>';
+                                $checked = "checked";
                             }
+                            echo '<p>';
+                            echo '<input type="radio" name="ref_degre" class="radio_degre" value="'.$degre->getId().'" title="'.$degre->getDescription().'" '.$checked.' '.$formData['disabled'].' /> <span class="checkbox-'.$formData['disabled'].'">'.$degre->getNom().'</span>';
+                            echo '</p>';
+                        }
 
-                            ?>
+                        ?>
 
-                            <p>
-                                <input type="radio" name="ref_degre" class="radio_degre" value="Aucun" title="" <?php echo $formData['disabled']; ?> /> <span class="checkbox-<?php echo $formData['disabled']; ?>">Aucun</span>
-                            </p>
+                        <p>
+                            <input type="radio" name="ref_degre" class="radio_degre" value="Aucun" title="" <?php echo $formData['disabled']; ?> /> <span class="checkbox-<?php echo $formData['disabled']; ?>">Aucun</span>
+                        </p>
 
-                            <!-- <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php //echo $formData['disabled']; ?> value="Tout déselectionner" /></p> -->
-                        </fieldset>
+                        <!-- <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php //echo $formData['disabled']; ?> value="Tout déselectionner" /></p> -->
+                        
                     </div>
 
                 </div>

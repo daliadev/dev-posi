@@ -481,7 +481,7 @@ class ServicesAdminQuestion extends Main
                     $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
 
                     // Ensuite il faut renommer les médias pour qu'ils soient bien associés à la bonne question
-
+                    //$this->shiftMedias();
 
                     $isToken = true;
 
@@ -1097,6 +1097,12 @@ class ServicesAdminQuestion extends Main
         {
             for ($i = $lastNum; $i >= $numOrdre; $i--)
             {
+                //$oldImageName = "img_".$i.".jpg";
+                //$oldAudioName = "audio_".$i.".mp3";
+
+                //$newImageName = "img_".$i.".jpg";
+                //$newAudioName = "audio_".$i.".mp3";
+
                 $resultset = $this->questionDAO->shiftOrder($i, $offset);
                 
                 if ($this->filterDataErrors($resultset['response']) || empty($resultset['response']['question']['row_count']))
@@ -1130,8 +1136,7 @@ class ServicesAdminQuestion extends Main
             return true;
         }
     }
-    
-    
+
     
     
     

@@ -481,7 +481,7 @@ class ServicesAdminQuestion extends Main
                     $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
 
                     // Ensuite il faut renommer les médias pour qu'ils soient bien associés à la bonne question (correspondance avec le numero d'ordre)
-                    $shiftMedias = $this->shiftMediasName($formData['num_ordre_question'], 1);
+                    //$shiftMedias = $this->shiftMediasName($formData['num_ordre_question'], 1);
 
                     $isToken = true;
 

@@ -241,19 +241,19 @@ class QuestionDAO extends ModelDAO
     
     
     
-    public function shiftOrder($numOrdre, $offset) 
+    public function shiftOrder($numOrdre, $offset, $imageName, $audioName) 
     {
         
         $this->resultset['response']['question'] = array();
         
         $offsetOrdre = $numOrdre + $offset;
-            
+        
         try
         {
             // Connection à la base de données
             $this->connectDB();
 
-            $request = "UPDATE question SET num_ordre_question = ".$offsetOrdre." WHERE num_ordre_question = ".$numOrdre;
+            $request = "UPDATE question SET num_ordre_question = ".$offsetOrdre.", image_question = '".$imageName."', audio_question = '".$audioName."' WHERE num_ordre_question = ".$numOrdre;
 
             // Création de l'appel à la requête préparée
             $this->prepareStatement($request);

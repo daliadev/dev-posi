@@ -479,7 +479,12 @@ class ServicesAdminQuestion extends Main
                 {
                     // S'il est réservé, on décale les numéros d'ordre avec n+1 pour toutes les questions supérieures à la question active (shift = décaler);
                     $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
+
+                    // Ensuite il faut renommer les médias pour qu'ils soient bien associés à la bonne question
+
+
                     $isToken = true;
+
                     break;
                 }
             }
@@ -603,10 +608,6 @@ class ServicesAdminQuestion extends Main
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }
-
-
-        
-
 
     }
     
@@ -807,7 +808,6 @@ class ServicesAdminQuestion extends Main
                             // Insertion de la réponse
                             $resultset = $this->reponseDAO->insert($dataReponse);
 
-                            //var_dump($resultset);
 
                             if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['reponse']['last_insert_id']) && !empty($resultset['response']['reponse']['last_insert_id']))
                             {

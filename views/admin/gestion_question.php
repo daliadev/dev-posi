@@ -440,9 +440,11 @@ $form_url = WEBROOT."admin/question/";
 
                         <?php 
 
+                        $checked = "";
+
                         foreach($response['degre'] as $degre)
                         {
-                            $checked = "";
+                            
                             if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
                             {
                                 $checked = "checked";
@@ -452,10 +454,15 @@ $form_url = WEBROOT."admin/question/";
                             echo '</p>';
                         }
 
-                        ?>
+                        if ($checked == "") 
+                        {
+                            $checked = "checked";
+                        }
 
+                        ?>
+                        
                         <p>
-                            <input type="radio" name="ref_degre" class="radio_degre" value="Aucun" title="" <?php echo $formData['disabled']; ?> /> <span class="checkbox-<?php echo $formData['disabled']; ?>">Aucun</span>
+                            <input type="radio" name="ref_degre" class="radio_degre" value="aucun" title="" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> <span class="checkbox-<?php echo $formData['disabled']; ?>">Aucun</span>
                         </p>
 
                         <!-- <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php //echo $formData['disabled']; ?> value="Tout déselectionner" /></p> -->

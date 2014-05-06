@@ -190,7 +190,7 @@ if (Config::DEBUG_MODE)
 
                 <ul>
                     <li><a href="#infos">1 - Informations utilisateur</a></li>
-                    <li><a href="#stats">2 - Les statistiques</a></li>
+                    <li><a href="#stats">2 - Les résultats</a></li>
                     <li><a href="#details">3 - Détails des résultats</a></li>
                     <li><a href="#exports">4 - Exports</a></li>
                 </ul>
@@ -205,7 +205,7 @@ if (Config::DEBUG_MODE)
                         <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
                         <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>">ici</a> pour acceder à la restitution publique de cet organisme)</div>
                         <?php endif; ?>
-                        <div class="info">Nom de l'intervenant - responsable : <strong><?php echo $infos_user['nom_intervenant']; ?></strong></div>
+                        <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php echo $infos_user['nom_intervenant']; ?></strong></div>-->
                         <div class="info">Email de l'intervenant : <strong><?php echo $infos_user['email_intervenant']; ?></strong></div>
                         <hr>
                         <div class="info">Nom : <strong><?php echo strtoupper($infos_user['nom']); ?></strong></div>

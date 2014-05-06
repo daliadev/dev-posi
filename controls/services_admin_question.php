@@ -480,8 +480,8 @@ class ServicesAdminQuestion extends Main
                     // S'il est réservé, on décale les numéros d'ordre avec n+1 pour toutes les questions supérieures à la question active (shift = décaler);
                     $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
 
-                    // Ensuite il faut renommer les médias pour qu'ils soient bien associés à la bonne question
-
+                    // Ensuite il faut renommer les médias pour qu'ils soient bien associés à la bonne question (correspondance avec le numero d'ordre)
+                    $shiftMedias = $this->shiftMediasName($formData['num_ordre_question'], 1);
 
                     $isToken = true;
 

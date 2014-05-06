@@ -49,7 +49,6 @@ class Config
             'label_menu' => "Questions / Réponses",
             'url_menu' => "question",
             'type_lien_menu' => "dynamic",
-            'icone' => 'ghiug.jpg'
         ),
         array(
             'code_menu' => "20",
@@ -68,8 +67,20 @@ class Config
             'label_menu' => "Activités",
             'url_menu' => "activite",
             'type_lien_menu' => "static"
-        )
-       
+        ),
+		 array(
+            'code_menu' => "50",
+            'label_menu' => "Utilisateur",
+            'url_menu' => "utilisateur",
+            'type_lien_menu' => "dynamic"
+        ),
+		array(
+            'code_menu' => "60",
+            'label_menu' => "Organisme",
+            'url_menu' => "organisme",
+            'type_lien_menu' => "dynamic"
+		
+       )
     );
     
     

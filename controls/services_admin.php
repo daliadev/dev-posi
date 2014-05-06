@@ -18,6 +18,7 @@ require_once(ROOT.'models/dao/menu_admin_dao.php');
 
 
 
+
 class ServicesAdmin extends Main
 {
     
@@ -983,6 +984,8 @@ class ServicesAdmin extends Main
         
         $this->setTemplate("template_page");
         $this->render("gestion_organisme"); 
+		
+		
         
     }
 

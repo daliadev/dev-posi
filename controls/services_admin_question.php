@@ -175,12 +175,17 @@ class ServicesAdminQuestion extends Main
         }
         
         
-        /*** Récupèration de la référence du niveau(degre) d'aptitude *=*/
+        /*** Récupèration de la référence du degré d'aptitude ***/
             
         if (isset($postData['ref_degre']) && !empty($postData['ref_degre']))
         {
-            $formData['ref_degre'] = $this->validatePostData($postData['ref_degre'], "ref_degre", "integer", false, "Aucun degré d'aptitude n'a été coché.", "Le degré d'aptitude n'est pas correctement sélectionné.");
+            $formData['ref_degre'] = $postData['ref_degre'];
             $dataQuestion['ref_degre'] = $formData['ref_degre'];
+        }
+        else
+        {
+            $formData['ref_degre'] = NULL;
+            $dataQuestion['ref_degre'] = NULL;
         }
 
 
@@ -374,7 +379,6 @@ class ServicesAdminQuestion extends Main
     public function setQuestionProperties($previousMode, $dataQuestion, &$formData)
     {
 
-
         /*** Traitement de l'image ***/
 
         if ($formData['image_upload'] && isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
@@ -475,7 +479,12 @@ class ServicesAdminQuestion extends Main
                 {
                     // S'il est réservé, on décale les numéros d'ordre avec n+1 pour toutes les questions supérieures à la question active (shift = décaler);
                     $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
+
+                    // Ensuite il faut renommer les médias pour qu'ils soient bien associés à la bonne question
+
+
                     $isToken = true;
+
                     break;
                 }
             }
@@ -599,10 +608,6 @@ class ServicesAdminQuestion extends Main
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }
-
-
-        
-
 
     }
     
@@ -803,7 +808,6 @@ class ServicesAdminQuestion extends Main
                             // Insertion de la réponse
                             $resultset = $this->reponseDAO->insert($dataReponse);
 
-                            //var_dump($resultset);
 
                             if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['reponse']['last_insert_id']) && !empty($resultset['response']['reponse']['last_insert_id']))
                             {

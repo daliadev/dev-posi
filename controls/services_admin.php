@@ -974,8 +974,29 @@ class ServicesAdmin extends Main
         
     }
     
-    
-    
+
+
+    public function organisme($requestParams = array())
+    {
+        // Authentification de l'admin necessaire
+        ServicesAuth::checkAuthentication("admin");
+        
+        $this->setTemplate("template_page");
+        $this->render("gestion_organisme"); 
+        
+    }
+
+
+    public function utilisateur($requestParams = array())
+    {
+        // Authentification de l'admin necessaire
+        ServicesAuth::checkAuthentication("admin");
+        
+        $this->setTemplate("template_page");
+        $this->render("gestion_utilisateur"); 
+        
+    }
+
     
     /**
      * activite - Gére la validation du formulaire de gestion des activités avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
@@ -992,6 +1013,9 @@ class ServicesAdmin extends Main
         
     }
 	
+
+
+
 	
     /* A supprimer !!! */
     public function restitution()

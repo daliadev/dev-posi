@@ -767,7 +767,7 @@ class ServicesAdmin extends Main
 
         $this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_degre_cbox" => "select", "nom_degre" => "text", "descript_degre" => "text"));
         
-        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_degre_cbox'] == null)
+        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_degre_cbox'] != null)
         {
             $this->formData['ref_degre_cbox'] = $requestParams[0];
         }

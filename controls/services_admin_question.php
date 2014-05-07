@@ -177,15 +177,15 @@ class ServicesAdminQuestion extends Main
         
         /*** Récupèration de la référence du degré d'aptitude ***/
             
-        if (isset($postData['ref_degre']) && !empty($postData['ref_degre']))
+        if (isset($postData['ref_degre']) && !empty($postData['ref_degre']) && $postData['ref_degre'] != "aucun")
         {
             $formData['ref_degre'] = $postData['ref_degre'];
             $dataQuestion['ref_degre'] = $formData['ref_degre'];
         }
         else
         {
-            $formData['ref_degre'] = NULL;
-            $dataQuestion['ref_degre'] = NULL;
+            $formData['ref_degre'] = null;
+            $dataQuestion['ref_degre'] = null;
         }
 
 
@@ -295,6 +295,9 @@ class ServicesAdminQuestion extends Main
 
         /*** Traitement de l'image ***/
         
+
+        // Vérifier les caractèristiques du média du médias  !!!
+
         //if (empty($this->errors)) 
         //{
             if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
@@ -550,6 +553,7 @@ class ServicesAdminQuestion extends Main
             {
                 $formData['ref_question'] = $dataQuestion['ref_question'];
 
+
                 // Mise à jour de la question
                 $resultsetQuestion = $this->setQuestion("update", $dataQuestion);
 
@@ -639,7 +643,7 @@ class ServicesAdminQuestion extends Main
             }
             else if ($modeRequete == "update")
             {
-                
+
                 if (!empty($dataQuestion['ref_question']))
                 {
                     if (isset($dataQuestion['code_cat']) && !empty($dataQuestion['code_cat']))
@@ -648,6 +652,7 @@ class ServicesAdminQuestion extends Main
                     }
 
                     
+
                     $resultset = $this->questionDAO->update($dataQuestion);
                     
                     // Traitement des erreurs de la requête

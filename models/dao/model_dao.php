@@ -141,6 +141,8 @@ class ModelDAO
     
     public function createQueryString($mode, $fieldsvalues, $table, $whereStmt = "")
     {
+        
+
         $requestString = "";
         
         if (!empty($mode) && !empty($fieldsvalues) && !empty($table))
@@ -154,11 +156,15 @@ class ModelDAO
                 {
                     if (is_numeric($value))
                     {
-                        $updatevalue = $value;
+                        $insertValues = $value;
+                    }
+                    else if ($value == null)
+                    {    
+                        $insertValues = "NULL";
                     }
                     else 
                     {
-                        $updatevalue = "'".$value."'";
+                        $insertValues = "'".$value."'";
                     }
                     
                     if ($i == 0)
@@ -187,6 +193,10 @@ class ModelDAO
                     if (is_numeric($value))
                     {
                         $updatevalue = $value;
+                    }
+                    else if ($value == null)
+                    {    
+                        $updatevalue = "NULL";
                     }
                     else 
                     {

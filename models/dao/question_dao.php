@@ -151,7 +151,7 @@ class QuestionDAO extends ModelDAO
     public function insert($values) 
     {
         $this->initialize();
-        
+
         if (!empty($values))
         {
             if (isset($values['ref_question']) && !empty($values['ref_question']))

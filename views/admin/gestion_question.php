@@ -355,7 +355,7 @@ $form_url = WEBROOT."admin/question/";
                             </div>
                         </div>
 
-                              
+                            
                     </div>
 
                 </div>
@@ -369,13 +369,14 @@ $form_url = WEBROOT."admin/question/";
                     <!-- Catégories -->
 
                     <div id="competences" class="formdiv" >
-                        <fieldset>
 
                             <div id="titre-question-h3">Catégories / compétences</div>
-                            <p>
+                            <!-- <p> -->
                                 <select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?> >
                                     <option value="select_cbox">---</option>
                                     <?php 
+
+                                    $optgroup = false;
 
                                     foreach($response['categorie'] as $categorie)
                                     {
@@ -386,20 +387,64 @@ $form_url = WEBROOT."admin/question/";
                                             $selected = "selected";
                                         }
                                         
+
+                                        
+
                                         if (strlen($categorie->getCode()) == 2)
                                         {
-                                            echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+                                            if ($optgroup)
+                                            {
+                                                echo '</optgroup>';
+                                                $optgroup = false;
+                                            }
+
+                                            if ($categorie->getTypeLien() == "dynamic")
+                                            {
+                                                echo '<optgroup label="'.$categorie->getNom().'">';
+                                                $optgroup = true;
+                                            }
+                                            else
+                                            {
+                                                //echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+                                            }
                                         }
+
+                                        $length = strlen($categorie->getCode());
+
+                                        if ($optgroup)
+                                        {
+                                            $length -= 2;
+                                            if ($length < 0)
+                                            {
+                                                $length = 0;
+                                            }
+                                        }
+
+                                        $style = "width:".($length * 10)."px;";
+
+                                        if ($length == 0 || $length == 2)
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>'.$categorie->getNom().'</option>';
+                                        }
+                                        else
+                                        {
+                                            echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                        }
+
+                                        /*
                                         else if (strlen($categorie->getCode()) == 4)
                                         {
-                                            echo '<option value="'.$categorie->getCode().'" style="margin-left:20px" '.$selected.'>- '.$categorie->getNom().'</option>';
+                                            
+                                            //echo '<option value="'.$categorie->getCode().'" style="margin-left:20px" '.$selected.'>- '.$categorie->getNom().'</option>';
                                         }
                                         else if (strlen($categorie->getCode()) == 6)
                                         {
+                                            //
                                             echo '<option value="'.$categorie->getCode().'" style="margin-left:40px" '.$selected.'>- '.$categorie->getNom().'</option>';
                                         }
                                         else if (strlen($categorie->getCode()) == 8)
                                         {
+                                            //
                                             echo '<option value="'.$categorie->getCode().'" style="margin-left:60px" '.$selected.'>- '.$categorie->getNom().'</option>';
                                         }
                                         else if (strlen($categorie->getCode()) == 10)
@@ -410,6 +455,11 @@ $form_url = WEBROOT."admin/question/";
                                         {
                                             echo '<option value="">Impossible d\'afficher cette catégorie</option>';
                                         }
+                                        */
+
+                                        
+                                        
+                                        
                                         /*
                                         if (strlen($categorie->getCode()) == 4)
                                         {
@@ -426,10 +476,14 @@ $form_url = WEBROOT."admin/question/";
                                         */
                                     }
 
+                                    if ($optgroup)
+                                    {
+                                        echo '</optgroup>';
+                                    }
+
                                     ?>
                                 </select>
-                            </p>
-                        </fieldset>
+                            <!-- </p> -->
                     </div>
 
 

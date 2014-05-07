@@ -381,7 +381,7 @@ class ServicesAdminQuestion extends Main
     
     public function setQuestionProperties($previousMode, $dataQuestion, &$formData)
     {
-
+        
         /*** Traitement de l'image ***/
 
         if ($formData['image_upload'] && isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))

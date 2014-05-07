@@ -96,6 +96,9 @@ class QuestionCategorieDAO extends ModelDAO
     { 
         $this->initialize();
         
+        var_dump($values);
+        exit();
+        
         if (isset($values['ref_question']) && !empty($values['ref_question']) && isset($values['ref_cat']) && !empty($values['ref_cat']))
         {
             $request = "INSERT INTO question_cat (ref_question, ref_cat) VALUES (".$values['ref_question'].", ".$values['ref_cat'].")";

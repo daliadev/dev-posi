@@ -296,7 +296,7 @@ class ServicesAdminQuestion extends Main
         /*** Traitement de l'image ***/
         
 
-        // Vérifier les caractèristiques du média du médias  !!!
+        // Vérifier les caractèristiques du média  !!!
 
         //if (empty($this->errors)) 
         //{
@@ -307,6 +307,7 @@ class ServicesAdminQuestion extends Main
                 //exit();
                 
                 $formData['image_upload'] = true;
+
 
                 // Insert ou update
                 /*
@@ -383,7 +384,7 @@ class ServicesAdminQuestion extends Main
     {
         
         /*** Traitement de l'image ***/
-
+        
         if ($formData['image_upload'] && isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
         {
             // S'il y a déjà une image, on la supprime avant de la remplacer par la nouvelle
@@ -419,11 +420,11 @@ class ServicesAdminQuestion extends Main
         {
             $this->registerError("form_empty", "Aucune image n'est sélectionnée.");
         }
-
+        
 
 
         /*** Traitement du son ***/
-
+        
         if ($formData['audio_upload'] && isset($_FILES['audio_file']['name']) && !empty($_FILES['audio_file']['name']))
         {
             // S'il y a déjà un son, on le supprime avant de la remplacer par le nouveau
@@ -456,10 +457,11 @@ class ServicesAdminQuestion extends Main
         {
             $this->registerError("form_empty", "Aucun son n'a été sélectionnée.");
         }
-
+        
 
 
         $dataReponses = array();
+
                 
         // On commence par extraire les réponses (si elles existent) des données de la question
         if (isset($dataQuestion['data_reponses']) && !empty($dataQuestion['data_reponses']))

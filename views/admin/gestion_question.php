@@ -380,15 +380,11 @@ $form_url = WEBROOT."admin/question/";
 
                                     foreach($response['categorie'] as $categorie)
                                     {
-                                        
                                         $selected = "";
                                         if (!empty($formData['categories'][0]['code_cat']) && $formData['categories'][0]['code_cat'] == $categorie->getCode())
                                         {
                                             $selected = "selected";
                                         }
-                                        
-
-                                        
 
                                         if (strlen($categorie->getCode()) == 2)
                                         {
@@ -403,10 +399,6 @@ $form_url = WEBROOT."admin/question/";
                                                 echo '<optgroup label="'.$categorie->getNom().'">';
                                                 $optgroup = true;
                                             }
-                                            else
-                                            {
-                                                //echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-                                            }
                                         }
 
                                         $length = strlen($categorie->getCode());
@@ -420,13 +412,9 @@ $form_url = WEBROOT."admin/question/";
                                             }
                                         }
 
-                                        $style = "width:".($length * 10)."px;";
+                                        $style = "padding-left:".($length * 10)."px;";
 
-                                        if ($length == 0 || $length == 2)
-                                        {
-                                            echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>'.$categorie->getNom().'</option>';
-                                        }
-                                        else
+                                        if ($length > 0)
                                         {
                                             echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
                                         }

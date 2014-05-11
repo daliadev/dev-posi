@@ -135,8 +135,6 @@ class QuestionCategorieDAO extends ModelDAO
                 
                 $request = $this->createQueryString("update", $values, "question_cat", "WHERE ref_question = ".$refQuestion);
                 
-                
-
                 $this->resultset['response'] = $this->executeRequest("update", $request, "question_cat", "QuestionCategorie");
             }
             else

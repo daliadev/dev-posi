@@ -297,14 +297,7 @@ class ServicesAdminQuestion extends Main
         
         $imageName = "";
 
-        if (isset($postData['image_question']) && !empty($postData['image_question']))
-        {
-
-            $formData['image_upload'] = false;
-            $formData['image_question'] = $postData['image_question'];
-            $dataQuestion['image_question'] = $formData['image_question'];
-        }
-        else if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
+        if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
         {
             $mimeType = str_replace("image/", "", $_FILES['image_file']['type']);
 
@@ -323,6 +316,13 @@ class ServicesAdminQuestion extends Main
                 $this->registerError("form_valid", "Le format de l'image est incorrect.");
             }
         }
+        else if (isset($postData['image_question']) && !empty($postData['image_question']))
+        {
+
+            $formData['image_upload'] = false;
+            $formData['image_question'] = $postData['image_question'];
+            $dataQuestion['image_question'] = $formData['image_question'];
+        }
         else 
         {
             $this->registerError("form_empty", "Aucune image n'a été sélectionnée.");
@@ -332,13 +332,7 @@ class ServicesAdminQuestion extends Main
 
         /*** Traitement du son ***/
 
-        if (isset($postData['audio_question']) && !empty($postData['audio_question']))
-        {
-            $formData['audio_upload'] = false;
-            $formData['audio_question'] = $postData['audio_question'];
-            $dataQuestion['audio_question'] = $formData['audio_question'];
-        }
-        else if (isset($_FILES['audio_file']['name']) && !empty($_FILES['audio_file']['name']))
+        if (isset($_FILES['audio_file']['name']) && !empty($_FILES['audio_file']['name']))
         {
             $mimeType = str_replace("audio/", "", $_FILES['audio_file']['type']);
 
@@ -357,13 +351,19 @@ class ServicesAdminQuestion extends Main
                 $this->registerError("form_empty", "Le format du son est incorrect.");
             }
         }
-        
+        else if (isset($postData['audio_question']) && !empty($postData['audio_question']))
+        {
+            $formData['audio_upload'] = false;
+            $formData['audio_question'] = $postData['audio_question'];
+            $dataQuestion['audio_question'] = $formData['audio_question'];
+        }
         else 
         {
             $this->registerError("form_empty", "Aucun son n'a été sélectionné.");
         }
         
         return $dataQuestion;
+
     }
     
     
@@ -525,6 +525,8 @@ class ServicesAdminQuestion extends Main
         }
 
 
+        
+
         /*** Traitement de l'image ***/
         
         if (empty($this->errors))
@@ -533,16 +535,17 @@ class ServicesAdminQuestion extends Main
             {
                 $imageFile = ROOT.IMG_PATH.$formData['image_question'];
                 $thumbFile = ROOT.THUMBS_PATH."thumb_".$formData['image_question'];
-                
+
                 if (file_exists($imageFile)) : unlink($imageFile); endif;
                 if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-               
-
+                
                 $this->uploadMedia($_FILES['image_file'], "image", array("jpg"), ROOT.IMG_PATH, $formData['image_question']);
 
                 if (!empty($this->errors))
                 {
                     $this->registerError("form_valid", "L'image n'a pas pu être enregistrée.");
+                    if (file_exists($imageFile)) : unlink($imageFile); endif;
+                    if (file_exists($thumbFile)) : unlink($thumbFile); endif;
                 }
             }
         }
@@ -551,6 +554,8 @@ class ServicesAdminQuestion extends Main
             $this->registerError("form_valid", "L'image n'a pas été enregistrée.");
         }
 
+        //var_dump($this->errors);
+        //exit();
 
         /*** Traitement du son ***/
         
@@ -565,9 +570,9 @@ class ServicesAdminQuestion extends Main
                 $this->uploadMedia($_FILES['audio_file'], "son", array("mp3"), ROOT.AUDIO_PATH, $formData['audio_question']);
 
                 if (!empty($this->errors)) 
-
                 {
                     $this->registerError("form_valid", "Le son n'a pas pu être enregistré.");
+                    if (file_exists($soundFile)) : unlink($soundFile); endif;
                 }
             }
         }
@@ -575,7 +580,6 @@ class ServicesAdminQuestion extends Main
         {
             $this->registerError("form_valid", "Le son n'a pas été enregistré.");
         }
-
     }
     
     

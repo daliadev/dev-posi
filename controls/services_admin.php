@@ -183,19 +183,19 @@ class ServicesAdmin extends Main
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         
         $initializedData = array(
-            "ref_question_cbox" => "select",
+            "ref_question_cbox"  => "select",
             "num_ordre_question" => "text",
-            "intitule_question" => "text",
-            "type_question" => "text",
-            "ref_reponses" => "multi",
+            "intitule_question"  => "text",
+            "type_question"      => "text",
+            "ref_reponses"       => "multi",
             "intitules_reponses" => "multi",
-            "correct" => "multi",
-            "reponse_champ" => "text",
-            "image_question" => "text",
-            "audio_question" => "text",
-            "code_cat_cbox" => "select",
-            "ref_activites" => "multi",
-            "ref_degre" => "text"
+            "correct"            => "multi",
+            "reponse_champ"      => "text",
+            "image_question"     => "text",
+            "audio_question"     => "text",
+            "code_cat_cbox"      => "select",
+            "ref_activites"      => "multi",
+            "ref_degre"          => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
@@ -491,9 +491,9 @@ class ServicesAdmin extends Main
         
         $initializedData = array(
             "code_cat_cbox" => "select", 
-            "nom" => "text", 
-            "descript_cat" => "text", 
-            "actif" => "text"
+            "nom"           => "text", 
+            "descript_cat"  => "text", 
+            "actif"         => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         

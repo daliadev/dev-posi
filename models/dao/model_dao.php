@@ -141,7 +141,6 @@ class ModelDAO
     
     public function createQueryString($mode, $fieldsvalues, $table, $whereStmt = "")
     {
-        
         $requestString = "";
         
         if (!empty($mode) && !empty($fieldsvalues) && !empty($table))
@@ -151,6 +150,7 @@ class ModelDAO
                 $fields = "";
                 //$insertValues = "";
                 $insertString = "";
+                
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
@@ -171,13 +171,13 @@ class ModelDAO
                     }
                     $i++;
                 }
-                
 
                 $requestString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertString.") ".$whereStmt;
                 
             }
             else if ($mode == "update")
             {
+                //$fields = "";
                 $updateString = "";
 
                 $i = 0;
@@ -190,6 +190,16 @@ class ModelDAO
 
                     if ($i == 0)
                     {
+                        $updateString .= $field." = '".$value."'";  
+                    }
+                    else 
+                    {
+                        $updateString .= ", ".$field." = '".$value."'";
+                    }
+                    $i++;
+                    /*
+                    if ($i == 0)
+                    {
                         $fields .= $field;
                         $updateString .= "'".$value."'"; 
                     }
@@ -199,6 +209,7 @@ class ModelDAO
                         $updateString .= ", '".$value."'"; 
                     }
                     $i++;
+                    */
                 }
 
                 $requestString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt;

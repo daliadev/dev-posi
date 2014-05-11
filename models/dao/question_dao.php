@@ -149,7 +149,7 @@ class QuestionDAO extends ModelDAO
      * @return array Dernier identifiant d'insertion sinon erreurs
      */
     public function insert($values) 
-    {
+    {   
         $this->initialize();
 
         if (!empty($values))

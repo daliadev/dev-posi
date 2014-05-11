@@ -307,14 +307,10 @@ class ServicesAdminCategorie extends Main
                     $this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
                 }
             }
-            else 
-            {
-                return true;
-            }
         }
         else 
         {
-            $this->registerError("form_request", "Le code categorie ou la reférence de la question manquants.");
+            $this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
         }
 
         return false;

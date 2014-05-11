@@ -96,12 +96,9 @@ class QuestionCategorieDAO extends ModelDAO
     { 
         $this->initialize();
         
-        var_dump($values);
-        exit();
-        
         if (isset($values['ref_question']) && !empty($values['ref_question']) && isset($values['ref_cat']) && !empty($values['ref_cat']))
         {
-            $request = "INSERT INTO question_cat (ref_question, ref_cat) VALUES (".$values['ref_question'].", ".$values['ref_cat'].")";
+            $request = "INSERT INTO question_cat (ref_question, ref_cat) VALUES (".$values['ref_question'].", '".$values['ref_cat']."')";
 
             $this->resultset['response'] = $this->executeRequest("insert", $request, "question_cat", "QuestionCategorie");
         }
@@ -127,6 +124,8 @@ class QuestionCategorieDAO extends ModelDAO
     {
         $this->initialize();
         
+       
+        
         if (!empty($values))
         {
             if (isset($values['ref_question']) && !empty($values['ref_question']) && isset($values['ref_cat']) && !empty($values['ref_cat']))
@@ -136,6 +135,8 @@ class QuestionCategorieDAO extends ModelDAO
                 
                 $request = $this->createQueryString("update", $values, "question_cat", "WHERE ref_question = ".$refQuestion);
                 
+                
+
                 $this->resultset['response'] = $this->executeRequest("update", $request, "question_cat", "QuestionCategorie");
             }
             else
@@ -178,16 +179,6 @@ class QuestionCategorieDAO extends ModelDAO
 
         return $this->resultset;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 
 }

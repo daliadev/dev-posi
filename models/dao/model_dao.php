@@ -142,7 +142,6 @@ class ModelDAO
     public function createQueryString($mode, $fieldsvalues, $table, $whereStmt = "")
     {
         
-
         $requestString = "";
         
         if (!empty($mode) && !empty($fieldsvalues) && !empty($table))
@@ -150,37 +149,31 @@ class ModelDAO
             if ($mode == "insert")
             {
                 $fields = "";
-                $insertValues = "";
+                //$insertValues = "";
+                $insertString = "";
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
-                    if (is_numeric($value))
-                    {
-                        $insertValues = $value;
-                    }
-                    else if ($value == null)
+                    if ($value == null)
                     {    
-                        $insertValues = "NULL";
+                        $value = "NULL";
                     }
-                    else 
-                    {
-                        $insertValues = "'".$value."'";
-                    }
-                    
+
                     if ($i == 0)
                     {
                         $fields .= $field;
-                        $insertValues .= "'".$value."'"; 
+                        $insertString .= "'".$value."'"; 
                     }
                     else 
                     {
                         $fields .= ", ".$field;
-                        $insertValues .= ", '".$value."'";
+                        $insertString .= ", '".$value."'"; 
                     }
                     $i++;
                 }
                 
-                $requestString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertValues.") ".$whereStmt." ";
+
+                $requestString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertString.") ".$whereStmt;
                 
             }
             else if ($mode == "update")
@@ -190,31 +183,25 @@ class ModelDAO
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
-                    if (is_numeric($value))
-                    {
-                        $updatevalue = $value;
-                    }
-                    else if ($value == null)
+                    if ($value == null)
                     {    
-                        $updatevalue = "NULL";
+                        $value = "NULL";
                     }
-                    else 
-                    {
-                        $updatevalue = "'".$value."'";
-                    }
-                    
+
                     if ($i == 0)
                     {
-                        $updateString .= $field." = ".$updatevalue;  
+                        $fields .= $field;
+                        $updateString .= "'".$value."'"; 
                     }
                     else 
                     {
-                        $updateString .= ", ".$field." = ".$updatevalue;
+                        $fields .= ", ".$field;
+                        $updateString .= ", '".$value."'"; 
                     }
                     $i++;
                 }
 
-                $requestString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt." ";
+                $requestString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt;
             } 
         }
 

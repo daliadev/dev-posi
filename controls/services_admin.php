@@ -89,7 +89,6 @@ class ServicesAdmin extends Main
             ServicesAuth::logout();
         }
         
-        var_dump($this->errors);
              
         if (!empty($this->errors) && count($this->errors) > 0)
         {
@@ -291,15 +290,15 @@ class ServicesAdmin extends Main
             
             // Traitement des infos saisies.
             $dataQuestion = $this->servicesQuestion->filterQuestionData($this->formData, $_POST);
-
+            
 
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors)) 
             {
                 $this->servicesQuestion->setQuestionProperties($previousMode, $dataQuestion, $this->formData);
             }
-
             
+
             // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors))
             {

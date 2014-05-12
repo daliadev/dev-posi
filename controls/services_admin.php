@@ -848,7 +848,6 @@ class ServicesAdmin extends Main
             $dataDegre = $this->servicesDegre->filterDegreData($this->formData, $_POST);
 
             
-
             /*----- Sauvegarde ou mise à jour des données ***/
             
             // Aucune erreur ne doit être enregistrée

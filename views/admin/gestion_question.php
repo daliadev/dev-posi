@@ -179,7 +179,7 @@ $form_url = WEBROOT."admin/question/";
 
                         <div id="intitule">
                             <p>
-                                <textarea name="intitule_question"  cols="62" rows="6" maxlength="391" placeholder="480 caractères maximum" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
+                                <textarea name="intitule_question"  cols="62" rows="6" maxlength="391" placeholder="380 caractères maximum" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
                             </p>
                         </div>
 
@@ -295,6 +295,7 @@ $form_url = WEBROOT."admin/question/";
                         <div id="titre-question-h3">Medias</div>
                         <div id="medias">
                             <div id="image-question">
+                                <h3>Image :</h3>
                                 <p>
                                 <?php
                                 if ($formData['image_question']) :
@@ -324,6 +325,7 @@ $form_url = WEBROOT."admin/question/";
                             <hr/>
 
                             <div id="audio-question">
+                                <h3>Son :</h3>
                                 <p>
                                 <?php
                                 if ($formData['audio_question']) :

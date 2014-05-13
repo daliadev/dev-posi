@@ -31,13 +31,6 @@ class Question
         return $this->ref_degre;
     }
     
-    /*
-    public function getCodeCategorie()
-    {
-        return $this->code_categorie;
-    }
-    */
-    
     public function getNumeroOrdre()
     {
         return $this->num_ordre_question;

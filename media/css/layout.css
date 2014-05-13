@@ -761,8 +761,23 @@ body{
 }
 
 
+/* a supprimer */
+/*
+input[type="submit"][disabled] {
+	background-color: #BDC3C7;
+	cursor: default;
+}
 
 
+.checkbox-disabled {
+color:#BDC3C7;
+}
+
+.select-disabled {
+color: #BDC3C7;
+}
+*/
+/* fin suppression */
 
 /*--------------------------------------Page intro-------------------------------------------------*/
 
@@ -992,6 +1007,15 @@ select {
 
 
 
+#buttons input[name='add'] { background: #f39c12; }
+#buttons input[name='save'] { background: #3498db; }
+#buttons input[name='edit'] { background: #1fbba6; }
+#buttons input[name='del'] { background: #f75556; }
+#buttons input[type="submit"][disabled] {
+	background-color: #BDC3C7;
+	cursor: default;
+}
+
 
 
 #zone-erreur{
@@ -1045,12 +1069,12 @@ select {
 	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
 }
 
-
+/*
 #buttons input[name='add'] { background: #f39c12; }
 #buttons input[name='save'] { background: #3498db; }
 #buttons input[name='edit'] { background: #1fbba6; }
 #buttons input[name='del'] { background: #f75556; }
-    
+*/   
         
 
 /*--------------------------------------------------------POSI APPLI-----------------------------------------------------------------*/

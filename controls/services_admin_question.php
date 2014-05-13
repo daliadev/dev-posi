@@ -229,7 +229,6 @@ class ServicesAdminQuestion extends Main
         }
 
 
-
         /*** Traitement des réponses du type qcm ***/
 
         if ($formData['type_question'] == "qcm")
@@ -420,8 +419,6 @@ class ServicesAdminQuestion extends Main
 
                 // Insertion de la question dans la bdd
                 $resultsetQuestion = $this->setQuestion("insert", $dataQuestion);
-
-                
 
 
                 if (isset($resultsetQuestion['response']['question']['last_insert_id']) && !empty($resultsetQuestion['response']['question']['last_insert_id']))
@@ -712,8 +709,18 @@ class ServicesAdminQuestion extends Main
                     if (file_exists($thumbFile)) : unlink($thumbFile); endif;
                     if (file_exists($soundFile)) : unlink($soundFile); endif;   
                 }
+
+                // On décale toutes les questions qui suivent d'un cran
+                $shiftOrdre = $this->shiftNumsOrdre($question->getNumeroOrdre(), -1);
                 
-                return true;
+                if ($shiftOrdre)
+                {
+                    return true;
+                }
+                else
+                {
+                    $this->registerError("form_request", "Le décalage des questions a échoué.");
+                }
             }
             else 
             {
@@ -1150,25 +1157,28 @@ class ServicesAdminQuestion extends Main
             echo "\$lastNum = ".$lastNum."<br/>";
             echo "\$numOrdre = ".$numOrdre."<br/>";
             echo "\$offset = ".$offset."<br/>";
+            exit();
         }
         
         $erreur = false;
-        
+
         if ($offset > 0)
         {
             for ($i = $lastNum; $i >= $numOrdre; $i--)
             {
-                $oldImageName = ROOT.IMG_PATH."img_".$numOrdre.".jpg";
-                $oldThumbName = ROOT.THUMBS_PATH."thumb_"."img_".$numOrdre.".jpg";
-                $oldAudioName = ROOT.AUDIO_PATH."audio_".$numOrdre.".mp3";
+                $newNumOrdre = $i + $offset;
 
-                $newImageName = ROOT.IMG_PATH."img_".$i.".jpg";
-                $newThumbName = ROOT.THUMBS_PATH."thumb_"."img_".$i.".jpg";
-                $newAudioName = ROOT.AUDIO_PATH."audio_".$i.".mp3";
+                $oldImageName = "img_".$i.".jpg";
+                $oldThumbName = "thumb_"."img_".$i.".jpg";
+                $oldAudioName = "audio_".$i.".mp3";
 
-                rename($oldImageName, $newImageName);
-                rename($oldThumbName, $newThumbName);
-                rename($oldAudioName, $newAudioName);
+                $newImageName = "img_".$newNumOrdre.".jpg";
+                $newThumbName = "thumb_"."img_".$newNumOrdre.".jpg";
+                $newAudioName = "audio_".$newNumOrdre.".mp3";
+
+                rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
+                rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
+                rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
 
                 $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName);
                 
@@ -1183,8 +1193,19 @@ class ServicesAdminQuestion extends Main
         {
             for ($i = ($numOrdre + 1); $i <= $lastNum; $i++)
             {
-                $newImageName = "img_".$i.".jpg";
-                $newAudioName = "audio_".$i.".mp3";
+                $newNumOrdre = $i + $offset;
+
+                $oldImageName = "img_".$i.".jpg";
+                $oldThumbName = "thumb_"."img_".$i.".jpg";
+                $oldAudioName = "audio_".$i.".mp3";
+
+                $newImageName = "img_".$newNumOrdre.".jpg";
+                $newThumbName = "thumb_"."img_".$newNumOrdre.".jpg";
+                $newAudioName = "audio_".$newNumOrdre.".mp3";
+
+                rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
+                rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
+                rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
 
                 $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName);
 

@@ -160,7 +160,7 @@ class QuestionDAO extends ModelDAO
             }
                 
             $request = $this->createQueryString("insert", $values, "question");
-            
+
             $this->resultset['response'] = $this->executeRequest("insert", $request, "question", "Question");
         }
         else

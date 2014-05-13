@@ -303,17 +303,9 @@ class ServicesAdminQuestion extends Main
 
             if ($mimeType == "jpeg" || $mimeType == "jpg") 
             {
-                /*
-                if (!empty($formData['num_ordre_question']))
-                {
-                    $imageName = "img_".$formData['num_ordre_question'].".jpg";
-                    $formData['image_question'] = $imageName;
-                    $dataQuestion['image_question'] = $formData['image_question'];
-                }
-                */
                 $formData['image_upload'] = true;
-                $formData['image_question'] = "NULL";
-                $dataQuestion['image_question'] = "NULL";
+                $formData['image_question'] = "";
+                $dataQuestion['image_question'] = null;
             }
             else
             {
@@ -330,8 +322,9 @@ class ServicesAdminQuestion extends Main
         else 
         {
             //$this->registerError("form_empty", "Aucune image n'a été sélectionnée.");
-            $formData['image_question'] = "NULL";
-            $dataQuestion['image_question'] = "NULL";
+            $formData['image_upload'] = false;
+            $formData['image_question'] = "";
+            $dataQuestion['image_question'] = null;
         }
 
 
@@ -344,18 +337,9 @@ class ServicesAdminQuestion extends Main
 
             if ($mimeType == "mp3" || $mimeType == "mpeg" || $mimeType == "mpeg3")
             {
-                /*
-                if (!empty($formData['num_ordre_question']))
-                {
-                    $audioName = "audio_".$formData['num_ordre_question'].".mp3";
-                    $formData['audio_question'] = $audioName;
-                    $dataQuestion['audio_question'] = $formData['audio_question'];
-                    $formData['audio_upload'] = true;
-                }
-                */
                 $formData['audio_upload'] = true;
-                $formData['audio_question'] = "NULL";
-                $dataQuestion['audio_question'] = "NULL";
+                $formData['audio_question'] = "";
+                $dataQuestion['audio_question'] = null;
             }
             else
             {
@@ -371,8 +355,9 @@ class ServicesAdminQuestion extends Main
         else 
         {
             //$this->registerError("form_empty", "Aucun son n'a été sélectionné.");
-            $formData['audio_question'] = "NULL";
-            $dataQuestion['audio_question'] = "NULL";
+            $formData['audio_upload'] = false;
+            $formData['audio_question'] = "";
+            $dataQuestion['audio_question'] = null;
         }
         
         return $dataQuestion;
@@ -432,8 +417,12 @@ class ServicesAdminQuestion extends Main
                     $dataQuestion['audio_question'] = $formData['audio_question'];
                 }
 
+
                 // Insertion de la question dans la bdd
                 $resultsetQuestion = $this->setQuestion("insert", $dataQuestion);
+
+                
+
 
                 if (isset($resultsetQuestion['response']['question']['last_insert_id']) && !empty($resultsetQuestion['response']['question']['last_insert_id']))
                 {
@@ -856,8 +845,9 @@ class ServicesAdminQuestion extends Main
                 }
             }
 
- 
+
             $successCount = 0;
+            $countReponses = 0;
             
             for ($i = 0; $i < count($dataReponses); $i++)
             {
@@ -865,24 +855,25 @@ class ServicesAdminQuestion extends Main
                 {
                     $dataReponse = $dataReponses[$i];
 
-                    
-            
-                    if (!empty($dataReponse['intitule_reponse']) && !empty($dataReponse['num_ordre_reponse']) && (!empty($dataReponse['est_correct']) || $dataReponse['est_correct'] == 0))
+                    if (!empty($dataReponse['intitule_reponse']) && strlen($dataReponse['intitule_reponse']) > 0 && !empty($dataReponse['num_ordre_reponse']) && (!empty($dataReponse['est_correct']) || $dataReponse['est_correct'] == 0))
                     {
+                        //var_dump($dataReponse['intitule_reponse']);
+                        $countReponses++;
+
                         if (empty($dataReponse['ref_reponse']))
                         {
                             // Insertion de la réponse
                             $resultset = $this->reponseDAO->insert($dataReponse);
 
-
+                            // Traitement des erreurs de la requête
                             if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['reponse']['last_insert_id']) && !empty($resultset['response']['reponse']['last_insert_id']))
                             {
                                 $successCount++;
-
                             }
                         }
                         else
                         {
+                            // Mise à jour de la réponse
                             $resultset = $this->reponseDAO->update($dataReponse);
 
                             // Traitement des erreurs de la requête
@@ -897,11 +888,16 @@ class ServicesAdminQuestion extends Main
                         unset($dataReponses[$i]);
                     }
                 }
-            }
-
-
+            } 
             
-            if ($successCount == count($dataReponses))
+            /*
+            var_dump($countReponses);
+            var_dump($successCount);
+            var_dump($dataReponses);
+            exit();
+            */
+
+            if ($successCount == $countReponses)
             {
                 return true;
             }
@@ -915,6 +911,7 @@ class ServicesAdminQuestion extends Main
             }
             
         }
+        
         
         return false;
     }

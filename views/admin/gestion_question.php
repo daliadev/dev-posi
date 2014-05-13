@@ -383,7 +383,7 @@ $form_url = WEBROOT."admin/question/";
                                     foreach($response['categorie'] as $categorie)
                                     {
                                         $selected = "";
-                                        if (!empty($formData['categories'][0]['code_cat']) && $formData['categories'][0]['code_cat'] == $categorie->getCode())
+                                        if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
                                         {
                                             $selected = "selected";
                                         }

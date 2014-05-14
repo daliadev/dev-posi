@@ -1219,7 +1219,7 @@ class ServicesAdminQuestion extends Main
         
         if ($erreur)
         {
-            $this->registerError("form_request", "Erreur lors du décalage des questions.");
+            $this->registerError("form_request", "Erreur lors du décalage des médias.");
             return false;
         }
         else 

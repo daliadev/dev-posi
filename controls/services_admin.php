@@ -358,7 +358,14 @@ class ServicesAdmin extends Main
             }
             
             // On recharge la page (sans aucune information).
-            header("Location: ".$this->url);
+            //if (isset($this->formData['ref_question']) && !empty($this->formData['ref_question']))
+            //{
+                //header("Location: ".$this->url.$this->formData['ref_question']);
+            //}
+            //else
+            //{
+                header("Location: ".$this->url); 
+            //}
             exit();
         }
         

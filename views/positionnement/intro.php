@@ -19,7 +19,7 @@
 
                 <form action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
 
-                    <div class="formu">
+                    <div class="form-small">
 
                         <div id="txt-intro">
                             

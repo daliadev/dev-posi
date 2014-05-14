@@ -88,7 +88,7 @@ body{
 	padding-left: 40px;
 	padding-bottom: 10px;
 	margin-bottom: 20px;
-	border-bottom: 1px solid #ebebeb;
+	border-bottom: 1px solid #ccc8c8;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #8d8d8d;
 	text-transform: uppercase;
@@ -213,16 +213,16 @@ body{
 
 /***   Mise en forme formulaires   ***/
 
+/*
 .bg-form {
 	background-color: #fff;
 	border: 1px solid #bdc3c7;
 }
-
+*/
 .zone-formu {
 	padding: 30px;
 	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
 	background-color: #fff;
-	/*border: 1px solid #bdc3c7;*/
 }
 
 .zone-formu2 {
@@ -230,8 +230,7 @@ body{
 	margin: 10px;
 	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
 	background-color: #fff;
-
-	/*border: 1px solid #bdc3c7;*/
+	border: 1px solid #dedcdc;
 }
 
 
@@ -248,7 +247,7 @@ body{
 .form-half {
 	/*display:inline-block;*/
 	/*vertical-align:top;*/
-	width: 400px;
+	width: 398px;
 	/*margin-top: 20px;*/
 	/*margin: 10px;*/
 }
@@ -287,7 +286,7 @@ form label {
 	/*display:block;*/
 	/*margin-left: 5px;*/
 	/*margin-top: 10px;*/
-	color:#6a6a6a;
+	color: #666060;
 	font-size:12px;
 	font-weight:260;
 }
@@ -305,11 +304,17 @@ form input {
 	padding: 5px;
 	/*padding: 0 10px;*/
 	/*background-color: ##EAEDF1;*/
-	border: 1px solid #c3c9cf;
+	border: 1px solid #ccc8c8;
     border-radius: 5px 5px 5px 5px;
+    color: #403b3b;
 	font-size: 12px;
-	line-height: 20px;
+	line-height: 1px;
 }
+	
+	form input[disabled] {
+		background-color: #f0f0f0;
+		color: #807979;
+	}
 
 	form input:required{
 	    background-color:#ffffff;
@@ -328,9 +333,9 @@ form input {
 	}
 
 	form input:focus, #contact textarea:focus {
-		border:1px solid #cccccc;
-		outline:medium none; 
-		background-color:#FFF;
+		border: 1px solid #ccc8c8;
+		outline: medium none; 
+		background-color: #FFF;
 	}
 
 
@@ -341,62 +346,66 @@ form input[type=text], form input[type=email], form input[type=tel], form input[
 }
 
 form input[type="radio"] {
-	height: 20px;
-	width: 20px;
-	/*margin: 0;*/
-	/*padding: 0 10px;*/
-	background-color: #f3a842;
-	border:1px solid #C3C9CF;
-	line-height: 20px;
+	height: 15px;
+	width: 15px;
+	margin: 0;
+	padding: 0;
+	background: none;
+	/*border:1px solid #C3C9CF;*/
+	border: none;
+	border-radius: none;
+	/*line-height: 20px;*/
 }
 
-/*
-form input[type=radio]
+
+form input[type=radio][disabled]
 {
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    line-height: 15px;
-    margin: 0;
+    /*background: none;*/
 }
-*/
+
 
 form input[type="checkbox"] {
-	width: 20px;
-	height: 20px;
+	width: 15px;
+	height: 15px;
 	margin: 10px 0;
-	padding: 5px;
-	background-color: #f3a842; 
-	border: 1px solid #c3c9cf;
-	line-height: 20px;
+	padding: 0;
+	/*border: 1px solid #c3c9cf;*/
+	border: none;
+	background: none;
+	border-radius: none;
+	/*line-height: 20px;*/
 }
+	
+	form input[type="checkbox"][disabled] {
+		/*background-color: #f3a842;*/ 
+	}
 
 	form .checkbox-disabled {
-		color:#BDC3C7;
+		/*color: #403b3b;*/ /*#BDC3C7;*/
 	}
 
 form p.descript {
-	width: 270px;
+	width: 250px;
 	margin: 5px 0;
 	padding: 5px;
-	padding-left: 30px;
+	margin-left: 30px;
+	color: #403b3b;
+}
 
+
+form input[type="file"] {
+	height: 30px;
+	width: 400px;
 }
 
 form input[type=text] {
+	/*color: #403b3b;*/
     /*height: 20px;*/
     /*line-height: 20px;*/
     /*padding: 5px;*/
 }
 
 /*
-form input[type=text]
-{
-    height: 20px;
-    line-height: 20px;
-    padding: 5px;
-}
-
 form input[type="text"][disabled]
 {
     background-color: #f0f0f0;
@@ -412,7 +421,7 @@ form #submit {
 }
 
 	form #submit input {
-		cursor: pointer;
+		/*cursor: pointer;
 		width: 200px;
 		height: 40px;
 		margin: 20px 50px 20px 50px;
@@ -421,28 +430,48 @@ form #submit {
 		color: #FFF;
 		font-size: 15px;
 		font-weight: bold;
-		line-height: 40px;
-	}
-
-		form #submit input:hover {
-			/*cursor: pointer;*/
-			background-color: #f3a842;
-		}
-
-	form input[type=submit] 
-	{
+		line-height: 1px;*/
 		cursor: pointer;
 		width: 140px;
-		height: 30px;
+		height: 35px;
 		padding: 5px;
 	    margin: 10px 0;
+	    /*margin-right: 75px;*/
 		background-color: #f7a22f;
 		border: 0;
 	    border-radius: 5px 5px 5px 5px; 
 		color: #FFF;
 		font-size: 15px;
 	    /*background-color: #f39c12;*/
-	    line-height: 20px;
+	    line-height: 1px;
+	}
+	form #submit input[disabled]
+	{
+	    background-color: #bdc3c7;
+	    cursor: default;  	
+	}
+
+	/*form #submit .ie7 { line-height: 1px; }*/
+
+		form #submit input:hover {
+			/*cursor: pointer;*/
+			background-color: #f3a842;
+		}
+	/*
+	form input[type=submit] 
+	{
+		cursor: pointer;
+		width: 140px;
+		height: 35px;
+		padding: 5px;
+	    margin: 10px 0;
+	    margin-right: 75px;
+		background-color: #f7a22f;
+		border: 0;
+	    border-radius: 5px 5px 5px 5px; 
+		color: #FFF;
+		font-size: 15px;
+	    line-height: 1px;
 	}
 
 		form input[type="submit"][disabled]
@@ -450,7 +479,7 @@ form #submit {
 		    background-color: #bdc3c7;
 		    cursor: default;  	
 		}
-
+	*/
 
 form select {
 	cursor:pointer;
@@ -458,8 +487,9 @@ form select {
 	height: 32px;
 	margin: 5px 0;
 	padding: 5px;
-	border: 1px solid #C3C9CF;
+	border: 1px solid #ccc8c8;
 	border-radius: 5px 5px 5px 5px;
+	color: #403b3b;
 	font-size: 12px;
 }
 
@@ -470,6 +500,7 @@ form select {
 	form option {
 		font-family: Tahoma, Helvetica, Arial, sans-serif;
 		padding: 1px;
+		color: #403b3b;
 	}
 
 
@@ -478,12 +509,15 @@ form textarea {
     height: 90px;
     margin: 5px 0;
     padding: 5px;
-    border: 1px solid #c3c9cf;
+    border: 1px solid #ccc8c8;
     border-radius: 5px 5px 5px 5px;
     font-size: 12px;
 }
 
-	form textarea[disabled] { color: #797d80; }
+	form textarea[disabled] { 
+		background-color: #f0f0f0;
+		color: #807979;
+	}
 
 
 form ul { list-style: none; }
@@ -994,7 +1028,7 @@ color: #BDC3C7;
 	margin: 20px;
 }
 
-
+/*
 .zone-chx-question{
 	background: #fff;
 	margin: 20px;
@@ -1002,22 +1036,21 @@ color: #BDC3C7;
 	padding: 20px;
 	border: 1px solid #BDC3C7;
 }
-
+*/
 
 #titre-admin-h2{
-	background-color:#1fbba6;
-	color: #ffffff;
-	font-size:16px;
 	margin: 30px;
 	padding: 15px 15px 15px 15px;
-	/*padding-top:15px;*/
-	/*padding-left:15px;*/
+	background-color: #1fbba6;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #ffffff;
+	font-size: 16px;
 	font-weight:bold;
 }
 	
-	
+/*	
 #titre-question-h3{
-	background-color:#2C3E50; /* #34495e (+clair) */
+	background-color:#2C3E50;
 	color:#ffffff;
 	font-size:14px;
 	padding-bottom:10px;
@@ -1026,7 +1059,7 @@ color: #BDC3C7;
 	font-weight:bold;
 	position:relative;
 }
-
+*/
 
 #num_ordre {
 	font-weight: bold;
@@ -1038,21 +1071,26 @@ color: #BDC3C7;
 }
 
 #intitule {
-	margin-top:10px;
+	/*margin-top:10px;*/
 }
 
 
 #intitule textarea{
-	width:391px;
-	height:115px;
+	width: 390px;
+	height: 115px;
 }
 
-
+.response-block {
+	background:#f0f0f0;
+	padding:10px;
+}
+/*
 #reponse-content-appli textarea {
-    width:740px;
-    height:77px;
-    resize:none;
+    width: 740px;
+    height: 77px;
+    resize: none;
 }
+*/
 
 #image-question, #audio-question {
     padding: 0px;
@@ -1073,7 +1111,7 @@ select {
 }
 */
 
-
+/*
 .part-left{
     width: 480px;
     float:left;
@@ -1099,7 +1137,8 @@ select {
     padding: 20px;
     border: 1px solid #BDC3C7;	
 }	
-    
+*/
+
 .datalist{ 
     border:1px solid #ccc;
     margin: 10px 0;
@@ -1207,15 +1246,15 @@ select {
 	margin-top:3px;
 }
 
-.bt-suivant {
-    background-repeat: no-repeat;
+#submit_suite {
+    /*background-repeat: no-repeat;*/
     cursor: pointer;
     background-color: #F39C12;
     height: 35px;
     margin-top: 0px;
     width: 100px;
     border: 0px;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: 15px;
     color: #FFF;
     float: right;
@@ -1223,7 +1262,7 @@ select {
     border-radius: 5px;
 }
 
-.bt-suivant[type=disabled] {
+#submit_suite[disabled] {
     background-color: #bdc3c7;
 }
 

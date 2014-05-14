@@ -58,7 +58,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                 <div class="titre-form" id="titre-utili">Utilisateur</div>
 
                 <form action="<?php echo $form_url; ?>" method="POST">
-                    <div class="formu">
+                    
+                    <div class="form-small">
 
                         <input type="hidden" value="<?php echo $formData['ref_user']; ?>" name="ref_user">
                         <input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">

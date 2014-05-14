@@ -65,7 +65,7 @@
             
             <div id="submit">
   
-                <input type="submit" id="submit_suite" name="submit_suite" class="bt-suivant" value="Suite" />
+                <input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" />
                 
             </div>
 

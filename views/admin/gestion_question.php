@@ -180,8 +180,8 @@ $form_url = WEBROOT."admin/question/";
                                     <div id="num_ordre">
 
                                         <?php
-                                        $numOrdre = $formData['num_ordre_question'];
-
+                                        //$numOrdre = $formData['num_ordre_question'];
+                                        /*
                                         if (!empty($numOrdre))
                                         {
                                             echo $numOrdre;
@@ -189,8 +189,9 @@ $form_url = WEBROOT."admin/question/";
                                         else 
                                         {
                                             echo "-"; 
-                                        } 
-                                        ?>				
+                                        }
+                                        */
+                                        ?>
 
                                     </div>
                                 </div>
@@ -201,14 +202,14 @@ $form_url = WEBROOT."admin/question/";
 
                             <div id="intitule">
                                 <p>
-                                    <textarea name="intitule_question"  cols="62" rows="6" maxlength="391" placeholder="380 caractères maximum" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
+                                    <textarea name="intitule_question" rows="6" maxlength="390" placeholder="380 caractères maximum" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
                                 </p>
                             </div>
 
 
                             <!-- Réponses qcm -->
 
-                            <div id="response-qcm" style="background:#ECF0F1; padding:10px">
+                            <div class="response-block">
                                 <div id="type_qcm" style="float:left">
                                     <p>
                                         <?php
@@ -289,7 +290,7 @@ $form_url = WEBROOT."admin/question/";
 
                             <!-- Réponses champ saisie -->
 
-                            <div id="response-champ" style="background:#ECF0F1; padding:10px">
+                            <div class="response-block">
                                 <div>
                                     <p>
                                         <?php
@@ -630,10 +631,10 @@ $form_url = WEBROOT."admin/question/";
                     <div id="buttons" class="form-full">
 
                         <input type="hidden" name="delete" value="false" />
-                        <input type="submit" name="del" class="bt-admin-menu-sup" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
+                        <input type="submit" name="add" class="bt-admin-menu-ajout" style="width:160px;" value="Ajouter une question" <?php echo $formData['add_disabled']; ?> />
                         <input type="submit" name="edit" class="bt-admin-menu-modif" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
                         <input type="submit" name="save" class="bt-admin-menu-enreg" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
-                        <input type="submit" name="add" class="bt-admin-menu-ajout" value="Ajouter une question" <?php echo $formData['add_disabled']; ?> />
+                        <input type="submit" name="del" class="bt-admin-menu-sup" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
 
                     </div>
                 </div>

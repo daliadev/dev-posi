@@ -63,7 +63,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                 <form action="<?php echo $form_url; ?>" method="POST" name="form_organisme">
                     
-                    <div class="formu">
+                    <div class="form-small">
 
                         <input type="hidden" value="<?php echo $formData['ref_organ']; ?>" name="ref_organ">
                         <input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">

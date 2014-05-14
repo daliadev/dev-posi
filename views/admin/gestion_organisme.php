@@ -58,7 +58,7 @@ $form_url = WEBROOT."admin/gestion_organisme/";
 
                 <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
 
-                    <div class="formu">
+                    <div class="form-small">
 
                         <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
 

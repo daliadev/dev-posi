@@ -57,7 +57,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
         
         <div id="organisme">
-            <div id="zone-formu">
+            <div class="zone-formu">
 
                 <div class="titre-form" id="titre-organ">Organisme</div>
 

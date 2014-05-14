@@ -38,7 +38,7 @@
         ?>
 
         <div id="administrateur-login">
-            <div id="zone-formu">
+            <div class="zone-formu">
 
                 <div class="titre-form" id="titre-utili">Résultats</div>
 

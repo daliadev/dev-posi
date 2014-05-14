@@ -52,7 +52,7 @@ $form_url = WEBROOT."admin/degre/";
 
         
         <div id="organisme">
-            <div id="zone-formu">
+            <div class="zone-formu">
 
                 <div class="titre-form" id="titre-cat">Gestion des degrés d'aptitude</div>
 

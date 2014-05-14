@@ -49,13 +49,13 @@ $form_url = WEBROOT."admin/categorie/";
 
         
         <div id="organisme">
-            <div id="zone-formu">
+            <div class="zone-formu">
 
                 <div class="titre-form" id="titre-cat">Gestion des catégories</div>
 
                 <form id="form-categorie" action="<?php echo $form_url; ?>" method="POST" name="form_admin_categorie">
 
-                    <div class="formu">
+                    <div class="form-small">
 
                         <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
                         <input type="hidden" name="code" value="<?php echo $formData['code_cat']; ?>" />

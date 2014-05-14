@@ -13,7 +13,7 @@
         
 
         <div id="utilisateur">
-            <div id="zone-formu">
+            <div class="zone-formu">
 
                 <div class="titre-form" id="titre-utili">Introduction</div>
 

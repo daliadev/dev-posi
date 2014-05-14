@@ -53,7 +53,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         <!-- Formulaire -->
 
         <div id="utilisateur">
-            <div id="zone-formu">
+            <div class="zone-formu">
                 
                 <div class="titre-form" id="titre-utili">Utilisateur</div>
 

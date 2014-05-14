@@ -123,21 +123,39 @@ body{
 
 
 
+/*----------------------------------------------FOOTER-----------------------------------------*/
+
+#footer{  
+    width:100%;
+    background:url(../images/footer-page.jpg) repeat-x;  
+    text-align:center; 
+    color:#b3b3b3;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+#txt-footer{ color:#b3b3b3; padding-top:15px; }
+
+
+
+
+
+
 
 
 /*---------------------   Formulaires   --------------------------*/
 
 
-/*#zone-formu label {
+/*.zone-formu label {
 }
 
 
 
 
-#zone-formu select{
+.zone-formu select{
 }
 
-#zone-formu textarea {
+.zone-formu textarea {
     height: 90px;
     padding: 5px;
     margin-top: 5px;
@@ -146,20 +164,20 @@ body{
     border-radius: 5px 5px 5px 5px;
 }
 
-#zone-formu input {
+.zone-formu input {
     
 }
 
-#zone-formu input[type=text] {
+.zone-formu input[type=text] {
 
 }
 
-#zone-formu input[type=radio] {
+.zone-formu input[type=radio] {
 
 }
 
 
-#zone-formu input[type=submit] {
+.zone-formu input[type=submit] {
     cursor: pointer;
     background-color: #f39c12;
     color: #fff;
@@ -174,38 +192,98 @@ body{
     font-size: 14px;
 }
 
-#zone-formu input[type="submit"][disabled]{
+.zone-formu input[type="submit"][disabled]{
     background-color: #bdc3c7;
     cursor: default;  	
 }
 
-#zone-formu input[type="text"][disabled]{
+.zone-formu input[type="text"][disabled]{
     background-color: #f0f0f0;
     color: #797d80;
     cursor: default;
 }
 
-#zone-formu textarea[disabled]{
+.zone-formu textarea[disabled]{
     color: #797d80;
 }
 */
 
 
-#zone-formu {
-	padding: 30px;
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+
+
+/***   Mise en forme formulaires   ***/
+
+.bg-form {
+	background-color: #fff;
+	border: 1px solid #bdc3c7;
 }
 
-#zone-formu form {
+.zone-formu {
+	padding: 30px;
+	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	background-color: #fff;
+	/*border: 1px solid #bdc3c7;*/
+}
+
+.zone-formu2 {
+	padding: 20px;
+	margin: 10px;
+	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	background-color: #fff;
+
+	/*border: 1px solid #bdc3c7;*/
+}
+
+
+
+.form-full {
+	/*display:inline-block;*/
+	/*vertical-align:top;*/
+	width: 900px;
+	/*margin-top: 20px;*/
+	/*margin: 10px;*/
+	
+}
+
+.form-half {
+	/*display:inline-block;*/
+	/*vertical-align:top;*/
+	width: 400px;
+	/*margin-top: 20px;*/
+	/*margin: 10px;*/
+}
+
+.form-small {
 	/*display:inline-block;*/
 	/*vertical-align:top;*/
 	width: 300px;
-	margin-top: 20px;
+	/*margin-top: 20px;*/
 	/*margin:0;*/
 	
 }
 
-#zone-formu label {
+
+
+/***  Composants formulaires  ***/
+
+
+form fieldset {
+
+}
+
+form fieldset legend {
+	width: 380px;
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: #2c3e50; /* #34495e (+clair) */
+	font-family: Helvetica, Arial, sans-serif;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+
+form label {
 	/*display:block;*/
 	/*margin-left: 5px;*/
 	/*margin-top: 10px;*/
@@ -215,12 +293,12 @@ body{
 }
 
 
-#zone-formu .input {
+form .input {
 	margin: 10px 0;
 }
 
 
-#zone-formu input {
+form input {
 	width: 288px;
 	height: 20px;
 	margin: 5px 0;
@@ -233,36 +311,36 @@ body{
 	line-height: 20px;
 }
 
-	#zone-formu input:required{
+	form input:required{
 	    background-color:#ffffff;
 	}
 
-	#zone-formu input:focus:required:valid{
+	form input:focus:required:valid{
 	    background-color:#eff8f3;
 		border:1px solid #88d7a6;
 		outline:medium none;
 	}
 
-	#zone-formu input:focus:required:invalid{
+	form input:focus:required:invalid{
 	    background-color:#f9f6f6;
 		border:1px solid #db8f8f;
 		outline:medium none;
 	}
 
-	#zone-formu input:focus, #contact textarea:focus {
+	form input:focus, #contact textarea:focus {
 		border:1px solid #cccccc;
 		outline:medium none; 
 		background-color:#FFF;
 	}
 
 
-#zone-formu input[type=text], input[type=email], input[type=tel], input[type=password]   {
+form input[type=text], form input[type=email], form input[type=tel], form input[type=password]   {
 	/*height: 30px;
 	cursor:pointer;
 	margin-bottom:1px;*/
 }
 
-#zone-formu input[type="radio"] {
+form input[type="radio"] {
 	height: 20px;
 	width: 20px;
 	/*margin: 0;*/
@@ -273,7 +351,7 @@ body{
 }
 
 /*
-#zone-formu input[type=radio]
+form input[type=radio]
 {
     width: 30px;
     height: 30px;
@@ -283,7 +361,7 @@ body{
 }
 */
 
-#zone-formu input[type="checkbox"] {
+form input[type="checkbox"] {
 	width: 20px;
 	height: 20px;
 	margin: 10px 0;
@@ -293,11 +371,11 @@ body{
 	line-height: 20px;
 }
 
-.checkbox-disabled {
-	color:#BDC3C7;
-}
+	form .checkbox-disabled {
+		color:#BDC3C7;
+	}
 
-#zone-formu p.descript {
+form p.descript {
 	width: 270px;
 	margin: 5px 0;
 	padding: 5px;
@@ -305,21 +383,21 @@ body{
 
 }
 
-#zone-formu input[type=text] {
+form input[type=text] {
     /*height: 20px;*/
     /*line-height: 20px;*/
     /*padding: 5px;*/
 }
 
 /*
-#zone-formu input[type=text]
+form input[type=text]
 {
     height: 20px;
     line-height: 20px;
     padding: 5px;
 }
 
-#zone-formu input[type="text"][disabled]
+form input[type="text"][disabled]
 {
     background-color: #f0f0f0;
     color: #797d80;
@@ -329,11 +407,11 @@ body{
 */
 
 
-#zone-formu #submit {
+form #submit {
 	width: 300px;
 }
 
-	#zone-formu #submit input {
+	form #submit input {
 		cursor: pointer;
 		width: 200px;
 		height: 40px;
@@ -346,12 +424,12 @@ body{
 		line-height: 40px;
 	}
 
-		#zone-formu #submit input:hover {
+		form #submit input:hover {
 			/*cursor: pointer;*/
 			background-color: #f3a842;
 		}
 
-	#zone-formu input[type=submit] 
+	form input[type=submit] 
 	{
 		cursor: pointer;
 		width: 140px;
@@ -367,14 +445,14 @@ body{
 	    line-height: 20px;
 	}
 
-		#zone-formu input[type="submit"][disabled]
+		form input[type="submit"][disabled]
 		{
 		    background-color: #bdc3c7;
 		    cursor: default;  	
 		}
 
 
-#zone-formu select {
+form select {
 	cursor:pointer;
 	width: 300px;
 	height: 32px;
@@ -385,17 +463,17 @@ body{
 	font-size: 12px;
 }
 
-	.select-disabled {
+	form .select-disabled {
 		color: #BDC3C7;
 	}
 
-	#zone-formu option {
-		font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	form option {
+		font-family: Tahoma, Helvetica, Arial, sans-serif;
 		padding: 1px;
 	}
 
 
-#zone-formu textarea {
+form textarea {
 	width: 288px;
     height: 90px;
     margin: 5px 0;
@@ -405,32 +483,52 @@ body{
     font-size: 12px;
 }
 
-	#zone-formu textarea[disabled] { color: #797d80; }
+	form textarea[disabled] { color: #797d80; }
 
 
-#zone-formu ul { list-style: none; }
+form ul { list-style: none; }
 
-	#zone-formu li{ margin-left: -30px; }
+	form li{ margin-left: -30px; }
 
-.placeholder { color: #999999; }
+form .placeholder { color: #999999; }
 
-.asterix { color:#FF0000; }
-
-
+form .asterix { color:#FF0000; }
 
 
-/*----------------------------------------------FOOTER-----------------------------------------*/
 
-#footer{  
-    width:100%;
-    background:url(../images/footer-page.jpg) repeat-x;  
-    text-align:center; 
-    color:#b3b3b3;
-    margin-top:20px;
-    margin-bottom:20px;
+
+#zone-erreur{
+	background: #fce3e0;
+	margin: 20px 0 0 0;
+    padding: 0 0 0 20px;
+	/*margin: 20px;*/
+	border: 1px solid #ff786a;
+	border-radius: 5px 5px 5px 5px;
+	color:#c0392b;
+    font-size: 12px;
 }
 
-#txt-footer{ color:#b3b3b3; padding-top:15px; }
+#zone-erreur li{
+	margin-left: -30px;
+}
+
+    
+#zone-success{
+    background: #bcede6;
+    margin: 20px 0 0 0;
+    padding: 10px;
+    border: 1px solid #1FBBA6;
+    border-radius: 5px 5px 5px 5px;
+    color: #039b87;
+    font-size: 12px;
+}
+
+#zone-success li{
+    margin-left: -20px;
+}
+
+
+
 
 
 
@@ -892,6 +990,11 @@ color: #BDC3C7;
 /*--------------------------------------Page admin question-------------------------------------------------*/
 
 
+#main-form {
+	margin: 20px;
+}
+
+
 .zone-chx-question{
 	background: #fff;
 	margin: 20px;
@@ -905,10 +1008,10 @@ color: #BDC3C7;
 	background-color:#1fbba6;
 	color: #ffffff;
 	font-size:16px;
-	margin: 20px;
-	padding-bottom:15px;
-	padding-top:15px;
-	padding-left:15px;
+	margin: 30px;
+	padding: 15px 15px 15px 15px;
+	/*padding-top:15px;*/
+	/*padding-left:15px;*/
 	font-weight:bold;
 }
 	
@@ -925,7 +1028,7 @@ color: #BDC3C7;
 }
 
 
-#num_ordre{
+#num_ordre {
 	font-weight: bold;
 	font-size: 40px;
 	margin-top: -21px;
@@ -934,10 +1037,8 @@ color: #BDC3C7;
 
 }
 
-#intitule{
-
+#intitule {
 	margin-top:10px;
-
 }
 
 
@@ -952,18 +1053,25 @@ color: #BDC3C7;
     height:77px;
     resize:none;
 }
-    
+
+#image-question, #audio-question {
+    padding: 0px;
+    margin: 20px 0px;
+}
+
+/*
 select {
 	width:200px;
 	height: 25px;
 }
-
+*/
+/*
 #response-qcm input[type=text] {
     width:280px;
     height:30px;
     margin-bottom:1px;
 }
-
+*/
 
 
 .part-left{
@@ -1012,41 +1120,10 @@ select {
 #buttons input[name='edit'] { background: #1fbba6; }
 #buttons input[name='del'] { background: #f75556; }
 #buttons input[type="submit"][disabled] {
-	background-color: #BDC3C7;
+	background-color: #bdc3c7;
 	cursor: default;
 }
 
-
-
-#zone-erreur{
-	background: #fce3e0;
-	margin: 20px 0 0 0;
-    padding: 0 0 0 20px;
-	/*margin: 20px;*/
-	border: 1px solid #ff786a;
-	border-radius: 5px 5px 5px 5px;
-	color:#c0392b;
-    font-size: 12px;
-}
-
-#zone-erreur li{
-	margin-left: -30px;
-}
-
-    
-#zone-success{
-    background: #bcede6;
-    margin: 20px 0 0 0;
-    padding: 10px;
-    border: 1px solid #1FBBA6;
-    border-radius: 5px 5px 5px 5px;
-    color: #039b87;
-    font-size: 12px;
-}
-
-#zone-success li{
-    margin-left: -20px;
-}
 
 
 

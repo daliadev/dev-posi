@@ -148,63 +148,58 @@ class ModelDAO
             if ($mode == "insert")
             {
                 $fields = "";
-                $insertValues = "";
+                //$insertValues = "";
+                $insertString = "";
+                
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
-                    if (is_numeric($value))
-                    {
-                        $updatevalue = $value;
-                    }
-                    else 
-                    {
-                        $updatevalue = "'".$value."'";
-                    }
-                    
-                    if ($i == 0)
-                    {
-                        $fields .= $field;
-                        $insertValues .= "'".$value."'"; 
-                    }
-                    else 
-                    {
-                        $fields .= ", ".$field;
-                        $insertValues .= ", '".$value."'";
+                    if ($value !== null)
+                    {    
+                        //$value = "NULL";
+                    //}
+                        if (empty($fields))
+                        {
+                            $fields .= $field;
+                            $insertString .= "'".$value."'"; 
+                        }
+                        else 
+                        {
+                            $fields .= ", ".$field;
+                            $insertString .= ", '".$value."'"; 
+                        }
                     }
                     $i++;
                 }
-                
-                $requestString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertValues.") ".$whereStmt." ";
+
+                $requestString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertString.") ".$whereStmt;
                 
             }
             else if ($mode == "update")
             {
+                //$fields = "";
                 $updateString = "";
 
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
-                    if (is_numeric($value))
-                    {
-                        $updatevalue = $value;
-                    }
-                    else 
-                    {
-                        $updatevalue = "'".$value."'";
-                    }
-                    
-                    if ($i == 0)
-                    {
-                        $updateString .= $field." = ".$updatevalue;  
-                    }
-                    else 
-                    {
-                        $updateString .= ", ".$field." = ".$updatevalue;
+                    if ($value !== null)
+                    {    
+                        //$value = "NULL";
+                    //}
+                        if (empty($updateString))
+                        {
+                            $updateString .= $field." = '".$value."'";  
+                        }
+                        else 
+                        {
+                            $updateString .= ", ".$field." = '".$value."'";
+                        }   
                     }
                     $i++;
                 }
 
-                $requestString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt." ";
+                $requestString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt;
             } 
         }
 

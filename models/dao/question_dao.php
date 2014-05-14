@@ -149,9 +149,9 @@ class QuestionDAO extends ModelDAO
      * @return array Dernier identifiant d'insertion sinon erreurs
      */
     public function insert($values) 
-    {
+    {   
         $this->initialize();
-        
+
         if (!empty($values))
         {
             if (isset($values['ref_question']) && !empty($values['ref_question']))
@@ -160,7 +160,7 @@ class QuestionDAO extends ModelDAO
             }
                 
             $request = $this->createQueryString("insert", $values, "question");
-            
+
             $this->resultset['response'] = $this->executeRequest("insert", $request, "question", "Question");
         }
         else

@@ -89,7 +89,6 @@ class ServicesAdmin extends Main
             ServicesAuth::logout();
         }
         
-        var_dump($this->errors);
              
         if (!empty($this->errors) && count($this->errors) > 0)
         {
@@ -184,19 +183,19 @@ class ServicesAdmin extends Main
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         
         $initializedData = array(
-            "ref_question_cbox" => "select",
+            "ref_question_cbox"  => "select",
             "num_ordre_question" => "text",
-            "intitule_question" => "text",
-            "type_question" => "text",
-            "ref_reponses" => "multi",
+            "intitule_question"  => "text",
+            "type_question"      => "text",
+            "ref_reponses"       => "multi",
             "intitules_reponses" => "multi",
-            "correct" => "multi",
-            "reponse_champ" => "text",
-            "image_question" => "text",
-            "audio_question" => "text",
-            "code_cat_cbox" => "select",
-            "ref_activites" => "multi",
-            "ref_degre" => "text"
+            "correct"            => "multi",
+            "reponse_champ"      => "text",
+            "image_question"     => "text",
+            "audio_question"     => "text",
+            "code_cat_cbox"      => "select",
+            "ref_activites"      => "multi",
+            "ref_degre"          => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
@@ -291,15 +290,15 @@ class ServicesAdmin extends Main
             
             // Traitement des infos saisies.
             $dataQuestion = $this->servicesQuestion->filterQuestionData($this->formData, $_POST);
-
+            
 
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors)) 
             {
                 $this->servicesQuestion->setQuestionProperties($previousMode, $dataQuestion, $this->formData);
             }
-
             
+
             // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors))
             {
@@ -492,9 +491,9 @@ class ServicesAdmin extends Main
         
         $initializedData = array(
             "code_cat_cbox" => "select", 
-            "nom" => "text", 
-            "descript_cat" => "text", 
-            "actif" => "text"
+            "nom"           => "text", 
+            "descript_cat"  => "text", 
+            "actif"         => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
@@ -767,7 +766,7 @@ class ServicesAdmin extends Main
 
         $this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_degre_cbox" => "select", "nom_degre" => "text", "descript_degre" => "text"));
         
-        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_degre_cbox'] == null)
+        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_degre_cbox'] != null)
         {
             $this->formData['ref_degre_cbox'] = $requestParams[0];
         }
@@ -849,7 +848,6 @@ class ServicesAdmin extends Main
             $dataDegre = $this->servicesDegre->filterDegreData($this->formData, $_POST);
 
             
-
             /*----- Sauvegarde ou mise à jour des données ***/
             
             // Aucune erreur ne doit être enregistrée

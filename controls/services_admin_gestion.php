@@ -91,56 +91,56 @@ class ServicesAdminGestion extends Main
     
     
     
-    public function switchFormButtons(&$formButtons, $mode)
+    public function switchFormButtons(&$formData, $mode)
     {
         switch ($mode)
         {
             case "init":
-                $formButtons['disabled'] = "";
-                $formButtons['save_disabled'] = "";
-                $formButtons['edit_disabled'] = "";
-                $formButtons['delete_disabled'] = "";
-                $formButtons['add_disabled'] = "";
+                $formData['disabled'] = "";
+                $formData['save_disabled'] = "";
+                $formData['edit_disabled'] = "";
+                $formData['delete_disabled'] = "";
+                $formData['add_disabled'] = "";
                 break;
             
             case "view":
-                $formButtons['disabled'] = "disabled";
-                $formButtons['save_disabled'] = "disabled";
-                $formButtons['edit_disabled'] = "disabled";
-                $formButtons['delete_disabled'] = "disabled";
-                $formButtons['add_disabled'] = "";
+                $formData['disabled'] = "disabled";
+                $formData['save_disabled'] = "disabled";
+                $formData['edit_disabled'] = "disabled";
+                $formData['delete_disabled'] = "disabled";
+                $formData['add_disabled'] = "";
                 break;
             
             case "new":
-                $formButtons['disabled'] = "";
-                $formButtons['save_disabled'] = "";
-                $formButtons['edit_disabled'] = "disabled";
-                $formButtons['delete_disabled'] = "";
-                $formButtons['add_disabled'] = "disabled";
+                $formData['disabled'] = "";
+                $formData['save_disabled'] = "";
+                $formData['edit_disabled'] = "disabled";
+                $formData['delete_disabled'] = "";
+                $formData['add_disabled'] = "disabled";
                 break;
             
             case "edit":
-                $formButtons['disabled'] = "";
-                $formButtons['save_disabled'] = "";
-                $formButtons['edit_disabled'] = "disabled";
-                $formButtons['delete_disabled'] = "";
-                $formButtons['add_disabled'] = "disabled";
+                $formData['disabled'] = "";
+                $formData['save_disabled'] = "";
+                $formData['edit_disabled'] = "disabled";
+                $formData['delete_disabled'] = "";
+                $formData['add_disabled'] = "disabled";
                 break;
             
             case "save":
-                $formButtons['disabled'] = "";
-                $formButtons['save_disabled'] = "";
-                $formButtons['edit_disabled'] = "disabled";
-                $formButtons['delete_disabled'] = "";
-                $formButtons['add_disabled'] = "disabled";
+                $formData['disabled'] = "";
+                $formData['save_disabled'] = "";
+                $formData['edit_disabled'] = "disabled";
+                $formData['delete_disabled'] = "";
+                $formData['add_disabled'] = "disabled";
                 break;
             
             case "delete":
-                $formButtons['disabled'] = "disabled";
-                $formButtons['save_disabled'] = "disabled";
-                $formButtons['edit_disabled'] = "disabled";
-                $formButtons['delete_disabled'] = "disabled";
-                $formButtons['add_disabled'] = "disabled";
+                $formData['disabled'] = "disabled";
+                $formData['save_disabled'] = "disabled";
+                $formData['edit_disabled'] = "disabled";
+                $formData['delete_disabled'] = "disabled";
+                $formData['add_disabled'] = "disabled";
                 break;
             
             default :

@@ -61,7 +61,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                 <div class="titre-form" id="titre-organ">Organisme</div>
 
-                <form action="<?php echo $form_url; ?>" method="POST" name="form_organisme">
+                <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_organisme">
                     
                     <div class="form-small">
 

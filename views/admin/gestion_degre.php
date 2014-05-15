@@ -54,9 +54,9 @@ $form_url = WEBROOT."admin/degre/";
         <div id="organisme">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-cat">Gestion des degrés d'aptitude</div>
+                <div class="titre-form" id="titre-cat">Gestion des degrés</div>
 
-                <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
+                <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
 
                     <div class="form-small">
 

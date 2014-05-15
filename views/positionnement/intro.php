@@ -17,7 +17,7 @@
 
                 <div class="titre-form" id="titre-utili">Introduction</div>
 
-                <form action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
+                <form id="form-posi" action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
 
                     <div class="form-small">
 

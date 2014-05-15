@@ -56,7 +56,7 @@ $form_url = WEBROOT."admin/gestion_organisme/";
 
                 <div class="titre-form" id="titre-cat">Gestion des organismes</div>
 
-                <form id="form-degre" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
+                <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_degre">
 
                     <div class="form-small">
 

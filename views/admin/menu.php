@@ -19,7 +19,7 @@
 					<!--MENU - 1	-->
 					<div id="bt-menu-titre"><?php echo Config::$menu_gestion["titre"];?></div>
 					
-					<hr>
+					<hr/>
 					<?php
 					foreach(Config::$menu_gestion as $menuElement)
 					{
@@ -46,7 +46,7 @@
 					
 					<!--MENU - 2	-->
 					<div id="bt-menu-titre"><?php echo Config::$menu_stat["titre"];?></div>
-					<hr>
+					<hr/>
 					<?php
 					foreach(Config::$menu_stat as $menuElement)
 					

@@ -49,7 +49,7 @@ $form_url = WEBROOT."admin/question/";
 
     <div id="content-large">
 
-        <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
+        <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu" style="margin-right:30px">Retour menu</div></a>
 
         <div style="clear:both;"></div>
 
@@ -63,7 +63,7 @@ $form_url = WEBROOT."admin/question/";
 
         <div id="main-form">
 
-            <form id="form-question" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
+            <form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
 
                 <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
                 <input type="hidden" name="num_ordre_question" value="<?php echo $formData['num_ordre_question']; ?>" />
@@ -201,9 +201,8 @@ $form_url = WEBROOT."admin/question/";
                             <!-- Intitulé -->
 
                             <div id="intitule">
-                                <p>
+                                    <label for="intitule_question">Intitulé:</label>
                                     <textarea name="intitule_question" rows="6" maxlength="390" placeholder="380 caractères maximum" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
-                                </p>
                             </div>
 
 
@@ -300,7 +299,7 @@ $form_url = WEBROOT."admin/question/";
                                             $checked = "checked";
                                         }
                                         ?>
-                                        <input type="radio" id="type-champ" name="type_question" value="champ_saisie" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> Réponse ouverte &nbsp;
+                                        <input type="radio" id="type-champ" name="type_question" value="champ_saisie" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> Réponse ouverte
                                     </p>
                                 </div>
 

@@ -104,7 +104,7 @@
                         <p>Temps total : <strong><?php echo $time; ?></strong></p>
                     </div>
 
-                    <p><strong>Vous êtes maintenant déconnecté de l'application.</strong></p>
+                    <p class="alignleft"><strong>Vous êtes maintenant déconnecté de l'application.</strong></p>
 
                 </div>
 

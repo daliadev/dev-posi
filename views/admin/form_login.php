@@ -31,16 +31,13 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         
         
 <!--*************************** Formulaire login admin **************************************-->
-
-
-        <form action="<?php echo $form_url; ?>" method="POST" name="form_login_admin">
          
         <div id="administrateur-login">
             <div class="zone-formu">
 
                 <div class="titre-form" id="titre-admin">Connexion administrateur</div>
 
-                <form action="<?php echo $form_url; ?>" method="POST" name="form_login_admin">
+                <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_login_admin">
 
                     <div class="form-small">
                         

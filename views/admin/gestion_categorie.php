@@ -53,7 +53,7 @@ $form_url = WEBROOT."admin/categorie/";
 
                 <div class="titre-form" id="titre-cat">Gestion des catégories</div>
 
-                <form id="form-categorie" action="<?php echo $form_url; ?>" method="POST" name="form_admin_categorie">
+                <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_categorie">
 
                     <div class="form-small">
 

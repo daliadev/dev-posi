@@ -27,8 +27,9 @@
                 {
                     foreach ($response['reponse'] as $reponse)
                     {
-                        echo '<input type="radio" class="radio_posi" name="radio_reponse" value="'.$reponse->getId().'" onclick="check();"> <label> '.$reponse->getIntitule().'</label></br>';
-                        
+                        echo '<p>';
+                            echo '<input type="radio" class="radio_posi" name="radio_reponse" value="'.$reponse->getId().'" onclick="check();"> <label> '.$reponse->getIntitule().'</label></br>';
+                        echo '</p>';
                         if ($reponse->getEstCorrect())
                         {
                             echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'"">';

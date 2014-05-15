@@ -208,10 +208,10 @@ $form_url = WEBROOT."admin/categorie/";
 
                         <div id="buttons">
                                 <input type="hidden" name="delete" value="false" />
-                                <input type="submit" class="add" name="add" style="float: left;" value="Ajouter" <?php echo $formData['add_disabled']; ?> />
-                                <input type="submit" class="edit" name="edit" style="float: right;" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
-                                <input type="submit" class="save" name="save" style="float: left;" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
-                                <input type="submit" class="del" name="del" style="float: right;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />      
+                                <input type="submit" class="add" name="add" style="float:left;" value="Ajouter" <?php echo $formData['add_disabled']; ?> />
+                                <input type="submit" class="edit" name="edit" style="float:right;" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
+                                <input type="submit" class="save" name="save" style="float:left;" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
+                                <input type="submit" class="del" name="del" style="float:right;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />      
                         </div>
                         <div style="clear:both;"></div>
 

@@ -21,6 +21,7 @@ body{
 	background-color:#eaedf1;
 	font-family: Helvetica, Arial, sans-serif;
     font-size: 12px;
+    color: #403b3b;
 	margin: 0;
 	padding: 0;
         
@@ -265,6 +266,11 @@ body{
 
 /***  Composants formulaires  ***/
 
+label
+{
+	vertical-align: top !important;
+}
+
 
 #form-posi fieldset {
 
@@ -279,6 +285,11 @@ body{
 	color: #ffffff;
 	font-size: 14px;
 	font-weight: bold;
+}
+
+#form-posi span
+{
+	vertical-align: top !important;
 }
 
 
@@ -308,7 +319,7 @@ body{
     border-radius: 5px 5px 5px 5px;
     color: #403b3b;
 	font-size: 12px;
-	line-height: 1px;
+	/*line-height: 1px;*/
 }
 	
 	#form-posi input[disabled] {
@@ -354,7 +365,6 @@ body{
 	/*border:1px solid #C3C9CF;*/
 	border: none;
 	border-radius: none;
-	
 }
 
 
@@ -430,7 +440,7 @@ form input[type="text"][disabled]
 		color: #FFF;
 		font-size: 15px;
 		font-weight: bold;
-		line-height: 1px;
+		/*line-height: 1px;*/
 	}
 
 	#form-posi #submit input[disabled]
@@ -459,7 +469,7 @@ form input[type="text"][disabled]
     border-radius: 5px 5px 5px 5px; 
 	color: #FFF;
 	font-size: 15px;
-    line-height: 1px;
+    /*line-height: 1px;*/
 }
 
 	form input[type="submit"][disabled]
@@ -485,7 +495,8 @@ form input[type="text"][disabled]
 	width: 398px;
 }
 	#form-posi .select-disabled {
-		color: #BDC3C7;
+		background-color: #f0f0f0;
+		color: #807979;
 	}
 
 	#form-posi option {
@@ -1040,8 +1051,8 @@ color: #BDC3C7;
 */
 
 #titre-admin-h2{
-	margin: 30px;
-	padding: 15px 15px 15px 15px;
+	margin: 20px 30px 10px 30px;
+	padding: 15px;
 	background-color: #1fbba6;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #ffffff;
@@ -1068,7 +1079,6 @@ color: #BDC3C7;
 	margin-top: -21px;
 	margin-left: 337px;
 	color: #ffffff;
-
 }
 
 #intitule {
@@ -1077,7 +1087,7 @@ color: #BDC3C7;
 
 
 #intitule textarea {
-	width: 390px;
+	width: 385px;
 	height: 115px;
 }
 
@@ -1088,15 +1098,18 @@ color: #BDC3C7;
 
 
 .response-block p {
-	/*margin-top: 10px;*/
-	/*line-height: 20px;*/
+	/*vertical-align: middle;*/
 }
 
 
 #intitules_reponses {
-	/*padding: 0;*/
+	padding: 0;
 }
 
+
+.response-item {
+	margin : 0 0 10px 0;
+}
 /*.radio-txt {
 	margin: 0px 0px;
 	padding-top: 5px;
@@ -1112,7 +1125,7 @@ color: #BDC3C7;
 
 #image-question, #audio-question {
     padding: 0px;
-    margin: 20px 0px;
+    margin: 10px 0 20px 0;
 }
 
 /*
@@ -1171,10 +1184,20 @@ select {
 }
 
 
+#buttons {
+	margin: 0px;
+}
+
+.buttons-block {
+	display: inline;
+	width: 450px;
+	height: 35px;
+	margin: 0 7px 0 10px;
+}
 
 #buttons input[name='add'] { background: #f39c12; }
-#buttons input[name='save'] { background: #3498db; }
 #buttons input[name='edit'] { background: #1fbba6; }
+#buttons input[name='save'] { background: #3498db; }
 #buttons input[name='del'] { background: #f75556; }
 #buttons input[type="submit"][disabled] {
 	background-color: #bdc3c7;
@@ -1260,8 +1283,12 @@ select {
 	border: 1px #ccc8c8 solid;
 }
 
+#reponse-content-appli p {
+	margin: 5px 0;
+}
+
 #reponse-content-appli input[type=radio]{
-	margin-top:3px;
+	/*margin: 2px 0;*/
 }
 
 #reponse-content-appli .reponse_champ {

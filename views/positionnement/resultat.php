@@ -42,10 +42,7 @@
 
                 <div class="titre-form" id="titre-utili">Résultats</div>
 
-                <div id="txt-intro">Voici vos résultats au test de positionnement. 
-                    <p> </p>
-
-                    <?php
+                <?php
 
                     if (isset($response['errors']) && !empty($response['errors']))
                     {
@@ -56,7 +53,16 @@
                         }
                         echo '</div">';
                     }
-                    ?>
+                ?>
+
+                <div id="txt-intro">Voici vos résultats au test de positionnement : 
+                    <p> </p>
+
+                    
+                    <div>
+                        <p>Taux de réussite globale : <strong class="<?php echo getColor($percentGlobal); ?>"><?php echo $percentGlobal; ?> %</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
+                    </div>
+
 
                     <div id="R-CCSP">
                         <?php
@@ -97,13 +103,13 @@
                         ?>
                     </div>
                     
+                    
                     <div>
-                        <p>Taux de réussite globale : <strong class="<?php echo getColor($percentGlobal); ?>"><?php echo $percentGlobal; ?> %</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
-                    </div>
-                    <div>
-                        <p>Temps total : <strong><?php echo $time; ?></strong></p>
+                        <p>Temps passé : <strong><?php echo $time; ?></strong></p>
                     </div>
 
+                    <hr/>
+                    
                     <p class="alignleft"><strong>Vous êtes maintenant déconnecté de l'application.</strong></p>
 
                 </div>

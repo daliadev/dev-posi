@@ -170,10 +170,10 @@ class UtilisateurDAO extends ModelDAO
             $nomUser = strtoupper(preg_replace("`(\s|-|_|\/)*`", "", $nomUser));
             $prenomUser = strtoupper(preg_replace("`(\s|-|_|\/)*`", "", $prenomUser));
                 
-            $request = "SELECT * FROM utilisateur 
-                        WHERE REPLACE(UPPER(nom_user),' ','') LIKE '".$nomUser."' 
-                        AND REPLACE(UPPER(prenom_user),' ','') LIKE '".$prenomUser."' 
-                        AND date_naiss_user = '".$dateNaissUser."'";
+            $request = "SELECT * FROM utilisateur ";
+            $request .= "WHERE REPLACE(UPPER(nom_user),' ','') LIKE '".$nomUser."' ";
+            $request .= "AND REPLACE(UPPER(prenom_user),' ','') LIKE '".$prenomUser."' ";
+            $request .= "AND date_naiss_user = '".$dateNaissUser."'";
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "utilisateur", "Utilisateur");
         }
@@ -240,6 +240,34 @@ class UtilisateurDAO extends ModelDAO
         {
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }   
+        
+        return $this->resultset;
+    }
+
+
+
+
+
+    /**
+     * delete - Efface un utilisateur avec toutes ses dépendances (inscription, sessions, résultats)
+     * 
+     * @param int Identifiant de l'utilisateur
+     * @return array Nbre de lignes effacées sinon erreurs
+     */
+    public function delete($refUser) 
+    {
+        $this->initialize();
+        
+        if (!empty($refUser))
+        {
+            $request = "DELETE FROM utilisateur WHERE id_user = ".$refUser;
+
+            $this->resultset['response'] = $this->executeRequest("delete", $request, "utilisateur");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "delete", 'message' => "Il n'y a aucun identifiant pour la suppression de l'utilisateur'.");
+        }
         
         return $this->resultset;
     }

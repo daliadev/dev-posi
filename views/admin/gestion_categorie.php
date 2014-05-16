@@ -248,7 +248,7 @@ $form_url = WEBROOT."admin/categorie/";
                 if (confirm("Voulez-vous réellement supprimer cette catégorie ?"))
                 {
                     $('input[name="delete"]').val("true");
-                    $('#form-categorie').submit();
+                    $('#form-posi').submit();
                 }
             });
         

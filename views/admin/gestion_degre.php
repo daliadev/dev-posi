@@ -85,7 +85,7 @@ $form_url = WEBROOT."admin/degre/";
                         </div>
 
                         <div id="submit">    
-                            <input type="submit" name="selection" value="Sélectionner" >
+                            <input type="submit" name="selection" value="Sélectionner" />
                         </div>
 
 
@@ -182,7 +182,7 @@ $form_url = WEBROOT."admin/degre/";
                 if (confirm("Voulez-vous réellement supprimer ce degré ?"))
                 {
                     $('input[name="delete"]').val("true");
-                    $('#form-degre').submit();
+                    $('#form-posi').submit();
                 }
             });
         

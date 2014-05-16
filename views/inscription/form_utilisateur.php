@@ -93,7 +93,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                                     {
                                         $selected = "selected";
                                     }
-                                    echo '<option value="'.$niveau->getId().'" title="'.  htmlentities($niveau->getDescription()).'" '.$selected.'>'.$niveau->getNom().'</option>';
+                                    echo '<option value="'.$niveau->getId().'" title="'.htmlentities($niveau->getDescription()).'" '.$selected.'>'.$niveau->getNom().'</option>';
                                 }
                                 ?>
                             </select>

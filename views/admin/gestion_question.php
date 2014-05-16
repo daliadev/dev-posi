@@ -413,7 +413,7 @@ $form_url = WEBROOT."admin/question/";
                                 
                                     <legend>Catégories / compétences</legend>
 
-                                    <select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?> >
+                                    <select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?>>
                                         <option value="select_cbox">---</option>
                                         <?php 
 
@@ -813,7 +813,7 @@ $form_url = WEBROOT."admin/question/";
                 if (confirm("Voulez-vous réellement supprimer cette question ?"))
                 {
                     $('input[name="delete"]').val("true");
-                    $('#form-question').submit();
+                    $('#form-posi').submit();
                 }
             });
             

@@ -19,7 +19,6 @@ require_once(ROOT.'models/dao/niveau_etudes_dao.php');
 require_once(ROOT.'models/dao/utilisateur_dao.php');
 require_once(ROOT.'models/dao/inscription_dao.php');
 
-//require_once('utils/config.php');
 
 
 class ServicesInscriptValidation extends Main

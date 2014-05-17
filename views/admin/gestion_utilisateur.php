@@ -62,7 +62,7 @@ $form_url = WEBROOT."admin/utilisateur/";
 
                     <div class="form-small">
 
-                        <!-- <input type="hidden" name="mode" value="<?php //echo $formData['mode']; ?>"> -->
+                        <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>">
                         <input type="hidden" name="ref_user" value="<?php echo $formData['ref_user']; ?>">
 
                         

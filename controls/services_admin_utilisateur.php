@@ -133,29 +133,27 @@ class ServicesAdminUtilisateur extends Main
         $dataUser['prenom_user'] = $formData['prenom_user'];
         
         // Formatage du prénom de l'utilisateur
-        $formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "string", false, "Aucune date de naissance n'a été saisie", "La date de naissance n'est pas correctement saisie.");
-        $dataUser['date_naiss_user'] = $formData['date_naiss_user'];
-        
+        $formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "date", false, "Aucune date de naissance n'a été saisie", "La date de naissance n'est pas correctement saisie.");
+        $dataUser['date_naiss_user'] = Tools::toggleDate($formData['date_naiss_user'], "us");
 
+        //$this->formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "date", true, "La date de naissance de l'utilisateur est incorrecte.", "La date de naissance de l'utilisateur n'a pas été saisi.");
 
-        // Formatage du prénom de l'utilisateur
-        //$formData['nbre_sessions_accomplies'] = $this->validatePostData($_POST['nbre_sessions_accomplies'], "nbre_sessions_accomplies", "string", false, "Aucun prénom n'a été saisi", "Le prénom n'est pas correctement saisi.");
-        //$dataUser['nbre_sessions_accomplies'] = $formData['nbre_sessions_accomplies'];
-        
-
-        /*
-        // Formatage du type de lien de la catégorie
-        if (isset($_POST['type_lien_cat']))
+        // Formatage de la sélection du niveau d'études de l'utilisateur
+        if (!empty($_POST['ref_niveau_cbox']))
         {
-            $formData['type_lien_cat'] = "dynamic";
-            $dataUser['type_lien_cat'] = "dynamic";
+            $this->formData['ref_niveau_cbox'] = $_POST['ref_niveau_cbox'];
+                    
+            if ($_POST['ref_niveau_cbox'] == "select_cbox")
+            {
+                $this->registerError("form_empty", "Aucun niveau d'études n'a été sélectionné");
+            }
+            else 
+            {
+                $this->formData['ref_niveau'] = $_POST['ref_niveau_cbox'];
+            }
         }
-        else 
-        {
-            $formData['type_lien_cat'] = "static";
-            $dataUser['type_lien_cat'] = "static";
-        }
-        */
+        $dataUser['ref_niveau'] = $this->formData['ref_niveau'];
+
 
         return $dataUser;
     }
@@ -163,44 +161,45 @@ class ServicesAdminUtilisateur extends Main
 
 
 
-    /*
-    public function setUserProperties($previousMode, $dataCategorie, &$formData)
+    
+    public function setUserProperties($previousMode, $dataUser, &$formData)
     {
 
         if ($previousMode == "new")
         {
-            // Insertion de la catégorie dans la bdd
-            $resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
-                    
-            // Traitement des erreurs de la requête
-            if ($resultsetCategorie['response'])
+            // Insertion de l'utilisateur dans la bdd
+            $resultsetUser = $this->setUtilisateur("insert", $dataUser);
+
+            // Traitement des erreurs de la requête et récupération de la référence
+            if ($resultsetUser && isset($resultsetUser['response']['utilisateur']['last_insert_id']) && !empty($resultsetUser['response']['utilisateur']['last_insert_id']))
             {
-                $formData['code_cat'] = $resultsetCategorie['response']['categorie']['code_cat'];
-                $dataCategorie['code_cat'] = $formData['code_cat'];
-                $this->registerSuccess("La catégorie a été enregistrée.");
+                $formData['ref_user'] = $resultsetUser['response']['utilisateur']['last_insert_id'];
+                //$dataUser['ref_user'] = $formData['ref_user'];
+                $this->registerSuccess("L'utilisateur a été enregistrée.");
             }
             else 
             {
-                $this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
+                $this->registerError("form_valid", "L'enregistrement de l'utilisateur a échoué.");
             }
         }
         else if ($previousMode == "edit"  || $previousMode == "save")
         {
-            if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
+            
+            if (isset($dataUser['ref_user']) && !empty($dataUser['ref_user']))
             {
-                $formData['code_cat'] = $dataCategorie['code_cat'];
+                $formData['ref_user'] = $dataUser['ref_user'];
 
-                // Mise à jour de la catégorie
-                $resultsetCategorie = $this->setCategorie("update", $dataCategorie);
+                // Mise à jour de la l'utilisateur
+                $resultsetUser = $this->setUtilisateur("update", $dataUser);
 
                 // Traitement des erreurs de la requête
-                if ($resultsetCategorie['response'])
+                if ($resultsetUser['response'])
                 {
-                    $this->registerSuccess("La catégorie a été mise à jour.");
+                    $this->registerSuccess("L'utilisateur a été mise à jour.");
                 }
                 else
                 {
-                    $this->registerError("form_valid", "La mise à jour de la catégorie a échoué.");
+                    $this->registerError("form_valid", "La mise à jour de l'utilisateur a échoué.");
                 }
             }
         }
@@ -210,7 +209,60 @@ class ServicesAdminUtilisateur extends Main
             exit();
         }
     }
-    */
+
+
+
+
+
+    public function setUtilisateur($modeUser, $dataUser)
+    {
+        if (!empty($dataUser) && is_array($dataUser))
+        {
+            if (!empty($dataUser['nom_user']) && !empty($dataUser['prenom_user']) && !empty($dataUser['date_naiss_user']))
+            {
+                if ($modeUser == "insert")
+                {
+                    $resultset = $this->utilisateurDAO->insert($dataUser);
+                    
+                    // Traitement des erreurs de la requête
+                    if (!$this->filterDataErrors($resultset['response']))
+                    {
+                        return $resultset;
+                    }
+                    else 
+                    {
+                        $this->registerError("form_request", "L'utilisateur n'a pu être inséré.");
+                    }
+                    
+                }
+                else if ($modeUser == "update")
+                {
+                    $resultset = $this->utilisateurDAO->update($dataUser);
+
+                    // Traitement des erreurs de la requête
+                    if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['row_count']) && !empty($resultset['response']['utilisateur']['row_count']))
+                    {
+                        return $resultset;
+                    } 
+                    else 
+                    {
+                        $this->registerError("form_request", "L'utilisateur n'a pu être mis à jour.");
+                    }
+                }
+            }
+            else 
+            {
+                $this->registerError("form_request", "Les valeurs obligatoires des champs sont manquantes.");
+            }
+        }
+        else 
+        {
+            $this->registerError("form_request", "Insertion de l'utilisateur non autorisée.");
+        }
+            
+        return false;
+    }
+
 
 
 

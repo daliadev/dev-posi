@@ -1141,10 +1141,10 @@ class ServicesAdmin extends Main
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesUtilisateur->errors) && empty($this->errors)) 
             {
-               // $this->servicesUtilisateur->setUserProperties($previousMode, $dataUser, $this->formData);
+               $this->servicesUtilisateur->setUserProperties($previousMode, $dataUser, $this->formData);
             }
 
-            
+
             // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesUtilisateur->errors) && empty($this->errors))
             {

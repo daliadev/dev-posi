@@ -986,12 +986,262 @@ class ServicesAdmin extends Main
 
 
 
-
+    /**
+     * organisme - Gestion des organismes avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
+     *
+     * @param array Tableau de paramètres passés par url (comme la référence de l'organisme)
+     */
     public function organisme($requestParams = array())
     {
         // Authentification de l'admin necessaire
         ServicesAuth::checkAuthentication("admin");
         
+        $this->initialize();
+        
+        $this->url = SERVER_URL."admin/organisme/";
+        
+        // Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
+        $dataUser = array();
+
+
+        /*** Définition du mode précédent du formulaire (permet de connaître l'action précédemment choisie par l'utilisateur) ***/
+
+        if (isset($_POST['mode']) && !empty($_POST['mode']))
+        {
+            $previousMode = $_POST['mode'];
+        }
+        else if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
+        {
+            $previousMode = "view";
+        }
+        else 
+        {
+            $previousMode = "new";
+        }
+        
+
+        /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
+        
+        $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
+
+
+        /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
+        
+        $initializedData = array(
+            "ref_organ_cbox"    => "select", 
+            "nom_organ"         => "text", 
+            "code_postal_organ" => "text", 
+            "tel_organ"         => "text"
+        );
+        $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
+
+
+        /*** Récupération du code de la catégorie par la méthode GET ***/
+
+        if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
+        {
+            $this->formData['ref_organ_cbox'] = $requestParams[0];
+        }
+        
+        $this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
+
+
+        /*** Initialisation des boutons ***/
+
+        $this->servicesGestion->switchFormButtons($this->formData, "init");
+
+        /*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
+        
+
+        /*** Mode "visualisation" et "édition" ***/
+
+        if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
+        {
+            // Verrouillage des boutons
+            $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
+
+            // Avec la référence, on va chercher toutes les infos sur la question 
+            if (!empty($this->formData['ref_user']))
+            {
+                if ($this->formData['mode'] == "view")
+                {
+                    // Déverrouillage des boutons "modifier" et "supprimer"
+                    $this->formData['edit_disabled'] = "";
+                    $this->formData['delete_disabled'] = "";
+                }
+                
+                $userDetails = array();
+                $userDetails = $this->servicesUtilisateur->getUserDetails($this->formData['ref_user']);
+                
+                $this->formData = array_merge($this->formData, $userDetails);
+            }
+            else if ($this->formData['mode'] == "edit")
+            {
+                $this->registerError("form_empty", "Cet utilisateur n'existe pas.");
+            }
+        }
+        
+
+        /*** Mode "nouvelle question" ***/
+        
+        else if ($this->formData['mode'] == "new")
+        {      
+            // Verrouillage des boutons.
+            $this->servicesGestion->switchFormButtons($this->formData, "new");
+
+            $this->formData['ref_user'] = null;
+            $this->formData['nom_user'] = null;
+            $this->formData['prenom_user'] = null;
+            $this->formData['date_naiss_user'] = null;
+            $this->formData['ref_niveau'] = null;
+        }
+
+
+        /*** Mode "enregistrement" ***/
+        
+        else if ($this->formData['mode'] == "save")
+        { 
+            // Verrouillage des boutons.
+            $this->servicesGestion->switchFormButtons($this->formData, "save");
+
+            // Récupèration de l'id de l'utilisateur s'il y en a un.
+            if (!empty($this->formData['code']))
+            {
+                if ($previousMode == "edit")
+                {
+                    $dataUser['ref_user'] = $this->formData['ref_user'];
+                }
+            }
+
+            // Traitement des infos saisies.
+            $dataUser = $this->servicesUtilisateur->filterUserData($this->formData, $_POST);
+
+
+            // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
+            if (empty($this->servicesUtilisateur->errors) && empty($this->errors)) 
+            {
+               $this->servicesUtilisateur->setUserProperties($previousMode, $dataUser, $this->formData);
+            }
+
+
+            // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
+            if (empty($this->servicesUtilisateur->errors) && empty($this->errors))
+            {
+                // On recharge la page en mode visualisation.
+                header("Location: ".$this->url.$this->formData['ref_user']);
+            }
+            else 
+            {
+                // Sinon mode nouveau ou édition.
+                if ($previousMode == "new")
+                {
+                    $this->formData['mode'] = "new";
+                }
+                else
+                {
+                    $this->formData['mode'] = "edit";
+                }
+            }
+        }
+ 
+        
+        /*** Mode "suppression" ***/
+        
+        else if ($this->formData['mode'] == "delete")
+        {
+            // Verrouillage des boutons.
+            $this->servicesGestion->switchFormButtons($this->formData, "delete");
+            
+            // Si la référence de l'utilisateur active existe :
+            if (!empty($this->formData['ref_user']))
+            {
+                // On supprime la catégorie dans la base.
+                $resultsetUser = $this->servicesUtilisateur->deleteUser($this->formData['ref_user']);
+                
+                // Si la suppression a fonctionnée :
+                if ($resultsetUser)
+                {   
+                    $this->registerSuccess("L'utilisateur a été supprimé avec succès.");
+                }
+                else
+                {
+                    // Sinon on renvoi une erreur.
+                    $this->registerError("form_valid", "L'utilisateur n'a pas pu être supprimé.");
+                }
+            }
+            else 
+            {
+                $this->registerError("form_valid", "L'utilisateur n'existe pas.");
+            }
+            
+            // On recharge la page (sans aucune information).
+            //header("Location: ".$this->url);
+            //exit();
+        }
+
+
+        /*** Erreur : aucun mode ***/
+
+        else  
+        {
+            // Renvoi vers le template 404 (page inconnue).
+            header("Location: ".SERVER_URL."erreur/page404");
+            exit();
+        }   
+        
+        
+        // Debuggage
+        if (Config::DEBUG_MODE)
+        {
+            // Liste des données traitées et renvoyées au formulaire.
+            echo "\$this->formData = <br/>";
+            var_dump($this->formData);
+        }
+            
+            
+        
+        /*** Retour des données traitées du formulaire ***/
+
+        $this->returnData['response']['form_data'] = array();
+        $this->returnData['response']['form_data'] = $this->formData;
+
+
+        
+        /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
+        
+        if ((!empty($this->servicesUtilisateur->errors) && count($this->servicesUtilisateur->errors) > 0) || !empty($this->errors))
+        {
+            $this->errors = array_merge($this->servicesUtilisateur->errors, $this->errors);
+            foreach($this->errors as $error)
+            {
+                $this->returnData['response']['errors'][] = $error;
+            }
+        }
+        else if ((!empty($this->servicesUtilisateur->success) && count($this->servicesUtilisateur->success) > 0) || !empty($this->success))
+        {
+            $this->success = array_merge($this->servicesUtilisateur->success, $this->success);
+            foreach($this->success as $success)
+            {
+                $this->returnData['response']['success'][] = $success;
+            }
+        }
+        
+        
+        /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
+        
+        // Requete pour obtenir la liste des utilisateurs
+        $listeUsers = $this->servicesUtilisateur->getUtilisateurs();
+
+        // Requete pour obtenir la liste des niveaux d'études
+        $listeNiveauxEtudes = $this->servicesUtilisateur->getNiveauxEtudes();
+        
+        // Assemblage de toutes les données de la réponse
+        $this->returnData['response'] = array_merge($listeUsers['response'], $this->returnData['response']);
+        $this->returnData['response'] = array_merge($listeNiveauxEtudes['response'], $this->returnData['response']);
+
+        /*** Envoi des données et rendu de la vue ***/
+        
+        $this->setResponse($this->returnData);
         $this->setTemplate("template_page");
         $this->render("gestion_organisme"); 
 		
@@ -1004,7 +1254,7 @@ class ServicesAdmin extends Main
 
 
     /**
-     * utilisateur - Gére la validation du formulaire de gestion des utilisateurs avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
+     * utilisateur - Gestion des utilisateurs avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
      *
      * @param array Tableau de paramètres passés par url (comme la référence de l'utilisateur)
      */

@@ -218,7 +218,7 @@ $form_url = WEBROOT."admin/utilisateur/";
 
                 event.preventDefault();
 
-                if (confirm("Voulez-vous réellement supprimer cet utilisateur ?"))
+                if (confirm("Voulez êtes sur le point de supprimer un utilisateur. Cette suppression effacera également tous les positionnements et les résultats qui en dépendent. Voulez-vous continuer ?"))
                 {
                     $('input[name="delete"]').val("true");
                     $('#form-posi').submit();

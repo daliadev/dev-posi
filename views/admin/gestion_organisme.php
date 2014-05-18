@@ -1,6 +1,6 @@
 <?php
 
-// Initialisation par défaut des valeurs du formulaire
+// Initialisation par dÃ©faut des valeurs du formulaire
 $formData = array();
 
 $formData['nom_organ'] = "";
@@ -8,7 +8,7 @@ $formData['code_postal_organ'] = "";
 $formData['tel_organ'] = "";
 
 
-// S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
+// S'il y a des valeurs dÃ©jÃ  existantes pour le formulaire, on remplace les valeurs par dÃ©faut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
 {      
     foreach($response['form_data'] as $key => $value)
@@ -30,7 +30,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/organisme/";
 
-//var_dump($response);
+var_dump($response['errors']);
 ?>
     
     
@@ -87,7 +87,7 @@ $form_url = WEBROOT."admin/organisme/";
                         </div>
 
                         <div id="submit">    
-                            <input type="submit" name="selection" value="Sélectionner">
+                            <input type="submit" name="selection" value="SÃ©lectionner">
                         </div>
 
 
@@ -140,7 +140,7 @@ $form_url = WEBROOT."admin/organisme/";
                         </div>
 
                         <div class="input">
-                            <label for="tel_organ">Téléphone <span class="asterix">*</span></label>
+                            <label for="tel_organ">TÃ©lÃ©phone <span class="asterix">*</span></label>
                             <input type="text" name="tel_organ" id="tel_organ" value="<?php echo $formData['tel_organ']; ?>" <?php echo $formData['disabled']; ?>>
                         </div>
 
@@ -195,7 +195,7 @@ $form_url = WEBROOT."admin/organisme/";
 
                 event.preventDefault();
 
-                if (confirm("Voulez êtes sur le point de supprimer un organisme. Cette suppression effacera également tous les intervenants qui en dépendent. Voulez-vous continuer ?"))
+                if (confirm("Voulez Ãªtes sur le point de supprimer un organisme. Cette suppression effacera Ã©galement tous les intervenants qui en dÃ©pendent. Voulez-vous continuer ?"))
                 {
                     $('input[name="delete"]').val("true");
                     $('#form-posi').submit();

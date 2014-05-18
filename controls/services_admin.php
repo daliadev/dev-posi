@@ -14,6 +14,7 @@ require_once(ROOT.'controls/services_admin_question.php');
 require_once(ROOT.'controls/services_admin_categorie.php');
 require_once(ROOT.'controls/services_admin_degre.php');
 require_once(ROOT.'controls/services_admin_utilisateur.php');
+require_once(ROOT.'controls/services_admin_organisme.php');
 require_once(ROOT.'controls/services_admin_restitution.php');
 require_once(ROOT.'models/dao/menu_admin_dao.php');
 
@@ -29,6 +30,7 @@ class ServicesAdmin extends Main
     private $servicesCategorie = null;
     private $servicesDegre = null;
     private $servicesUtilisateur = null;
+    private $servicesOrganisme = null;
     private $servicesRestitution = null;
     
     private $menuAdminDAO = null;
@@ -45,6 +47,7 @@ class ServicesAdmin extends Main
         $this->servicesCategorie = new ServicesAdminCategorie();
         $this->servicesDegre = new ServicesAdminDegre();
         $this->servicesUtilisateur = new ServicesAdminUtilisateur();
+        $this->servicesOrganisme = new ServicesAdminOrganisme();
         $this->servicesRestitution = new ServicesAdminRestitution();
         
         $this->menuAdminDAO = new MenuAdminDAO();
@@ -1001,7 +1004,7 @@ class ServicesAdmin extends Main
         $this->url = SERVER_URL."admin/organisme/";
         
         // Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
-        $dataUser = array();
+        $dataOrgan = array();
 
 
         /*** Définition du mode précédent du formulaire (permet de connaître l'action précédemment choisie par l'utilisateur) ***/
@@ -1061,7 +1064,7 @@ class ServicesAdmin extends Main
             $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
 
             // Avec la référence, on va chercher toutes les infos sur la question 
-            if (!empty($this->formData['ref_user']))
+            if (!empty($this->formData['ref_organ']))
             {
                 if ($this->formData['mode'] == "view")
                 {
@@ -1070,14 +1073,14 @@ class ServicesAdmin extends Main
                     $this->formData['delete_disabled'] = "";
                 }
                 
-                $userDetails = array();
-                $userDetails = $this->servicesUtilisateur->getUserDetails($this->formData['ref_user']);
+                $organDetails = array();
+                $organDetails = $this->servicesOrganisme->getOrganDetails($this->formData['ref_organ']);
                 
-                $this->formData = array_merge($this->formData, $userDetails);
+                $this->formData = array_merge($this->formData, $organDetails);
             }
             else if ($this->formData['mode'] == "edit")
             {
-                $this->registerError("form_empty", "Cet utilisateur n'existe pas.");
+                $this->registerError("form_empty", "Cet organisme n'existe pas.");
             }
         }
         
@@ -1089,11 +1092,10 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "new");
 
-            $this->formData['ref_user'] = null;
-            $this->formData['nom_user'] = null;
-            $this->formData['prenom_user'] = null;
-            $this->formData['date_naiss_user'] = null;
-            $this->formData['ref_niveau'] = null;
+            $this->formData['ref_organ'] = null;
+            $this->formData['nom_organ'] = null;
+            $this->formData['code_postal_organ'] = null;
+            $this->formData['tel_organ'] = null;
         }
 
 
@@ -1104,31 +1106,30 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "save");
 
-            // Récupèration de l'id de l'utilisateur s'il y en a un.
-            if (!empty($this->formData['code']))
+            // Récupèration de l'id de l'organisme s'il y en a un.
+            if (!empty($this->formData['ref_organ']))
             {
                 if ($previousMode == "edit")
                 {
-                    $dataUser['ref_user'] = $this->formData['ref_user'];
+                    $dataOrgan['ref_organ'] = $this->formData['ref_organ'];
                 }
             }
 
             // Traitement des infos saisies.
-            $dataUser = $this->servicesUtilisateur->filterUserData($this->formData, $_POST);
+            $dataOrgan = $this->servicesOrganisme->filterOrganData($this->formData, $_POST);
 
 
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
-            if (empty($this->servicesUtilisateur->errors) && empty($this->errors)) 
+            if (empty($this->servicesOrganisme->errors) && empty($this->errors)) 
             {
-               $this->servicesUtilisateur->setUserProperties($previousMode, $dataUser, $this->formData);
+               $this->servicesOrganisme->setOrganProperties($previousMode, $dataOrgan, $this->formData);
             }
 
-
             // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
-            if (empty($this->servicesUtilisateur->errors) && empty($this->errors))
+            if (empty($this->servicesOrganisme->errors) && empty($this->errors))
             {
                 // On recharge la page en mode visualisation.
-                header("Location: ".$this->url.$this->formData['ref_user']);
+                header("Location: ".$this->url.$this->formData['ref_organ']);
             }
             else 
             {
@@ -1152,26 +1153,26 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons.
             $this->servicesGestion->switchFormButtons($this->formData, "delete");
             
-            // Si la référence de l'utilisateur active existe :
-            if (!empty($this->formData['ref_user']))
+            // Si la référence de l'organisme actif existe :
+            if (!empty($this->formData['ref_organ']))
             {
-                // On supprime la catégorie dans la base.
-                $resultsetUser = $this->servicesUtilisateur->deleteUser($this->formData['ref_user']);
+                // On supprime l'organisme dans la base.
+                $resultsetUser = $this->servicesOrganisme->deleteOrganisme($this->formData['ref_organ']);
                 
                 // Si la suppression a fonctionnée :
                 if ($resultsetUser)
                 {   
-                    $this->registerSuccess("L'utilisateur a été supprimé avec succès.");
+                    $this->registerSuccess("L'organisme a été supprimé avec succès.");
                 }
                 else
                 {
                     // Sinon on renvoi une erreur.
-                    $this->registerError("form_valid", "L'utilisateur n'a pas pu être supprimé.");
+                    $this->registerError("form_valid", "L'organisme n'a pas pu être supprimé.");
                 }
             }
             else 
             {
-                $this->registerError("form_valid", "L'utilisateur n'existe pas.");
+                $this->registerError("form_valid", "L'organisme n'existe pas.");
             }
             
             // On recharge la page (sans aucune information).
@@ -1209,17 +1210,17 @@ class ServicesAdmin extends Main
         
         /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
         
-        if ((!empty($this->servicesUtilisateur->errors) && count($this->servicesUtilisateur->errors) > 0) || !empty($this->errors))
+        if ((!empty($this->servicesOrganisme->errors) && count($this->servicesOrganisme->errors) > 0) || !empty($this->errors))
         {
-            $this->errors = array_merge($this->servicesUtilisateur->errors, $this->errors);
+            $this->errors = array_merge($this->servicesOrganisme->errors, $this->errors);
             foreach($this->errors as $error)
             {
                 $this->returnData['response']['errors'][] = $error;
             }
         }
-        else if ((!empty($this->servicesUtilisateur->success) && count($this->servicesUtilisateur->success) > 0) || !empty($this->success))
+        else if ((!empty($this->servicesOrganisme->success) && count($this->servicesOrganisme->success) > 0) || !empty($this->success))
         {
-            $this->success = array_merge($this->servicesUtilisateur->success, $this->success);
+            $this->success = array_merge($this->servicesOrganisme->success, $this->success);
             foreach($this->success as $success)
             {
                 $this->returnData['response']['success'][] = $success;
@@ -1230,14 +1231,11 @@ class ServicesAdmin extends Main
         /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
         
         // Requete pour obtenir la liste des utilisateurs
-        $listeUsers = $this->servicesUtilisateur->getUtilisateurs();
-
-        // Requete pour obtenir la liste des niveaux d'études
-        $listeNiveauxEtudes = $this->servicesUtilisateur->getNiveauxEtudes();
+        $listeOrgans = $this->servicesOrganisme->getOrganismes();
         
         // Assemblage de toutes les données de la réponse
-        $this->returnData['response'] = array_merge($listeUsers['response'], $this->returnData['response']);
-        $this->returnData['response'] = array_merge($listeNiveauxEtudes['response'], $this->returnData['response']);
+        $this->returnData['response'] = array_merge($listeOrgans['response'], $this->returnData['response']);
+
 
         /*** Envoi des données et rendu de la vue ***/
         
@@ -1245,8 +1243,6 @@ class ServicesAdmin extends Main
         $this->setTemplate("template_page");
         $this->render("gestion_organisme"); 
 		
-		
-        
     }
 
 

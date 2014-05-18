@@ -229,9 +229,12 @@ class OrganismeDAO extends ModelDAO
     {
         $this->initialize();
         
-        if (!empty($values))
+        if (!empty($values) && isset($values['ref_organ']) && !empty($values['ref_organ']))
         {
-            $request = $this->createQueryString("update", $values, "organisme");
+            $refOrgan = $values['ref_organ'];
+            unset($values['ref_organ']);
+
+            $request = $this->createQueryString("update", $values, "organisme", "WHERE id_organ = ".$refOrgan);
 
             $this->resultset['response'] = $this->executeRequest("update", $request, "organisme", "Organisme");
         }

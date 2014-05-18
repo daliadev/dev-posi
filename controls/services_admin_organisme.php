@@ -6,7 +6,7 @@ require_once(ROOT.'models/dao/organisme_dao.php');
 
 
 
-class ServicesAdminUtilisateur extends Main
+class ServicesAdminOrganisme extends Main
 {
 
 	private $organismeDAO = null;
@@ -15,7 +15,7 @@ class ServicesAdminUtilisateur extends Main
     
     public function __construct() 
     {
-        $this->controllerName = "adminUtilisateur";
+        $this->controllerName = "adminOrganisme";
 
         $this->organismeDAO = new OrganismeDAO();
         // $this->niveauEtudesDAO = new NiveauEtudesDAO();
@@ -73,12 +73,11 @@ class ServicesAdminUtilisateur extends Main
         $organDetails['code_postal_organ'] = "";
         $organDetails['tel_organ'] = "";
 
-        $resultset = $this->organismeDAO->selectById($organDetails);
+        $resultset = $this->organismeDAO->selectById($refOrgan);
         
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
-            //$organDetails['ref_user'] = $resultset['response']['organisme']->getId();
             $organDetails['nom_organ'] = $resultset['response']['organisme']->getNom();
             $organDetails['code_postal_organ'] = $resultset['response']['organisme']->getCodePostal();
             $organDetails['tel_organ'] = $resultset['response']['organisme']->getTelephone();
@@ -90,66 +89,28 @@ class ServicesAdminUtilisateur extends Main
 
 
 
-
-    /* requêtes niveaux d'études */
-    /*
-    public function getNiveauxEtudes()
-    {
-        $resultset = $this->niveauEtudesDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            return $resultset;
-        }
-
-        return false;
-    }
-    */
-
-
-
-
     public function filterOrganData(&$formData, $postData)
     {
         $dataUser = array();
         
         /*** Récupération de la référence de l'utilisateur ***/
         
-        if (isset($formData['ref_user']) && !empty($formData['ref_user']))
+        if (isset($formData['ref_organ']) && !empty($formData['ref_organ']))
         {
-            $dataUser['ref_user'] = $formData['ref_user'];
+            $dataUser['ref_organ'] = $formData['ref_organ'];
         }
         
         // Formatage du nom de l'utilisateur
-        $formData['nom_user'] = $this->validatePostData($_POST['nom_user'], "nom_user", "string", true, "Aucun nom n'a été saisi", "Le nom n'est pas correctement saisi.");
-        $dataUser['nom_user'] = $formData['nom_user'];
+        $formData['nom_organ'] = $this->validatePostData($_POST['nom_organ'], "nom_organ", "string", true, "Aucun nom n'a été saisi", "Le nom n'est pas correctement saisi.");
+        $dataUser['nom_organ'] = $formData['nom_organ'];
         
         // Formatage du prénom de l'utilisateur
-        $formData['prenom_user'] = $this->validatePostData($_POST['prenom_user'], "prenom_user", "string", false, "Aucun prénom n'a été saisi", "Le prénom n'est pas correctement saisi.");
-        $dataUser['prenom_user'] = $formData['prenom_user'];
+        $formData['code_postal_organ'] = $this->validatePostData($_POST['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'est saisi", "Le code postal n'est pas correctement saisi.");
+        $dataUser['code_postal_organ'] = $formData['code_postal_organ'];
         
         // Formatage du prénom de l'utilisateur
-        $formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "date", false, "Aucune date de naissance n'a été saisie", "La date de naissance n'est pas correctement saisie.");
-        $dataUser['date_naiss_user'] = Tools::toggleDate($formData['date_naiss_user'], "us");
-
-        //$this->formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "date", true, "La date de naissance de l'utilisateur est incorrecte.", "La date de naissance de l'utilisateur n'a pas été saisi.");
-
-        // Formatage de la sélection du niveau d'études de l'utilisateur
-        if (!empty($_POST['ref_niveau_cbox']))
-        {
-            $this->formData['ref_niveau_cbox'] = $_POST['ref_niveau_cbox'];
-                    
-            if ($_POST['ref_niveau_cbox'] == "select_cbox")
-            {
-                $this->registerError("form_empty", "Aucun niveau d'études n'a été sélectionné");
-            }
-            else 
-            {
-                $this->formData['ref_niveau'] = $_POST['ref_niveau_cbox'];
-            }
-        }
-        $dataUser['ref_niveau'] = $this->formData['ref_niveau'];
+        $formData['tel_organ'] = $this->validatePostData($_POST['tel_organ'], "tel_organ", "integer", true, "Aucun numéro de téléphone n'a été saisi", "Le numéro de téléphone n'est pas correctement saisi.");
+        $dataUser['tel_organ'] = $formData['tel_organ'];
 
 
         return $dataUser;
@@ -164,39 +125,39 @@ class ServicesAdminUtilisateur extends Main
 
         if ($previousMode == "new")
         {
-            // Insertion de l'utilisateur dans la bdd
-            $resultsetUser = $this->setUtilisateur("insert", $dataUser);
+            // Insertion de l'organisme dans la bdd
+            $resultsetOrgan = $this->setOrganisme("insert", $dataOrgan);
 
             // Traitement des erreurs de la requête et récupération de la référence
-            if ($resultsetUser && isset($resultsetUser['response']['utilisateur']['last_insert_id']) && !empty($resultsetUser['response']['utilisateur']['last_insert_id']))
+            if ($resultsetOrgan && isset($resultsetOrgan['response']['organisme']['last_insert_id']) && !empty($resultsetOrgan['response']['organisme']['last_insert_id']))
             {
-                $formData['ref_user'] = $resultsetUser['response']['utilisateur']['last_insert_id'];
-                //$dataUser['ref_user'] = $formData['ref_user'];
-                $this->registerSuccess("L'utilisateur a été enregistrée.");
+                $formData['ref_organ'] = $resultsetOrgan['response']['organisme']['last_insert_id'];
+
+                $this->registerSuccess("L'organisme a été enregistré.");
             }
             else 
             {
-                $this->registerError("form_valid", "L'enregistrement de l'utilisateur a échoué.");
+                $this->registerError("form_valid", "L'enregistrement de l'organisme a échoué.");
             }
         }
         else if ($previousMode == "edit"  || $previousMode == "save")
         {
             
-            if (isset($dataUser['ref_user']) && !empty($dataUser['ref_user']))
+            if (isset($dataOrgan['ref_organ']) && !empty($dataOrgan['ref_organ']))
             {
-                $formData['ref_user'] = $dataUser['ref_user'];
+                $formData['ref_organ'] = $dataOrgan['ref_organ'];
 
-                // Mise à jour de la l'utilisateur
-                $resultsetUser = $this->setUtilisateur("update", $dataUser);
+                // Mise à jour de la l'organisme
+                $resultsetOrgan = $this->setOrganisme("update", $dataOrgan);
 
                 // Traitement des erreurs de la requête
-                if ($resultsetUser['response'])
+                if ($resultsetOrgan['response'])
                 {
-                    $this->registerSuccess("L'utilisateur a été mise à jour.");
+                    $this->registerSuccess("L'organisme a été mise à jour.");
                 }
                 else
                 {
-                    $this->registerError("form_valid", "La mise à jour de l'utilisateur a échoué.");
+                    $this->registerError("form_valid", "La mise à jour de l'organisme a échoué.");
                 }
             }
         }
@@ -213,13 +174,13 @@ class ServicesAdminUtilisateur extends Main
 
     public function setOrganisme($modeOrgan, $dataOrgan)
     {
-        if (!empty($dataUser) && is_array($dataUser))
+        if (!empty($dataOrgan) && is_array($dataOrgan))
         {
-            if (!empty($dataUser['nom_user']) && !empty($dataUser['prenom_user']) && !empty($dataUser['date_naiss_user']))
+            if (!empty($dataOrgan['nom_organ']) && !empty($dataOrgan['code_postal_organ']) && !empty($dataOrgan['tel_organ']))
             {
-                if ($modeUser == "insert")
+                if ($modeOrgan == "insert")
                 {
-                    $resultset = $this->organismeDAO->insert($dataUser);
+                    $resultset = $this->organismeDAO->insert($dataOrgan);
                     
                     // Traitement des erreurs de la requête
                     if (!$this->filterDataErrors($resultset['response']))
@@ -228,22 +189,22 @@ class ServicesAdminUtilisateur extends Main
                     }
                     else 
                     {
-                        $this->registerError("form_request", "L'utilisateur n'a pu être inséré.");
+                        $this->registerError("form_request", "L'organisme n'a pu être inséré.");
                     }
                     
                 }
-                else if ($modeUser == "update")
+                else if ($modeOrgan == "update")
                 {
-                    $resultset = $this->organismeDAO->update($dataUser);
+                    $resultset = $this->organismeDAO->update($dataOrgan);
 
                     // Traitement des erreurs de la requête
-                    if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['row_count']) && !empty($resultset['response']['utilisateur']['row_count']))
+                    if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['organisme']['row_count']) && !empty($resultset['response']['organisme']['row_count']))
                     {
                         return $resultset;
                     } 
                     else 
                     {
-                        $this->registerError("form_request", "L'utilisateur n'a pu être mis à jour.");
+                        $this->registerError("form_request", "L'organisme n'a pu être mis à jour.");
                     }
                 }
             }
@@ -254,7 +215,7 @@ class ServicesAdminUtilisateur extends Main
         }
         else 
         {
-            $this->registerError("form_request", "Insertion de l'utilisateur non autorisée.");
+            $this->registerError("form_request", "Insertion de l'organisme non autorisée.");
         }
             
         return false;
@@ -268,11 +229,11 @@ class ServicesAdminUtilisateur extends Main
     public function deleteOrganisme($refOrgan)
     {
         // On commence par sélectionner les réponses associèes à la question
-        $resultsetSelect = $this->organismeDAO->selectById($refUser);
+        $resultsetSelect = $this->organismeDAO->selectById($refOrgan);
 
         if (!$this->filterDataErrors($resultsetSelect['response']))
         { 
-            $resultsetDelete = $this->organismeDAO->delete($refUser);
+            $resultsetDelete = $this->organismeDAO->delete($refOrgan);
 
             if (!$this->filterDataErrors($resultsetDelete['response']))
             {
@@ -280,12 +241,12 @@ class ServicesAdminUtilisateur extends Main
             }
             else 
             {
-                $this->registerError("form_request", "L'utilisateur n'a pas pu être supprimée.");
+                $this->registerError("form_request", "L'organisme n'a pas pu être supprimé.");
             }
         }
         else
         {
-           $this->registerError("form_request", "Cet utilisateur n'existe pas."); 
+           $this->registerError("form_request", "Cet organisme n'existe pas."); 
         }
 
         return false;

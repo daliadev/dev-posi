@@ -136,8 +136,6 @@ class ServicesAdminUtilisateur extends Main
         $formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "date", false, "Aucune date de naissance n'a été saisie", "La date de naissance n'est pas correctement saisie.");
         $dataUser['date_naiss_user'] = Tools::toggleDate($formData['date_naiss_user'], "us");
 
-        //$this->formData['date_naiss_user'] = $this->validatePostData($_POST['date_naiss_user'], "date_naiss_user", "date", true, "La date de naissance de l'utilisateur est incorrecte.", "La date de naissance de l'utilisateur n'a pas été saisi.");
-
         // Formatage de la sélection du niveau d'études de l'utilisateur
         if (!empty($_POST['ref_niveau_cbox']))
         {
@@ -283,7 +281,7 @@ class ServicesAdminUtilisateur extends Main
             }
             else 
             {
-                $this->registerError("form_request", "L'utilisateur n'a pas pu être supprimée.");
+                $this->registerError("form_request", "L'utilisateur n'a pas pu être supprimé.");
             }
         }
         else

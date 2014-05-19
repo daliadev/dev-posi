@@ -37,12 +37,14 @@ if (Config::DEBUG_MODE)
     //echo "\$response = ";
     //var_dump($response);
     
-    //echo "\$formdata = ";
-    //var_dump($formData);
+    echo "\$formdata = ";
+    var_dump($formData);
 }
 
 $form_url = WEBROOT."admin/question/";
 
+//echo "\$formdata = ";
+//var_dump($formData);
 
 ?>
 
@@ -531,7 +533,6 @@ $form_url = WEBROOT."admin/question/";
                                 <fieldset>
 
                                     <legend>Degrés d'aptitude (facultatif)</legend>
-                                    <!-- <div id="titre-question-h3">Degrés d'aptitude (facultatif)</div> -->
 
                                     <?php 
 
@@ -542,7 +543,7 @@ $form_url = WEBROOT."admin/question/";
                                     {
                                         $checked = "";
 
-                                        if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId())
+                                        if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId() && $formData['ref_degre'] != "aucun")
                                         {
                                             $checked = "checked";
                                             $isChecked = true;

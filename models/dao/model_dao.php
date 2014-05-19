@@ -154,21 +154,31 @@ class ModelDAO
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
-                    if ($value !== null)
-                    {    
-                        //$value = "NULL";
-                    //}
-                        if (empty($fields))
+                    if (empty($fields))
+                    {
+                        $fields .= $field;
+                        if (is_null($value))
                         {
-                            $fields .= $field;
-                            $insertString .= "'".$value."'"; 
+                            $insertString .= "NULL"; 
                         }
-                        else 
+                        else
                         {
-                            $fields .= ", ".$field;
+                            $insertString .= "'".$value."'";  
+                        }
+                    }
+                    else 
+                    {
+                        $fields .= ", ".$field;
+                        if (is_null($value))
+                        {
+                            $insertString .= ", NULL"; 
+                        }
+                        else
+                        {
                             $insertString .= ", '".$value."'"; 
                         }
                     }
+
                     $i++;
                 }
 
@@ -177,25 +187,36 @@ class ModelDAO
             }
             else if ($mode == "update")
             {
-                //$fields = "";
                 $updateString = "";
 
                 $i = 0;
                 foreach ($fieldsvalues as $field => $value)
                 {
-                    if ($value !== null)
-                    {    
-                        //$value = "NULL";
-                    //}
-                        if (empty($updateString))
+
+                    if (empty($updateString))
+                    {
+                        if (is_null($value))
                         {
-                            $updateString .= $field." = '".$value."'";  
+                            $updateString .= $field." = NULL"; 
                         }
-                        else 
+                        else
+                        {
+                            $updateString .= $field." = '".$value."'"; 
+                        }
+                         
+                    }
+                    else 
+                    {
+                        if (is_null($value))
+                        {
+                            $updateString .= ", ".$field." = NULL";
+                        }
+                        else
                         {
                             $updateString .= ", ".$field." = '".$value."'";
-                        }   
-                    }
+                        }
+                    }   
+
                     $i++;
                 }
 

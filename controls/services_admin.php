@@ -297,6 +297,7 @@ class ServicesAdmin extends Main
             // Traitement des infos saisies.
             $dataQuestion = $this->servicesQuestion->filterQuestionData($this->formData, $_POST);
             
+            
 
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors)) 
@@ -304,6 +305,9 @@ class ServicesAdmin extends Main
                 $this->servicesQuestion->setQuestionProperties($previousMode, $dataQuestion, $this->formData);
             }
             
+            //var_dump($this->servicesQuestion->errors);
+            //exit();
+
 
             // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors))

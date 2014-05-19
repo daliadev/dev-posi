@@ -183,6 +183,7 @@ class QuestionDAO extends ModelDAO
      */
     public function update($values) 
     {
+
         $this->initialize();
         
         if (!empty($values))
@@ -193,7 +194,7 @@ class QuestionDAO extends ModelDAO
                 unset($values['ref_question']);
 
                 $request = $this->createQueryString("update", $values, "question", "WHERE id_question = ".$refQuestion);
-                
+
                 $this->resultset['response'] = $this->executeRequest("update", $request, "question", "Question");
             }
             else

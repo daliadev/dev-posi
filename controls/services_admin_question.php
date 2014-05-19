@@ -184,7 +184,7 @@ class ServicesAdminQuestion extends Main
         }
         else
         {
-            $formData['ref_degre'] = null;
+            $formData['ref_degre'] = "aucun";
             $dataQuestion['ref_degre'] = null;
         }
 
@@ -308,7 +308,7 @@ class ServicesAdminQuestion extends Main
             }
             else
             {
-                $this->registerError("form_valid", "Le format de l'image est incorrect.");
+                $this->registerError("form_valid", 'Le format de l\'image est incorrect (format ".jpg" uniquement).');
             }
         }
         else if (isset($postData['image_question']) && !empty($postData['image_question']))
@@ -342,7 +342,7 @@ class ServicesAdminQuestion extends Main
             }
             else
             {
-                $this->registerError("form_empty", "Le format du son est incorrect.");
+                $this->registerError("form_empty", 'Le format du son est incorrect (format ".mp3" uniquement).');
             }
         }
         else if (isset($postData['audio_question']) && !empty($postData['audio_question']))
@@ -492,6 +492,8 @@ class ServicesAdminQuestion extends Main
                     $formData['audio_question'] = $this->setMedia("audio", $_FILES, "audio_".$formData['num_ordre_question'].".mp3");
                     $dataQuestion['audio_question'] = $formData['audio_question'];
                 }
+
+                
 
                 // Mise à jour de la question
                 $resultsetQuestion = $this->setQuestion("update", $dataQuestion);

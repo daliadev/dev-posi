@@ -28,6 +28,10 @@ body{
 }
 
 
+
+
+
+
 /* Conteneur principale */
 
 #content{
@@ -1051,9 +1055,19 @@ color: #BDC3C7;
 */
 
 #titre-admin-h2{
-	margin: 20px 30px 10px 30px;
+	margin: 20px 20px 10px 20px;
 	padding: 15px;
 	background-color: #1fbba6;
+	font-family: Helvetica, Arial, sans-serif;
+	color: #ffffff;
+	font-size: 16px;
+	font-weight:bold;
+}
+
+#titre-admin-h2-stat{
+	margin: 20px 20px 10px 20px;
+	padding: 15px;
+	background-color: #3498db;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #ffffff;
 	font-size: 16px;
@@ -1285,6 +1299,9 @@ select {
 
 #reponse-content-appli p {
 	margin: 5px 0;
+	-webkit-margin-before: 0,5em;
+	-webkit-margin-after: 0,5em;
+	
 }
 
 #reponse-content-appli input[type=radio]{

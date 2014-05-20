@@ -1709,6 +1709,14 @@ class ServicesAdmin extends Main
         }
 
     }
+	
+	 public function stat()
+    {
+        
+        header("Location: ".SERVER_URL."statistique/stat");
+        exit();
+		
+	}
     
 }
 

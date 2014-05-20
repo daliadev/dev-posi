@@ -86,16 +86,22 @@ class Config
     
     public static $menu_stat = array(
     
-        'titre' =>"Statistique",
+        'titre' =>"Gestion des résultats",
     
         array(
             'code_menu' => "10",
-            'label_menu' => "Restitution des résultats",
+            'label_menu' => "Restitution",
             'url_menu' => "restitution",
             'type_lien_menu' => "dynamic"
         ),
-        array(
+		 array(
             'code_menu' => "20",
+            'label_menu' => "Statistique",
+            'url_menu' => "stat",
+            'type_lien_menu' => "dynamic"
+        ),
+        array(
+            'code_menu' => "30",
             'label_menu' => "Gérer les comptes",
             'url_menu' => "compte",
             'type_lien_menu' => "static"

@@ -32,6 +32,9 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/utilisateur/";
 
+
+//var_dump($response['organ']);
+
 ?>
     
     
@@ -71,20 +74,46 @@ $form_url = WEBROOT."admin/utilisateur/";
 
                                 <?php
                                 
-                                foreach($response['utilisateur'] as $utilisateur)
+                                $optgroup = false;
+
+                                foreach($response['organ'] as $organ)
                                 {
-                                    $selected = "";
-                                    if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
+                                    if ($optgroup)
                                     {
-                                        $selected = "selected";
+                                        echo '</optgroup>';
+                                        $optgroup = false;
                                     }
 
-                                    echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
+                                    if (isset($organ['nom_organ']) && !empty($organ['nom_organ']))
+                                    {
+                                        echo '<optgroup label="'.$organ['nom_organ'].'">';
+                                        $optgroup = true;
+                                    }
+
+                                    foreach($organ['user'] as $user)
+                                    {
+                                        $selected = "";
+                                        if (!empty($formData['ref_user']) && $formData['ref_user'] == $user['ref_user'])
+                                        {
+                                            $selected = "selected";
+                                        }
+
+                                        $style = "padding-left:20px;";
+
+                                        echo '<option value="'.$user['ref_user'].'" style="'.$style.'" '.$selected.'>'.$user['nom_user'].' '.$user['prenom_user'].'</option>';
+                                    }
+
                                 }
                                 
+                                if ($optgroup)
+                                {
+                                    echo '</optgroup>';
+                                }
+
                                 ?>
 
                             </select>
+
                         </div>
 
                         <div id="submit">    

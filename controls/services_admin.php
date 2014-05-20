@@ -1501,13 +1501,54 @@ class ServicesAdmin extends Main
         /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
         
         // Requete pour obtenir la liste des utilisateurs
-        $listeUsers = $this->servicesUtilisateur->getUtilisateurs();
+        //$listeUsers = $this->servicesUtilisateur->getUtilisateurs();
+
+
+        $listeUsers['organ'] = array();
+        
+
+        // Requete pour obtenir la liste des organismes
+        $listeOrgan = $this->servicesRestitution->getOrganismesList();
+
+
+        if (!$this->filterDataErrors($listeOrgan['response']))
+        {
+            $i = 0;
+
+            foreach($listeOrgan['response']['organisme'] as $organisme)
+            {
+                $listeUsers['organ'][$i]['ref_organ'] = $organisme->getId();
+                $listeUsers['organ'][$i]['nom_organ'] = $organisme->getNom();
+                $listeUsers['organ'][$i]['user'] = array();
+
+                /*** On va chercher tous les utilisateurs qui correspondent à l'organisme ***/
+                
+                $resultsetUsers = $this->servicesRestitution->getUsersFromOrganisme($organisme->getId());
+
+                if (!$this->filterDataErrors($resultsetUsers['response']))
+                {
+                    $j = 0;
+
+                    foreach($resultsetUsers['response']['utilisateur'] as $user)
+                    {
+                        $listeUsers['organ'][$i]['user'][$j]['ref_user'] = $user->getId();
+                        $listeUsers['organ'][$i]['user'][$j]['nom_user'] = $user->getNom();
+                        $listeUsers['organ'][$i]['user'][$j]['prenom_user'] = $user->getPrenom();
+                        $j++;
+                    }
+                }   
+
+                $i++;
+            }
+        }
+
+
 
         // Requete pour obtenir la liste des niveaux d'études
         $listeNiveauxEtudes = $this->servicesUtilisateur->getNiveauxEtudes();
         
         // Assemblage de toutes les données de la réponse
-        $this->returnData['response'] = array_merge($listeUsers['response'], $this->returnData['response']);
+        $this->returnData['response'] = array_merge($listeUsers, $this->returnData['response']);
         $this->returnData['response'] = array_merge($listeNiveauxEtudes['response'], $this->returnData['response']);
 
         /*** Envoi des données et rendu de la vue ***/

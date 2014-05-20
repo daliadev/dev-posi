@@ -28,6 +28,13 @@ body{
 }
 
 
+p {
+	margin: 10px 0;
+	/*-webkit-margin-before: 0,5em;*/
+	/*-webkit-margin-after: 0,5em;*/
+}
+
+
 /* Conteneur principale */
 
 #content{

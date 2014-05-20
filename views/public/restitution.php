@@ -53,7 +53,7 @@ if (Config::DEBUG_MODE)
         <?php endif; ?>
         
         <!-- Header -->
-        <div id="titre-admin-h2">Administration positionnement - Restitution des résultats</div>
+        <div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?></div>
 
 
 

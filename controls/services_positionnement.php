@@ -565,28 +565,40 @@ class ServicesPositionnement extends Main
         for ($i = 0; $i < count($tabCorrection); $i++)
         {
             // On détermine si c'est une categorie principale ou une sous-categorie
-            if (strlen($tabCorrection[$i]['code_cat']) == 2 && $tabCorrection[$i]['type_lien'] == "dynamic")
+            if (strlen($tabCorrection[$i]['code_cat']) == 2)
             {
                 // Catégorie parent
-                $tabCorrection[$i]['parent'] = true;
-                $parentCode = $tabCorrection[$i]['code_cat'];
-                $tabCorrection[$i]['total'] = 0;
-                $tabCorrection[$i]['total_correct'] = 0;
-                $tabCorrection[$i]['children'] = array();
-
-                for ($j = 0; $j < count($tabCorrection); $j++)
+                
+                if ($tabCorrection[$i]['type_lien'] == "dynamic")
                 {
-                    if (strlen($tabCorrection[$j]['code_cat']) == 2 && $tabCorrection[$j]['code_cat'] == $parentCode)
+                    $tabCorrection[$i]['parent'] = true;
+                    $parentCode = $tabCorrection[$i]['code_cat'];
+                    $tabCorrection[$i]['total'] = 0;
+                    $tabCorrection[$i]['total_correct'] = 0;
+                    $tabCorrection[$i]['children'] = array();
+
+                    for ($j = 0; $j < count($tabCorrection); $j++)
                     {
-                        
-                    }
-                    else if (strlen($tabCorrection[$j]['code_cat']) > 2 && substr($tabCorrection[$j]['code_cat'], 0, 2) == $parentCode)
-                    {
-                        $tabCorrection[$i]['total'] += $tabCorrection[$j]['total'];
-                        $tabCorrection[$i]['total_correct'] += $tabCorrection[$j]['total_correct'];
-                        $tabCorrection[$i]['children'][] = $tabCorrection[$j];
+                        //if (strlen($tabCorrection[$j]['code_cat']) == 2 && $tabCorrection[$j]['code_cat'] == $parentCode)
+                        //{
+                            
+                        //}
+                        //else 
+                        if (strlen($tabCorrection[$j]['code_cat']) > 2 && substr($tabCorrection[$j]['code_cat'], 0, 2) == $parentCode)
+                        {
+                            $tabCorrection[$i]['total'] += $tabCorrection[$j]['total'];
+                            $tabCorrection[$i]['total_correct'] += $tabCorrection[$j]['total_correct'];
+                            $tabCorrection[$i]['children'][] = $tabCorrection[$j];
+                        }
                     }
                 }
+                else if ($tabCorrection[$i]['type_lien'] == "static")
+                {
+                    $tabCorrection[$i]['parent'] = true;
+                    $parentCode = $tabCorrection[$i]['code_cat'];
+                    $tabCorrection[$i]['children'] = false;
+                }
+                
             }
             else 
             {

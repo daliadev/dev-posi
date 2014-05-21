@@ -27,6 +27,8 @@
         return $color;
     }
 
+var_dump($response);
+
 ?>
 
 
@@ -81,7 +83,7 @@
 
                                     $title = "";
                                     
-                                    if (!empty($correction['children']))
+                                    if (!empty($correction['children']) && is_array($correction['children']) && count($correction['children']) > 0)
                                     {
                                         //$title .= "Dont :";
                                         //$title .= "<ul>";

@@ -459,28 +459,39 @@ class ServicesAdminRestitution extends Main
         
         for ($i = 0; $i < count($tabStats); $i++)
         {
-            // On détermine si c'est une categorie principale ou une sous-categorie et le type de categories (rapport parent-enfant)
-            if (strlen($tabStats[$i]['code_cat']) == 2 && $tabStats[$i]['type_lien'] == "dynamic")
+            // On détermine si c'est une categorie principale ou une sous-categorie
+            if (strlen($tabStats[$i]['code_cat']) == 2)
             {
                 // Catégorie parent
-                $tabStats[$i]['parent'] = true;
-                $parentCode = $tabStats[$i]['code_cat'];
-                $tabStats[$i]['total'] = 0;
-                $tabStats[$i]['total_correct'] = 0;
-                $tabStats[$i]['children'] = array();
 
-                for ($j = 0; $j < count($tabStats); $j++)
+                if ($tabStats[$i]['type_lien'] == "dynamic")
                 {
-                    if (strlen($tabStats[$j]['code_cat']) == 2 && $tabStats[$j]['code_cat'] == $parentCode)
+                    $tabStats[$i]['parent'] = true;
+                    $parentCode = $tabStats[$i]['code_cat'];
+                    $tabStats[$i]['total'] = 0;
+                    $tabStats[$i]['total_correct'] = 0;
+                    $tabStats[$i]['children'] = array();
+
+                    for ($j = 0; $j < count($tabStats); $j++)
                     {
-                        
+                        //if (strlen($tabStats[$j]['code_cat']) == 2 && $tabStats[$j]['code_cat'] == $parentCode)
+                        //{
+                            
+                        //}
+                        //else 
+                        if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
+                        {
+                            $tabStats[$i]['total'] += $tabStats[$j]['total'];
+                            $tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
+                            $tabStats[$i]['children'][] = $tabStats[$j];
+                        }
                     }
-                    else if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
-                    {
-                        $tabStats[$i]['total'] += $tabStats[$j]['total'];
-                        $tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
-                        $tabStats[$i]['children'][] = $tabStats[$j];
-                    }
+                }
+                else if ($tabStats[$i]['type_lien'] == "static")
+                {
+                    $tabStats[$i]['parent'] = true;
+                    $parentCode = $tabStats[$i]['code_cat'];
+                    $tabStats[$i]['children'] = false;
                 }
             }
             else 
@@ -488,6 +499,7 @@ class ServicesAdminRestitution extends Main
                 $tabStats[$i]['parent'] = false;
                 $tabStats[$i]['children'] = false;
             }
+
         }
         
         

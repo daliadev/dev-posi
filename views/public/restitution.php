@@ -40,6 +40,8 @@ if (Config::DEBUG_MODE)
     var_dump($response);
 }
 
+//var_dump($response['stats']);
+
 
 ?>
 
@@ -252,14 +254,19 @@ if (Config::DEBUG_MODE)
                                     </li>
                                     -->
                                     <?php foreach ($stats['categories'] as $statCategorie) : ?>
+
                                         <?php if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
+
                                         <li>
-                                            <p><?php echo $statCategorie['nom_categorie']; ?> : 
+
+                                            <p><?php echo $statCategorie['nom_categorie']; ?> :
                                                 <strong><?php echo $statCategorie['percent']; ?>%</strong> (<strong><?php echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
                                                 <?php $width = $statCategorie['percent']; ?>
                                                 <span class="percent" style="width:<?php echo $width; ?>%" title="<?php echo $statCategorie['descript_categorie']; ?>"></span>
                                             </p>
+
                                         </li>
+
                                         <?php endif; ?>
                                     <?php endforeach; ?>
                                 </ul>

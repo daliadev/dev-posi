@@ -30,7 +30,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 }
 
 
-$form_url = $response['url'];
+//$form_url = $response['url'];
 
 
 
@@ -82,21 +82,19 @@ if (Config::DEBUG_MODE)
 
                 <div class="zone-liste-restitution">
 
-                    <div id="titre-question-h3"><strong>Statistique générale:</strong></div></br>
+                    <div id="titre-question-h3"><strong>Statistique total du positionnement:</strong></div>
 
                     
-						<p>sdfsfdkmsqld jqlj mql jgmql gmlqjdfmgl qjdmgl qdmflq mfdlqkdlfj ghqlkdf gksqdgf</p>
-                   
-                    
-                    
-                    
-                  
+						<p>Nombre de positionnement: <strong>48</strong></p>
+						<p>Nombre de personne positionnées: <strong>46</strong></p>
+						<p>Temps moyen: <strong>17 min</strong></p>
+						<p>Temps total: <strong>15h25</strong></p>
 
                   
                 </div>
             </div>
 
-        <form action="<?php echo $form_url; ?>" method="post" name="formu_admin_com_act" enctype="multipart/form-data">
+        <form action="" method="post" name="formu_admin_com_act" enctype="multipart/form-data">
 
             <div id="select-posi">
 
@@ -108,22 +106,7 @@ if (Config::DEBUG_MODE)
                         <label for="ref_organ_cbox">Organisme :</label><br/>
                         <select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user">
                             <option class="organ-option" value="select_cbox">---</option>
-                            <?php
-                            
-                            if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
-                            {						
-                                foreach ($response['organisme'] as $organisme)
-                                {
-                                    $selected = "";
-                                    if (!empty($formData['ref_organ']) && $formData['ref_organ'] == $organisme->getId())
-                                    {
-                                        $selected = "selected";
-                                    }
-                                    echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
-                                }
-                            }
-                            
-                            ?>
+                          
                         </select>
                     </div>
 
@@ -137,61 +120,16 @@ if (Config::DEBUG_MODE)
                             <select name="ref_user_cbox" id="ref_user_cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session">
                                 <option value="select_cbox">---</option>
 
-                                <?php
-                                
-                                foreach ($response['utilisateurs'] as $utilisateur)
-                                {
-                                    $selected = "";
-                                    if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
-                                    {
-                                        $selected = "selected";
-                                    }
-                                    echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.strtoupper($utilisateur->getNom()).' '.$utilisateur->getPrenom().'</option>';
-                                }
-                                
-                                ?>
+                              
 
                             </select>
                         </div>
-                    <?php
-                    //endif;
-                    ?>
-
-                    &nbsp;
                     
-                    <?php
-                    //if (isset($response['sessions']) && !empty($response['sessions'])) :
-                    ?>
-                        <div class="combo-box" id="combo-posi">
-                            <label for="ref_session_cbox">Positionnement :</label><br/>
-                            <select name="ref_session_cbox" id="ref_session_cbox" class="ajax-list">
-                                <option value="select_cbox">---</option>
-
-                                <?php
-                                
-                                foreach ($response['sessions'] as $session)
-                                {
-                                    $selected = "";
-                                    if (!empty($formData['ref_session']) && $formData['ref_session'] == $session->getId())
-                                    {
-                                        $selected = "selected";
-                                    }
-
-                                    $date = Tools::toggleDate(substr($session->getDate(), 0, 10));
-                                    $timeToSeconds = Tools::timeToSeconds(substr($session->getDate(), 11, 8), $inputFormat = "h:m:s");
-                                    $time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
-                                    echo '<option value="'.$session->getId().'" '.$selected.'>'.$date.' '.$time.'</option>';
-                                }
-                                
-                                ?>
-
-                            </select>
-                        </div>
-                    <?php
-                    //endif;
-                    ?>
                     
-                    &nbsp;
+                      
+                 
+                    
+                   
 
                     <input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" />
                 </div>
@@ -211,76 +149,56 @@ if (Config::DEBUG_MODE)
 
                 <div id="infos" class="zone-liste-restitution">
 
-                    <!-- <div id="titre-question-h3">2 - Informations utilisateur</div></br> -->
-
-                    <?php if (!empty($response['infos_user'])) : $infos_user = $response['infos_user'] ?>
-
-                        <div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
-                        <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
-                        <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>">ici</a> pour acceder à la restitution publique de cet organisme)</div>
-                        <?php endif; ?>
-                        <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php echo $infos_user['nom_intervenant']; ?></strong></div> -->
-                        <div class="info">Email de l'intervenant : <strong><?php echo $infos_user['email_intervenant']; ?></strong></div>
-                        <hr>
-                        <div class="info">Nom : <strong><?php echo strtoupper($infos_user['nom']); ?></strong></div>
-                        <div class="info">Prénom : <strong><?php echo $infos_user['prenom']; ?></strong></div>
-                        <div class="info">Date de naissance : <strong><?php echo $infos_user['date_naiss']; ?></strong></div>
-                        <div class="info">Niveau d'études : <strong><span title="<?php echo $infos_user['descript_niveau']; ?>"><?php echo $infos_user['nom_niveau']; ?></span></strong></div>
-                        <br/>
-                        <div class="info">Nombre de positionnements terminés : <strong><?php $infos_user['nbre_positionnements']; ?></strong></div>
-                        <div class="info">Date du dernier positionnement : <strong><?php echo $infos_user['date_last_posi']; ?></strong></div>
-
-                    <?php else : ?>
-                        <div class="info">Aucun organisme n'a été sélectionné.</div>
-                    <?php endif; ?>
+                   <p>Positionnement de l'organisme: <strong>24</strong></p>
+				   <p>Temps total: <strong>8h16</strong></p>
+				   <p>Temps moyen: <strong>13 min</strong></p>
+				   <p>Moyenne global de l'organisme: <strong>68 %</strong></p>
 
                 </div>
 
 
                 <div id="stats" class="zone-liste-restitution">
 
-                    <!-- <div id="titre-question-h3">3- Les statistiques</div></br> -->
+                   
                     
                     <div id="statistiques">
 
-                        <?php if (!empty($response['stats'])) : $stats = $response['stats'];
-                            $dateSession = Tools::toggleDate(substr($response['session'][0]->getDate(), 0, 10));
-                            $timeToSeconds = Tools::timeToSeconds(substr($response['session'][0]->getDate(), 11, 8), $inputFormat = "h:m:s");
-                            $time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
-                            $tempsTotal = Tools::timeToString($response['session'][0]->getTempsTotal());
-                        ?>
-                            <div class="info">Positionnement du : <strong><?php echo $dateSession; ?> à <?php echo $time; ?></strong></div>
-                            <div class="info">Temps total : <strong><?php echo $tempsTotal; ?></strong></div>
-                            <?php if (!empty($stats['percent_global'])) : ?>
-                                <div class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</div>
-                            <?php endif; ?>
-                                
-                            <br/>
-                            <!-- <div class="info">Taux de réussite par catégories/compétences : </div> -->
+                       
+                            <table width="100%" border="1" id="table-resultats" class="tablesorter">   
+                            <th class="header" >Date positionnement</th>
+							<th class="header" >Nom</th>
+							<th class="header">Prenom</th>
+							<th class="header">Naissance</th>
+							<th class="header">Score Global</th>
+							<th class="header">Temps (h:m:s)</th>
+							<tr style="background-color:#FFF6EA;">
+								<td align="center">15/05/2014</td>
+								<td align="center">Billard</td>
+								<td align="center">gregory</td>
+								<td align="center">06/03/1985</td>
+								<td align="center">85 %</td>
+								<td align="center">00:20:18</td>
+							</tr>
+							<tr style="background-color:#FCE7CA;">
+								<td align="center">12/05/2014</td>
+								<td align="center">Beurion</td>
+								<td align="center">nicolas</td>
+								<td align="center">12/06/1975</td>
+								<td align="center">71 %</td>
+								<td align="center">00:14:52</td>
+							</tr>
+							<tr style="background-color:#FFF6EA;">
+								<td align="center">11/05/2014</td>
+								<td align="center">Martin</td>
+								<td align="center">eric</td>
+								<td align="center">10/12/1958</td>
+								<td align="center">65%</td>
+								<td align="center">00:31:17</td>
+							</tr>
+							
                             
-                            <div class="stats gradiant_pic">
-                                <ul>
-                                    <!--
-                                    <li>
-                                        <div class="info">Taux de réussite par catégories/compétences : </div>
-                                    </li>
-                                    -->
-                                    <?php foreach ($stats['categories'] as $statCategorie) : ?>
-                                        <?php if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
-                                        <li>
-                                            <p><?php echo $statCategorie['nom_categorie']; ?> : 
-                                                <strong><?php echo $statCategorie['percent']; ?>%</strong> (<strong><?php echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
-                                                <?php $width = $statCategorie['percent']; ?>
-                                                <span class="percent" style="width:<?php echo $width; ?>%" title="<?php echo $statCategorie['descript_categorie']; ?>"></span>
-                                            </p>
-                                        </li>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-                        <?php else : ?>
-                            <div class="info">Aucun utilisateur n'a été sélectionné.</div>
-                        <?php endif; ?>
+                             </table>
+                       
 
                     </div>
 

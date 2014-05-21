@@ -36,7 +36,7 @@ class ServicesStatistique extends Main
 
     
     /**
-     * restitution - Gére la validation du formulaire de gestion des degrés d'aptitude avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
+     * statistique - Gére la validation du formulaire de gestion des degrés d'aptitude avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
      *
      * @param array Tableau de paramètres passés par url (le code d'identification de l'organisme)
      */

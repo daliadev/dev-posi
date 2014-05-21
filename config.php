@@ -80,6 +80,13 @@ class Config
             'url_menu' => "organisme",
             'type_lien_menu' => "dynamic"
 		
+       ),
+        array(
+            'code_menu' => "70",
+            'label_menu' => "Comptes administrateur",
+            'url_menu' => "compte",
+            'type_lien_menu' => "dynamic"
+        
        )
     );
     

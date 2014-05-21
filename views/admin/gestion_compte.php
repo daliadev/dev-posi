@@ -28,7 +28,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 }
 
 
-$form_url = WEBROOT."admin/organisme/";
+$form_url = WEBROOT."admin/compte/";
 
 ?>
     
@@ -52,7 +52,7 @@ $form_url = WEBROOT."admin/organisme/";
         <div id="utilisateur">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-utili">Gestion des organismes</div>
+                <div class="titre-form" id="titre-utili">Gestion des comptes</div>
 
                 <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_user">
 
@@ -63,7 +63,7 @@ $form_url = WEBROOT."admin/organisme/";
 
                         
                         <div class="input">
-                            <label for="ref_organ_cbox">Liste des organismes :</label>
+                            <label for="ref_organ_cbox">Liste des administrateurs :</label>
                             <select name="ref_organ_cbox" id="ref_organ_cbox">
                                 <option value="select_cbox">---</option>
 
@@ -157,7 +157,7 @@ $form_url = WEBROOT."admin/organisme/";
 
                         <div id="buttons">
                                 <input type="hidden" name="delete" value="false">
-                                <input type="submit" class="add" name="add" style="float:left;" value="Ajouter" disabled <?php //echo $formData['add_disabled']; ?>>
+                                <input type="submit" class="add" name="add" style="float:left;" value="Ajouter" <?php echo $formData['add_disabled']; ?>>
                                 <input type="submit" class="edit" name="edit" style="float:right;" value="Modifier" <?php echo $formData['edit_disabled']; ?>>
                                 <input type="submit" class="save" name="save" style="float:left;" value="Enregistrer" <?php echo $formData['save_disabled']; ?>>
                                 <input type="submit" class="del" name="del" style="float:right;" value="Supprimer" <?php echo $formData['delete_disabled']; ?>>      

@@ -307,12 +307,32 @@ class ServicesAdminStat extends Main
     */
 
 
+    public function getUsers()
+    {
+        $resultset = $this->utilisateurDAO->selectAll();
+        
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultset['response']['utilisateur'];
+                $resultset['response']['utilisateur'] = array($utilisateur);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+
 
     
     public function getUserSessions($refUser, $startDate, $endDate)
     {
         $resultset = $this->sessionDAO->selectByUserFromDate($refUser, $startDate, $endDate);
-        
+
         // Filtrage des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
@@ -342,31 +362,35 @@ class ServicesAdminStat extends Main
         $userStats['moyenne_score_sessions'] = 0;
 
         // On établit la liste des sessions (positionnements) de l'utilisateur
-        $sessionsList = null;
+        $userSessionsList = array();
         $resultsetSessions = $this->getUserSessions($refUser, $startDate, $endDate);
 
-        if ($resultsetSessions && count($resultsetSessions['response']['session']) > 0)
+        if ($resultsetSessions)
         {
-            $userSessionsList = $resultsetSessions['response']['session'];
-
-            // On procède au comptage par sessions
-            foreach ($userSessionsList as $userSession) 
+            if (isset($resultsetSessions['response']['session']) && !empty($resultsetSessions['response']['session']))
             {
-                if ($userSession->getSessionAccomplie() === 1) 
+                $userSessionsList = $resultsetSessions['response']['session'];
+
+                // On procède au comptage par sessions
+                foreach ($userSessionsList as $userSession) 
                 {
-                    $userStats['nbre_sessions']++;
-                    $userStats['temps_total'] += $userSession->getTempsTotal();
+                    if ($userSession->getSessionAccomplie()) 
+                    {
+                        $userStats['nbre_sessions']++;
+                        $userStats['temps_total'] += $userSession->getTempsTotal();
+                    }
                 }
-            }
 
-            // Calcul de la moyenne du temps passés par positionnement
-            if ($userStats['nbre_sessions'] > 0 && $userStats['temps_total'] > 0)
-            {
-                $userStats['moyenne_temps_sessions'] = $userStats['temps_total'] / $userStats['nbre_sessions'];
+                // Calcul de la moyenne du temps passés par positionnement
+                if ($userStats['nbre_sessions'] > 0 && $userStats['temps_total'] > 0)
+                {
+                    $userStats['moyenne_temps_sessions'] = $userStats['temps_total'] / $userStats['nbre_sessions'];
+                }
             }
 
             return $userStats;
         }
+
 
         return false;
         
@@ -590,12 +614,18 @@ class ServicesAdminStat extends Main
                     $globalStats['nbre_users']++;
                     $globalStats['nbre_sessions'] += $userStats['nbre_sessions'];
                     $globalStats['temps_total'] += $userStats['temps_total'];
-                    $globalStats['moyenne_temps_session'] += $userStats['moyenne_temps_sessions'];
-                    $globalStats['moyenne_temps_session'] += $userStats['moyenne_temps_sessions'];
+                    //$globalStats['moyenne_temps_session'] += $userStats['moyenne_temps_sessions'];
+                    //$globalStats['moyenne_temps_session'] += $userStats['moyenne_temps_sessions'];
                 }
             }
         }
 
+        //$stringTime = Tools::timeToString($totalTime);
+
+        $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
+        $globalStats['temps_total'] = Tools::timeToString(round($globalStats['temps_total']));
+
+        
         /*
         $userStats['nbre_sessions'] = 0;
         $userStats['temps_total'] = 0;
@@ -726,8 +756,8 @@ class ServicesAdminStat extends Main
 
 
 
-        $globalStats['niveau_infos'] = $niveauxInfos;
-        $globalStats['categories_infos'] = null;
+        //$globalStats['niveau_infos'] = $niveauxInfos;
+        //$globalStats['categories_infos'] = null;
 
         return $globalStats;
 

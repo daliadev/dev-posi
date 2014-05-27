@@ -2,20 +2,15 @@
 
 
 // Initialisation par défaut des valeurs du formulaire
-/*$formData = array();
-$formData['ref_organ_cbox'] = "";
-$formData['ref_organ'] = "";
-$formData['ref_user_cbox'] = "";
-$formData['ref_user'] = "";
-$formData['ref_session_cbox'] = "";
-$formData['ref_session'] = "";*/
 
+$formData = array();
 
+// S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
-{   
+{      
     foreach($response['form_data'] as $key => $value)
     {
-        if (is_array($response['form_data'][$key]))
+        if (is_array($response['form_data'][$key]) && count($response['form_data'][$key]) > 0)
         {
             for ($i = 0; $i < count($response['form_data'][$key]); $i++)
             {
@@ -102,11 +97,13 @@ if (Config::DEBUG_MODE)
 						</select>
 						<input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" />
 						</br>
+
 						<hr>
-						<p>Nombre de positionnement: <strong>48</strong></p>
-						<p>Nombre de personne positionnées: <strong>46</strong></p>
-						<p>Temps de passation moyen: <strong>17 min</strong></p>
-						<p>Temps total: <strong>35h25</strong></p>
+
+						<p>Nombre de positionnement: <strong><?php echo $response['stats']['nbre_sessions']; ?></strong></p>
+						<p>Nombre de personne positionnées: <strong><?php echo $response['stats']['nbre_users']; ?></strong></p>
+						<p>Temps de passation moyen: <strong><?php echo $response['stats']['moyenne_temps_session']; ?></strong></p>
+						<p>Temps total: <strong><?php echo $response['stats']['temps_total']; ?></strong></p>
 						
 						<p>Nombre de candidats réparti par Niveau de formation : 
 							<ul>

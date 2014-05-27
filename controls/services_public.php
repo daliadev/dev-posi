@@ -427,8 +427,40 @@ class ServicesPublic extends Main
         //ServicesAuth::checkAuthentication("admin");
         
         $this->initialize();
+        
+        $this->url = SERVER_URL."public/statistique/";
 
-        $this->url = SERVER_URL."public/statistique";
+        
+        if (Config::DEBUG_MODE)
+        {
+            echo "\$_POST = ";
+            var_dump($_POST);
+        }
+
+
+        
+        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats();
+
+
+        //exit();
+
+
+        /*-----   Retour des données traitées du formulaire   -----*/
+        
+        $this->returnData['response']['form_data'] = $this->formData;
+        $this->returnData['response']['url'] = $this->url;
+
+        // S'il y a des erreurs, on les injecte dans la réponse
+        if (!empty($this->errors) && count($this->errors) > 0)
+        {
+            foreach($this->errors as $error)
+            {
+                $this->returnData['response']['errors'][] = $error;
+            }
+        }
+
+        $this->setResponse($this->returnData);
+
         $this->setTemplate("template_page");
         $this->render("statistique");
         

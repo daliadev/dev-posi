@@ -125,13 +125,14 @@ class SessionDAO extends ModelDAO
     {
         $this->initialize();
         
-        if(!empty($refUser) && !empty($refOrganisme))
+        if (!empty($refUser))
         {
             $request = "SELECT * FROM session ";
             $request .= "WHERE ref_user = ".$refUser." ";
             $request .= "AND session_accomplie = 1 ";
             $request .= "ORDER BY date_session DESC";
             
+
             $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
         }
         else

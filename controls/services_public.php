@@ -10,6 +10,7 @@ require_once(ROOT.'controls/authentication.php');
 
 require_once(ROOT.'controls/services_admin_gestion.php');
 require_once(ROOT.'controls/services_admin_restitution.php');
+require_once(ROOT.'controls/services_admin_stat.php');
 require_once(ROOT.'models/dao/organisme_dao.php');
 
 
@@ -19,6 +20,8 @@ class ServicesPublic extends Main
 
     
     private $servicesRestitution = null;
+    private $servicesAdminStat = null;
+
     private $organismeDAO = null;
     
     private $servicesGestion = null;
@@ -31,6 +34,8 @@ class ServicesPublic extends Main
         $this->servicesGestion = new ServicesAdminGestion();
         
         $this->servicesRestitution = new ServicesAdminRestitution();
+        $this->servicesAdminStat = new ServicesAdminStat();
+
         $this->organismeDAO = new OrganismeDAO();
     }
     
@@ -405,6 +410,28 @@ class ServicesPublic extends Main
             $this->setTemplate("template_page");
             $this->render("restitution");
         }
+
+    }
+
+
+
+    /**
+     * statistique - Gére la validation du formulaire de gestion des degrés d'aptitude avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
+     *
+     * @param array Tableau de paramètres passés par url (le code d'identification de l'organisme)
+     */
+    public function statistique($requestParams = array())
+    {
+
+        /*** Authentification avec les droits admin ***/
+        //ServicesAuth::checkAuthentication("admin");
+        
+        $this->initialize();
+
+        $this->url = SERVER_URL."public/statistique";
+        $this->setTemplate("template_page");
+        $this->render("statistique");
+        
 
     }
     

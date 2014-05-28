@@ -251,9 +251,10 @@ p {
 .form-full {
 	/*display:inline-block;*/
 	/*vertical-align:top;*/
-	width: 900px;
+	width: 860px;
 	/*margin-top: 20px;*/
 	/*margin: 10px;*/
+	overflow: hidden;
 	
 }
 
@@ -299,6 +300,10 @@ label
 	font-weight: bold;
 }
 
+#form-posi .form-full fieldset legend {
+	width: 838px;
+}
+
 #form-posi span
 {
 	vertical-align: top !important;
@@ -316,7 +321,8 @@ label
 
 
 #form-posi .input {
-	margin: 10px 0;
+	/*margin: 10px 0;*/
+	margin: 10px 40px 10px 0;
 }
 
 
@@ -1414,7 +1420,7 @@ select {
 
 
 
-/*----------------------------------------------RESTITUTION--------------------------------------------*/
+/*----------------------------------------------  Restitution et Statistiques   --------------------------------------------*/
 
 #infos-posi {
     margin: 0px 20px;
@@ -1452,6 +1458,10 @@ select {
 
 #infos-posi .ui-state-active a, #infos-posi .ui-state-active a:link, #infos-posi .ui-state-active a:visited {
     color: #EB8F00;
+}
+
+#infos-posi li {
+	margin-left: 0;
 }
 
 
@@ -1506,9 +1516,48 @@ select {
     padding: 0;
     color: #000000;
     font-weight:bold;
-    background: #f7f7f7 url(../images/gradiant.png) repeat-y 0 0;	
+    background: #f7f7f7 url(../images/gradiant.png) repeat-y 0 0;
 }
-	
+
+
+
+.stats-detail {
+	overflow: hidden;
+	/*padding: 40px 0;*/
+}
+
+
+	.stats-detail .bloc-stat {
+		float: left;
+		width: 104px;
+		height: 100px;
+		margin-right: 20px;
+		padding: 10px;
+		background: #f0f0f0;
+		border: 1px solid #CCC8C8;
+		border-radius: 5px;
+		color: #666060;
+		text-align: center;
+	}
+
+
+	.stats-detail .bloc-stat strong 
+	{
+		display: block;
+		margin-bottom: 15px;
+		color: #666060;
+		font-size: 18px;
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.stats-detail .last 
+	{
+		margin-right: 0px;
+	}
+
+
+
 
 
 /*-------------------------------------- tableau résultats restitution -------------------------------*/

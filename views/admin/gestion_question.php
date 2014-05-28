@@ -98,7 +98,7 @@ $form_url = WEBROOT."admin/question/";
                             </select> &nbsp;
 
 
-                            <input type="submit" name="selection" value="Sélectionner" class="bt-admin-menu-ajout2" /> &nbsp;
+                            <input type="submit" name="selection" value="Sélectionner"/>
                             <!--
                             <input type="submit" name="edit" class="bt-admin-menu-modif-haut" value="Modifier" <?php //echo $formData['edit_disabled']; ?> />
                             <input type="submit" name="save" class="bt-admin-menu-enreg-haut" value="Enregistrer" <?php //echo $formData['save_disabled']; ?> />

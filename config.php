@@ -9,7 +9,7 @@
 class Config 
 {
 
-    const DEBUG_MODE = 1; // Activer (1) / désactiver (0) l'affichage du débuguage
+    const DEBUG_MODE = 0; // Activer (1) / désactiver (0) l'affichage du débuguage
     
     const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) la gestion des activités dans la partie admin (prédiction d'un parcours, orientation)
     

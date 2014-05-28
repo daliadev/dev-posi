@@ -52,7 +52,7 @@ class ServicesAdminStat extends Main
     
     
     
-    /*
+    
     public function getNiveaux()
     {
         $resultset = $this->niveauEtudesDAO->selectAll();
@@ -72,7 +72,7 @@ class ServicesAdminStat extends Main
         
         return false;
     }
-    */
+    
     
     /*
     public function getCategories()
@@ -561,8 +561,8 @@ class ServicesAdminStat extends Main
         $globalStats['moyenne_temps_session'] = 0;
         $globalStats['temps_total'] = 0;
 
-        $globalstats['categories_infos'] = array();
-        $globalStats['niveau_infos'] = array();
+        //$globalstats['categories_infos'] = array();
+        //$globalStats['niveau_infos'] = array();
         //$globalStats['utilisateurs'] = array();
 
         /*
@@ -597,13 +597,14 @@ class ServicesAdminStat extends Main
 
         // On établit les stats de sessions (positionnements) par utilisateur
 
-        $usersList = null;
+        $usersList = array();
         $userStats = array();
         $resultsetUsers = $this->getUsers();
 
         if ($resultsetUsers)
         {
             $usersList = $resultsetUsers['response']['utilisateur'];
+
 
             foreach($usersList as $user)
             {
@@ -625,6 +626,8 @@ class ServicesAdminStat extends Main
         $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
         $globalStats['temps_total'] = Tools::timeToString(round($globalStats['temps_total']));
 
+
+
         
         /*
         $userStats['nbre_sessions'] = 0;
@@ -638,16 +641,16 @@ class ServicesAdminStat extends Main
 
 
 
-        /*****   Calcul du nbre d'utilisateurs par niveaux d'etudes   *****/
+        /*****   Calcul du nombre d'utilisateurs par niveaux d'etudes   *****/
 
-        /*
+        
         $niveauxInfos = array();
 
         $resultsetNiveaux = $this->getNiveaux();
 
         if ($resultsetNiveaux)
         {
-            $niveauxList = $resultsetSessions['response']['niveau_etudes'];
+            $niveauxList = $resultsetNiveaux['response']['niveau_etudes'];
 
             $i = 0;
 
@@ -658,7 +661,7 @@ class ServicesAdminStat extends Main
                 $niveauxInfos[$i]['nom_niveau'] = $niveau->getNom();
                 $niveauxInfos[$i]['descript_niveau'] = $niveau->getDescription();
 
-                if (!empty($usersList))
+                if (count($usersList) > 0)
                 {
                     $niveauxInfos[$i]['nbre_users'] = 0;
 
@@ -674,7 +677,11 @@ class ServicesAdminStat extends Main
                 $i++;
             }
         }
-        */
+        
+        //var_dump($niveauxInfos);
+        //exit();
+
+        $globalStats['niveaux'] = $niveauxInfos;
 
 
         /*****   Calcul des scores moyen par catégories/compétences   *****/

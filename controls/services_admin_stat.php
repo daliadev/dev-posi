@@ -358,8 +358,9 @@ class ServicesAdminStat extends Main
         $userStats = array();
         $userStats['nbre_sessions'] = 0;
         $userStats['temps_total'] = 0;
-        $userStats['moyenne_temps_sessions'] = 0;
-        $userStats['moyenne_score_sessions'] = 0;
+        $userStats['score_total'] = 0;
+        //$userStats['moyenne_temps_sessions'] = 0;
+        //$userStats['moyenne_score_sessions'] = 0;
 
         // On établit la liste des sessions (positionnements) de l'utilisateur
         $userSessionsList = array();
@@ -378,14 +379,25 @@ class ServicesAdminStat extends Main
                     {
                         $userStats['nbre_sessions']++;
                         $userStats['temps_total'] += $userSession->getTempsTotal();
+                        $userStats['score_total'] += $userSession->getScorePourcent();
                     }
                 }
 
                 // Calcul de la moyenne du temps passés par positionnement
+                /*
                 if ($userStats['nbre_sessions'] > 0 && $userStats['temps_total'] > 0)
                 {
                     $userStats['moyenne_temps_sessions'] = $userStats['temps_total'] / $userStats['nbre_sessions'];
                 }
+                */
+
+                // Calcul de la moyenne du score par positionnement
+                /*
+                if ($userStats['nbre_sessions'] > 0 && $userStats['score_pourcent'] > 0)
+                {
+                    $userStats['moyenne_score_sessions'] = $userStats['score_pourcent'] / $userStats['nbre_sessions'];
+                }
+                */
             }
 
             return $userStats;
@@ -558,8 +570,10 @@ class ServicesAdminStat extends Main
 
         $globalStats['nbre_sessions'] = 0;
         $globalStats['nbre_users'] = 0;
-        $globalStats['moyenne_temps_session'] = 0;
         $globalStats['temps_total'] = 0;
+        $globalStats['moyenne_temps_session'] = 0;
+        $globalStats['score_total'] = 0;
+        $globalStats['moyenne_score_session'] = 0;
 
         //$globalstats['categories_infos'] = array();
         //$globalStats['niveau_infos'] = array();
@@ -615,18 +629,15 @@ class ServicesAdminStat extends Main
                     $globalStats['nbre_users']++;
                     $globalStats['nbre_sessions'] += $userStats['nbre_sessions'];
                     $globalStats['temps_total'] += $userStats['temps_total'];
-                    //$globalStats['moyenne_temps_session'] += $userStats['moyenne_temps_sessions'];
-                    //$globalStats['moyenne_temps_session'] += $userStats['moyenne_temps_sessions'];
+                    $globalStats['score_total'] += $userStats['score_total'];
                 }
             }
         }
 
-        //$stringTime = Tools::timeToString($totalTime);
-
         $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
         $globalStats['temps_total'] = Tools::timeToString(round($globalStats['temps_total']));
 
-
+        $globalStats['moyenne_score_session'] = $globalStats['score_total'] / $globalStats['nbre_sessions'];
 
         
         /*
@@ -660,10 +671,11 @@ class ServicesAdminStat extends Main
 
                 $niveauxInfos[$i]['nom_niveau'] = $niveau->getNom();
                 $niveauxInfos[$i]['descript_niveau'] = $niveau->getDescription();
+                $niveauxInfos[$i]['nbre_users'] = 0;
 
                 if (count($usersList) > 0)
                 {
-                    $niveauxInfos[$i]['nbre_users'] = 0;
+                    //$niveauxInfos[$i]['nbre_users'] = 0;
 
                     foreach ($usersList as $user)
                     {

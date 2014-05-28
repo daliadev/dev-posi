@@ -1428,6 +1428,7 @@ select {
     background: #fff;
 }
 
+
 #infos-posi .ui-widget-header {
     background: #fff;
     border: none;
@@ -1524,30 +1525,16 @@ select {
 .stats-detail {
 	overflow: hidden;
 	/*padding: 40px 0;*/
+	margin-bottom: 10px;
 }
 
 
 	.stats-detail .bloc-stat {
 		float: left;
 		width: 104px;
-		height: 100px;
 		margin-right: 20px;
 		padding: 10px;
-		background: #f0f0f0;
-		border: 1px solid #CCC8C8;
-		border-radius: 5px;
 		color: #666060;
-		text-align: center;
-	}
-
-
-	.stats-detail .bloc-stat strong 
-	{
-		display: block;
-		margin-bottom: 15px;
-		color: #666060;
-		font-size: 18px;
-		font-weight: bold;
 		text-align: center;
 	}
 
@@ -1555,6 +1542,27 @@ select {
 	{
 		margin-right: 0px;
 	}
+
+		.bloc-stat .bloc-stat-title
+		{
+			width: 104px;
+			height: 45px;
+			/*padding-bottom: 15px;*/
+			text-align: center;
+		}
+
+		.bloc-stat .bloc-stat-number
+		{
+			width: 104px;
+			height: 100px;
+			background: #f0f0f0;
+			border: 1px solid #CCC8C8;
+			border-radius: 5px;
+			font-size: 20px;
+			font-weight: bold;
+			text-align: center;
+			line-height: 100px;
+		}
 
 
 

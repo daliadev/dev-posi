@@ -100,21 +100,28 @@ if (Config::DEBUG_MODE)
         					<input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" />
         					</br> -->
 
-        					<hr>
+        					
 
 
                             <div class="stats-detail">
-        
+                                
+                                <p><strong>Statistiques basiques</strong></p>
+                                <hr>
+
+
                                 <div class="bloc-stat">
-        						  Nombre de positionnement <strong><?php echo $response['stats']['nbre_sessions']; ?></strong>
+                                    <div class="bloc-stat-title">Nombre de positionnements</div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
                                 </div>
         						
                                 <div class="bloc-stat">
-                                    Nombre d'utilisateurs positionnés <strong><?php echo $response['stats']['nbre_users']; ?></strong>
+                                    <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
         						</div>
                                 
                                 <div class="bloc-stat">
-                                    Taux de réussite moyen <strong>0 %</strong>
+                                    <div class="bloc-stat-title">Score moyen global</div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['moyenne_score_session']; ?>%</strong></div>
                                 </div>
 
 
@@ -122,15 +129,18 @@ if (Config::DEBUG_MODE)
 
 
                                 <div class="bloc-stat">
-                                    Temps de passation moyen : <strong style="font-size:15px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong>
+                                    <div class="bloc-stat-title">Temps de passation moyen</div>
+                                    <div class="bloc-stat-number"><strong style="font-size:15px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat">
-                                    Temps total : <strong style="font-size:14px;"><?php echo $response['stats']['temps_total']; ?></strong></p>
+                                    <div class="bloc-stat-title">Temps total</div>
+                                    <div class="bloc-stat-number"><strong style="font-size:13px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat last">
-                                    Age moyen des utilisateurs : <strong>26 ans</strong></p>
+                                    <div class="bloc-stat-title">Age moyen des utilisateurs</div>
+                                    <div class="bloc-stat-number"><strong>26 ans</strong></div>
                                 </div>
 
                                 <div style="clear:both;"></div>
@@ -138,7 +148,9 @@ if (Config::DEBUG_MODE)
                             </div>
                             
                             <div class="stats-detail">
-        						<p>Nombre de candidats réparti par Niveau de formation : 
+                                <p><strong>Nombre de candidats répartis par niveau de formation</strong></p>
+                                <hr>
+        						<p><!-- Nombre de candidats réparti par Niveau de formation :  -->
         							<ul>
                                         <?php
                                         for ($i = 0; $i < count($response['stats']['niveaux']); $i++)
@@ -156,8 +168,11 @@ if (Config::DEBUG_MODE)
         						</p>
         					</div>	
         					
-                            <div class="stats-detail">	
-        						<p>Score moyen par compétence :</p>
+                            <div class="stats-detail">
+                                <p><strong>Score moyen par compétences</strong></p>
+                                <hr>
+        						<!-- <p>Score moyen par compétence :</p> -->
+                                <p>
         							<ul>
         								<li>Oral : <strong> 68 %</strong></li>
         								<li>Ecrit : <strong> 100 %</strong></li>
@@ -165,9 +180,9 @@ if (Config::DEBUG_MODE)
         								<li>Espace temps : <strong> 85%</strong></li>
         								<li>Informatique : <strong> 48%</strong></li>
         							</ul>
-        						<hr>
-        						
-        						<p>Score moyen global: <strong>68%</strong></p>
+        						</p>
+        						<!-- <hr> -->
+        						<!-- <p>Score moyen global: <strong>68%</strong></p> -->
         					</div>
 
                         <fieldset>
@@ -188,7 +203,7 @@ if (Config::DEBUG_MODE)
                             <!-- <div id="titre-question-h3"><strong>Statistique d'un organisme</strong></div></br> -->
                             
 
-                            <select name="ref_organ_cbox" id="ref_organ_cbox" style="margin: 0px 10px 3px 10px;">
+                            <select name="ref_organ_cbox" id="ref_organ_cbox">
                                 <option value="select_cbox">---</option>
 
                                 <?php 

@@ -53,7 +53,7 @@ if (Config::DEBUG_MODE)
         <?php endif; ?>
         
         <!-- Header -->
-        <div id="titre-admin-h2">Statistique du positionnement</div>
+        <div id="titre-admin-h2-stat">Statistique du positionnement</div>
 
 
 
@@ -83,55 +83,14 @@ if (Config::DEBUG_MODE)
                 <div class="zone-liste-restitution">
 
                     <div id="titre-question-h3"><strong>Statistique total du positionnement:</strong></div>
-					</br>
-						Filtre:
-						<select>
-							<option>janvier 2014
-							<option>Fevrier 2014
-							<option>Mars 2014
-							<option>Avril 2014
-							<option>Mai 2014
-						</select>	
-						au
-						<select>
-							<option>janvier 2014
-							<option>Fevrier 2014
-							<option>Mars 2014
-							<option>Avril 2014
-							<option>Mai 2014
-						</select>
-						<input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" />
-						</br>
-						<hr>
+
+                    
 						<p>Nombre de positionnement: <strong>48</strong></p>
 						<p>Nombre de personne positionnées: <strong>46</strong></p>
-						<p>Temps de passation moyen: <strong>17 min</strong></p>
-						<p>Temps total: <strong>35h25</strong></p>
-						
-						<p>Nombre de candidats réparti par Niveau de formation : 
-							<ul>
-								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 9</strong></li>
-								<li>Niveau IV : Bac : <strong> 8</strong></li>
-								<li>Niveau III : Bac+2 : <strong> 6</strong></li>
-								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
-							</ul>
-						</p>
-						
-						
-						<p>Score moyen par compétence :</p>
-							<ul>
-								<li>Oral<strong> 68 %</strong></li>
-								<li>Ecrit : <strong> 100 %</strong></li>
-								<li>Calcul: <strong> 60%</strong></li>
-								<li>Espace temps : <strong> 85%</strong></li>
-								<li>Informatique : <strong> 48%</strong></li>
-							</ul>
-						<hr>
-						
-						<p>Score moyen global: <strong>68%</strong></p>
-						
+						<p>Temps moyen: <strong>17 min</strong></p>
+						<p>Temps total: <strong>15h25</strong></p>
+
+                  
                 </div>
             </div>
 
@@ -141,7 +100,7 @@ if (Config::DEBUG_MODE)
 
                 <div class="zone-liste-restitution">
 
-                    <div id="titre-question-h3"><strong>Statistique d'un organisme</strong></div></br>
+                    <div id="titre-question-h3"><strong>Sélection d'un organisme</strong></div></br>
 
                     <div class="combo-box" id="combo-organ">
                         <label for="ref_organ_cbox">Organisme :</label><br/>
@@ -167,7 +126,9 @@ if (Config::DEBUG_MODE)
                         </div>
                     
                     
-    
+                      
+                 
+                    
                    
 
                     <input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" />
@@ -183,47 +144,72 @@ if (Config::DEBUG_MODE)
 
                 <ul>
                     <li><a href="#infos">1 - Statistique organisme</a></li>
-                    
+                    <li><a href="#stats">2 - liste des utilisateurs</a></li>
                 </ul>
 
                 <div id="infos" class="zone-liste-restitution">
 
-                  <p>Nombre de positionnement: <strong>40</strong></p>
-						<p>Nombre de personne positionnées: <strong>40</strong></p>
-						<p>Temps de passation moyen: <strong>17 min</strong></p>
-						<p>Temps total: <strong>20h45</strong></p>
-						<p>Nombre de candidats réparti par Niveau de formation : 
-							<ul>
-								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 6</strong></li>
-								<li>Niveau IV : Bac : <strong> 8</strong></li>
-								<li>Niveau III : Bac+2 : <strong> 3</strong></li>
-								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
-							</ul>
-						</p>
-						
-						<p>Score moyen par compétence :</p>
-							<ul>
-								<li>Oral<strong> 80 %</strong></li>
-								<li>Ecrit : <strong> 100 %</strong></li>
-								<li>Calcul: <strong> 68%</strong></li>
-								<li>Espace temps : <strong> 90%</strong></li>
-								<li>Informatique : <strong> 48%</strong></li>
-							</ul>
-						<hr>
-						<p>Score moyen global: <strong>60%</strong></p>
-
+                   <p>Positionnement de l'organisme: <strong>24</strong></p>
+				   <p>Temps total: <strong>8h16</strong></p>
+				   <p>Temps moyen: <strong>13 min</strong></p>
+				   <p>Moyenne global de l'organisme: <strong>68 %</strong></p>
 
                 </div>
 
 
-              
+                <div id="stats" class="zone-liste-restitution">
+
+                   
+                    
+                    <div id="statistiques">
+
+                       
+                            <table width="100%" border="1" id="table-resultats" class="tablesorter">   
+                            <th class="header" >Date positionnement</th>
+							<th class="header" >Nom</th>
+							<th class="header">Prenom</th>
+							<th class="header">Naissance</th>
+							<th class="header">Score Global</th>
+							<th class="header">Temps (h:m:s)</th>
+							<tr style="background-color:#FFF6EA;">
+								<td align="center">15/05/2014</td>
+								<td align="center">Billard</td>
+								<td align="center">gregory</td>
+								<td align="center">06/03/1985</td>
+								<td align="center">85 %</td>
+								<td align="center">00:20:18</td>
+							</tr>
+							<tr style="background-color:#FCE7CA;">
+								<td align="center">12/05/2014</td>
+								<td align="center">Beurion</td>
+								<td align="center">nicolas</td>
+								<td align="center">12/06/1975</td>
+								<td align="center">71 %</td>
+								<td align="center">00:14:52</td>
+							</tr>
+							<tr style="background-color:#FFF6EA;">
+								<td align="center">11/05/2014</td>
+								<td align="center">Martin</td>
+								<td align="center">eric</td>
+								<td align="center">10/12/1958</td>
+								<td align="center">65%</td>
+								<td align="center">00:31:17</td>
+							</tr>
+							
+                            
+                             </table>
+                       
+
+                    </div>
+
+                </div>
+
+                
+
+
+               
 
             </div>
-
-
-        </div>
 
         </form>
         

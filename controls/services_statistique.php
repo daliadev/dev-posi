@@ -8,7 +8,7 @@
 
 require_once(ROOT.'controls/authentication.php');
 
-//require_once(ROOT.'controls/services_admin_gestion.php');
+require_once(ROOT.'controls/services_admin_stat.php');
 
 
 
@@ -17,7 +17,7 @@ class ServicesStatistique extends Main
 {
 
     
-    //private $servicesRestitution = null;
+    private $servicesAdminStat = null;
     //private $organismeDAO = null;
     
 
@@ -27,7 +27,7 @@ class ServicesStatistique extends Main
     {
         $this->controllerName = "statistique";
         
-        //$this->servicesGestion = new ServicesAdminGestion();
+        $this->servicesAdminStat = new ServicesAdminStat();
         
         
     }

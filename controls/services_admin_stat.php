@@ -15,7 +15,7 @@ require_once(ROOT.'models/dao/categorie_dao.php');
 
 
 
-class ServicesAdminRestitution extends Main
+class ServicesAdminStat extends Main
 {
     
     private $organismeDAO = null;
@@ -35,7 +35,7 @@ class ServicesAdminRestitution extends Main
     public function __construct() 
     {
         $this->errors = array();
-        $this->controllerName = "adminRestitution";
+        $this->controllerName = "adminStat";
 
         $this->organismeDAO = new OrganismeDAO();
         $this->utilisateurDAO = new UtilisateurDAO();
@@ -54,6 +54,53 @@ class ServicesAdminRestitution extends Main
     
     
     
+    public function getNiveaux()
+    {
+        $resultset = $this->niveauEtudesDAO->selectAll();
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
+            { 
+                $niveau = $resultset['response']['niveau_etudes'];
+                $resultset['response']['niveau_etudes'] = array($niveau);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+    
+    
+    
+    public function getCategories()
+    {
+        $resultset = $this->categorieDAO->selectAll();
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+
+
+
+
+
+
     public function getOrganismesList()
     {
         $resultset = $this->organismeDAO->selectAll();
@@ -95,7 +142,7 @@ class ServicesAdminRestitution extends Main
     
     
     
-    
+    /*
     public function getUserSessions($refUser, $refOrganisme)
     {
         $resultset = $this->sessionDAO->selectByUser($refUser, $refOrganisme);
@@ -120,7 +167,7 @@ class ServicesAdminRestitution extends Main
         
         return $resultset;
     }
-    
+    */
     
     public function getSession($refSession)
     {
@@ -164,34 +211,8 @@ class ServicesAdminRestitution extends Main
     */
     
     
-    /*
-    public function getNiveau($refNiveau)
-    {
-        $resultset = $this->niveauEtudesDAO->selectById($refNiveau);
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-
-        return $resultset;
-    }
-    */
     
     
-    public function getCategories()
-    {
-        $resultset = $this->categorieDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-        { 
-            $categorie = $resultset['response']['categorie'];
-            $resultset['response']['categorie'] = array($categorie);
-        }
-        
-        return $resultset;
-    }
 
     
     
@@ -254,50 +275,381 @@ class ServicesAdminRestitution extends Main
     }
     
     
+
+
+
+
+
     
-    /*
-    public function getResultatsBySession($refSession)
+    public function getSessions()
     {
-        $resultset = $this->sessionDAO->selectById($refSession);
+        $resultset = $this->sessionDAO->selectAll();
         
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        // Si la session est unique
-        
-        if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
-        { 
-            $session = $resultset['response']['session'];
-            $resultset['response']['session'] = array($session);
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
+            { 
+                $session = $resultset['response']['session'];
+                $resultset['response']['session'] = array($session);
+            }
+
+            return $resultset;
         }
         
-        return $resultset;
+        return false;
     }
-    */
-    
-    /*
-    public function getQuestions()
+
+
+
+
+
+    public function getStatsCategories()
     {
-        $resultset = $this->questionDAO->selectAll();
+        $posiStats = array();
         
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        $posiStats['percent_global'] = null;
+        $posiStats['categories'] = array();
         
-        // Si la session est unique
         
-        if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
-        { 
-            $question = $resultset['response']['question'];
-            $resultset['response']['question'] = array($question);
+        /*** On récupère la liste des categories ***/
+        
+        $resultsetcategories = $this->getCategories();
+        $categoriesList = $resultsetcategories['response']['categorie'];
+        
+        
+        /*** On va chercher tous les résultats classés par categories ***/
+        
+        // On sélectionne tous les résultats correspondant à la session en cours
+        $resultats = $this->getResultatsByCategories($refSession);
+        
+        $tabStats = array();
+        $totalGlobal = 0;
+        $totalCorrectGlobal = 0;
+        $percentGlobal = 0;
+        $countValidCategories = 0;
+        $j = 0;
+                        
+        foreach ($categoriesList as $categorie)
+        {
+            $codeCat = $categorie->getCode();
+
+            $tabStats[$j]['code_cat'] = $codeCat;
+            $tabStats[$j]['nom'] = $categorie->getNom();
+            $tabStats[$j]['description'] = $categorie->getDescription();
+            $tabStats[$j]['type_lien'] = $categorie->getTypeLien();
+            $tabStats[$j]['total'] = 0;
+            $tabStats[$j]['total_correct'] = 0;
+            
+            // Pour chaque resultat attaché à la catégorie.
+            for ($i = 0; $i < count($resultats); $i++)
+            {
+                if ($resultats[$i]['code_cat'] == $codeCat)
+                {
+                   // Le nombre de réponses s'incrémentent.
+                   $tabStats[$j]['total']++;
+                   $totalGlobal++;
+                   
+                   if ($resultats[$i]['correct'])
+                   {
+                       $tabStats[$j]['total_correct']++;
+                       $totalCorrectGlobal++;
+                   }
+                }  
+            }
+
+            // Calcul du poucentage de réussite dans cette catégorie
+            
+            if ($tabStats[$j]['total'] > 0)
+            {
+                $tabStats[$j]['percent'] = round(($tabStats[$j]['total_correct'] * 100) / $tabStats[$j]['total']);
+                $countValidCategories++;
+            }
+            else 
+            {
+                $tabStats[$j]['percent'] = 0;
+            }
+
+            $j++;
         }
         
-        return $resultset;
+        
+        /*** Intégration du système d'héritage des résultats ***/
+        
+        for ($i = 0; $i < count($tabStats); $i++)
+        {
+            // On détermine si c'est une categorie principale ou une sous-categorie
+            if (strlen($tabStats[$i]['code_cat']) == 2)
+            {
+                // Catégorie parent
+
+                if ($tabStats[$i]['type_lien'] == "dynamic")
+                {
+                    $tabStats[$i]['parent'] = true;
+                    $parentCode = $tabStats[$i]['code_cat'];
+                    $tabStats[$i]['total'] = 0;
+                    $tabStats[$i]['total_correct'] = 0;
+                    $tabStats[$i]['children'] = array();
+
+                    for ($j = 0; $j < count($tabStats); $j++)
+                    {
+                        if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
+                        {
+                            $tabStats[$i]['total'] += $tabStats[$j]['total'];
+                            $tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
+                            $tabStats[$i]['children'][] = $tabStats[$j];
+                        }
+                    }
+                }
+                else if ($tabStats[$i]['type_lien'] == "static")
+                {
+                    $tabStats[$i]['parent'] = true;
+                    $parentCode = $tabStats[$i]['code_cat'];
+                    $tabStats[$i]['children'] = false;
+                }
+            }
+            else 
+            {
+                $tabStats[$i]['parent'] = false;
+                $tabStats[$i]['children'] = false;
+            }
+
+        }
+        
+        
+        /*** Données envoyées à la page de résultat ***/
+        
+        $posiStats['categories'] = array();
+        $k = 0;
+        
+        foreach ($tabStats as $stat)
+        {
+            $posiStats['categories'][$k]['parent'] = $stat['parent'];
+            $posiStats['categories'][$k]['children'] = $stat['children'];
+            $posiStats['categories'][$k]['nom_categorie'] = $stat['nom'];
+            $posiStats['categories'][$k]['descript_categorie'] = $stat['description'];
+            $posiStats['categories'][$k]['total'] = $stat['total'];
+            $posiStats['categories'][$k]['total_correct'] = $stat['total_correct'];
+
+            if ($stat['total'] > 0)
+            {
+                $posiStats['categories'][$k]['percent'] = round(($stat['total_correct'] * 100) / $stat['total']);
+            }
+            else 
+            {
+                $posiStats['categories'][$k]['percent'] = 0;
+            }
+            
+            $k++;
+        }
+
+
+        /*** Stats globales ***/
+        
+        $percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
+        $posiStats['percent_global'] = $percentGlobal;
+        $posiStats['total_global'] = $totalGlobal;
+        $posiStats['total_correct_global'] = $totalCorrectGlobal;
+        
+        return  $posiStats;
     }
-    */
+
+
+
     
-    
-    
-    
+
+    public function getCustomStats($startDate = false, $endDate = false, $ref_organ = null)
+    {
+
+        $globalStats['nbre_sessions'] = 0;
+        $globalStats['nbre_users'] = 0;
+        $globalStats['moyenne_temps_session'] = 0;
+        $globalStats['temps_total'] = 0;
+
+        $globalstats['categories_infos'] = array();
+        $globalStats['niveau_infos'] = array();
+        //$globalStats['utilisateurs'] = array();
+
+
+        // On établit la liste des sessions (positionnements)
+        $sessionsList = null;
+        $resultsetSessions = $this->getSessions();
+        if ($resultsetSessions)
+        {
+            $sessionsList = $resultsetSessions['response']['session'];
+
+            // On procède au comptage par sessions
+            foreach ($sessionsList as $session) 
+            {
+                $globalStats['nbre_sessions']++;
+
+                if ($session->getSessionAccomplie() === 1) 
+                {
+                    $globalStats['temps_total'] += $session->getTempsTotal();
+                }
+
+            }
+
+        }
+
+
+
+        /*****   Calcul de la moyenne du temps passé sur un positionnement  *****/
+
+        // => moyenne du temps de chaque utilisateur par positionnement / nbre d'utilisateurs
+
+        $usersList = null;
+        $resultsetUsers = $this->getUsers();
+
+        if ($resultsetUsers)
+        {
+            $usersList = $resultsetUsers['response']['utilisateur'];
+
+        }
+
+
+
+        /*****   Calcul du nbre d'utilisateurs par niveaux d'etudes   *****/
+
+
+        $niveauxInfos = array();
+
+        $resultsetNiveaux = $this->getNiveaux();
+
+        if ($resultsetNiveaux)
+        {
+            $niveauxList = $resultsetSessions['response']['niveau_etudes'];
+
+            $i = 0;
+
+            foreach ($niveauxList as $niveau)
+            {
+                $refNiveau = $niveau->getId();
+
+                $niveauxInfos[$i]['nom_niveau'] = $niveau->getNom();
+                $niveauxInfos[$i]['descript_niveau'] = $niveau->getDescription();
+
+                if (!empty($usersList))
+                {
+                    $niveauxInfos[$i]['nbre_users'] = 0;
+
+                    foreach ($usersList as $user)
+                    {
+                        if($user->getRefNiveau() == $refNiveau)
+                        {
+                            $niveauxInfos[$i]['nbre_users']++;
+                        }
+                    }
+                }
+
+                $i++;
+            }
+        }
+
+
+
+        /*****   Calcul des scores moyen par catégories/compétences   *****/
+
+
+        // Récupèration la liste des categories
+        
+        $resultsetcategories = $this->getCategories();
+
+        if ($resultsetcategories)
+        {
+            $categoriesList = $resultsetcategories['response']['categorie'];
+        }
+
+
+
+        /*** On va chercher tous les résultats classés par categories ***/
+        
+        // On sélectionne tous les résultats correspondant à la session en cours
+
+        $resultats = $this->getResultatsByCategories($refSession);
+        
+        $tabStats = array();
+        $totalGlobal = 0;
+        $totalCorrectGlobal = 0;
+        $percentGlobal = 0;
+        $countValidCategories = 0;
+        $j = 0;
+        
+        /*       
+        foreach ($categoriesList as $categorie)
+        {
+            $codeCat = $categorie->getCode();
+
+            $tabStats[$j]['code_cat'] = $codeCat;
+            $tabStats[$j]['nom'] = $categorie->getNom();
+            $tabStats[$j]['description'] = $categorie->getDescription();
+            $tabStats[$j]['type_lien'] = $categorie->getTypeLien();
+            $tabStats[$j]['total'] = 0;
+            $tabStats[$j]['total_correct'] = 0;
+            
+            // Pour chaque resultat attaché à la catégorie.
+            for ($i = 0; $i < count($resultats); $i++)
+            {
+                if ($resultats[$i]['code_cat'] == $codeCat)
+                {
+                   // Le nombre de réponses s'incrémentent.
+                   $tabStats[$j]['total']++;
+                   $totalGlobal++;
+                   
+                   if ($resultats[$i]['correct'])
+                   {
+                       $tabStats[$j]['total_correct']++;
+                       $totalCorrectGlobal++;
+                   }
+                }  
+            }
+
+            
+            // Calcul du poucentage de réussite dans cette catégorie
+            
+            if ($tabStats[$j]['total'] > 0)
+            {
+                $tabStats[$j]['percent'] = round(($tabStats[$j]['total_correct'] * 100) / $tabStats[$j]['total']);
+                $countValidCategories++;
+            }
+            else 
+            {
+                $tabStats[$j]['percent'] = 0;
+            }
+
+            $j++;
+        }
+        */
+
+
+
+
+
+
+
+        $globalStats['niveau_infos'] = $niveauxInfos;
+        $globalStats['categories_infos'] = null;
+
+    }
+
+
+
+
+
+    public function getOrganStats($refOrganisme)
+    {
+
+
+    }
+
+
+    public function getUsersStats()
+    {
+
+    }
+
+
 
     public function getInfosUser($refUser)
     {
@@ -358,217 +710,7 @@ class ServicesAdminRestitution extends Main
     
     
     
-    public function getPosiStats($refSession)
-    {
-        $posiStats = array();
-        
-        //$posiStats['date'] = null;
-        //$posiStats['temps_total'] = null;
-        $posiStats['percent_global'] = null;
-        $posiStats['categories'] = array();
-        
-        
-        /*** On récupère la liste des categories ***/
-        
-        $resultsetcategories = $this->getCategories();
-        $categoriesList = $resultsetcategories['response']['categorie'];
-        
-        
-        /*** On va chercher tous les résultats classés par categories ***/
-        
-        // On sélectionne tous les résultats correspondant à la session en cours
-        $resultats = $this->getResultatsByCategories($refSession);
-        
-        $tabStats = array();
-        $totalGlobal = 0;
-        $totalCorrectGlobal = 0;
-        $percentGlobal = 0;
-        $countValidCategories = 0;
-        $j = 0;
-                        
-        foreach ($categoriesList as $categorie)
-        {
-            $codeCat = $categorie->getCode();
-
-            $tabStats[$j]['code_cat'] = $codeCat;
-            $tabStats[$j]['nom'] = $categorie->getNom();
-            $tabStats[$j]['description'] = $categorie->getDescription();
-            $tabStats[$j]['type_lien'] = $categorie->getTypeLien();
-            $tabStats[$j]['total'] = 0;
-            $tabStats[$j]['total_correct'] = 0;
-            
-            // Pour chaque resultat attaché à la catégorie.
-            for ($i = 0; $i < count($resultats); $i++)
-            {
-                if ($resultats[$i]['code_cat'] == $codeCat)
-                {
-                   // Le nombre de réponses s'incrémentent.
-                   $tabStats[$j]['total']++;
-                   $totalGlobal++;
-                   
-                   if ($resultats[$i]['correct'])
-                   {
-                       $tabStats[$j]['total_correct']++;
-                       $totalCorrectGlobal++;
-                   }
-                }  
-            }
-            
-            
-            /*** Calcul des pourcentage selon le type de la catégorie. ***/
-            /*
-            if ($tabStats[$j]['type_lien'] == "unique")
-            {
-                // Cette catégorie possède son propre pourcentage indépendament de ses enfants.
-                
-            }
-            else if ($tabStats[$j]['type_lien'] == "static") 
-            {
-                // Le pourcentage de cette categorie est la somme de celui de ses enfants.
-                
-            }
-            else if ($tabStats[$j]['type_lien'] == "dynamic") 
-            {
-                // Le pourcentage de cette categorie est la somme de celui de ses enfants, de plus il a son propre pourcentage.
-                
-            }
-            else
-            {
-                // Cette categorie n'a pas de pourcentage propre à elle.
-                
-            }
-            */
-
-            
-            // Calcul du poucentage de réussite dans cette catégorie
-            
-            if ($tabStats[$j]['total'] > 0)
-            {
-                $tabStats[$j]['percent'] = round(($tabStats[$j]['total_correct'] * 100) / $tabStats[$j]['total']);
-                $countValidCategories++;
-            }
-            else 
-            {
-                $tabStats[$j]['percent'] = 0;
-            }
-
-            $j++;
-        }
-        
-        
-        /*** Intégration du système d'héritage des résultats ***/
-        
-        for ($i = 0; $i < count($tabStats); $i++)
-        {
-            // On détermine si c'est une categorie principale ou une sous-categorie
-            if (strlen($tabStats[$i]['code_cat']) == 2)
-            {
-                // Catégorie parent
-
-                if ($tabStats[$i]['type_lien'] == "dynamic")
-                {
-                    $tabStats[$i]['parent'] = true;
-                    $parentCode = $tabStats[$i]['code_cat'];
-                    $tabStats[$i]['total'] = 0;
-                    $tabStats[$i]['total_correct'] = 0;
-                    $tabStats[$i]['children'] = array();
-
-                    for ($j = 0; $j < count($tabStats); $j++)
-                    {
-                        //if (strlen($tabStats[$j]['code_cat']) == 2 && $tabStats[$j]['code_cat'] == $parentCode)
-                        //{
-                            
-                        //}
-                        //else 
-                        if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
-                        {
-                            $tabStats[$i]['total'] += $tabStats[$j]['total'];
-                            $tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
-                            $tabStats[$i]['children'][] = $tabStats[$j];
-                        }
-                    }
-                }
-                else if ($tabStats[$i]['type_lien'] == "static")
-                {
-                    $tabStats[$i]['parent'] = true;
-                    $parentCode = $tabStats[$i]['code_cat'];
-                    $tabStats[$i]['children'] = false;
-                }
-            }
-            else 
-            {
-                $tabStats[$i]['parent'] = false;
-                $tabStats[$i]['children'] = false;
-            }
-
-        }
-        
-        
-        /*** Données envoyées à la page de résultat ***/
-        
-        //$dataPage = array();
-        //$posiStats = array();
-        $posiStats['categories'] = array();
-        $k = 0;
-        
-        foreach ($tabStats as $stat)
-        {
-            $posiStats['categories'][$k]['parent'] = $stat['parent'];
-            $posiStats['categories'][$k]['children'] = $stat['children'];
-            $posiStats['categories'][$k]['nom_categorie'] = $stat['nom'];
-            $posiStats['categories'][$k]['descript_categorie'] = $stat['description'];
-            $posiStats['categories'][$k]['total'] = $stat['total'];
-            $posiStats['categories'][$k]['total_correct'] = $stat['total_correct'];
-
-            if ($stat['total'] > 0)
-            {
-                $posiStats['categories'][$k]['percent'] = round(($stat['total_correct'] * 100) / $stat['total']);
-            }
-            else 
-            {
-                $posiStats['categories'][$k]['percent'] = 0;
-            }
-            
-            $k++;
-        }
-        
-        
-        /*** Gestion du temps ***/
-        
-        //$stringTime = Tools::timeToString($totalTime);
-        //$posiStats['temps'] = $stringTime;
-        
-        
-        /*** Stats globales ***/
-        
-        $percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
-        $posiStats['percent_global'] = $percentGlobal;
-        $posiStats['total_global'] = $totalGlobal;
-        $posiStats['total_correct_global'] = $totalCorrectGlobal;
-
-        
-        
-        /*
-        $posiStats['nb_reponses'] = $totalGlobal;
-        $posiStats['nb_rep_correctes'] = $totalCorrectGlobal;
-        if ($totalGlobal > 0 && $totalCorrectGlobal > 0)
-        {
-            $posiStats['percent_total'] = round(($totalCorrectGlobal * 100) / $totalGlobal);
-        }
-        */
-        /*
-        if ($countValidCategories > 0)
-        {
-            $posiStats['percent_total'] = round($percentGlobal / $countValidCategories);
-        }
-        else 
-        {
-            $posiStats['percent_total'] =  0;
-        }
-        */
-        
-        return  $posiStats;
-    }
+    
     
     
     

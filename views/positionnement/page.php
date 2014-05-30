@@ -130,6 +130,10 @@
                     //$("#submit_suite").css("visibility", "visible");
                     $("#submit_suite").removeProp("disabled");
                 }
+                else
+                {
+                    $(this).blur();
+                }
             });
             
         });

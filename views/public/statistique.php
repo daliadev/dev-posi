@@ -251,12 +251,49 @@ if (Config::DEBUG_MODE)
                     <div id="infos-posi" class="form-full">
 
                         <ul>
-                            <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>   
+                            <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
+                            <li><a href="#exports">2 - Exports</a></li>      
                         </ul>
 
                         <div id="infos" class="zone-liste-restitution">
 
-                            <p>Nombre de positionnement: <strong>40</strong></p>
+                            <div class="bloc-stat">
+                                <div class="bloc-stat-title">Nombre de positionnements</div>
+                                <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
+                            </div>
+
+                            <div class="bloc-stat">
+                                <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
+                                <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
+                            </div>
+                            
+                            <div class="bloc-stat">
+                                <div class="bloc-stat-title">Score moyen global</div>
+                                <div class="bloc-stat-number"><strong><?php echo $response['stats']['moyenne_score_session']; ?>%</strong></div>
+                            </div>
+
+
+                            <!-- <div style="clear:both;"></div> -->
+
+
+                            <div class="bloc-stat">
+                                <div class="bloc-stat-title">Temps de passation moyen</div>
+                                <div class="bloc-stat-number"><strong style="font-size:12px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                            </div>
+
+                            <div class="bloc-stat">
+                                <div class="bloc-stat-title">Temps total</div>
+                                <div class="bloc-stat-number"><strong style="font-size:10px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
+                            </div>
+
+                            <div class="bloc-stat last">
+                                <div class="bloc-stat-title">Age moyen des utilisateurs</div>
+                                <div class="bloc-stat-number"><strong>26 ans</strong></div>
+                            </div>
+
+                            <div style="clear:both;"></div>
+
+                            <!-- <p>Nombre de positionnement: <strong>40</strong></p>
     						<p>Nombre de personne positionnées: <strong>40</strong></p>
     						<p>Temps de passation moyen: <strong>17 min</strong></p>
     						<p>Temps total: <strong>20h45</strong></p>
@@ -280,8 +317,18 @@ if (Config::DEBUG_MODE)
     								<li>Informatique : <strong> 48%</strong></li>
     							</ul>
     						<hr>
-    						<p>Score moyen global: <strong>60%</strong></p>
+    						<p>Score moyen global: <strong>60%</strong></p> -->
 
+
+                        </div>
+
+                        <div id="exports" class="zone-liste-restitution">
+
+                            <div class="export-files">
+
+                                <div class="info">Aucun export n'est disponible.</div>
+
+                            </div>
 
                         </div>
 

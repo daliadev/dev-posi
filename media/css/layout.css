@@ -1069,7 +1069,7 @@ color: #BDC3C7;
 */
 
 #titre-admin-h2{
-	margin: 20px 20px 10px 20px;
+	margin: 20px 30px 10px 30px;
 	padding: 15px;
 	background-color: #1fbba6;
 	font-family: Helvetica, Arial, sans-serif;
@@ -1423,9 +1423,10 @@ select {
 /*----------------------------------------------  Restitution et Statistiques   --------------------------------------------*/
 
 #infos-posi {
-    margin: 0px 20px;
-    padding: 20px;
+    margin: 0;
+    padding: 0px;
     background: #fff;
+    border: none !important;
 }
 
 
@@ -1436,7 +1437,7 @@ select {
 }
 
 #infos-posi .ui-widget {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
     font-size: 1em;
 }
 
@@ -1445,6 +1446,13 @@ select {
     padding: 20px;
     border: 1px solid #dddddd;
     background: #fff;
+}
+
+.ui-corner-all {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
 }
 
 #infos-posi .ui-state-default {
@@ -1461,6 +1469,10 @@ select {
     color: #EB8F00;
 }
 
+
+
+
+
 #infos-posi li {
 	margin-left: 0;
 }
@@ -1470,7 +1482,7 @@ select {
     padding:20px;
     margin:20px;
     background-color:#ffffff;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
     font-size: 1em;
 }
 
@@ -1491,7 +1503,13 @@ select {
 }
 
 
-.stats ul { width: 790px; list-style: none; }
+.stats ul { 
+	width: 790px; 
+	list-style: none;
+}
+	.stats li { 
+		font-family: Helvetica, Arial, sans-serif !important; 
+	}
 
 .stats .percent {
     display: block;
@@ -1521,6 +1539,7 @@ select {
 }
 
 
+/* page statistique */
 
 .stats-detail {
 	overflow: hidden;
@@ -1557,13 +1576,46 @@ select {
 			height: 100px;
 			background: #f0f0f0;
 			border: 1px solid #CCC8C8;
-			border-radius: 5px;
+			border-radius: 10px;
 			font-size: 20px;
 			font-weight: bold;
 			text-align: center;
 			line-height: 100px;
 		}
 
+
+	#infos-posi .bloc-stat {
+		float:left;
+		width: 96px;
+		margin-right: 20px;
+		padding: 10px;
+		color: #666060;
+		text-align: center;
+	}
+
+	#infos-posi .last
+	{
+		margin-right: 0px;
+	}	
+
+		#infos-posi .bloc-stat .bloc-stat-title
+		{
+			width: 96px;
+			height: 50px;
+		}
+
+		#infos-posi .bloc-stat .bloc-stat-number
+		{
+			margin: 0 auto;
+			width: 70px;
+			height: 70px;
+			background: #ffffff;
+			border: 1px solid #CCC8C8;
+			border-radius: 10px;
+			font-size: 16px;
+			font-weight: bold;
+			line-height: 70px;
+		}
 
 
 

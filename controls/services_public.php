@@ -437,11 +437,24 @@ class ServicesPublic extends Main
             var_dump($_POST);
         }
 
-
         
-        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats();
+        /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
+        
+        $initializedData = array(
+            "ref_organ_cbox" => "select", 
+            "date_debut"     => "text", 
+            "date_fin"       => "text"
+        );
+        $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
+        
+        // On récupère les differents identifiants de la zone de sélection 
+        $this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
 
 
+
+        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($this->formData['date_debut'], $this->formData['date_fin'], $this->formData['ref_organ']);
+
+        //var_dump($this->returnData['response']['stats']);
         //exit();
 
 

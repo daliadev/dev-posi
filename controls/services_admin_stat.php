@@ -1,8 +1,8 @@
 <?php
 
 
-// require_once(ROOT.'models/dao/organisme_dao.php');
-// require_once(ROOT.'models/dao/intervenant_dao.php');
+require_once(ROOT.'models/dao/organisme_dao.php');
+require_once(ROOT.'models/dao/intervenant_dao.php');
 require_once(ROOT.'models/dao/utilisateur_dao.php');
 require_once(ROOT.'models/dao/niveau_etudes_dao.php');
 require_once(ROOT.'models/dao/session_dao.php');
@@ -18,11 +18,11 @@ require_once(ROOT.'models/dao/categorie_dao.php');
 class ServicesAdminStat extends Main
 {
     
-    // private $organismeDAO = null;
+    private $organismeDAO = null;
     private $utilisateurDAO = null;
     private $niveauEtudesDAO = null;
     private $sessionDAO = null;
-    // private $intervenantDAO = null;
+    private $intervenantDAO = null;
     private $questionDAO = null;
     private $degreDAO = null;
     // private $reponseDAO = null;
@@ -36,11 +36,11 @@ class ServicesAdminStat extends Main
         $this->errors = array();
         $this->controllerName = "adminStat";
 
-        // $this->organismeDAO = new OrganismeDAO();
+        $this->organismeDAO = new OrganismeDAO();
         $this->utilisateurDAO = new UtilisateurDAO();
         $this->niveauEtudesDAO = new NiveauEtudesDAO();
         $this->sessionDAO = new SessionDAO();
-        // $this->intervenantDAO = new IntervenantDAO();
+        $this->intervenantDAO = new IntervenantDAO();
         $this->questionDAO = new QuestionDAO();
         $this->degreDAO = new DegreDAO();
         // $this->reponseDAO = new ReponseDAO();
@@ -329,6 +329,8 @@ class ServicesAdminStat extends Main
 
 
     
+
+
     public function getUserSessions($refUser, $startDate, $endDate)
     {
         $resultset = $this->sessionDAO->selectByUserFromDate($refUser, $startDate, $endDate);
@@ -349,6 +351,30 @@ class ServicesAdminStat extends Main
         return false;
     }
     
+
+    public function getUserOrganismes($refIntervenant)
+    {
+        $resultset = $this->intervenantDAO->selectById($refIntervenant);
+
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
+            { 
+                $intervenant = $resultset['response']['intervenant'];
+                $resultset['response']['intervenant'] = array($intervenant);
+            }
+
+            if (isset($resultset['response']['intervenant']) && !empty($resultset['response']['intervenant']))
+            {
+                return $resultset['response']['intervenant'][0]->getRefOrganisme();
+            }
+
+        }
+ 
+        return false;
+    }
     
 
 
@@ -372,6 +398,8 @@ class ServicesAdminStat extends Main
             {
                 $userSessionsList = $resultsetSessions['response']['session'];
 
+                $refsOrganismes = array();
+
                 // On procède au comptage par sessions
                 foreach ($userSessionsList as $userSession) 
                 {
@@ -380,24 +408,30 @@ class ServicesAdminStat extends Main
                         $userStats['nbre_sessions']++;
                         $userStats['temps_total'] += $userSession->getTempsTotal();
                         $userStats['score_total'] += $userSession->getScorePourcent();
+
+                        $refOrgan = $this->getUserOrganismes($userSession->getRefIntervenant());
+                        
+                        $isToken = false;
+
+
+                        for ($i = 0; $i < count($refsOrganismes); $i++) 
+                        {
+                            if ($refsOrganismes[$i] == $refOrgan)
+                            {
+                                $isToken = true;
+                                break;
+                            }
+                        }
+
+                        if (!$isToken)
+                        {
+                            $refsOrganismes[] = $refOrgan;
+                        }
+                     
                     }
                 }
-
-                // Calcul de la moyenne du temps passés par positionnement
-                /*
-                if ($userStats['nbre_sessions'] > 0 && $userStats['temps_total'] > 0)
-                {
-                    $userStats['moyenne_temps_sessions'] = $userStats['temps_total'] / $userStats['nbre_sessions'];
-                }
-                */
-
-                // Calcul de la moyenne du score par positionnement
-                /*
-                if ($userStats['nbre_sessions'] > 0 && $userStats['score_pourcent'] > 0)
-                {
-                    $userStats['moyenne_score_sessions'] = $userStats['score_pourcent'] / $userStats['nbre_sessions'];
-                }
-                */
+                
+                $userStats['refs_organismes'] = $refsOrganismes;
             }
 
             return $userStats;
@@ -568,6 +602,7 @@ class ServicesAdminStat extends Main
     public function getCustomStats($startDate = false, $endDate = false, $ref_organ = null)
     {
 
+        $globalStats = array();
         $globalStats['nbre_sessions'] = 0;
         $globalStats['nbre_users'] = 0;
         $globalStats['temps_total'] = 0;
@@ -575,32 +610,16 @@ class ServicesAdminStat extends Main
         $globalStats['score_total'] = 0;
         $globalStats['moyenne_score_session'] = 0;
 
-        //$globalstats['categories_infos'] = array();
-        //$globalStats['niveau_infos'] = array();
-        //$globalStats['utilisateurs'] = array();
+        $organStats = array();
+        $organStats['nbre_sessions'] = 0;
+        $organStats['nbre_users'] = 0;
+        $organStats['temps_total'] = 0;
+        $organStats['nbre_sessions'] = 0;
+        $organStats['moyenne_temps_session'] = 0;
+        $organStats['score_total'] = 0;
+        $organStats['moyenne_score_session'] = 0;
 
-        /*
-        // On établit la liste des sessions (positionnements)
-        $sessionsList = null;
-        $resultsetSessions = $this->getSessions();
-        if ($resultsetSessions)
-        {
-            $sessionsList = $resultsetSessions['response']['session'];
-
-            // On procède au comptage par sessions
-            foreach ($sessionsList as $session) 
-            {
-                $globalStats['nbre_sessions']++;
-
-                if ($session->getSessionAccomplie() === 1) 
-                {
-                    $globalStats['temps_total'] += $session->getTempsTotal();
-                }
-
-            }
-
-        }
-        */
+ 
 
 
         /*****   Calcul de la moyenne du temps passé sur un positionnement  *****/
@@ -609,7 +628,7 @@ class ServicesAdminStat extends Main
 
 
 
-        // On établit les stats de sessions (positionnements) par utilisateur
+        // On établit les stats de bases
 
         $usersList = array();
         $userStats = array();
@@ -624,6 +643,8 @@ class ServicesAdminStat extends Main
             {
                 $userStats = $this->getUserStats($user->getId());
 
+                //var_dump($userStats);
+
                 if ($userStats)
                 {
                     $globalStats['nbre_users']++;
@@ -637,9 +658,9 @@ class ServicesAdminStat extends Main
         $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
         $globalStats['temps_total'] = Tools::timeToString(round($globalStats['temps_total']));
 
-        $globalStats['moyenne_score_session'] = $globalStats['score_total'] / $globalStats['nbre_sessions'];
+        $globalStats['moyenne_score_session'] = round($globalStats['score_total'] / $globalStats['nbre_sessions']);
 
-        
+        //exit();
         /*
         $userStats['nbre_sessions'] = 0;
         $userStats['temps_total'] = 0;

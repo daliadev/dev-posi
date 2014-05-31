@@ -68,19 +68,21 @@ if (Config::DEBUG_MODE)
                                 
                             <legend>Statistiques globales du positionnement :</legend>
 
-                            <p><strong>Filtres : </strong></p>
+                            <div class="info">
+                                <p><strong>Filtres : </strong></p>
 
-                            <div class="input" style="width:120px; display:inline-block;">
-                                <label for="date_debut">Date de début : </label>
-                                <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_naiss_user']; ?>">
+                                <div class="input" style="width:120px; display:inline-block;">
+                                    <label for="date_debut">Date de début : </label>
+                                    <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_naiss_user']; ?>">
+                                </div>
+
+                                <div class="input" style="width:120px; display:inline-block;">
+                                    <label for="date_fin">Date de fin : </label>
+                                    <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php //echo $formData['date_naiss_user']; ?>">
+                                </div>
+
+                                <input type="submit" value="Envoyer" name="valid_date">
                             </div>
-
-                            <div class="input" style="width:120px; display:inline-block;">
-                                <label for="date_fin">Date de fin : </label>
-                                <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php //echo $formData['date_naiss_user']; ?>">
-                            </div>
-
-                            <input type="submit" value="Envoyer" name="valid_date">
 
         					<!-- <select>
         						<option>janvier 2014

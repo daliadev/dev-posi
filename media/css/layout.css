@@ -1478,6 +1478,7 @@ select {
 }
 
 
+
 .zone-liste-restitution {
     padding:20px;
     margin:20px;
@@ -1486,20 +1487,29 @@ select {
     font-size: 1em;
 }
 
-.zone-liste-restitution .combo-box {
-    display: inline-block;
-}
-
 .zone-liste-restitution hr {
     margin-bottom:15px;
     padding:0;
 }
 
+.combo-box {
+    display: inline-block;
+}
+	.combo-box select {
+	    width: 200px !important;
+	}
+
+
 .info {
     background-color:#f5f5f5;
     margin-top: 2px;
     padding: 5px;
-    font-size: 14px;
+    /*font-size: 13px;*/
+}
+
+.tab-block
+{
+	font-size: 13px;	
 }
 
 
@@ -1678,35 +1688,16 @@ select {
 }
 
 #content-large .retour-menu {
-    margin-right: 20px;
+    margin-right: 30px;
     margin-bottom: 0px;
 }
 	
-.retour-menu a:hover{
+.retour-menu a, .retour-menu a:hover, .retour-menu a:visited, .retour-menu a:link, .retour-menu a:active {
     color:#ffffff;
     text-decoration:none;
     cursor: pointer;
 }
-
-.retour-menu a:visited{
-    color:#ffffff;
-    text-decoration:none;
-    cursor: pointer;
-}
-
-.retour-menu a:link{
-    color:#ffffff;
-    text-decoration:none;
-    cursor: pointer;
-}
-
-.retour-menu a:active{
-    color:#ffffff;
-    text-decoration:none;
-    cursor: pointer;
-}
-
-        
+   
         
 /*----------------------------------lighbox2--------------------------------*/
 

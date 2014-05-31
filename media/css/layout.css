@@ -234,14 +234,14 @@ p {
 */
 .zone-formu {
 	padding: 30px;
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	background-color: #fff;
 }
 
 .zone-formu2 {
 	padding: 20px;
 	margin: 10px;
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	background-color: #fff;
 	border: 1px solid #dedcdc;
 }
@@ -1488,22 +1488,28 @@ select {
 }
 
 .zone-liste-restitution hr {
-    margin-bottom:15px;
-    padding:0;
+    margin-bottom: 15px;
+    padding: 0;
 }
 
-.combo-box {
-    display: inline-block;
+.filter-item {
+    /*display: inline-block;*/
+    float: left;
+    margin-right: 20px;
 }
-	.combo-box select {
+	.filter-item label {
+	    display: block;
+	}
+
+	.filter-item select {
 	    width: 200px !important;
 	}
 
 
 .info {
-    background-color:#f5f5f5;
+    background-color:#f0f0f0;
     margin-top: 2px;
-    padding: 5px;
+    padding: 10px;
     /*font-size: 13px;*/
 }
 
@@ -1551,6 +1557,29 @@ select {
 
 /* page statistique */
 
+
+.stats-global
+{
+	overflow: hidden;
+	position: relative;
+	width: 860px;
+	height: 380px;
+	/*padding: 40px 0;*/
+	margin-bottom: 10px;
+	background: url(../images/graph_stat_global.jpg) top left no-repeat;
+	color: #ffffff;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+	.stats-global .stat-posi
+	{
+		position: absolute;
+		top: 186px;
+		left: 102px;
+		font-size: 26px;
+	}
+
 .stats-detail {
 	overflow: hidden;
 	/*padding: 40px 0;*/
@@ -1582,11 +1611,11 @@ select {
 
 		.bloc-stat .bloc-stat-number
 		{
-			width: 104px;
+			width: 100px;
 			height: 100px;
 			background: #f0f0f0;
 			border: 1px solid #CCC8C8;
-			border-radius: 10px;
+			border-radius: 100px;
 			font-size: 20px;
 			font-weight: bold;
 			text-align: center;
@@ -1622,7 +1651,7 @@ select {
 			background: #ffffff;
 			border: 1px solid #CCC8C8;
 			border-radius: 10px;
-			font-size: 16px;
+			font-size: 15px;
 			font-weight: bold;
 			line-height: 70px;
 		}

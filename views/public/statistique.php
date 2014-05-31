@@ -62,54 +62,78 @@ if (Config::DEBUG_MODE)
 
                     <!-- <div id="titre-question-h3"><strong>Statistique total du positionnement:</strong></div> -->
 
+                    <div id="bloc-stat-filtre" class="form-full">
+
+                        <p style="margin-top:0;"><strong>Filtres : </strong></p>
+
+                        <hr>
+
+                        <!-- <div class="input" style="width:120px; display:inline-block;"> -->
+                        <div class="filter-item">
+                            <label for="date_debut">Date de début : </label>
+                            <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_naiss_user']; ?>">
+                        </div>
+
+                        <!-- <div class="input" style="width:120px; display:inline-block;"> -->
+                        <div class="filter-item">
+                            <label for="date_fin">Date de fin : </label>
+                            <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php //echo $formData['date_naiss_user']; ?>">
+                        </div>
+
+                        <div class="filter-item">
+                            <label for="ref_organ_cbox">Organisme : </label>
+                            <select name="ref_organ_cbox" id="ref_organ_cbox">
+                                <option class="organ-option" value="select_cbox">---</option>
+                                <?php
+                                
+                                if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
+                                {                       
+                                    foreach ($response['organisme'] as $organisme)
+                                    {
+                                        $selected = "";
+                                        if (!empty($formData['ref_organ']) && $formData['ref_organ'] == $organisme->getId())
+                                        {
+                                            $selected = "selected";
+                                        }
+                                        echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
+                                    }
+                                }
+                                
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="filter-item">
+                            <input type="submit" name="select-form" value="Sélectionner" style="margin: 18px 0 0 0;">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="zone-formu2">
+
                     <div id="bloc-stat-global" class="form-full">
 
                         <fieldset>
                                 
-                            <legend>Statistiques globales du positionnement :</legend>
+                            <legend>Statistiques globales</legend>
 
-                            <div class="info">
-                                <p><strong>Filtres : </strong></p>
+                            <div class="stats-global">
 
-                                <div class="input" style="width:120px; display:inline-block;">
-                                    <label for="date_debut">Date de début : </label>
-                                    <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_naiss_user']; ?>">
-                                </div>
+                                <div class="stat-posi">123</div>
 
-                                <div class="input" style="width:120px; display:inline-block;">
-                                    <label for="date_fin">Date de fin : </label>
-                                    <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php //echo $formData['date_naiss_user']; ?>">
-                                </div>
+                                <div class="stat-user">58</div>
 
-                                <input type="submit" value="Envoyer" name="valid_date">
+                                <div class="stat-pourcent">63%</div>
+
+                                <div class="stat-temps">18 min 25 s</div>
+
+                                <div class="stat-pourcent">25 h 35 min</div>
+
                             </div>
-
-        					<!-- <select>
-        						<option>janvier 2014
-        						<option>Fevrier 2014
-        						<option>Mars 2014
-        						<option>Avril 2014
-        						<option>Mai 2014
-        					</select>	
-        					au
-        					<select>
-        						<option>janvier 2014
-        						<option>Fevrier 2014
-        						<option>Mars 2014
-        						<option>Avril 2014
-        						<option>Mai 2014
-        					</select>
-        					<input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" />
-        					</br> -->
-
-        					
 
 
                             <div class="stats-detail">
-                                
-                                <p><strong>Statistiques basiques</strong></p>
-                                <hr>
-
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre de positionnements</div>
@@ -151,8 +175,10 @@ if (Config::DEBUG_MODE)
                             
                             <div class="stats-detail">
                                 <p><strong>Nombre de candidats répartis par niveau de formation</strong></p>
+
                                 <hr>
-        						<p><!-- Nombre de candidats réparti par Niveau de formation :  -->
+
+        						<p>
         							<ul>
                                         <?php
                                         for ($i = 0; $i < count($response['stats']['niveaux']); $i++)
@@ -160,20 +186,16 @@ if (Config::DEBUG_MODE)
                                             echo '<li title="'.$response['stats']['niveaux'][$i]['descript_niveau'].'">'.$response['stats']['niveaux'][$i]['nom_niveau'].' : <strong> '.$response['stats']['niveaux'][$i]['nbre_users'].'</strong></li>';
                                         }
                                         ?>
-            								<!-- <li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-            								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 9</strong></li>
-            								<li>Niveau IV : Bac : <strong> 8</strong></li>
-            								<li>Niveau III : Bac+2 : <strong> 6</strong></li>
-            								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-            								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li> -->
+
         							</ul>
         						</p>
         					</div>	
         					
                             <div class="stats-detail">
                                 <p><strong>Score moyen par compétences</strong></p>
+
                                 <hr>
-        						<!-- <p>Score moyen par compétence :</p> -->
+
                                 <p>
         							<ul>
         								<li>Oral : <strong> 68 %</strong></li>
@@ -183,8 +205,7 @@ if (Config::DEBUG_MODE)
         								<li>Informatique : <strong> 48%</strong></li>
         							</ul>
         						</p>
-        						<!-- <hr> -->
-        						<!-- <p>Score moyen global: <strong>68%</strong></p> -->
+
         					</div>
 
                         <fieldset>
@@ -192,7 +213,7 @@ if (Config::DEBUG_MODE)
                 </div>
 
             
-                
+                <!-- 
                 <div class="zone-formu2">
 
                     <div id="select-organ" class="form-full">
@@ -200,139 +221,109 @@ if (Config::DEBUG_MODE)
                         <fieldset>
                                 
                             <legend>Statistiques par organisme</legend>
-                        <!-- <div class="zone-liste-restitution"> -->
-
-                            <!-- <div id="titre-question-h3"><strong>Statistique d'un organisme</strong></div></br> -->
+                            
                             
 
-                            <select name="ref_organ_cbox" id="ref_organ_cbox">
-                                <option value="select_cbox">---</option>
-
-                                <?php 
-                                /*
-                                foreach($response['question'] as $question)
-                                {
-                                    $selected = "";
-                                    if (!empty($formData['ref_question']) && $formData['ref_question'] == $question->getId())
-                                    {
-                                        $selected = "selected";
-                                    }
-                                    echo '<option value="'.$question->getId().'" '.$selected.'>Question '.$question->getNumeroOrdre().'</option>';
-                                }
-                                */
-                                ?>
-
-                            </select> &nbsp;
-
+                            &nbsp;
 
                             <input type="submit" name="select-organ" value="Sélectionner"/>
 
-
-                            <!-- 
-                            <div class="combo-box" id="combo-organ">
-                                <label for="ref_organ_cbox">Organisme :</label><br/>
-                                <select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user">
-                                    <option class="organ-option" value="select_cbox">---</option>
-                                  
-                                </select>
-                            </div>
-                           
-
-                            <input type="submit" value="Valider" id="submit-posi" class="bt-admin-menu-ajout2" /> -->
-
                         </fieldset>
 
-                        <!-- </div> -->
                     </div>
                 </div>
-
+                 -->
 
 
                 <div class="zone-formu2">
 
                     <div id="infos-posi" class="form-full">
 
-                        <ul>
-                            <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
-                            <li><a href="#exports">2 - Exports</a></li>      
-                        </ul>
+                        <fieldset>
+                                
+                            <legend>Statistiques organisme</legend>
+                            <ul>
+                                <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
+                                <li><a href="#exports">2 - Exports</a></li>      
+                            </ul>
 
-                        <div id="infos" class="zone-liste-restitution">
+                            <div id="infos" class="zone-liste-restitution">
 
-                            <div class="bloc-stat">
-                                <div class="bloc-stat-title">Nombre de positionnements</div>
-                                <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
-                            </div>
+                                <div class="bloc-stat">
+                                    <div class="bloc-stat-title">Nombre de positionnements</div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
+                                </div>
 
-                            <div class="bloc-stat">
-                                <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
-                            </div>
-                            
-                            <div class="bloc-stat">
-                                <div class="bloc-stat-title">Score moyen global</div>
-                                <div class="bloc-stat-number"><strong><?php echo $response['stats']['moyenne_score_session']; ?>%</strong></div>
-                            </div>
-
-
-                            <!-- <div style="clear:both;"></div> -->
-
-
-                            <div class="bloc-stat">
-                                <div class="bloc-stat-title">Temps de passation moyen</div>
-                                <div class="bloc-stat-number"><strong style="font-size:12px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
-                            </div>
-
-                            <div class="bloc-stat">
-                                <div class="bloc-stat-title">Temps total</div>
-                                <div class="bloc-stat-number"><strong style="font-size:10px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
-                            </div>
-
-                            <div class="bloc-stat last">
-                                <div class="bloc-stat-title">Age moyen des utilisateurs</div>
-                                <div class="bloc-stat-number"><strong>26 ans</strong></div>
-                            </div>
-
-                            <div style="clear:both;"></div>
-
-                            <!-- <p>Nombre de positionnement: <strong>40</strong></p>
-    						<p>Nombre de personne positionnées: <strong>40</strong></p>
-    						<p>Temps de passation moyen: <strong>17 min</strong></p>
-    						<p>Temps total: <strong>20h45</strong></p>
-    						<p>Nombre de candidats réparti par Niveau de formation : 
-    							<ul>
-    								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-    								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 6</strong></li>
-    								<li>Niveau IV : Bac : <strong> 8</strong></li>
-    								<li>Niveau III : Bac+2 : <strong> 3</strong></li>
-    								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-    								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
-    							</ul>
-    						</p>
-    						
-    						<p>Score moyen par compétence :</p>
-    							<ul>
-    								<li>Oral<strong> 80 %</strong></li>
-    								<li>Ecrit : <strong> 100 %</strong></li>
-    								<li>Calcul: <strong> 68%</strong></li>
-    								<li>Espace temps : <strong> 90%</strong></li>
-    								<li>Informatique : <strong> 48%</strong></li>
-    							</ul>
-    						<hr>
-    						<p>Score moyen global: <strong>60%</strong></p> -->
+                                <div class="bloc-stat">
+                                    <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
+                                </div>
+                                
+                                <div class="bloc-stat">
+                                    <div class="bloc-stat-title">Score moyen global</div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['moyenne_score_session']; ?>%</strong></div>
+                                </div>
 
 
-                        </div>
+                                <!-- <div style="clear:both;"></div> -->
 
-                        <div id="exports" class="zone-liste-restitution">
 
-                            <div class="export-files">
+                                <div class="bloc-stat">
+                                    <div class="bloc-stat-title">Temps de passation moyen</div>
+                                    <div class="bloc-stat-number"><strong style="font-size:11px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                </div>
 
-                                <div class="info">Aucun export n'est disponible.</div>
+                                <div class="bloc-stat">
+                                    <div class="bloc-stat-title">Temps total</div>
+                                    <div class="bloc-stat-number"><strong style="font-size:9px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
+                                </div>
+
+                                <div class="bloc-stat last">
+                                    <div class="bloc-stat-title">Age moyen des utilisateurs</div>
+                                    <div class="bloc-stat-number"><strong>26 ans</strong></div>
+                                </div>
+
+                                <div style="clear:both;"></div>
+
+                                <!-- <p>Nombre de positionnement: <strong>40</strong></p>
+        						<p>Nombre de personne positionnées: <strong>40</strong></p>
+        						<p>Temps de passation moyen: <strong>17 min</strong></p>
+        						<p>Temps total: <strong>20h45</strong></p>
+        						<p>Nombre de candidats réparti par Niveau de formation : 
+        							<ul>
+        								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
+        								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 6</strong></li>
+        								<li>Niveau IV : Bac : <strong> 8</strong></li>
+        								<li>Niveau III : Bac+2 : <strong> 3</strong></li>
+        								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
+        								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
+        							</ul>
+        						</p>
+        						
+        						<p>Score moyen par compétence :</p>
+        							<ul>
+        								<li>Oral<strong> 80 %</strong></li>
+        								<li>Ecrit : <strong> 100 %</strong></li>
+        								<li>Calcul: <strong> 68%</strong></li>
+        								<li>Espace temps : <strong> 90%</strong></li>
+        								<li>Informatique : <strong> 48%</strong></li>
+        							</ul>
+        						<hr>
+        						<p>Score moyen global: <strong>60%</strong></p> -->
+
 
                             </div>
 
-                        </div>
+                            <div id="exports" class="zone-liste-restitution">
+
+                                <div class="export-files">
+
+                                    <div class="info">Aucun export n'est disponible.</div>
+
+                                </div>
+
+                            </div>
+                        </fieldset>
 
                     </div>
 

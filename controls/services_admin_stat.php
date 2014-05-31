@@ -74,7 +74,7 @@ class ServicesAdminStat extends Main
     }
     
     
-    /*
+    
     public function getCategories()
     {
         $resultset = $this->categorieDAO->selectAll();
@@ -94,7 +94,7 @@ class ServicesAdminStat extends Main
         
         return false;
     }
-    */
+    
 
 
 
@@ -224,7 +224,7 @@ class ServicesAdminStat extends Main
     
     
     
-    /*
+    
     public function getResultatsByCategories($refSession)
     {
         $tabResultats = array();
@@ -280,7 +280,7 @@ class ServicesAdminStat extends Main
         return $tabResultats;
         
     }
-    */
+    
     
 
 
@@ -598,6 +598,7 @@ class ServicesAdminStat extends Main
 
 
     
+
 
     public function getCustomStats($startDate = false, $endDate = false, $ref_organ = null)
     {

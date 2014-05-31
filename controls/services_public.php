@@ -472,6 +472,12 @@ class ServicesPublic extends Main
             }
         }
 
+        //Liste des organismes pour le combo-box
+        $organismesList = $this->servicesRestitution->getOrganismesList(); 
+        $this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
+
+
+
         $this->setResponse($this->returnData);
 
         $this->setTemplate("template_page");

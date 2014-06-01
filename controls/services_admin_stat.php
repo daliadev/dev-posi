@@ -239,15 +239,13 @@ class ServicesAdminStat extends Main
             foreach ($resultsetResultats['response']['resultat'] as $resultat)
             {      
                 // On établit si le résultat est correct ou non
+                $tabResultats[$i]['correct'] = false;
+
                 if ($resultat->getRefReponseQcm() && $resultat->getRefReponseQcmCorrecte())
                 {
                     if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
                     {
                         $tabResultats[$i]['correct'] = true;
-                    }
-                    else 
-                    {
-                        $tabResultats[$i]['correct'] = false;
                     }
                     
                     // Ensuite on va chercher les données sur la question correspondant au résultat
@@ -255,7 +253,7 @@ class ServicesAdminStat extends Main
 
                     if (!$this->filterDataErrors($resultsetQuestion['response']))
                     {        
-                        // On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
+                        // On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair ?)
                         $resultsetCatQuestion = $this->questionCatDAO->selectByRefQuestion($resultsetQuestion['response']['question']->getId());
 
                         if (!$this->filterDataErrors($resultsetCatQuestion['response']))
@@ -446,7 +444,7 @@ class ServicesAdminStat extends Main
 
 
 
-    public function getStatsCategories()
+    public function getSessionCategoriesStats()
     {
         $posiStats = array();
         
@@ -465,23 +463,25 @@ class ServicesAdminStat extends Main
         // On sélectionne tous les résultats correspondant à la session en cours
         $resultats = $this->getResultatsByCategories($refSession);
         
-        $tabStats = array();
+        $tabStatsCat = array();
+
         $totalGlobal = 0;
         $totalCorrectGlobal = 0;
         $percentGlobal = 0;
         $countValidCategories = 0;
         $j = 0;
-                        
+        
+
         foreach ($categoriesList as $categorie)
         {
             $codeCat = $categorie->getCode();
 
-            $tabStats[$j]['code_cat'] = $codeCat;
-            $tabStats[$j]['nom'] = $categorie->getNom();
-            $tabStats[$j]['description'] = $categorie->getDescription();
-            $tabStats[$j]['type_lien'] = $categorie->getTypeLien();
-            $tabStats[$j]['total'] = 0;
-            $tabStats[$j]['total_correct'] = 0;
+            $tabStatsCat[$j]['code_cat'] = $codeCat;
+            $tabStatsCat[$j]['nom'] = $categorie->getNom();
+            $tabStatsCat[$j]['description'] = $categorie->getDescription();
+            $tabStatsCat[$j]['type_lien'] = $categorie->getTypeLien();
+            $tabStatsCat[$j]['total'] = 0;
+            $tabStatsCat[$j]['total_correct'] = 0;
             
             // Pour chaque resultat attaché à la catégorie.
             for ($i = 0; $i < count($resultats); $i++)
@@ -489,12 +489,12 @@ class ServicesAdminStat extends Main
                 if ($resultats[$i]['code_cat'] == $codeCat)
                 {
                    // Le nombre de réponses s'incrémentent.
-                   $tabStats[$j]['total']++;
+                   $tabStatsCat[$j]['total']++;
                    $totalGlobal++;
                    
                    if ($resultats[$i]['correct'])
                    {
-                       $tabStats[$j]['total_correct']++;
+                       $tabStatsCat[$j]['total_correct']++;
                        $totalCorrectGlobal++;
                    }
                 }  
@@ -502,14 +502,14 @@ class ServicesAdminStat extends Main
 
             // Calcul du poucentage de réussite dans cette catégorie
             
-            if ($tabStats[$j]['total'] > 0)
+            if ($tabStatsCat[$j]['total'] > 0)
             {
-                $tabStats[$j]['percent'] = round(($tabStats[$j]['total_correct'] * 100) / $tabStats[$j]['total']);
+                $tabStatsCat[$j]['percent'] = round(($tabStatsCat[$j]['total_correct'] * 100) / $tabStatsCat[$j]['total']);
                 $countValidCategories++;
             }
             else 
             {
-                $tabStats[$j]['percent'] = 0;
+                $tabStatsCat[$j]['percent'] = 0;
             }
 
             $j++;
@@ -518,42 +518,42 @@ class ServicesAdminStat extends Main
         
         /*** Intégration du système d'héritage des résultats ***/
         
-        for ($i = 0; $i < count($tabStats); $i++)
+        for ($i = 0; $i < count($tabStatsCat); $i++)
         {
             // On détermine si c'est une categorie principale ou une sous-categorie
-            if (strlen($tabStats[$i]['code_cat']) == 2)
+            if (strlen($tabStatsCat[$i]['code_cat']) == 2)
             {
                 // Catégorie parent
 
-                if ($tabStats[$i]['type_lien'] == "dynamic")
+                if ($tabStatsCat[$i]['type_lien'] == "dynamic")
                 {
-                    $tabStats[$i]['parent'] = true;
-                    $parentCode = $tabStats[$i]['code_cat'];
-                    $tabStats[$i]['total'] = 0;
-                    $tabStats[$i]['total_correct'] = 0;
-                    $tabStats[$i]['children'] = array();
+                    $tabStatsCat[$i]['parent'] = true;
+                    $parentCode = $tabStatsCat[$i]['code_cat'];
+                    $tabStatsCat[$i]['total'] = 0;
+                    $tabStatsCat[$i]['total_correct'] = 0;
+                    $tabStatsCat[$i]['children'] = array();
 
-                    for ($j = 0; $j < count($tabStats); $j++)
+                    for ($j = 0; $j < count($tabStatsCat); $j++)
                     {
-                        if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
+                        if (strlen($tabStatsCat[$j]['code_cat']) > 2 && substr($tabStatsCat[$j]['code_cat'], 0, 2) == $parentCode)
                         {
-                            $tabStats[$i]['total'] += $tabStats[$j]['total'];
-                            $tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
-                            $tabStats[$i]['children'][] = $tabStats[$j];
+                            $tabStatsCat[$i]['total'] += $tabStatsCat[$j]['total'];
+                            $tabStatsCat[$i]['total_correct'] += $tabStatsCat[$j]['total_correct'];
+                            $tabStatsCat[$i]['children'][] = $tabStatsCat[$j];
                         }
                     }
                 }
-                else if ($tabStats[$i]['type_lien'] == "static")
+                else if ($tabStatsCat[$i]['type_lien'] == "static")
                 {
-                    $tabStats[$i]['parent'] = true;
-                    $parentCode = $tabStats[$i]['code_cat'];
-                    $tabStats[$i]['children'] = false;
+                    $tabStatsCat[$i]['parent'] = true;
+                    $parentCode = $tabStatsCat[$i]['code_cat'];
+                    $tabStatsCat[$i]['children'] = false;
                 }
             }
             else 
             {
-                $tabStats[$i]['parent'] = false;
-                $tabStats[$i]['children'] = false;
+                $tabStatsCat[$i]['parent'] = false;
+                $tabStatsCat[$i]['children'] = false;
             }
 
         }
@@ -564,7 +564,7 @@ class ServicesAdminStat extends Main
         $posiStats['categories'] = array();
         $k = 0;
         
-        foreach ($tabStats as $stat)
+        foreach ($tabStatsCat as $stat)
         {
             $posiStats['categories'][$k]['parent'] = $stat['parent'];
             $posiStats['categories'][$k]['children'] = $stat['children'];
@@ -584,7 +584,7 @@ class ServicesAdminStat extends Main
             
             $k++;
         }
-
+        
 
         /*** Stats globales ***/
         
@@ -718,6 +718,8 @@ class ServicesAdminStat extends Main
         $globalStats['niveaux'] = $niveauxInfos;
 
 
+
+
         /*****   Calcul des scores moyen par catégories/compétences   *****/
 
 
@@ -744,8 +746,8 @@ class ServicesAdminStat extends Main
         $percentGlobal = 0;
         $countValidCategories = 0;
         $j = 0;
-        */
-        /*       
+        
+
         foreach ($categoriesList as $categorie)
         {
             $codeCat = $categorie->getCode();
@@ -790,15 +792,6 @@ class ServicesAdminStat extends Main
             $j++;
         }
         */
-
-
-
-
-
-
-
-        //$globalStats['niveau_infos'] = $niveauxInfos;
-        //$globalStats['categories_infos'] = null;
 
         return $globalStats;
 
@@ -963,8 +956,7 @@ class ServicesAdminStat extends Main
                     {
                         $parentCode = substr($code_cat, 0, 2);
                         $resultCatParent = $this->categorieDAO->selectByCode($parentCode);
-                        //var_dump($resultCatParent['response']);
-                        //exit();
+
                         if (!$this->filterDataErrors($resultCatParent['response']))
                         {
                             $categories[$j]['nom_cat_parent'] = $resultCatParent['response']['categorie']->getNom();

@@ -47,7 +47,25 @@ class ResultatDAO extends ModelDAO
     }
     
     
-    
+    /*
+    public function selectByCategories($refCategorie) 
+    {
+        $this->initialize();
+        
+        if (!empty($refCategorie))
+        {
+            $request = "SELECT * FROM resultat WHERE ref_session = ".$refCategorie;
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "resultat", "Resultat");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun identifiant de catégorie.");
+        }
+        
+        return $this->resultset;
+    }
+    */
     
     
     /**

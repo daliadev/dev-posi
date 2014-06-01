@@ -1558,8 +1558,7 @@ select {
 /* page statistique */
 
 
-.stats-global
-{
+.stats-global {
 	overflow: hidden;
 	position: relative;
 	width: 860px;
@@ -1568,17 +1567,53 @@ select {
 	margin-bottom: 10px;
 	background: url(../images/graph_stat_global.jpg) top left no-repeat;
 	color: #ffffff;
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: bold;
 }
 
-	.stats-global .stat-posi
-	{
+	.stats-global .stat-posi {
 		position: absolute;
 		top: 186px;
 		left: 102px;
 		font-size: 26px;
 	}
+
+	.stats-global .stat-user {
+		position: absolute;
+		top: 135px;
+		left: 220px;
+		font-size: 20px;
+	}
+
+	.stats-global .stat-pourcent {
+		position: absolute;
+		top: 181px;
+		left: 320px;
+		color: #f1b557;
+		font-size: 36px;
+	}
+
+	.stats-global .stat-temps {
+		position: absolute;
+		top: 236px;
+		left: 490px;
+		/*font-size: 14px;*/
+	}
+
+	.stats-global .stat-total-temps {
+		position: absolute;
+		top: 141px;
+		left: 574px;
+		font-size: 16px;
+	}
+
+	.stats-global .stat-age {
+		position: absolute;
+		top: 210px;
+		left: 732px;
+		/*font-size: 14px;*/
+	}
+
 
 .stats-detail {
 	overflow: hidden;
@@ -1613,9 +1648,10 @@ select {
 		{
 			width: 100px;
 			height: 100px;
-			background: #f0f0f0;
-			border: 1px solid #CCC8C8;
+			background-color: #a49c9c;
+			/*border: 1px solid #CCC8C8;*/
 			border-radius: 100px;
+			color: #ffffff;
 			font-size: 20px;
 			font-weight: bold;
 			text-align: center;

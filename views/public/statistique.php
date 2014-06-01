@@ -56,7 +56,7 @@ if (Config::DEBUG_MODE)
 
             <form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
 
-                <!-- <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" /> -->
+                <!-- <input type="hidden" name="mode" value="<?php //echo $formData['mode']; ?>" /> -->
   
                 <div class="zone-formu2">
 
@@ -124,14 +124,17 @@ if (Config::DEBUG_MODE)
 
                                 <div class="stat-user">58</div>
 
-                                <div class="stat-pourcent">63%</div>
+                                <div class="stat-pourcent">63<small>%</small></div>
 
                                 <div class="stat-temps">18 min 25 s</div>
 
-                                <div class="stat-pourcent">25 h 35 min</div>
+                                <div class="stat-total-temps">25 h 35 min</div>
+
+                                <div class="stat-age">26 ans</div>
 
                             </div>
 
+                            <hr>
 
                             <div class="stats-detail">
 
@@ -147,7 +150,7 @@ if (Config::DEBUG_MODE)
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['moyenne_score_session']; ?>%</strong></div>
+                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong><?php echo $response['stats']['moyenne_score_session']; ?><small>%</small></strong></div>
                                 </div>
 
 
@@ -156,7 +159,7 @@ if (Config::DEBUG_MODE)
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:15px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:14px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat">

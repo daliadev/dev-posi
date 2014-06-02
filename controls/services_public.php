@@ -10,6 +10,7 @@ require_once(ROOT.'controls/authentication.php');
 
 require_once(ROOT.'controls/services_admin_gestion.php');
 require_once(ROOT.'controls/services_admin_restitution.php');
+require_once(ROOT.'controls/services_admin_stat.php');
 require_once(ROOT.'models/dao/organisme_dao.php');
 
 
@@ -19,6 +20,8 @@ class ServicesPublic extends Main
 
     
     private $servicesRestitution = null;
+    private $servicesAdminStat = null;
+
     private $organismeDAO = null;
     
     private $servicesGestion = null;
@@ -31,6 +34,8 @@ class ServicesPublic extends Main
         $this->servicesGestion = new ServicesAdminGestion();
         
         $this->servicesRestitution = new ServicesAdminRestitution();
+        $this->servicesAdminStat = new ServicesAdminStat();
+
         $this->organismeDAO = new OrganismeDAO();
     }
     
@@ -405,6 +410,79 @@ class ServicesPublic extends Main
             $this->setTemplate("template_page");
             $this->render("restitution");
         }
+
+    }
+
+
+
+    /**
+     * statistique - Gére la validation du formulaire de gestion des degrés d'aptitude avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
+     *
+     * @param array Tableau de paramètres passés par url (le code d'identification de l'organisme)
+     */
+    public function statistique($requestParams = array())
+    {
+
+        /*** Authentification avec les droits admin ***/
+        //ServicesAuth::checkAuthentication("admin");
+        
+        $this->initialize();
+        
+        $this->url = SERVER_URL."public/statistique/";
+
+        
+        if (Config::DEBUG_MODE)
+        {
+            echo "\$_POST = ";
+            var_dump($_POST);
+        }
+
+        
+        /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
+        
+        $initializedData = array(
+            "ref_organ_cbox" => "select", 
+            "date_debut"     => "text", 
+            "date_fin"       => "text"
+        );
+        $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
+        
+        // On récupère les differents identifiants de la zone de sélection 
+        $this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
+
+
+
+        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($this->formData['date_debut'], $this->formData['date_fin'], $this->formData['ref_organ']);
+
+        //var_dump($this->returnData['response']['stats']);
+        //exit();
+
+
+        /*-----   Retour des données traitées du formulaire   -----*/
+        
+        $this->returnData['response']['form_data'] = $this->formData;
+        $this->returnData['response']['url'] = $this->url;
+
+        // S'il y a des erreurs, on les injecte dans la réponse
+        if (!empty($this->errors) && count($this->errors) > 0)
+        {
+            foreach($this->errors as $error)
+            {
+                $this->returnData['response']['errors'][] = $error;
+            }
+        }
+
+        //Liste des organismes pour le combo-box
+        $organismesList = $this->servicesRestitution->getOrganismesList(); 
+        $this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
+
+
+
+        $this->setResponse($this->returnData);
+
+        $this->setTemplate("template_page");
+        $this->render("statistique");
+        
 
     }
     

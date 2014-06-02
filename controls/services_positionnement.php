@@ -494,7 +494,7 @@ class ServicesPositionnement extends Main
         $dataSession['temps_total'] = $totalTime;
         
         $idSession = ServicesAuth::getSessionData("ref_session");
-        
+        /*
         // Mise à jour de la session
         $resultset = $this->sessionDAO->update($dataSession, $idSession);
 
@@ -503,7 +503,7 @@ class ServicesPositionnement extends Main
         {
             $this->registerError("form_request", "La session n'a pu être mises à jour.");
         }
-        
+        */
         
         // Mise à jour du nbre de sessions terminée de l'utilisateur
 
@@ -558,6 +558,7 @@ class ServicesPositionnement extends Main
             
             $j++;
         }
+
         
         
         /*** Intégration du système d'héritage des résultats ***/
@@ -643,13 +644,26 @@ class ServicesPositionnement extends Main
         $dataPage['response']['temps'] = $stringTime;
         
         
-        /*** Stats globales ***/
+        /*** Injection des stats globales dans la réponse ***/
         
         $percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
         $dataPage['response']['percent_global'] = $percentGlobal;
         $dataPage['response']['total_global'] = $totalGlobal;
         $dataPage['response']['total_correct_global'] = $totalCorrectGlobal;
-                
+        
+
+        /*** Mise à jour de la session  ***/
+        $dataSession['score_pourcent'] = $percentGlobal;
+
+        $resultset = $this->sessionDAO->update($dataSession, $idSession);
+
+        // Traitement des erreurs de la requête
+        if ($this->filterDataErrors($resultset['response']) || !isset($resultset['response']['session']['row_count']) || empty($resultset['response']['session']['row_count']))
+        {
+            $this->registerError("form_request", "La session n'a pu être mise à jour.");
+        }
+
+
         
         /*** Déconnexion automatique de l'utilisateur ***/
         ServicesAuth::logout();

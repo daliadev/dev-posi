@@ -16,7 +16,7 @@ require_once(ROOT.'controls/services_admin_stat.php');
 class ServicesStatistique extends Main
 {
 
-    
+    /*
     private $servicesAdminStat = null;
     //private $organismeDAO = null;
     
@@ -28,10 +28,8 @@ class ServicesStatistique extends Main
         $this->controllerName = "statistique";
         
         $this->servicesAdminStat = new ServicesAdminStat();
-        
-        
     }
-    
+    */
     
 
     
@@ -40,10 +38,11 @@ class ServicesStatistique extends Main
      *
      * @param array Tableau de paramètres passés par url (le code d'identification de l'organisme)
      */
+
+    /*
     public function stat($requestParams = array())
     {
 
-	 /*** Authentification avec les droits admin ***/
         ServicesAuth::checkAuthentication("admin");
 		
         $this->initialize();
@@ -54,6 +53,7 @@ class ServicesStatistique extends Main
         
 
     }
+    */
     
 }
 

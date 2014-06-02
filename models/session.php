@@ -17,6 +17,7 @@ class Session
     public $session_accomplie = null;
     public $temps_total = null;
     public $validation = null;
+    public $score_pourcent = null;
 
     
     public function getId()
@@ -52,6 +53,11 @@ class Session
     public function getValidation()
     {
         return $this->validation;
+    }
+
+    public function getScorePourcent()
+    {
+        return $this->score_pourcent;
     }
     
 }

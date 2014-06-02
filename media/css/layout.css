@@ -234,14 +234,14 @@ p {
 */
 .zone-formu {
 	padding: 30px;
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	background-color: #fff;
 }
 
 .zone-formu2 {
 	padding: 20px;
 	margin: 10px;
-	font-family: "Amaranth", Tahoma, Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	background-color: #fff;
 	border: 1px solid #dedcdc;
 }
@@ -251,9 +251,10 @@ p {
 .form-full {
 	/*display:inline-block;*/
 	/*vertical-align:top;*/
-	width: 900px;
+	width: 860px;
 	/*margin-top: 20px;*/
 	/*margin: 10px;*/
+	overflow: hidden;
 	
 }
 
@@ -299,6 +300,10 @@ label
 	font-weight: bold;
 }
 
+#form-posi .form-full fieldset legend {
+	width: 838px;
+}
+
 #form-posi span
 {
 	vertical-align: top !important;
@@ -316,7 +321,8 @@ label
 
 
 #form-posi .input {
-	margin: 10px 0;
+	/*margin: 10px 0;*/
+	margin: 10px 40px 10px 0;
 }
 
 
@@ -1063,7 +1069,7 @@ color: #BDC3C7;
 */
 
 #titre-admin-h2{
-	margin: 20px 20px 10px 20px;
+	margin: 20px 30px 10px 30px;
 	padding: 15px;
 	background-color: #1fbba6;
 	font-family: Helvetica, Arial, sans-serif;
@@ -1414,13 +1420,15 @@ select {
 
 
 
-/*----------------------------------------------RESTITUTION--------------------------------------------*/
+/*----------------------------------------------  Restitution et Statistiques   --------------------------------------------*/
 
 #infos-posi {
-    margin: 0px 20px;
-    padding: 20px;
+    margin: 0;
+    padding: 0px;
     background: #fff;
+    border: none !important;
 }
+
 
 #infos-posi .ui-widget-header {
     background: #fff;
@@ -1429,7 +1437,7 @@ select {
 }
 
 #infos-posi .ui-widget {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
     font-size: 1em;
 }
 
@@ -1438,6 +1446,13 @@ select {
     padding: 20px;
     border: 1px solid #dddddd;
     background: #fff;
+}
+
+.ui-corner-all {
+	border-bottom-right-radius: 0px;
+	border-bottom-left-radius: 0px;
+	border-top-right-radius: 0px;
+	border-top-left-radius: 0px;
 }
 
 #infos-posi .ui-state-default {
@@ -1455,32 +1470,62 @@ select {
 }
 
 
+
+
+
+#infos-posi li {
+	margin-left: 0;
+}
+
+
+
 .zone-liste-restitution {
     padding:20px;
     margin:20px;
     background-color:#ffffff;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
     font-size: 1em;
 }
 
-.zone-liste-restitution .combo-box {
-    display: inline-block;
+.zone-liste-restitution hr {
+    margin-bottom: 15px;
+    padding: 0;
 }
 
-.zone-liste-restitution hr {
-    margin-bottom:15px;
-    padding:0;
+.filter-item {
+    /*display: inline-block;*/
+    float: left;
+    margin-right: 20px;
 }
+	.filter-item label {
+	    display: block;
+	}
+
+	.filter-item select {
+	    width: 200px !important;
+	}
+
 
 .info {
-    background-color:#f5f5f5;
+    background-color:#f0f0f0;
     margin-top: 2px;
-    padding: 5px;
-    font-size: 14px;
+    padding: 10px;
+    /*font-size: 13px;*/
+}
+
+.tab-block
+{
+	font-size: 13px;	
 }
 
 
-.stats ul { width: 790px; list-style: none; }
+.stats ul { 
+	width: 790px; 
+	list-style: none;
+}
+	.stats li { 
+		font-family: Helvetica, Arial, sans-serif !important; 
+	}
 
 .stats .percent {
     display: block;
@@ -1506,9 +1551,148 @@ select {
     padding: 0;
     color: #000000;
     font-weight:bold;
-    background: #f7f7f7 url(../images/gradiant.png) repeat-y 0 0;	
+    background: #f7f7f7 url(../images/gradiant.png) repeat-y 0 0;
 }
-	
+
+
+/* page statistique */
+
+
+.stats-global {
+	overflow: hidden;
+	position: relative;
+	width: 860px;
+	height: 380px;
+	/*padding: 40px 0;*/
+	margin-bottom: 10px;
+	background: url(../images/graph_stat_global.jpg) top left no-repeat;
+	color: #ffffff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+	.stats-global .stat-posi {
+		position: absolute;
+		top: 186px;
+		left: 102px;
+		font-size: 26px;
+	}
+
+	.stats-global .stat-user {
+		position: absolute;
+		top: 135px;
+		left: 220px;
+		font-size: 20px;
+	}
+
+	.stats-global .stat-pourcent {
+		position: absolute;
+		top: 181px;
+		left: 320px;
+		color: #f1b557;
+		font-size: 36px;
+	}
+
+	.stats-global .stat-temps {
+		position: absolute;
+		top: 236px;
+		left: 490px;
+		/*font-size: 14px;*/
+	}
+
+	.stats-global .stat-total-temps {
+		position: absolute;
+		top: 141px;
+		left: 574px;
+		font-size: 16px;
+	}
+
+	.stats-global .stat-age {
+		position: absolute;
+		top: 210px;
+		left: 732px;
+		/*font-size: 14px;*/
+	}
+
+
+.stats-detail {
+	overflow: hidden;
+	/*padding: 40px 0;*/
+	margin-bottom: 10px;
+}
+
+
+	.stats-detail .bloc-stat {
+		float: left;
+		width: 100px;
+		margin-right: 20px;
+		padding: 10px;
+		color: #666060;
+		text-align: center;
+	}
+
+	.stats-detail .last 
+	{
+		margin-right: 0px;
+	}
+
+		.bloc-stat .bloc-stat-title
+		{
+			width: 100px;
+			height: 45px;
+			/*padding-bottom: 15px;*/
+			text-align: center;
+		}
+
+		.bloc-stat .bloc-stat-number
+		{
+			width: 100px;
+			height: 100px;
+			background-color: #a49c9c;
+			/*border: 1px solid #CCC8C8;*/
+			border-radius: 100px;
+			color: #ffffff;
+			font-size: 20px;
+			font-weight: bold;
+			text-align: center;
+			line-height: 100px;
+		}
+
+
+	#infos-posi .bloc-stat {
+		float:left;
+		width: 96px;
+		margin-right: 20px;
+		padding: 10px;
+		color: #666060;
+		text-align: center;
+	}
+
+	#infos-posi .last
+	{
+		margin-right: 0px;
+	}	
+
+		#infos-posi .bloc-stat .bloc-stat-title
+		{
+			width: 96px;
+			height: 50px;
+		}
+
+		#infos-posi .bloc-stat .bloc-stat-number
+		{
+			margin: 0 auto;
+			width: 70px;
+			height: 70px;
+			background: #ffffff;
+			border: 1px solid #CCC8C8;
+			border-radius: 10px;
+			font-size: 15px;
+			font-weight: bold;
+			line-height: 70px;
+		}
+
+
 
 
 /*-------------------------------------- tableau résultats restitution -------------------------------*/
@@ -1569,35 +1753,16 @@ select {
 }
 
 #content-large .retour-menu {
-    margin-right: 20px;
+    margin-right: 30px;
     margin-bottom: 0px;
 }
 	
-.retour-menu a:hover{
+.retour-menu a, .retour-menu a:hover, .retour-menu a:visited, .retour-menu a:link, .retour-menu a:active {
     color:#ffffff;
     text-decoration:none;
     cursor: pointer;
 }
-
-.retour-menu a:visited{
-    color:#ffffff;
-    text-decoration:none;
-    cursor: pointer;
-}
-
-.retour-menu a:link{
-    color:#ffffff;
-    text-decoration:none;
-    cursor: pointer;
-}
-
-.retour-menu a:active{
-    color:#ffffff;
-    text-decoration:none;
-    cursor: pointer;
-}
-
-        
+   
         
 /*----------------------------------lighbox2--------------------------------*/
 

@@ -19,7 +19,7 @@
     <script src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js"></script>
     <script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js"></script>
     
-    <NOSCRIPT><div id="no-js">Pour un fonctionnement correct du positionnement, activez JavaScript en modifiant les options de votre navigateur</div></NOSCRIPT>
+    <noscript><div id="no-js">Pour un fonctionnement correct du positionnement, activez JavaScript en modifiant les options de votre navigateur</div></noscript>
     
 </head>
   

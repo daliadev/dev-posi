@@ -1858,11 +1858,11 @@ class ServicesAdmin extends Main
 
 
 
-
-
-	public function stat()
+    /* Redirection de la page "admin/statistique" vers la page "public/statistique" */
+	public function statistique()
     {
-        header("Location: ".SERVER_URL."statistique/stat");
+        
+        header("Location: ".SERVER_URL."public/statistique");
         exit();
 		
 	}

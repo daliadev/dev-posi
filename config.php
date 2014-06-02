@@ -104,14 +104,8 @@ class Config
 		 array(
             'code_menu' => "20",
             'label_menu' => "Statistique",
-            'url_menu' => "stat",
+            'url_menu' => "statistique",
             'type_lien_menu' => "dynamic"
-        ),
-        array(
-            'code_menu' => "30",
-            'label_menu' => "Gérer les comptes",
-            'url_menu' => "compte",
-            'type_lien_menu' => "static"
         )
     );
     

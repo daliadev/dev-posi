@@ -27,7 +27,7 @@
         return $color;
     }
 
-var_dump($response);
+    //var_dump($response);
 
 ?>
 

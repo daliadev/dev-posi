@@ -220,6 +220,16 @@ class ServicesAdminStat extends Main
     
     
     
+    public function getResultatsByUser($refUser)
+    {
+        // On sélectionne tous les résultats correspondant à l'utilisateur
+        $resultsetResultats = $this->resultatDAO->selectByUser($refUser);
+
+        //var_dump();
+        //exit();
+
+        return $resultsetResultats;
+    }
 
     
     
@@ -442,9 +452,21 @@ class ServicesAdminStat extends Main
 
 
 
+    public function getCategorieFromResult($result)
+    {
+        //$categorie = array();
+
+        $refQuestion = $result->getRefQuestion();
+
+        $categorie = $this->categorieDAO->selectByQuestion($refQuestion);
 
 
-    public function getSessionCategoriesStats()
+        return $categorie;
+    }
+
+
+
+    public function getUserCategoriesStats($refUser)
     {
         $posiStats = array();
         
@@ -459,10 +481,25 @@ class ServicesAdminStat extends Main
         
         
         /*** On va chercher tous les résultats classés par categories ***/
+        $resultats = $this->getResultatsByUser($refUser);
+
+        //var_dump($resultats['response']);
+        //exit();
+
+        /*
+        if ($resultats)
+        {
+            foreach ($resultats as $result) {
+            
+                $categorie = $this->getCategorieFromResult($result->getId());
+            }
+        }
+        */
         
+
         // On sélectionne tous les résultats correspondant à la session en cours
-        $resultats = $this->getResultatsByCategories($refSession);
-        
+        //$resultats = $this->getResultatsByCategories($refSession);
+        /*
         $tabStatsCat = array();
 
         $totalGlobal = 0;
@@ -514,10 +551,10 @@ class ServicesAdminStat extends Main
 
             $j++;
         }
-        
+        */
         
         /*** Intégration du système d'héritage des résultats ***/
-        
+        /*
         for ($i = 0; $i < count($tabStatsCat); $i++)
         {
             // On détermine si c'est une categorie principale ou une sous-categorie
@@ -557,10 +594,10 @@ class ServicesAdminStat extends Main
             }
 
         }
-        
+        */
         
         /*** Données envoyées à la page de résultat ***/
-        
+        /*
         $posiStats['categories'] = array();
         $k = 0;
         
@@ -584,16 +621,17 @@ class ServicesAdminStat extends Main
             
             $k++;
         }
-        
+        */
 
         /*** Stats globales ***/
-        
+        /*
         $percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
         $posiStats['percent_global'] = $percentGlobal;
         $posiStats['total_global'] = $totalGlobal;
         $posiStats['total_correct_global'] = $totalCorrectGlobal;
-        
-        return  $posiStats;
+        */
+
+        return  $resultats;
     }
 
 
@@ -644,8 +682,7 @@ class ServicesAdminStat extends Main
             {
                 $userStats = $this->getUserStats($user->getId());
 
-                //var_dump($userStats);
-
+                
                 if ($userStats)
                 {
                     $globalStats['nbre_users']++;
@@ -653,11 +690,15 @@ class ServicesAdminStat extends Main
                     $globalStats['temps_total'] += $userStats['temps_total'];
                     $globalStats['score_total'] += $userStats['score_total'];
                 }
+
+                $userResults = $this->getUserCategoriesStats($user->getId());
+                //var_dump($userResults['response']);
+
             }
         }
 
         $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
-        $globalStats['temps_total'] = Tools::timeToString(round($globalStats['temps_total']));
+        $globalStats['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($globalStats['temps_total']), "h:m"))." min";
 
         $globalStats['moyenne_score_session'] = round($globalStats['score_total'] / $globalStats['nbre_sessions']);
 
@@ -722,6 +763,7 @@ class ServicesAdminStat extends Main
 
         /*****   Calcul des scores moyen par catégories/compétences   *****/
 
+        
 
         // Récupèration la liste des categories
         /*
@@ -936,7 +978,7 @@ class ServicesAdminStat extends Main
                 
                 
                 /*** Catégories ***/
-                
+
                 $resultsetCategories = $this->categorieDAO->selectByQuestion($question->getId());
                 $this->filterDataErrors($resultsetCategories['response']);
                 if (!empty($resultsetCategories['response']['categorie']) && count($resultsetCategories['response']['categorie']) == 1)

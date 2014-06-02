@@ -66,7 +66,7 @@
             
             <div id="submit">
   
-                <input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" />
+                <input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" disabled>
                 
             </div>
 

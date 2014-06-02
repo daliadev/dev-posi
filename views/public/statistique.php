@@ -118,7 +118,7 @@ if (Config::DEBUG_MODE)
                                 
                             <legend>Statistiques globales</legend>
 
-                            <div class="stats-global">
+                            <!-- <div class="stats-global">
 
                                 <div class="stat-posi">123</div>
 
@@ -132,9 +132,9 @@ if (Config::DEBUG_MODE)
 
                                 <div class="stat-age">26 ans</div>
 
-                            </div>
+                            </div> -->
 
-                            <hr>
+                            <!-- <hr> -->
 
                             <div class="stats-detail">
 
@@ -159,12 +159,12 @@ if (Config::DEBUG_MODE)
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:14px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:13px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:13px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:12px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat last">

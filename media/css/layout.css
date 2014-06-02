@@ -1624,7 +1624,7 @@ select {
 
 	.stats-detail .bloc-stat {
 		float: left;
-		width: 104px;
+		width: 100px;
 		margin-right: 20px;
 		padding: 10px;
 		color: #666060;
@@ -1638,7 +1638,7 @@ select {
 
 		.bloc-stat .bloc-stat-title
 		{
-			width: 104px;
+			width: 100px;
 			height: 45px;
 			/*padding-bottom: 15px;*/
 			text-align: center;

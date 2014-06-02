@@ -82,7 +82,7 @@ CREATE TABLE organisme
 	tel_organ CHAR(10) NULL,
 	fax_organ CHAR(10) NULL,
 	email_organ VARCHAR(100) NULL,
-	nbre_posi_max INT(5) NOT NULL DEFAULT 0
+	nbre_posi_max INT(8) UNSIGNED NOT NULL DEFAULT 0
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -144,7 +144,7 @@ CREATE TABLE session
 	session_accomplie TINYINT(1) NOT NULL DEFAULT 0,
 	temps_total DOUBLE NOT NULL,
 	validation TINYINT(1) NOT NULL DEFAULT 0,
-	score_pourcent INT(3) NOT NULL DEFAULT 0,
+	score_pourcent INT(3) UNSIGNED NOT NULL DEFAULT 0,
 	KEY date_session (date_session)
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -188,8 +188,7 @@ CREATE TABLE resultat
 	ref_reponse_qcm_correcte INT(5) UNSIGNED NULL,
 	reponse_champ TEXT NULL,
 	validation_reponse_champ TINYINT(1) NULL,
-	temps_reponse DOUBLE NOT NULL,
-	taux_reussite TINYINT(1) NOT NULL DEFAULT 0
+	temps_reponse DOUBLE NOT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

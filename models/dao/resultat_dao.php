@@ -66,6 +66,35 @@ class ResultatDAO extends ModelDAO
         return $this->resultset;
     }
     */
+
+
+    
+    public function selectByUser($refUser) 
+    {
+        $this->initialize();
+        
+        if (!empty($refUser))
+        {
+            $request = "SELECT id_result, ref_session, ref_question, ref_reponse_qcm, ref_reponse_qcm_correcte, reponse_champ, validation_reponse_champ, temps_reponse ";
+            $request .= "FROM resultat, session, utilisateur ";
+            $request .= "WHERE utilisateur.id_user = ".$refUser." ";
+            $request .= "AND session.ref_user = utilisateur.id_user ";
+            $request .= "AND session.session_accomplie = 1 ";
+            $request .= "AND resultat.ref_session = session.id_session ";
+            //$request .= "GROUP BY id_session ORDER BY date_session DESC";
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "resultat", "Resultat");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun identifiant d'utilisateur'.");
+        }
+        
+        return $this->resultset;
+    }
+    
+
+
     
     
     /**

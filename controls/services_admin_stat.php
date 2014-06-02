@@ -225,16 +225,28 @@ class ServicesAdminStat extends Main
         // On sélectionne tous les résultats correspondant à l'utilisateur
         $resultsetResultats = $this->resultatDAO->selectByUser($refUser);
 
-        //var_dump();
-        //exit();
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultsetResultats['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetResultats['response']['resultat']) && count($resultsetResultats['response']['resultat']) == 1)
+            { 
+                $resultat = $resultsetResultats['response']['resultat'];
+                $resultsetResultats['response']['resultat'] = array($resultat);
+            }
 
-        return $resultsetResultats;
+            return $resultsetResultats;
+        }
+        
+        return false;
+
+        
     }
 
     
     
     
-    
+    /*
     public function getResultatsByCategories($refSession)
     {
         $tabResultats = array();
@@ -288,7 +300,7 @@ class ServicesAdminStat extends Main
         return $tabResultats;
         
     }
-    
+    */
     
 
 
@@ -452,50 +464,88 @@ class ServicesAdminStat extends Main
 
 
 
-    public function getCategorieFromResult($result)
+    public function getCategoriesFromResult($result)
     {
         //$categorie = array();
 
         $refQuestion = $result->getRefQuestion();
 
-        $categorie = $this->categorieDAO->selectByQuestion($refQuestion);
+        $resultsetCategories = $this->categorieDAO->selectByQuestion($refQuestion);
 
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultsetCategories['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetCategories['response']['categorie']) && count($resultsetCategories['response']['categorie']) == 1)
+            { 
+                $categorie = $resultsetCategories['response']['categorie'];
+                $resultsetCategories['response']['categorie'] = array($categorie);
+            }
 
-        return $categorie;
+            return $resultsetCategories;
+        }
+        
+        return false;
     }
 
 
 
     public function getUserCategoriesStats($refUser)
     {
-        $posiStats = array();
+        $tabResultats = array();
         
-        $posiStats['percent_global'] = null;
-        $posiStats['categories'] = array();
-        
+        //$tabCategories['ref_user'] = $refUser;
         
         /*** On récupère la liste des categories ***/
+        //$resultsetcategories = $this->getCategories();
+        //$categoriesList = $resultsetcategories['response']['categorie'];
         
-        $resultsetcategories = $this->getCategories();
-        $categoriesList = $resultsetcategories['response']['categorie'];
         
-        
-        /*** On va chercher tous les résultats classés par categories ***/
+        /*** On va chercher tous les résultats classés par utilisateurs ***/
         $resultats = $this->getResultatsByUser($refUser);
+        
 
-        //var_dump($resultats['response']);
-        //exit();
-
-        /*
         if ($resultats)
         {
-            foreach ($resultats as $result) {
-            
-                $categorie = $this->getCategorieFromResult($result->getId());
+            $i = 0;
+
+            foreach ($resultats['response']['resultat'] as $result) 
+            {
+                $tabResultats[$i]['resultat']['result'] = $result;
+
+                $tabResultats[$i]['resultat']['categories'] = array();
+                $resultCategories = $this->getCategoriesFromResult($result);
+
+                if ($resultCategories)
+                {
+                   
+                    $tabResultats[$i]['categories'] = array();
+
+                    foreach ($resultCategories['response']['categorie'] as $categorie) 
+                    {
+                        $tabResultats[$i]['resultat']['categories'][] = $categorie;
+                        //$tabResultats[$i]['categories'][]['code_cat'] = $categorie->getCode();
+                    }
+
+                    //$tabResultCategories = $resultCategories['response']['categorie'];
+                    //$resultats['response']['resultat'][$i]['categorie'][0] = array_merge($resultCategories['response'], $resultats['response']);
+                }
+                
+                var_dump($tabResultats[$i]['resultat']);
+
+                $i++;
             }
         }
-        */
+        else
+        {
+
+        }
+
         
+        exit();
+        
+        
+
 
         // On sélectionne tous les résultats correspondant à la session en cours
         //$resultats = $this->getResultatsByCategories($refSession);

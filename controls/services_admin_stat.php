@@ -351,27 +351,30 @@ class ServicesAdminStat extends Main
     
 
 
-    public function getUserSessions($refUser, $startDate, $endDate)
+    public function getSessionsDetails($startDate, $endDate, $refUser, $ref_organ)
     {
-        /*
-        $resultset = $this->sessionDAO->selectByUserFromDate($refUser, $startDate, $endDate);
+
+        $resultsetSessions = $this->sessionDAO->selectByDatesUserOrgan($startDate, $endDate, $refUser, $ref_organ);
 
         // Filtrage des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
+        if (!$this->filterDataErrors($resultsetSessions['response']))
         {
             // Si le résultat est unique
-            if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
+            if (!empty($resultsetSessions['response']['session']) && count($resultsetSessions['response']['session']) == 1)
             { 
-                $session = $resultset['response']['session'];
-                $resultset['response']['session'] = array($session);
+                $session = $resultsetSessions['response']['session'];
+                $resultsetSessions['response']['session'] = array($session);
             }
 
-            return $resultset;
+            return $resultsetSessions;
         }
-        */
+        
         return false;
     }
     
+
+
+
 
     public function getUserOrganismes($refIntervenant)
     {
@@ -463,7 +466,7 @@ class ServicesAdminStat extends Main
     }
 
 
-
+    /*
     public function getCategoriesFromResult($result)
     {
         //$categorie = array();
@@ -487,13 +490,14 @@ class ServicesAdminStat extends Main
         
         return false;
     }
-
+    */
 
 
     public function getSessionCategoriesStats($refSession)
     {
       
     }
+
 
     public function getUserCategoriesStats($refUser)
     {
@@ -731,7 +735,7 @@ class ServicesAdminStat extends Main
     
 
 
-    public function getCustomStats($startDate = false, $endDate = false, $ref_organ = null)
+    public function getCustomStats($startDate = null, $endDate = null, $ref_organ = null)
     {
 
         
@@ -756,9 +760,13 @@ class ServicesAdminStat extends Main
         $organStats['moyenne_score_session'] = 0;
 
     
-        // On récupère outes les sessions comprises entre 2 dates si elles sont indiqués, sinon sélectionne toutes les questions
-        //$sessions = $this->getFilteredSessions($startDate, $endDate);
+        // On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref de l'organisme, sinon sélectionne toutes les sessions)
+        $sessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
 
+        //var_dump($sessions);
+        //exit();
+
+        return $sessions;
 
 
         /*****   Calcul de la moyenne du temps passé sur un positionnement  *****/
@@ -768,7 +776,7 @@ class ServicesAdminStat extends Main
 
 
         // On établit les stats de bases
-
+        /*
         $usersList = array();
         $userStats = array();
         $resultsetUsers = $this->getUsers();
@@ -793,7 +801,6 @@ class ServicesAdminStat extends Main
 
                 //$userCats = $this->getUserCategoriesStats($user->getId());
 
-                //foreach ($userCats
 
                 //var_dump($userResults['response']);
 
@@ -804,6 +811,8 @@ class ServicesAdminStat extends Main
         $globalStats['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($globalStats['temps_total']), "h:m"))." min";
 
         $globalStats['moyenne_score_session'] = round($globalStats['score_total'] / $globalStats['nbre_sessions']);
+        */
+
 
         //exit();
         /*
@@ -820,7 +829,7 @@ class ServicesAdminStat extends Main
 
         /*****   Calcul du nombre d'utilisateurs par niveaux d'etudes   *****/
 
-        
+        /*
         $niveauxInfos = array();
 
         $resultsetNiveaux = $this->getNiveaux();
@@ -861,6 +870,10 @@ class ServicesAdminStat extends Main
 
         $globalStats['niveaux'] = $niveauxInfos;
 
+        */
+
+
+        
 
 
 

@@ -13,6 +13,7 @@ class Session
     public $id_session = null;
     public $ref_user = null;
     public $ref_intervenant = null;
+    public $ref_organ = null;
     public $date_session = null;
     public $session_accomplie = null;
     public $temps_total = null;
@@ -33,6 +34,11 @@ class Session
     public function getRefIntervenant()
     {
         return $this->ref_intervenant;
+    }
+
+    public function getRefOrgan()
+    {
+        return $this->ref_organ;
     }
 
     public function getDate()

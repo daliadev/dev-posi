@@ -439,6 +439,7 @@ class ServicesPublic extends Main
 
         
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
+        $this->formData['ref_organ'] = null;
 
         $initializedData = array(
             "ref_organ_cbox" => "select", 
@@ -449,8 +450,17 @@ class ServicesPublic extends Main
 
         // On récupère les differents identifiants de la zone de sélection 
         $this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
-        $this->formData['date_debut'] = $_POST['date_debut'];
-        $this->formData['date_fin'] = $_POST['date_fin'];
+
+        if (isset($_POST['date_debut']) && !empty($_POST['date_debut']))
+        {
+            $this->formData['date_debut'] = $_POST['date_debut'];
+        }
+        
+        if (isset($_POST['date_fin']) && !empty($_POST['date_fin']))
+        {
+            $this->formData['date_fin'] = $_POST['date_fin'];
+        }
+        
 
 
         $filters = array();
@@ -483,19 +493,13 @@ class ServicesPublic extends Main
             }
         }
         
-        /*
-        if (!empty($this->formData['date_debut']) && !empty($this->formData['date_fin']))
-        {
-            var_dump($filters);
-            exit();
-        }
-        */
         
 
-        //$this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($this->formData['date_debut'], $this->formData['date_fin'], $this->formData['ref_organ']);
+        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($filters['start_date'], $filters['end_date'], $this->formData['ref_organ']);
 
         //var_dump($this->returnData['response']['stats']);
         //exit();
+
 
 
         /*-----   Retour des données traitées du formulaire   -----*/

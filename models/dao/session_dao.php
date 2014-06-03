@@ -90,33 +90,40 @@ class SessionDAO extends ModelDAO
      * @param int Référence de l'utilisateur.
      * @return array Sessions correspondantes à l'utilisateur.
      */
-    public function selectFromDateToDate($startDate, $endDate) 
+    public function selectByDatesUserOrgan($startDate, $endDate, $refUser, $refOrgan) 
     {
         $this->initialize();
         
-        if (!empty($refUser))
-        {
-            $request = "SELECT * FROM session ";
-            $request .= "WHERE session_accomplie = 1 ";
-            if ($startDate)
-            {
-                $request .= "AND date_session >= ".$startDate." ";
-            }
-            if ($endDate)
-            {
-                $request .= "AND date_session <= ".$endDate." ";
-            }
-            
-            $request .= "ORDER BY date_session DESC";
-            
+        
+        $request = "SELECT id_session, ref_user, ref_intervenant, intervenant.ref_organ, date_session, session_accomplie, temps_total, validation, score_pourcent ";
+        $request .= "FROM session, intervenant ";
+        $request .= "WHERE session_accomplie = 1 ";
 
-            $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
-        }
-        else
+        if ($startDate)
         {
-            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+            $request .= "AND session.date_session >= ".$startDate." ";
+        }
+        if ($endDate)
+        {
+            $request .= "AND session.date_session <= ".$endDate." ";
+        }
+        if ($refUser)
+        {
+            $request .= "AND session.ref_user = ".$refUser." ";
         }
         
+
+        $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
+
+        if ($refOrgan)
+        {
+            $request .= "AND intervenant.ref_organ = ".$refOrgan." ";
+        }
+
+        $request .= "ORDER BY date_session ASC";
+
+        $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
+
         return $this->resultset;
     }
     
@@ -138,7 +145,7 @@ class SessionDAO extends ModelDAO
         
         if(!empty($refUser) && !empty($refOrganisme))
         {
-            $request = "SELECT id_session, ref_user, ref_intervenant, date_session, session_accomplie, temps_total, validation FROM session, intervenant ";
+            $request = "SELECT id_session, ref_user, ref_intervenant, date_session, session_accomplie, temps_total, validation, score_pourcent FROM session, intervenant ";
             $request .= "WHERE session.ref_user = ".$refUser." ";
             $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
             $request .= "AND intervenant.ref_organ = ".$refOrganisme." ";

@@ -41,7 +41,7 @@ if (Config::DEBUG_MODE)
 }
 
 
-var_dump($formData);
+var_dump($response['stats']['response']['session']);
 
 
 ?>
@@ -148,17 +148,17 @@ var_dump($formData);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre de positionnements</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong>123<?php //echo $response['stats']['nbre_sessions']; ?></strong></div>
                                 </div>
         						
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong>58<?php //echo $response['stats']['nbre_users']; ?></strong></div>
         						</div>
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong><?php echo $response['stats']['moyenne_score_session']; ?><small>%</small></strong></div>
+                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong>63<?php //echo $response['stats']['moyenne_score_session']; ?><small>%</small></strong></div>
                                 </div>
 
 
@@ -167,12 +167,12 @@ var_dump($formData);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:13px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:13px;">18 min 25 s<?php //echo $response['stats']['moyenne_temps_session']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:12px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:12px;">25 h 35 min<?php //echo $response['stats']['temps_total']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat last">
@@ -256,12 +256,12 @@ var_dump($formData);
 
                     <div id="infos-posi" class="form-full">
 
-                        <fieldset>
+                        <!-- <fieldset>
                                 
-                            <legend>Statistiques organisme</legend>
+                            <legend>Statistiques organisme</legend> -->
                             <ul>
                                 <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
-                                <li><a href="#exports">2 - Exports</a></li>      
+                                <!-- <li><a href="#exports">2 - Exports</a></li> -->  
                             </ul>
 
                             <div id="infos" class="zone-liste-restitution">
@@ -331,16 +331,18 @@ var_dump($formData);
 
                             </div>
 
+                            <!-- 
                             <div id="exports" class="zone-liste-restitution">
 
                                 <div class="export-files">
 
                                     <div class="info">Aucun export n'est disponible.</div>
-
+                                
                                 </div>
-
+                            
                             </div>
-                        </fieldset>
+                             -->
+                       <!--  </fieldset> -->
 
                     </div>
 
@@ -367,15 +369,20 @@ var_dump($formData);
        
         $(function() { 
             
+            
+
             $("#infos-posi").tabs();
 
             //$("#infos-posi").tooltip();
+            var date = new Date();
+            var year = date.getFullYear();
+            // alert(year);
 
             $(".search-date").datepicker({
                 dateFormat: "dd/mm/yy",
                 changeMonth: true, 
                 changeYear: true, 
-                yearRange: "2013:2014",
+                yearRange: "2014:"+year,
                 closeText: 'Fermer',
                 prevText: 'Précédent',
                 nextText: 'Suivant',
@@ -386,11 +393,8 @@ var_dump($formData);
                 dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
                 dayNamesMin: ['D','L','M','M','J','V','S'],
                 weekHeader: 'Sem.',
-                dateFormat: 'dd/mm/yy',
                 firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: ''
+                showMonthAfterYear: false
             });
             
         })(jQuery);

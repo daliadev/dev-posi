@@ -793,18 +793,6 @@ form input[type="text"][disabled]
 	width:145px;
 }
 
-.bt-admin-menu-ajout2-right{
-	cursor:pointer;
-	background-color:#f7a22f;
-	height:35px;
-	border:0px;
-	font-family: Helvetica, Arial, sans-serif;
-	font-size:15px;
-	color:#FFF;
-	/*width:145px;*/
-	float:right;
-}
-
 
 .bt-admin-ok-ajout{
 	cursor:pointer;
@@ -1660,7 +1648,7 @@ select {
 		{
 			width: 100px;
 			height: 100px;
-			background-color: #43545D;
+			background-color: #a49c9c;
 			/*border: 1px solid #CCC8C8;*/
 			border-radius: 100px;
 			color: #ffffff;
@@ -1694,14 +1682,14 @@ select {
 		#infos-posi .bloc-stat .bloc-stat-number
 		{
 			margin: 0 auto;
-			width: 100px;
-			height: 100px;
-			background: #4b5a62;
-			/*border: 1px solid #CCC8C8;*/
-			border-radius: 100px;
+			width: 70px;
+			height: 70px;
+			background: #ffffff;
+			border: 1px solid #CCC8C8;
+			border-radius: 10px;
 			font-size: 15px;
 			font-weight: bold;
-			line-height: 100px;
+			line-height: 70px;
 		}
 
 

@@ -4,11 +4,6 @@
 // Initialisation par défaut des valeurs du formulaire
 
 $formData = array();
-$formData['ref_organ_cbox'] = "";
-$formData['ref_organ'] = "";
-$formData['date_debut'] = "";
-$formData['date_fin'] = "";
-
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
@@ -40,10 +35,7 @@ if (Config::DEBUG_MODE)
     var_dump($response);
 }
 
-
-var_dump($response['stats']['response']['session']);
-
-
+ var_dump($response['organisme']);
 ?>
 
 
@@ -79,13 +71,13 @@ var_dump($response['stats']['response']['session']);
                         <!-- <div class="input" style="width:120px; display:inline-block;"> -->
                         <div class="filter-item">
                             <label for="date_debut">Date de début : </label>
-                            <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
+                            <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_naiss_user']; ?>">
                         </div>
 
                         <!-- <div class="input" style="width:120px; display:inline-block;"> -->
                         <div class="filter-item">
                             <label for="date_fin">Date de fin : </label>
-                            <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
+                            <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php //echo $formData['date_naiss_user']; ?>">
                         </div>
 
                         <div class="filter-item">
@@ -148,17 +140,17 @@ var_dump($response['stats']['response']['session']);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre de positionnements</div>
-                                    <div class="bloc-stat-number"><strong>123<?php //echo $response['stats']['nbre_sessions']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
                                 </div>
         						
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                    <div class="bloc-stat-number"><strong>58<?php //echo $response['stats']['nbre_users']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
         						</div>
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong>63<?php //echo $response['stats']['moyenne_score_session']; ?><small>%</small></strong></div>
+                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong><?php echo $response['stats']['moyenne_score_session']; ?><small>%</small></strong></div>
                                 </div>
 
 
@@ -167,12 +159,12 @@ var_dump($response['stats']['response']['session']);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:13px;">18 min 25 s<?php //echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:13px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:12px;">25 h 35 min<?php //echo $response['stats']['temps_total']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:12px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat last">
@@ -181,8 +173,10 @@ var_dump($response['stats']['response']['session']);
                                 </div>
 
                                 <div style="clear:both;"></div>
-                                
-                                <input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme"name="export_xls_total_organisme" class="bt-admin-menu-ajout2-right" />
+								
+								
+								<input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme"name="export_xls_total_organisme" class="bt-admin-menu-ajout2-right" />
+
                             </div>
                             
                             <div class="stats-detail">
@@ -201,10 +195,8 @@ var_dump($response['stats']['response']['session']);
 
         							</ul>
         						</p>
-
-                                <input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau"name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
-        					
-                            </div>	
+								<input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau"name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
+        					</div>	
         					
                             <div class="stats-detail">
                                 <p><strong>Score moyen par compétences</strong></p>
@@ -220,9 +212,7 @@ var_dump($response['stats']['response']['session']);
         								<li>Informatique : <strong> 48%</strong></li>
         							</ul>
         						</p>
-                                
-                                <input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_xls_score_competences" class="bt-admin-menu-ajout2-right" />
-
+								<input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_xls_score_competences" class="bt-admin-menu-ajout2-right" />
         					</div>
 
                         <fieldset>
@@ -256,12 +246,12 @@ var_dump($response['stats']['response']['session']);
 
                     <div id="infos-posi" class="form-full">
 
-                        <!-- <fieldset>
+                        <fieldset>
                                 
-                            <legend>Statistiques organisme</legend> -->
+                            <legend>Statistiques organisme</legend>
                             <ul>
                                 <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
-                                <!-- <li><a href="#exports">2 - Exports</a></li> -->  
+                                <!--<li><a href="#exports">2 - Exports</a></li>   -->   
                             </ul>
 
                             <div id="infos" class="zone-liste-restitution">
@@ -302,47 +292,20 @@ var_dump($response['stats']['response']['session']);
 
                                 <div style="clear:both;"></div>
 
-                                <!-- <p>Nombre de positionnement: <strong>40</strong></p>
-        						<p>Nombre de personne positionnées: <strong>40</strong></p>
-        						<p>Temps de passation moyen: <strong>17 min</strong></p>
-        						<p>Temps total: <strong>20h45</strong></p>
-        						<p>Nombre de candidats réparti par Niveau de formation : 
-        							<ul>
-        								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-        								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 6</strong></li>
-        								<li>Niveau IV : Bac : <strong> 8</strong></li>
-        								<li>Niveau III : Bac+2 : <strong> 3</strong></li>
-        								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-        								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
-        							</ul>
-        						</p>
-        						
-        						<p>Score moyen par compétence :</p>
-        							<ul>
-        								<li>Oral<strong> 80 %</strong></li>
-        								<li>Ecrit : <strong> 100 %</strong></li>
-        								<li>Calcul: <strong> 68%</strong></li>
-        								<li>Espace temps : <strong> 90%</strong></li>
-        								<li>Informatique : <strong> 48%</strong></li>
-        							</ul>
-        						<hr>
-        						<p>Score moyen global: <strong>60%</strong></p> -->
 
 
                             </div>
 
-                            <!-- 
-                            <div id="exports" class="zone-liste-restitution">
+                            <!--<div id="exports" class="zone-liste-restitution">
 
                                 <div class="export-files">
 
                                     <div class="info">Aucun export n'est disponible.</div>
-                                
+
                                 </div>
-                            
-                            </div>
-                             -->
-                       <!--  </fieldset> -->
+
+                            </div>!-->
+                        </fieldset>
 
                     </div>
 
@@ -369,20 +332,15 @@ var_dump($response['stats']['response']['session']);
        
         $(function() { 
             
-            
-
             $("#infos-posi").tabs();
 
             //$("#infos-posi").tooltip();
-            var date = new Date();
-            var year = date.getFullYear();
-            // alert(year);
 
             $(".search-date").datepicker({
                 dateFormat: "dd/mm/yy",
                 changeMonth: true, 
                 changeYear: true, 
-                yearRange: "2014:"+year,
+                yearRange: "2013:2014",
                 closeText: 'Fermer',
                 prevText: 'Précédent',
                 nextText: 'Suivant',
@@ -393,8 +351,11 @@ var_dump($response['stats']['response']['session']);
                 dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
                 dayNamesMin: ['D','L','M','M','J','V','S'],
                 weekHeader: 'Sem.',
+                dateFormat: 'dd/mm/yy',
                 firstDay: 1,
-                showMonthAfterYear: false
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
             });
             
         })(jQuery);

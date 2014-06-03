@@ -439,23 +439,67 @@ class ServicesPublic extends Main
 
         
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
-        
+        $this->formData['ref_organ'] = null;
+
         $initializedData = array(
             "ref_organ_cbox" => "select", 
             "date_debut"     => "text", 
             "date_fin"       => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
-        
+
         // On récupère les differents identifiants de la zone de sélection 
         $this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
 
+        if (isset($_POST['date_debut']) && !empty($_POST['date_debut']))
+        {
+            $this->formData['date_debut'] = $_POST['date_debut'];
+        }
+        
+        if (isset($_POST['date_fin']) && !empty($_POST['date_fin']))
+        {
+            $this->formData['date_fin'] = $_POST['date_fin'];
+        }
+        
 
 
-        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($this->formData['date_debut'], $this->formData['date_fin'], $this->formData['ref_organ']);
+        $filters = array();
+        $filters['start_date'] = false;
+        $filters['end_date'] = false;
+
+
+        if (!empty($this->formData['date_debut']))
+        {
+            if (preg_match("`^[0-3][0-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$`", $this->formData['date_debut']))
+            {
+                $filters['start_date'] = Tools::toggleDate($this->formData['date_debut'], "us");
+            }
+            else
+            {
+                $this->registerError("form_valid", "La date de début n'est pas valide.");
+            }
+        }
+
+
+        if (!empty($this->formData['date_fin']))
+        {
+            if (preg_match("`^[0-3][0-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$`", $this->formData['date_fin']))
+            {
+                $filters['end_date'] = Tools::toggleDate($this->formData['date_fin'], "us");
+            }
+            else
+            {
+                $this->registerError("form_valid", "La date de fin n'est pas valide.");
+            }
+        }
+        
+        
+
+        $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($filters['start_date'], $filters['end_date'], $this->formData['ref_organ']);
 
         //var_dump($this->returnData['response']['stats']);
         //exit();
+
 
 
         /*-----   Retour des données traitées du formulaire   -----*/

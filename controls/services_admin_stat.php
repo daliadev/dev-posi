@@ -258,15 +258,28 @@ class ServicesAdminStat extends Main
         // On sélectionne tous les résultats correspondant à l'utilisateur
         $resultsetResultats = $this->resultatDAO->selectByUser($refUser);
 
-        //var_dump();
-        //exit();
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultsetResultats['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetResultats['response']['resultat']) && count($resultsetResultats['response']['resultat']) == 1)
+            { 
+                $resultat = $resultsetResultats['response']['resultat'];
+                $resultsetResultats['response']['resultat'] = array($resultat);
+            }
 
-        return $resultsetResultats;
+            return $resultsetResultats;
+        }
+        
+        return false;
+
+        
     }
 
-
-
     
+    
+    
+    /*
     public function getResultatsByCategories($refSession)
     {
         $tabResultats = array();
@@ -320,7 +333,7 @@ class ServicesAdminStat extends Main
         return $tabResultats;
         
     }
-    
+    */
     
 
 
@@ -371,26 +384,30 @@ class ServicesAdminStat extends Main
     
 
 
-    public function getUserSessions($refUser, $startDate, $endDate)
+    public function getSessionsDetails($startDate, $endDate, $refUser, $ref_organ)
     {
-        $resultset = $this->sessionDAO->selectByUserFromDate($refUser, $startDate, $endDate);
+
+        $resultsetSessions = $this->sessionDAO->selectByDatesUserOrgan($startDate, $endDate, $refUser, $ref_organ);
 
         // Filtrage des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
+        if (!$this->filterDataErrors($resultsetSessions['response']))
         {
             // Si le résultat est unique
-            if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
+            if (!empty($resultsetSessions['response']['session']) && count($resultsetSessions['response']['session']) == 1)
             { 
-                $session = $resultset['response']['session'];
-                $resultset['response']['session'] = array($session);
+                $session = $resultsetSessions['response']['session'];
+                $resultsetSessions['response']['session'] = array($session);
             }
 
-            return $resultset;
+            return $resultsetSessions;
         }
         
         return false;
     }
     
+
+
+
 
     public function getUserOrganismes($refIntervenant)
     {
@@ -479,56 +496,138 @@ class ServicesAdminStat extends Main
 
 
         return false;
-        
     }
 
 
-
-    public function getCategorieFromResult($result)
+    /*
+    public function getCategoriesFromResult($result)
     {
         //$categorie = array();
 
         $refQuestion = $result->getRefQuestion();
 
-        $categorie = $this->categorieDAO->selectByQuestion($refQuestion);
+        $resultsetCategories = $this->categorieDAO->selectByQuestion($refQuestion);
 
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultsetCategories['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetCategories['response']['categorie']) && count($resultsetCategories['response']['categorie']) == 1)
+            { 
+                $categorie = $resultsetCategories['response']['categorie'];
+                $resultsetCategories['response']['categorie'] = array($categorie);
+            }
 
-        return $categorie;
+            return $resultsetCategories;
+        }
+        
+        return false;
     }
+    */
 
+
+    public function getSessionCategoriesStats($refSession)
+    {
+      
+    }
 
 
     public function getUserCategoriesStats($refUser)
     {
-        $posiStats = array();
+        $tabResultats = array();
+
+        $tabCategories = array();
         
-        $posiStats['percent_global'] = null;
-        $posiStats['categories'] = array();
-        
+        //$tabSessionCategories
+        //$tabCategories['ref_user'] = $refUser;
         
         /*** On récupère la liste des categories ***/
-        
         $resultsetcategories = $this->getCategories();
         $categoriesList = $resultsetcategories['response']['categorie'];
         
         
-        /*** On va chercher tous les résultats classés par categories ***/
+
+        /*** On va chercher tous les résultats classés par utilisateurs ***/
 
         $resultats = $this->getResultatsByUser($refUser);
-
-        //var_dump($resultats['response']);
-        //exit();
-
-        /*
+        
         if ($resultats)
         {
-            foreach ($resultats as $result) {
-            
-                $categorie = $this->getCategorieFromResult($result->getId());
+            $i = 0;
+
+            $tabResultats[$i] = array();
+            $tabCategories[$i] = array();
+
+            foreach ($resultats['response']['resultat'] as $result) 
+            {
+                $tabResultats[$i]['resultat'] = array();
+                $tabResultats[$i]['resultat']['ref_session'] = $result->getRefSession();
+                $tabResultats[$i]['resultat']['total'] = 0;
+                $tabResultats[$i]['resultat']['total_correct'] = 0;
+
+                $refReponseQcm = $result->getRefReponseQcm();
+
+                if (!empty($refReponseQcm) && $refReponseQcm != null)
+                {
+                    $tabResultats[$i]['resultat']['total']++;
+
+                    if ($result->getRefReponseQcm() == $result->getRefReponseQcmCorrecte())
+                    {
+                        $tabResultats[$i]['resultat']['total_correct']++;
+                    }
+
+                    $tabResultats[$i]['resultat']['categories'] = array();
+
+                    $resultCategories = $this->getCategoriesFromResult($result);
+
+                    if ($resultCategories)
+                    {
+                        $j = 0;
+
+                        foreach ($resultCategories['response']['categorie'] as $categorie) 
+                        {
+                            $tabResultats[$i]['resultat']['categories'][$j] = array();  
+                            $tabResultats[$i]['resultat']['categories'][$j]['code_cat'] = $categorie->getCode();
+                            $tabResultats[$i]['resultat']['categories'][$j]['nom_cat'] = $categorie->getNom();
+                            $tabResultats[$i]['resultat']['categories'][$j]['descript_cat'] = $categorie->getDescription();
+                            $tabResultats[$i]['resultat']['categories'][$j]['type_lien'] = $categorie->getTypeLien();
+
+                            $j++;
+                        }
+                    }
+                    else
+                    {
+                        $this->registerError("form_request", "Il n'y a aucune categorie correspondante au résultat");
+                    }
+                }
+
+                //var_dump($tabResultats[$i]['resultat']);
+
+                $i++;
             }
         }
-        */
+        else
+        {
+            $this->registerError("form_request", "Il n'y a pas de résultats pour cet utilisateur");
+        }
+
+        /*
+        $tabCategories = array();
+
+        for ($i = 0; $i < $tabResultats; $i++) 
+        { 
+            
+            $categories = $tabResultats[$i]['resultat']['categories'];
+
+            for ($i = 0; $i < $categories; $i++) 
+            { 
+                if ()
+            }
+        }
         
+        exit();
+        */
+
 
         // On sélectionne tous les résultats correspondant à la session en cours
         //$resultats = $this->getResultatsByCategories($refSession);
@@ -671,8 +770,12 @@ class ServicesAdminStat extends Main
     
 
 
-    public function getCustomStats($startDate = false, $endDate = false, $ref_organ = null)
+    public function getCustomStats($startDate = null, $endDate = null, $ref_organ = null)
     {
+
+        
+
+
 
         $globalStats = array();
         $globalStats['nbre_sessions'] = 0;
@@ -691,7 +794,14 @@ class ServicesAdminStat extends Main
         $organStats['score_total'] = 0;
         $organStats['moyenne_score_session'] = 0;
 
- 
+    
+        // On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref de l'organisme, sinon sélectionne toutes les sessions)
+        $sessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
+
+        //var_dump($sessions);
+        //exit();
+
+        return $sessions;
 
 
         /*****   Calcul de la moyenne du temps passé sur un positionnement  *****/
@@ -701,7 +811,7 @@ class ServicesAdminStat extends Main
 
 
         // On établit les stats de bases
-
+        /*
         $usersList = array();
         $userStats = array();
         $resultsetUsers = $this->getUsers();
@@ -724,7 +834,9 @@ class ServicesAdminStat extends Main
                     $globalStats['score_total'] += $userStats['score_total'];
                 }
 
-                $userResults = $this->getUserCategoriesStats($user->getId());
+                //$userCats = $this->getUserCategoriesStats($user->getId());
+
+
                 //var_dump($userResults['response']);
 
             }
@@ -734,6 +846,8 @@ class ServicesAdminStat extends Main
         $globalStats['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($globalStats['temps_total']), "h:m"))." min";
 
         $globalStats['moyenne_score_session'] = round($globalStats['score_total'] / $globalStats['nbre_sessions']);
+        */
+
 
         //exit();
         /*
@@ -750,6 +864,7 @@ class ServicesAdminStat extends Main
 
         /*****   Calcul du nombre d'utilisateurs par niveaux d'etudes   *****/
 
+        /*
         $niveauxInfos = array();
 
         $resultsetNiveaux = $this->getNiveaux();
@@ -791,6 +906,10 @@ class ServicesAdminStat extends Main
 
         $globalStats['niveaux'] = $niveauxInfos;
 
+        */
+
+
+        
 
 
         /*****   Calcul des scores moyen par catégories/compétences   *****/
@@ -875,79 +994,12 @@ class ServicesAdminStat extends Main
     }
 
 
-
-
-
-    /*
-    public function getOrganStats($refOrganisme)
+    
+    private function getFilteredSessions() 
     {
 
-
     }
-    */
 
-    
-
-
-    /*
-    public function getInfosUser($refUser)
-    {
-        $userInfos = array();
-        
-        $userInfos['nom_organ'] = null;
-        $userInfos['nom_intervenant'] = null;
-        $userInfos['email_intervenant'] = null;
-        $userInfos['nom'] = null;
-        $userInfos['prenom'] = null;
-        $userInfos['date_naiss'] = null;
-        $userInfos['adresse'] = null;
-        $userInfos['code_postal'] = null;
-        $userInfos['ville'] = null;
-        $userInfos['email'] = null;
-        $userInfos['tel'] = null;
-        $userInfos['nom_niveau'] = null;
-        $userInfos['descript_niveau'] = null;
-        $userInfos['nbre_positionnements'] = null;
-        $userInfos['date_last_posi'] = null;
-        
-        $resultsetUser = $this->utilisateurDAO->selectById($refUser);
-        
-        if (!$this->filterDataErrors($resultsetUser['response']))
-        {
-            if (!empty($resultsetUser['response']['utilisateur']) && count($resultsetUser['response']['utilisateur']) == 1)
-            { 
-                $user = $resultsetUser['response']['utilisateur'];
-                $resultsetUser['response']['utilisateur'] = array($user);
-                
-                if (!empty($resultsetUser['response']['utilisateur']))
-                {
-                    $utilisateur = $resultsetUser['response']['utilisateur'][0];
-                    
-                    $userInfos['nom'] = $utilisateur->getNom();
-                    $userInfos['prenom'] = $utilisateur->getPrenom();
-                    $userInfos['date_naiss'] = Tools::toggleDate($utilisateur->getDateNaiss());
-                    $userInfos['adresse'] = $utilisateur->getAdresse();
-                    $userInfos['code_postal'] = $utilisateur->getCodePostal();
-                    $userInfos['ville'] = $utilisateur->getVille();
-                    $userInfos['email'] = $utilisateur->getEmail();
-                    $userInfos['tel'] = $utilisateur->getTel();
-                    $userInfos['nbre_positionnements'] = $utilisateur->getSessionsAccomplies();
-                    
-                    $resultsetNiveau = $this->niveauEtudesDAO->selectById($utilisateur->getRefNiveau());
-                    $this->filterDataErrors($resultsetNiveau['response']);
-                    $userInfos['nom_niveau'] = $resultsetNiveau['response']['niveau_etudes']->getNom();
-                    $userInfos['descript_niveau'] = $resultsetNiveau['response']['niveau_etudes']->getDescription();
-                }
-                
-            }
-        }
-        
-        return $userInfos;
-    }
-    */
-
-    
-    
     
     
     
@@ -1161,6 +1213,10 @@ class ServicesAdminStat extends Main
         
         return $questionsDetails;
     }
+
+
+
+    
 
 }
 

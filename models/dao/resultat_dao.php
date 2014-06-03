@@ -68,7 +68,7 @@ class ResultatDAO extends ModelDAO
     */
 
 
-    
+    /*
     public function selectByUser($refUser) 
     {
         $this->initialize();
@@ -93,7 +93,7 @@ class ResultatDAO extends ModelDAO
         return $this->resultset;
     }
     
-
+    */
 
     
     

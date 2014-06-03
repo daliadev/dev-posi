@@ -4,11 +4,6 @@
 // Initialisation par défaut des valeurs du formulaire
 
 $formData = array();
-$formData['ref_organ_cbox'] = "";
-$formData['ref_organ'] = "";
-$formData['date_debut'] = "";
-$formData['date_fin'] = "";
-
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
@@ -40,10 +35,7 @@ if (Config::DEBUG_MODE)
     var_dump($response);
 }
 
-
-var_dump($formData);
-
-
+ var_dump($response['organisme']);
 ?>
 
 
@@ -79,13 +71,13 @@ var_dump($formData);
                         <!-- <div class="input" style="width:120px; display:inline-block;"> -->
                         <div class="filter-item">
                             <label for="date_debut">Date de début : </label>
-                            <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
+                            <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_naiss_user']; ?>">
                         </div>
 
                         <!-- <div class="input" style="width:120px; display:inline-block;"> -->
                         <div class="filter-item">
                             <label for="date_fin">Date de fin : </label>
-                            <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
+                            <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php //echo $formData['date_naiss_user']; ?>">
                         </div>
 
                         <div class="filter-item">
@@ -181,8 +173,10 @@ var_dump($formData);
                                 </div>
 
                                 <div style="clear:both;"></div>
-                                
-                                <input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme"name="export_xls_total_organisme" class="bt-admin-menu-ajout2-right" />
+								
+								
+								<input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme"name="export_xls_total_organisme" class="bt-admin-menu-ajout2-right" />
+
                             </div>
                             
                             <div class="stats-detail">
@@ -201,10 +195,8 @@ var_dump($formData);
 
         							</ul>
         						</p>
-
-                                <input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau"name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
-        					
-                            </div>	
+								<input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau"name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
+        					</div>	
         					
                             <div class="stats-detail">
                                 <p><strong>Score moyen par compétences</strong></p>
@@ -220,9 +212,7 @@ var_dump($formData);
         								<li>Informatique : <strong> 48%</strong></li>
         							</ul>
         						</p>
-                                
-                                <input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_xls_score_competences" class="bt-admin-menu-ajout2-right" />
-
+								<input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_xls_score_competences" class="bt-admin-menu-ajout2-right" />
         					</div>
 
                         <fieldset>
@@ -261,7 +251,7 @@ var_dump($formData);
                             <legend>Statistiques organisme</legend>
                             <ul>
                                 <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
-                                <li><a href="#exports">2 - Exports</a></li>      
+                                <!--<li><a href="#exports">2 - Exports</a></li>   -->   
                             </ul>
 
                             <div id="infos" class="zone-liste-restitution">
@@ -302,36 +292,11 @@ var_dump($formData);
 
                                 <div style="clear:both;"></div>
 
-                                <!-- <p>Nombre de positionnement: <strong>40</strong></p>
-        						<p>Nombre de personne positionnées: <strong>40</strong></p>
-        						<p>Temps de passation moyen: <strong>17 min</strong></p>
-        						<p>Temps total: <strong>20h45</strong></p>
-        						<p>Nombre de candidats réparti par Niveau de formation : 
-        							<ul>
-        								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-        								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 6</strong></li>
-        								<li>Niveau IV : Bac : <strong> 8</strong></li>
-        								<li>Niveau III : Bac+2 : <strong> 3</strong></li>
-        								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-        								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
-        							</ul>
-        						</p>
-        						
-        						<p>Score moyen par compétence :</p>
-        							<ul>
-        								<li>Oral<strong> 80 %</strong></li>
-        								<li>Ecrit : <strong> 100 %</strong></li>
-        								<li>Calcul: <strong> 68%</strong></li>
-        								<li>Espace temps : <strong> 90%</strong></li>
-        								<li>Informatique : <strong> 48%</strong></li>
-        							</ul>
-        						<hr>
-        						<p>Score moyen global: <strong>60%</strong></p> -->
 
 
                             </div>
 
-                            <div id="exports" class="zone-liste-restitution">
+                            <!--<div id="exports" class="zone-liste-restitution">
 
                                 <div class="export-files">
 
@@ -339,7 +304,7 @@ var_dump($formData);
 
                                 </div>
 
-                            </div>
+                            </div>!-->
                         </fieldset>
 
                     </div>

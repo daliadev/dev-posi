@@ -81,7 +81,48 @@ class SessionDAO extends ModelDAO
         return $this->resultset;
     }
     
+
+
     
+    /**
+     * selectByUserFromDate - Récupère la référence et la date des sessions correspondantes à un utilisateur par rapport à un organisme donné. Ne prend pas en compte les sessions non terminées.
+     * 
+     * @param int Référence de l'utilisateur.
+     * @return array Sessions correspondantes à l'utilisateur.
+     */
+    public function selectFromDateToDate($startDate, $endDate) 
+    {
+        $this->initialize();
+        
+        if (!empty($refUser))
+        {
+            $request = "SELECT * FROM session ";
+            $request .= "WHERE session_accomplie = 1 ";
+            if ($startDate)
+            {
+                $request .= "AND date_session >= ".$startDate." ";
+            }
+            if ($endDate)
+            {
+                $request .= "AND date_session <= ".$endDate." ";
+            }
+            
+            $request .= "ORDER BY date_session DESC";
+            
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+        }
+        
+        return $this->resultset;
+    }
+    
+    
+
+
     
     
     
@@ -115,34 +156,6 @@ class SessionDAO extends ModelDAO
     }
 
 
-    /**
-     * selectByUserFromDate - Récupère la référence et la date des sessions correspondantes à un utilisateur par rapport à un organisme donné. Ne prend pas en compte les sessions non terminées.
-     * 
-     * @param int Référence de l'utilisateur.
-     * @return array Sessions correspondantes à l'utilisateur.
-     */
-    public function selectByUserFromDate($refUser, $startDate, $endDate) 
-    {
-        $this->initialize();
-        
-        if (!empty($refUser))
-        {
-            $request = "SELECT * FROM session ";
-            $request .= "WHERE ref_user = ".$refUser." ";
-            $request .= "AND session_accomplie = 1 ";
-            $request .= "ORDER BY date_session DESC";
-            
-
-            $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
-        }
-        
-        return $this->resultset;
-    }
-    
     
     
    

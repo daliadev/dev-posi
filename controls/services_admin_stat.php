@@ -219,7 +219,7 @@ class ServicesAdminStat extends Main
     
     
     
-    
+    /*
     public function getResultatsByUser($refUser)
     {
         // On sélectionne tous les résultats correspondant à l'utilisateur
@@ -242,7 +242,7 @@ class ServicesAdminStat extends Main
 
         
     }
-
+    */
     
     
     
@@ -402,7 +402,7 @@ class ServicesAdminStat extends Main
     
 
 
-
+    /*
     public function getUserStats($refUser, $startDate = false, $endDate = false)
     {
         $userStats = array();
@@ -464,7 +464,7 @@ class ServicesAdminStat extends Main
 
         return false;
     }
-
+    */
 
     /*
     public function getCategoriesFromResult($result)
@@ -491,12 +491,6 @@ class ServicesAdminStat extends Main
         return false;
     }
     */
-
-
-    public function getSessionCategoriesStats($refSession)
-    {
-      
-    }
 
 
     public function getUserCategoriesStats($refUser)
@@ -738,10 +732,6 @@ class ServicesAdminStat extends Main
     public function getCustomStats($startDate = null, $endDate = null, $ref_organ = null)
     {
 
-        
-
-
-
         $globalStats = array();
         $globalStats['nbre_sessions'] = 0;
         $globalStats['nbre_users'] = 0;
@@ -759,14 +749,17 @@ class ServicesAdminStat extends Main
         $organStats['score_total'] = 0;
         $organStats['moyenne_score_session'] = 0;
 
-    
+
         // On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref de l'organisme, sinon sélectionne toutes les sessions)
-        $sessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
+        $resultsetSessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
+
+        
+
 
         //var_dump($sessions);
         //exit();
 
-        return $sessions;
+        //return $sessions;
 
 
         /*****   Calcul de la moyenne du temps passé sur un positionnement  *****/
@@ -776,42 +769,87 @@ class ServicesAdminStat extends Main
 
 
         // On établit les stats de bases
-        /*
-        $usersList = array();
-        $userStats = array();
-        $resultsetUsers = $this->getUsers();
+        $sessionsList = array();
+        $refsUsers = array();
 
-        if ($resultsetUsers)
+        if ($resultsetSessions)
         {
-            $usersList = $resultsetUsers['response']['utilisateur'];
+            $sessionsList = $resultsetSessions['response']['session'];
 
+            $globalStats['nbre_sessions'] = count($sessionsList);
 
-            foreach($usersList as $user)
+            foreach ($sessionsList as $session)
             {
-                $userStats = $this->getUserStats($user->getId());
+                $globalStats['temps_total'] += $session->getTempsTotal();
+                $globalStats['score_total'] += $session->getScorePourcent();
 
+                $userId = $session->getRefUser();
+
+                $isToken = false;
                 
-                if ($userStats)
+                if (count($refsUsers) > 0)
                 {
-                    $globalStats['nbre_users']++;
-                    $globalStats['nbre_sessions'] += $userStats['nbre_sessions'];
-                    $globalStats['temps_total'] += $userStats['temps_total'];
-                    $globalStats['score_total'] += $userStats['score_total'];
+                    foreach($refsUsers as $refUser)
+                    {
+                        if ($refUser != $userId)
+                        {
+                            $refsUsers[] = $userId;
+                        }
+                    }
                 }
-
-                //$userCats = $this->getUserCategoriesStats($user->getId());
-
-
-                //var_dump($userResults['response']);
-
+                else
+                {
+                    $refsUsers[] = $userId;
+                }
+                
             }
         }
 
+        //var_dump($refsUsers);
+        //exit();
+
+
+        $usersList = array();
+        
+
+        //$resultsetUsers = $this->getUsers();
+
+        /*
+        if ($resultsetUsers)
+        {
+            $usersList = $resultsetUsers['response']['utilisateur'];
+            
+            foreach($usersList as $user)
+            {
+                //$userStats = $this->getUserStats($user->getId());
+                $refUser = $user->getId();
+                $isToken = false;
+
+                
+                foreach($sessionsList as $session)
+                {
+                    if ($sessionsList->getRefUser() == $refUser && !$isToken)
+                    {
+                        $isToken = true;
+                        $globalStats['nbre_users']++;
+                    }
+                    else
+                    {
+                        $isToken = false;
+                    }
+                }
+                
+                //$userCats = $this->getUserCategoriesStats($user->getId());
+
+                //var_dump($userResults['response']);
+            }
+        }
+        */
         $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
         $globalStats['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($globalStats['temps_total']), "h:m"))." min";
 
         $globalStats['moyenne_score_session'] = round($globalStats['score_total'] / $globalStats['nbre_sessions']);
-        */
+        
 
 
         //exit();
@@ -954,15 +992,6 @@ class ServicesAdminStat extends Main
         return $globalStats;
 
     }
-
-    
-    private function getFilteredSessions() 
-    {
-
-    }
-    
-    
-    
     
     
     

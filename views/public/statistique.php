@@ -41,7 +41,7 @@ if (Config::DEBUG_MODE)
 }
 
 
-var_dump($response['stats']['response']['session']);
+var_dump($response['stats']);
 
 
 ?>

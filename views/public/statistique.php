@@ -63,8 +63,6 @@ var_dump($response['stats']);
         <div id="main-form">
 
             <form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
-
-                <!-- <input type="hidden" name="mode" value="<?php //echo $formData['mode']; ?>" /> -->
   
                 <div class="zone-formu2">
 
@@ -76,13 +74,11 @@ var_dump($response['stats']);
 
                         <hr>
 
-                        <!-- <div class="input" style="width:120px; display:inline-block;"> -->
                         <div class="filter-item">
                             <label for="date_debut">Date de début : </label>
                             <input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
                         </div>
 
-                        <!-- <div class="input" style="width:120px; display:inline-block;"> -->
                         <div class="filter-item">
                             <label for="date_fin">Date de fin : </label>
                             <input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
@@ -91,7 +87,7 @@ var_dump($response['stats']);
                         <div class="filter-item">
                             <label for="ref_organ_cbox">Organisme : </label>
                             <select name="ref_organ_cbox" id="ref_organ_cbox">
-                                <option class="organ-option" value="select_cbox">---</option>
+                                <option class="organ-option" value="select_cbox">Tous</option>
                                 <?php
                                 
                                 if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
@@ -148,17 +144,17 @@ var_dump($response['stats']);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre de positionnements</div>
-                                    <div class="bloc-stat-number"><strong>123<?php //echo $response['stats']['nbre_sessions']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['nbre_sessions']; ?></strong></div>
                                 </div>
         						
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                    <div class="bloc-stat-number"><strong>58<?php //echo $response['stats']['nbre_users']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['nbre_users']; ?></strong></div>
         						</div>
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong>63<?php //echo $response['stats']['moyenne_score_session']; ?><small>%</small></strong></div>
+                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong><?php echo $response['stats']['global']['moyenne_score_session']; ?><small>%</small></strong></div>
                                 </div>
 
 
@@ -167,12 +163,12 @@ var_dump($response['stats']);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:13px;">18 min 25 s<?php //echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:13px;"><?php echo $response['stats']['global']['moyenne_temps_session']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:12px;">25 h 35 min<?php //echo $response['stats']['temps_total']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:12px;"><?php echo $response['stats']['global']['temps_total']; ?></strong></div>
         						</div>
 
                                 <div class="bloc-stat last">
@@ -193,16 +189,18 @@ var_dump($response['stats']);
         						<p>
         							<ul>
                                         <?php
+                                        /*
                                         for ($i = 0; $i < count($response['stats']['niveaux']); $i++)
                                         {
                                             echo '<li title="'.$response['stats']['niveaux'][$i]['descript_niveau'].'">'.$response['stats']['niveaux'][$i]['nom_niveau'].' : <strong> '.$response['stats']['niveaux'][$i]['nbre_users'].'</strong></li>';
                                         }
+                                        */
                                         ?>
 
         							</ul>
         						</p>
 
-                                <input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau"name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
+                                <input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau" name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
         					
                             </div>	
         					
@@ -268,17 +266,17 @@ var_dump($response['stats']);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre de positionnements</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_sessions']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['organ']['nbre_sessions']; ?></strong></div>
                                 </div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['nbre_users']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['organ']['nbre_users']; ?></strong></div>
                                 </div>
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['moyenne_score_session']; ?>%</strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['organ']['moyenne_score_session']; ?>%</strong></div>
                                 </div>
 
 
@@ -287,12 +285,12 @@ var_dump($response['stats']);
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:11px;"><?php echo $response['stats']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:11px;"><?php echo $response['stats']['organ']['moyenne_temps_session']; ?></strong></div>
                                 </div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:9px;"><?php echo $response['stats']['temps_total']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:9px;"><?php echo $response['stats']['organ']['temps_total']; ?></strong></div>
                                 </div>
 
                                 <div class="bloc-stat last">

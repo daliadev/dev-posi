@@ -731,85 +731,85 @@ class ServicesAdminStat extends Main
 
     public function getCustomStats($startDate = null, $endDate = null, $ref_organ = null)
     {
+        $stats = array();
 
-        $globalStats = array();
-        $globalStats['nbre_sessions'] = 0;
-        $globalStats['nbre_users'] = 0;
-        $globalStats['temps_total'] = 0;
-        $globalStats['moyenne_temps_session'] = 0;
-        $globalStats['score_total'] = 0;
-        $globalStats['moyenne_score_session'] = 0;
+        $stats['global'] = array();
+        $stats['global']['nbre_sessions'] = 0;
+        $stats['global']['nbre_users'] = 0;
+        $stats['global']['temps_total'] = 0;
+        $stats['global']['moyenne_temps_session'] = 0;
+        $stats['global']['score_total'] = 0;
+        $stats['global']['moyenne_score_session'] = 0;
 
-        $organStats = array();
-        $organStats['nbre_sessions'] = 0;
-        $organStats['nbre_users'] = 0;
-        $organStats['temps_total'] = 0;
-        $organStats['nbre_sessions'] = 0;
-        $organStats['moyenne_temps_session'] = 0;
-        $organStats['score_total'] = 0;
-        $organStats['moyenne_score_session'] = 0;
+        $stats['organ'] = array();
+        $stats['organ']['nbre_sessions'] = 0;
+        $stats['organ']['nbre_users'] = 0;
+        $stats['organ']['temps_total'] = 0;
+        $stats['organ']['nbre_sessions'] = 0;
+        $stats['organ']['moyenne_temps_session'] = 0;
+        $stats['organ']['score_total'] = 0;
+        $stats['organ']['moyenne_score_session'] = 0;
 
 
         // On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref de l'organisme, sinon sélectionne toutes les sessions)
         $resultsetSessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
 
-        
 
-
-        //var_dump($sessions);
-        //exit();
-
-        //return $sessions;
-
-
-        /*****   Calcul de la moyenne du temps passé sur un positionnement  *****/
-
-        // => moyenne du temps de chaque utilisateur par positionnement / nbre d'utilisateurs
-
-
-
+       
         // On établit les stats de bases
         $sessionsList = array();
-        $refsUsers = array();
+        $tabRefsUsers = array();
 
         if ($resultsetSessions)
         {
             $sessionsList = $resultsetSessions['response']['session'];
 
-            $globalStats['nbre_sessions'] = count($sessionsList);
+            $stats['global']['nbre_sessions'] = count($sessionsList);
 
             foreach ($sessionsList as $session)
             {
-                $globalStats['temps_total'] += $session->getTempsTotal();
-                $globalStats['score_total'] += $session->getScorePourcent();
+                $stats['global']['temps_total'] += $session->getTempsTotal();
+                $stats['global']['score_total'] += $session->getScorePourcent();
 
                 $userId = $session->getRefUser();
 
-                $isToken = false;
-                
-                if (count($refsUsers) > 0)
+                if (count($tabRefsUsers) > 0)
                 {
-                    foreach($refsUsers as $refUser)
+                    $isToken = false;
+
+                    foreach($tabRefsUsers as $refUser)
                     {
-                        if ($refUser != $userId)
+                        if ($refUser == $userId)
                         {
-                            $refsUsers[] = $userId;
+                            $isToken = true;
+                            break;
                         }
+                    }
+
+                    if (!$isToken)
+                    {
+                        $tabRefsUsers[] = $userId;
+                        $stats['global']['nbre_users']++;
                     }
                 }
                 else
                 {
-                    $refsUsers[] = $userId;
-                }
-                
+                    $tabRefsUsers[] = $userId;
+                    $stats['global']['nbre_users']++;
+                }    
             }
         }
-
+        /*
+        foreach ($tabRefsUsers as $refUser) 
+        {
+            $stats['global']['nbre_users']++;
+        }
+        */
         //var_dump($refsUsers);
         //exit();
 
 
-        $usersList = array();
+        //$usersList = array();
         
 
         //$resultsetUsers = $this->getUsers();
@@ -824,31 +824,32 @@ class ServicesAdminStat extends Main
                 //$userStats = $this->getUserStats($user->getId());
                 $refUser = $user->getId();
                 $isToken = false;
-
-                
+        */
+                /*
                 foreach($sessionsList as $session)
                 {
                     if ($sessionsList->getRefUser() == $refUser && !$isToken)
                     {
                         $isToken = true;
-                        $globalStats['nbre_users']++;
+                        $stats['global']['nbre_users']++;
                     }
                     else
                     {
                         $isToken = false;
                     }
                 }
-                
+                */
+        /*        
                 //$userCats = $this->getUserCategoriesStats($user->getId());
 
                 //var_dump($userResults['response']);
             }
         }
         */
-        $globalStats['moyenne_temps_session'] = Tools::timeToString(round($globalStats['temps_total'] / $globalStats['nbre_sessions']));
-        $globalStats['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($globalStats['temps_total']), "h:m"))." min";
+        $stats['global']['moyenne_temps_session'] = Tools::timeToString(round($stats['global']['temps_total'] / $stats['global']['nbre_sessions']));
+        $stats['global']['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($stats['global']['temps_total']), "h:m"))." min";
 
-        $globalStats['moyenne_score_session'] = round($globalStats['score_total'] / $globalStats['nbre_sessions']);
+        $stats['global']['moyenne_score_session'] = round($stats['global']['score_total'] / $stats['global']['nbre_sessions']);
         
 
 
@@ -906,7 +907,7 @@ class ServicesAdminStat extends Main
         //var_dump($niveauxInfos);
         //exit();
 
-        $globalStats['niveaux'] = $niveauxInfos;
+        $stats['global']['niveaux'] = $niveauxInfos;
 
         */
 
@@ -989,7 +990,7 @@ class ServicesAdminStat extends Main
         }
         */
 
-        return $globalStats;
+        return $stats;
 
     }
     

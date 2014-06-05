@@ -47,6 +47,35 @@ class ResultatDAO extends ModelDAO
     }
     
     
+    public function selectBySessionAndCategories($refSession, $refCategorie = null) 
+    {
+        $this->initialize();
+        
+        if (!empty($refSession))
+        {
+            $request = "SELECT * FROM resultat WHERE ref_session = ".$refSession;
+
+            $request = "SELECT id_result, ref_session, resultat.ref_question, question_cat.ref_cat, ref_reponse_qcm, ref_reponse_qcm_correcte, reponse_champ, validation_reponse_champ, temps_reponse ";
+            $request .= "FROM resultat, question_cat ";
+            $request .= "WHERE resultat.ref_session = ".$refSession." ";
+            $request .= "AND question_cat.ref_question = resultat.ref_question ";
+            if ($refCategorie)
+            {
+                $request .= "AND question_cat.ref_cat = ".$refCategorie." ";
+            }
+            //$request .= "AND categorie.code_cat = question_cat.ref_cat ";
+            $request .= "ORDER BY id_result ASC";
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "resultat", "Resultat");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun identifiant de session.");
+        }
+        
+        return $this->resultset;
+    }
+
     /*
     public function selectByCategories($refCategorie) 
     {

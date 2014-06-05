@@ -243,6 +243,53 @@ class ServicesAdminStat extends Main
         
     }
     */
+
+    /*
+    public function getResultatsBySession($refSession)
+    {
+        // On sélectionne tous les résultats correspondant à l'utilisateur
+        $resultsetResultats = $this->resultatDAO->selectBySession($refSession);
+
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultsetResultats['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetResultats['response']['resultat']) && count($resultsetResultats['response']['resultat']) == 1)
+            { 
+                $resultat = $resultsetResultats['response']['resultat'];
+                $resultsetResultats['response']['resultat'] = array($resultat);
+            }
+
+            return $resultsetResultats;
+        }
+        
+        return false;
+
+        
+    }
+    */
+
+
+    public function getCategoriesFromSession($refSession)
+    {
+        // On sélectionne tous les résultats correspondant à l'utilisateur
+        $resultsetResultatsCat = $this->resultatDAO->selectBySessionAndCategories($refSession, null);
+
+        // Filtrage des erreurs de la requête
+        if (!$this->filterDataErrors($resultsetResultatsCat['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetResultatsCat['response']['resultat']) && count($resultsetResultatsCat['response']['resultat']) == 1)
+            { 
+                $ResultatsCat = $resultsetResultatsCat['response']['resultat'];
+                $resultsetResultatsCat['response']['resultat'] = array($ResultatsCat);
+            }
+
+            return $resultsetResultatsCat;
+        }
+        
+        return false;
+    }
     
     
     
@@ -375,7 +422,7 @@ class ServicesAdminStat extends Main
 
 
 
-
+    /*
     public function getUserOrganismes($refIntervenant)
     {
         $resultset = $this->intervenantDAO->selectById($refIntervenant);
@@ -399,7 +446,7 @@ class ServicesAdminStat extends Main
  
         return false;
     }
-    
+    */
 
 
     /*
@@ -740,7 +787,7 @@ class ServicesAdminStat extends Main
         $stats['global']['moyenne_temps_session'] = 0;
         $stats['global']['score_total'] = 0;
         $stats['global']['moyenne_score_session'] = 0;
-
+        /*
         $stats['organ'] = array();
         $stats['organ']['nbre_sessions'] = 0;
         $stats['organ']['nbre_users'] = 0;
@@ -749,20 +796,23 @@ class ServicesAdminStat extends Main
         $stats['organ']['moyenne_temps_session'] = 0;
         $stats['organ']['score_total'] = 0;
         $stats['organ']['moyenne_score_session'] = 0;
+        */
 
 
-        // On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref de l'organisme, sinon sélectionne toutes les sessions)
+        // On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref. de l'organisme, sinon sélectionne toutes les sessions)
         $resultsetSessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
 
 
        
-        // On établit les stats de bases
+        /*****   Calcul des statisqtiques générales  *****/
+
         $sessionsList = array();
         $tabRefsUsers = array();
 
         if ($resultsetSessions)
         {
             $sessionsList = $resultsetSessions['response']['session'];
+            $stats['sessions'] = $sessionsList;
 
             $stats['global']['nbre_sessions'] = count($sessionsList);
 
@@ -809,43 +859,25 @@ class ServicesAdminStat extends Main
         //exit();
 
 
-        //$usersList = array();
-        
+        $usersList = array();
+        $resultsetUsers = $this->getUsers();
 
-        //$resultsetUsers = $this->getUsers();
-
-        /*
         if ($resultsetUsers)
         {
-            $usersList = $resultsetUsers['response']['utilisateur'];
-            
-            foreach($usersList as $user)
+            foreach($tabRefsUsers as $refUser)
             {
-                //$userStats = $this->getUserStats($user->getId());
-                $refUser = $user->getId();
-                $isToken = false;
-        */
-                /*
-                foreach($sessionsList as $session)
+                foreach ($resultsetUsers['response']['utilisateur'] as $user) 
                 {
-                    if ($sessionsList->getRefUser() == $refUser && !$isToken)
+                    if ($refUser == $user->getId())
                     {
-                        $isToken = true;
-                        $stats['global']['nbre_users']++;
-                    }
-                    else
-                    {
-                        $isToken = false;
+                        $usersList[] = $user;
+                        break;
                     }
                 }
-                */
-        /*        
-                //$userCats = $this->getUserCategoriesStats($user->getId());
-
-                //var_dump($userResults['response']);
             }
         }
-        */
+
+
         $stats['global']['moyenne_temps_session'] = Tools::timeToString(round($stats['global']['temps_total'] / $stats['global']['nbre_sessions']));
         $stats['global']['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($stats['global']['temps_total']), "h:m"))." min";
 
@@ -853,22 +885,9 @@ class ServicesAdminStat extends Main
         
 
 
-        //exit();
-        /*
-        $userStats['nbre_sessions'] = 0;
-        $userStats['temps_total'] = 0;
-        $userStats['moyenne_temps_sessions'] = 0;
-        $userStats['moyenne_score_sessions'] = 0;
-        */
-
-        // A partir de chaque utilisateur on établit les stats globales des sessions et des utilisateurs
-
-
-
 
         /*****   Calcul du nombre d'utilisateurs par niveaux d'etudes   *****/
 
-        /*
         $niveauxInfos = array();
 
         $resultsetNiveaux = $this->getNiveaux();
@@ -889,8 +908,6 @@ class ServicesAdminStat extends Main
 
                 if (count($usersList) > 0)
                 {
-                    //$niveauxInfos[$i]['nbre_users'] = 0;
-
                     foreach ($usersList as $user)
                     {
                         if($user->getRefNiveau() == $refNiveau)
@@ -909,8 +926,6 @@ class ServicesAdminStat extends Main
 
         $stats['global']['niveaux'] = $niveauxInfos;
 
-        */
-
 
         
 
@@ -920,15 +935,42 @@ class ServicesAdminStat extends Main
 
         
 
-        // Récupèration la liste des categories
-        /*
+        // Récupèration de la liste des categories
+        
         $resultsetcategories = $this->getCategories();
 
         if ($resultsetcategories)
         {
             $categoriesList = $resultsetcategories['response']['categorie'];
         }
-        */
+        
+
+        // Récupération des résultats et de la catégorie associée correspondants aux sessions
+
+        
+        $tabCatSession = array();
+
+        foreach ($sessionsList as $session)
+        {
+            
+            $resultatsSession = $this->getCategoriesFromSession($session->getId());
+
+            if ($resultatsSession)
+            {
+                foreach ($resultatsSession['response']['resultat'] as $result) 
+                {
+                    var_dump($result);
+                }
+            }
+
+        }
+
+
+        exit();
+
+
+
+
 
 
         /*** On va chercher tous les résultats classés par categories ***/

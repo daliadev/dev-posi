@@ -41,7 +41,7 @@ if (Config::DEBUG_MODE)
 }
 
 
-var_dump($response['stats']);
+var_dump($response['stats']['global']);
 
 
 ?>
@@ -189,12 +189,12 @@ var_dump($response['stats']);
         						<p>
         							<ul>
                                         <?php
-                                        /*
-                                        for ($i = 0; $i < count($response['stats']['niveaux']); $i++)
+                                        
+                                        for ($i = 0; $i < count($response['stats']['global']['niveaux']); $i++)
                                         {
-                                            echo '<li title="'.$response['stats']['niveaux'][$i]['descript_niveau'].'">'.$response['stats']['niveaux'][$i]['nom_niveau'].' : <strong> '.$response['stats']['niveaux'][$i]['nbre_users'].'</strong></li>';
+                                            echo '<li title="'.$response['stats']['global']['niveaux'][$i]['descript_niveau'].'">'.$response['stats']['global']['niveaux'][$i]['nom_niveau'].' : <strong> '.$response['stats']['global']['niveaux'][$i]['nbre_users'].'</strong></li>';
                                         }
-                                        */
+                                        
                                         ?>
 
         							</ul>

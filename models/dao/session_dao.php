@@ -95,7 +95,7 @@ class SessionDAO extends ModelDAO
 
         $this->initialize();
 
-        $request = "SELECT id_session, ref_user, ref_intervenant, intervenant.ref_organ, DATE(date_session), session_accomplie, temps_total, validation, score_pourcent ";
+        $request = "SELECT id_session, ref_user, ref_intervenant, intervenant.ref_organ, date_session, session_accomplie, temps_total, validation, score_pourcent ";
         $request .= "FROM session, intervenant ";
         $request .= "WHERE session_accomplie = 1 ";
 

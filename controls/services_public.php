@@ -471,7 +471,7 @@ class ServicesPublic extends Main
         {
             if (preg_match("`^[0-3][0-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$`", $this->formData['date_debut']))
             {
-                $filters['start_date'] = Tools::toggleDate($this->formData['date_debut'], "us");
+                $filters['start_date'] = Tools::toggleDate($this->formData['date_debut'], "us")." 00:00:00";
             }
             else
             {
@@ -483,7 +483,7 @@ class ServicesPublic extends Main
         {
             if (preg_match("`^[0-3][0-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$`", $this->formData['date_fin']))
             {
-                $filters['end_date'] = Tools::toggleDate($this->formData['date_fin'], "us");
+                $filters['end_date'] = Tools::toggleDate($this->formData['date_fin'], "us")." 23:59:59";
             }
             else
             {

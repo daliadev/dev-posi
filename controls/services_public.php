@@ -495,9 +495,6 @@ class ServicesPublic extends Main
 
         $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($filters['start_date'], $filters['end_date'], $this->formData['ref_organ']);
 
-        //var_dump($this->returnData['response']['stats']);
-        //exit();
-
 
 
         /*-----   Retour des données traitées du formulaire   -----*/

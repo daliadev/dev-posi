@@ -1,5 +1,32 @@
 <?php
 
+// Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage 
+function getColor($percent)
+{
+    $percent = intval($percent);
+    
+    $color = "gris";
+
+    if ($percent < 40)
+    {
+        $color = "rouge";
+    }
+    else if ($percent >= 40 && $percent < 60)
+    {
+        $color = "orange2";
+    }
+    else if ($percent >= 60 && $percent < 80)
+    {
+        $color = "jaune";
+    }
+    else if ($percent >= 80)
+    {
+        $color = "vert";
+    }
+
+    return $color;
+}
+
 
 // Initialisation par défaut des valeurs du formulaire
 
@@ -41,7 +68,7 @@ if (Config::DEBUG_MODE)
 }
 
 
-var_dump($response['stats']['global']);
+//var_dump($response['stats']['global']);
 
 
 ?>
@@ -154,12 +181,8 @@ var_dump($response['stats']['global']);
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number" style="color:#f1b557;"><strong><?php echo $response['stats']['global']['moyenne_score_session']; ?><small>%</small></strong></div>
+                                    <div class="bloc-stat-number"><strong class="<?php echo getColor($response['stats']['global']['moyenne_score_session']); ?>"><?php echo $response['stats']['global']['moyenne_score_session']; ?><small>%</small></strong></div>
                                 </div>
-
-
-                                <!-- <div style="clear:both;"></div> -->
-
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
@@ -175,51 +198,68 @@ var_dump($response['stats']['global']);
                                     <div class="bloc-stat-title">Age moyen des utilisateurs</div>
                                     <div class="bloc-stat-number"><strong>26 ans</strong></div>
                                 </div>
-
-                                <div style="clear:both;"></div>
                                 
-                                <input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme"name="export_xls_total_organisme" class="bt-admin-menu-ajout2-right" />
+                                <input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:150px;">
+                                
+                                <div style="clear:both;"></div>
+
                             </div>
                             
                             <div class="stats-detail">
+
                                 <p><strong>Nombre de candidats répartis par niveau de formation</strong></p>
 
                                 <hr>
 
-        						<p>
-        							<ul>
-                                        <?php
-                                        
-                                        for ($i = 0; $i < count($response['stats']['global']['niveaux']); $i++)
-                                        {
-                                            echo '<li title="'.$response['stats']['global']['niveaux'][$i]['descript_niveau'].'">'.$response['stats']['global']['niveaux'][$i]['nom_niveau'].' : <strong> '.$response['stats']['global']['niveaux'][$i]['nbre_users'].'</strong></li>';
-                                        }
-                                        
-                                        ?>
+                                <div class="progressbars" style="width:580px;">
 
-        							</ul>
-        						</p>
+                                    <?php for ($i = 0; $i < count($response['stats']['global']['niveaux']); $i++) : ?>
 
-                                <input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau" name="export_xls_niveau_nombre" class="bt-admin-menu-ajout2-right" />
-        					
+                                        <div class="progressbar">
+                                            <div class="progressbar-title" title="<?php echo $response['stats']['global']['niveaux'][$i]['descript_niveau']; ?>">
+                                                <?php echo $response['stats']['global']['niveaux'][$i]['nom_niveau']; ?> / <strong><?php echo $response['stats']['global']['niveaux'][$i]['nbre_users']; ?></strong> utilisateurs
+                                                <div class="progressbar-bg">
+                                                    <span style="width:<?php echo $response['stats']['global']['niveaux'][$i]['pourcent']; ?>%; background-color: #f39c12;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <?php endfor; ?>
+                                        
+                                </div>
+                                
+                                <input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau" name="export_niveau_nombre" style="float:right; margin: 0 3px 0 0; width:150px;">
+        					       
+                                <div style="clear:both;"></div>
+
                             </div>	
         					
                             <div class="stats-detail">
+
                                 <p><strong>Score moyen par compétences</strong></p>
 
                                 <hr>
 
-                                <p>
-        							<ul>
-        								<li>Oral : <strong> 68 %</strong></li>
-        								<li>Ecrit : <strong> 100 %</strong></li>
-        								<li>Calcul: <strong> 60%</strong></li>
-        								<li>Espace temps : <strong> 85%</strong></li>
-        								<li>Informatique : <strong> 48%</strong></li>
-        							</ul>
-        						</p>
+                                <div class="progressbars" style="width:580px;">
+
+                                    <?php for ($i = 0; $i < count($response['stats']['global']['categories']); $i++) : ?>
+
+                                        <div class="progressbar">
+                                            <div class="progressbar-title" title="<?php echo $response['stats']['global']['categories'][$i]['description']; ?>">
+                                                <?php echo $response['stats']['global']['categories'][$i]['nom']; ?> / <strong><?php echo $response['stats']['global']['categories'][$i]['pourcent']; ?></strong>%
+                                                <div class="progressbar-bg">
+                                                    <span class="bg-<?php echo getColor($response['stats']['global']['categories'][$i]['pourcent']); ?>" style="width:<?php echo $response['stats']['global']['categories'][$i]['pourcent']; ?>%;"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    <?php endfor; ?>
+                                        
+                                </div>
                                 
-                                <input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_xls_score_competences" class="bt-admin-menu-ajout2-right" />
+                                <input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_score_competences" style="float:right; margin:0 3px 0 0; width:150px;">
+
+                                <div style="clear:both;"></div>
 
         					</div>
 
@@ -250,47 +290,43 @@ var_dump($response['stats']['global']);
                  -->
 
 
-                <div class="zone-formu2">
+                <!-- <div class="zone-formu2">
 
-                    <div id="infos-posi" class="form-full">
+                    <div id="infos-posi" class="form-full"> -->
 
                         <!-- <fieldset>
                                 
                             <legend>Statistiques organisme</legend> -->
-                            <ul>
-                                <li><a href="#infos">1 - Statistique globale de l'organisme</a></li>
-                                <!-- <li><a href="#exports">2 - Exports</a></li> -->  
-                            </ul>
+                            <!-- <ul>
+                                <li><a href="#infos">1 - Statistique globale de l'organisme</a></li> 
+                            </ul> -->
 
-                            <div id="infos" class="zone-liste-restitution">
+                            <!-- <div id="infos" class="zone-liste-restitution"> -->
 
-                                <div class="bloc-stat">
+                                <!-- <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre de positionnements</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['organ']['nbre_sessions']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php //echo $response['stats']['organ']['nbre_sessions']; ?></strong></div>
                                 </div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['organ']['nbre_users']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong><?php //echo $response['stats']['organ']['nbre_users']; ?></strong></div>
                                 </div>
                                 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['organ']['moyenne_score_session']; ?>%</strong></div>
+                                    <div class="bloc-stat-number"><strong><?php //echo $response['stats']['organ']['moyenne_score_session']; ?>%</strong></div>
                                 </div>
-
-
-                                <!-- <div style="clear:both;"></div> -->
 
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:11px;"><?php echo $response['stats']['organ']['moyenne_temps_session']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:11px;"><?php //echo $response['stats']['organ']['moyenne_temps_session']; ?></strong></div>
                                 </div>
 
                                 <div class="bloc-stat">
                                     <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:9px;"><?php echo $response['stats']['organ']['temps_total']; ?></strong></div>
+                                    <div class="bloc-stat-number"><strong style="font-size:9px;"><?php //echo $response['stats']['organ']['temps_total']; ?></strong></div>
                                 </div>
 
                                 <div class="bloc-stat last">
@@ -298,7 +334,7 @@ var_dump($response['stats']['global']);
                                     <div class="bloc-stat-number"><strong>26 ans</strong></div>
                                 </div>
 
-                                <div style="clear:both;"></div>
+                                <div style="clear:both;"></div> -->
 
                                 <!-- <p>Nombre de positionnement: <strong>40</strong></p>
         						<p>Nombre de personne positionnées: <strong>40</strong></p>
@@ -327,7 +363,7 @@ var_dump($response['stats']['global']);
         						<p>Score moyen global: <strong>60%</strong></p> -->
 
 
-                            </div>
+                            <!-- </div> -->
 
                             <!-- 
                             <div id="exports" class="zone-liste-restitution">
@@ -342,9 +378,9 @@ var_dump($response['stats']['global']);
                              -->
                        <!--  </fieldset> -->
 
-                    </div>
+                    <!-- </div> -->
 
-                </div>
+                <!-- </div> -->
 
 
             </form>
@@ -367,14 +403,12 @@ var_dump($response['stats']['global']);
        
         $(function() { 
             
-            
-
-            $("#infos-posi").tabs();
-
-            //$("#infos-posi").tooltip();
             var date = new Date();
             var year = date.getFullYear();
-            // alert(year);
+
+            $(".search-date").focus(function(event) {
+                $(this).val('');
+            });
 
             $(".search-date").datepicker({
                 dateFormat: "dd/mm/yy",
@@ -395,6 +429,8 @@ var_dump($response['stats']['global']);
                 showMonthAfterYear: false
             });
             
+            $("#infos-posi").tabs();
+
         })(jQuery);
 
     </script>

@@ -50,6 +50,8 @@ class ServicesAdminStat extends Main
         $stats['global']['moyenne_temps_session'] = 0;
         $stats['global']['score_total'] = 0;
         $stats['global']['moyenne_score_session'] = 0;
+        $stats['global']['age_total'] = 0;
+        $stats['global']['age_moyen'] = 0;
 
         $stats['global']['niveaux'] = array();
         $stats['global']['categories'] = array();
@@ -61,7 +63,7 @@ class ServicesAdminStat extends Main
 
 
        
-        /*****   Calcul des statisqtiques générales  *****/
+        /*****   Calcul des statistiques générales  *****/
 
         $sessionsList = array();
         $tabRefsUsers = array();
@@ -118,8 +120,18 @@ class ServicesAdminStat extends Main
             {
                 foreach ($resultsetUsers['response']['utilisateur'] as $user) 
                 {
+                    
                     if ($refUser == $user->getId())
                     {
+                        $today = date("Y-m-d");
+                        $dateNaissance = $user->getDateNaiss();
+
+                        $timestampAge = strtotime($today) - strtotime($dateNaissance);
+
+                        $age = floor((($timestampAge / 3600) / 24) / 365.24219879);
+                        //var_dump($age);
+                        $stats['global']['age_total'] += $age;
+
                         $usersList[] = $user;
                         break;
                     }
@@ -127,14 +139,18 @@ class ServicesAdminStat extends Main
             }
         }
 
+        //exit();
 
         $stats['global']['moyenne_temps_session'] = Tools::timeToString(round($stats['global']['temps_total'] / $stats['global']['nbre_sessions']));
         $stats['global']['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($stats['global']['temps_total']), "h:m"))." min";
 
         $stats['global']['moyenne_score_session'] = round($stats['global']['score_total'] / $stats['global']['nbre_sessions']);
         
+        $stats['global']['age_moyen'] = round($stats['global']['age_total'] / $stats['global']['nbre_users']);
 
-
+        //var_dump("age moyen");
+        //var_dump($stats['global']['age_moyen']);
+        //exit();
 
         /*****   Calcul du nombre d'utilisateurs par niveaux d'etudes   *****/
 

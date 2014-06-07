@@ -147,7 +147,7 @@ if (Config::DEBUG_MODE)
 
                         <fieldset>
                                 
-                            <legend>Statistiques globales</legend>
+                            <legend>Résultats</legend>
 
                             <!-- <div class="stats-global">
 
@@ -196,7 +196,7 @@ if (Config::DEBUG_MODE)
 
                                 <div class="bloc-stat last">
                                     <div class="bloc-stat-title">Age moyen des utilisateurs</div>
-                                    <div class="bloc-stat-number"><strong>26 ans</strong></div>
+                                    <div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['age_moyen']; ?> ans</strong></div>
                                 </div>
                                 
                                 <input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:150px;">

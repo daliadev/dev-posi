@@ -34,7 +34,7 @@
     $totalCorrectGlobal = $response['total_correct_global'];
 
 
-    var_dump($response);
+    //var_dump($response);
 
 ?>
 

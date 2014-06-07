@@ -1498,11 +1498,17 @@ select {
 	border-top-left-radius: 0px;
 }
 
+.ui-corner-top {
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+}
+
 #infos-posi .ui-state-default {
-    border: 1px solid #dddddd;
+    border: none;
     font-family: Helvetica, Arial, sans-serif;
     background: #2C3E50;
 }
+
 
 #infos-posi .ui-state-default a, #infos-posi .ui-state-default a:link, #infos-posi .ui-state-default a:visited {
     color: #fff;

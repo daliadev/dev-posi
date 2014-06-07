@@ -1,23 +1,23 @@
 <?php
 
-    $time = $response['temps'];
-    $percentGlobal = $response['percent_global'];
-    $totalGlobal = $response['total_global'];
-    $totalCorrectGlobal = $response['total_correct_global'];
-
+    
     function getColor($percent)
     {
         $percent = intval($percent);
         
         $color = "gris";
 
-        if ($percent <= 50)
+        if ($percent < 40)
         {
             $color = "rouge";
         }
-        else if ($percent > 50 && $percent < 80)
+        else if ($percent >= 40 && $percent < 60)
         {
             $color = "orange2";
+        }
+        else if ($percent >= 60 && $percent < 80)
+        {
+            $color = "jaune";
         }
         else if ($percent >= 80)
         {
@@ -27,7 +27,14 @@
         return $color;
     }
 
-    //var_dump($response);
+
+    $time = $response['temps'];
+    $percentGlobal = $response['percent_global'];
+    $totalGlobal = $response['total_global'];
+    $totalCorrectGlobal = $response['total_correct_global'];
+
+
+    var_dump($response);
 
 ?>
 
@@ -48,13 +55,33 @@
 
                     if (isset($response['errors']) && !empty($response['errors']))
                     {
-                        echo '<div id="error">';
+                        echo '<div id="zone-erreur">';
+                        echo '<ul>';
                         foreach($response['errors'] as $error)
                         {
-                           echo "<p>".$error['message']."</p>";
+                            if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                            {
+                                echo '<li>'.$error['message'].'</li>';
+                            }
                         }
-                        echo '</div">';
+                        echo '</ul>';
+                        echo '</div>';
                     }
+                    else if (isset($response['success']) && !empty($response['success']))
+                    {
+                        echo '<div id="zone-success">';
+                        echo '<ul>';
+                        foreach($response['success'] as $message)
+                        {
+                            if ($message)
+                            {
+                                echo '<li>'.$message.'</li>';
+                            }
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+
                 ?>
 
                 <div id="txt-intro">Voici vos résultats au test de positionnement : 
@@ -62,12 +89,13 @@
 
                     
                     <div>
-                        <p>Taux de réussite globale : <strong class="<?php echo getColor($percentGlobal); ?>"><?php echo $percentGlobal; ?> %</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
+                        <p>Taux de réussite globale : <strong class="<?php echo getColor($percentGlobal); ?>"><?php echo $percentGlobal; ?>%</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
                     </div>
 
 
-                    <div id="R-CCSP">
+                    <!-- <div id="R-CCSP"> -->
                         <?php
+                        /*
                         foreach ($response['correction'] as $correction)
                         {
                             //var_dump($correction);
@@ -102,10 +130,46 @@
                                 }
                             }
                         }
+                        */
                         ?>
+                    <!-- </div> -->
+                    
+                    <div id="R-CCSP" class="progressbars" style="width:270px;">
+
+                        <?php
+
+                        foreach ($response['correction'] as $correction)
+                        {
+                            if ($correction['parent'])
+                            {
+                                $percent = $correction['percent'];
+                                if ($percent == 0)
+                                {
+                                    $percent = 4;
+                                }
+
+                                if ($correction['total'] > 0)
+                                {
+                                    $color = getColor($correction['percent']);
+
+                                    //echo '<p>'.$correction['nom_categorie'].' : <strong class="'.$color.'">'.$percent.'%</strong> ('.$correction['total_correct'].'/'.$correction['total'].')</p>';
+                                    echo '<div class="progressbar">';
+                                        echo '<div class="progressbar-title" title="">';
+                                            echo $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
+                                            echo '<div class="progressbar-bg">';
+                                                echo '<span class="bg-'.$color.'" style="width:'.$percent.'%;"></span>';
+                                            echo '</div>';
+                                        echo '</div>';
+                                    echo '</div>';
+
+                                }
+                            }
+                        }
+
+                        ?>
+
                     </div>
-                    
-                    
+
                     <div>
                         <p>Temps passé : <strong><?php echo $time; ?></strong></p>
                     </div>
@@ -137,7 +201,7 @@
        
         $(function() { 
             
-            $("#R-CCSP").tooltip();
+            //$("#R-CCSP").tooltip();
             /*
             $(".result").tooltip({
                 items: "[title]",

@@ -85,34 +85,33 @@ class SessionDAO extends ModelDAO
 
     
     /**
-     * selectByUserFromDate - Récupère la référence et la date des sessions correspondantes à un utilisateur par rapport à un organisme donné. Ne prend pas en compte les sessions non terminées.
+     * selectByDatesUserOrgan - Récupère la référence et la date des sessions correspondantes à un utilisateur par rapport à un organisme donné. Ne prend pas en compte les sessions non terminées.
      * 
      * @param int Référence de l'utilisateur.
      * @return array Sessions correspondantes à l'utilisateur.
      */
     public function selectByDatesUserOrgan($startDate, $endDate, $refUser, $refOrgan) 
     {
+
         $this->initialize();
-        
-        
+
         $request = "SELECT id_session, ref_user, ref_intervenant, intervenant.ref_organ, date_session, session_accomplie, temps_total, validation, score_pourcent ";
         $request .= "FROM session, intervenant ";
         $request .= "WHERE session_accomplie = 1 ";
 
         if ($startDate)
         {
-            $request .= "AND session.date_session >= ".$startDate." ";
+            $request .= "AND session.date_session >= '".$startDate."' ";
         }
         if ($endDate)
         {
-            $request .= "AND session.date_session <= ".$endDate." ";
+            $request .= "AND session.date_session <= '".$endDate."' ";
         }
         if ($refUser)
         {
             $request .= "AND session.ref_user = ".$refUser." ";
         }
         
-
         $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
 
         if ($refOrgan)
@@ -120,9 +119,12 @@ class SessionDAO extends ModelDAO
             $request .= "AND intervenant.ref_organ = ".$refOrgan." ";
         }
 
-        $request .= "ORDER BY date_session ASC";
+        $request .= "ORDER BY session.date_session ASC";
+
 
         $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
+
+        
 
         return $this->resultset;
     }

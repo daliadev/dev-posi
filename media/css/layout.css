@@ -553,7 +553,7 @@ form input[type="text"][disabled]
 
 #zone-erreur{
 	background: #fce3e0;
-	margin: 20px 0 0 0;
+	margin: 20px 0 10px 0;
     padding: 0 0 0 20px;
 	/*margin: 20px;*/
 	border: 1px solid #ff786a;
@@ -948,7 +948,7 @@ color: #BDC3C7;
 
 #txt-intro{
 	font-size:12px;
-	padding: 10 px;
+	/*padding: 10px;*/
 	text-align: justify;
 	color: #8D8D8D;
 }
@@ -965,20 +965,49 @@ color: #BDC3C7;
 	color: #8D8D8D;
 }
 
-#txt-intro .rouge {
+
+
+/*** Couleurs ***/
+
+.rouge {
 	color: #F75556;
 }
 
-#txt-intro .orange2 {
+.orange2 {
 	color: #f39c12;
 }
 
-#txt-intro .vert {
+.jaune {
+	color: #F5D313;
+}
+
+.vert {
 	color: #98C03A;
 }
 
-#txt-intro .gris {
+.gris {
 	color: #8D8D8D;
+}
+
+
+.bg-rouge {
+	background-color: #F75556;
+}
+
+.bg-orange2 {
+	background-color: #f39c12;
+}
+
+.bg-jaune {
+	background-color: #F5D313;
+}
+
+.bg-vert {
+	background-color: #58D68D;
+}
+
+.bg-gris {
+	background-color: #8D8D8D;
 }
 
 
@@ -989,8 +1018,10 @@ color: #BDC3C7;
 #R-CCSP {
 	border: 1px solid #ccc8c8;
 	border-radius: 5px 5px 5px 5px;
-	padding: 10px 15px;
+	margin: 20px 0;
+	padding: 15px 15px;
 	font-size: 13px;
+	text-align: left;
 }
 
 #R-CCSP p {
@@ -1567,6 +1598,9 @@ select {
 }
 
 
+
+
+
 /* page statistique */
 
 
@@ -1703,6 +1737,39 @@ select {
 			font-weight: bold;
 			line-height: 100px;
 		}
+
+
+	.progressbars {
+		/*float: left;*/
+		width: 400px;
+		margin-top: 0px;
+	}
+
+	.progressbar {
+		margin-bottom: 10px;
+	}
+
+	.progressbar-title {
+		/*font-weight: 300;*/
+		/*text-transform: uppercase;*/
+		/*line-height: 25px;*/
+	}
+
+	.progressbar-bg {
+		position: relative;
+		height: 10px;
+		margin-top: 5px;
+		background-color: #e6e6e6;
+		border-radius: 5px;
+	}
+	
+	.progressbar-bg span {
+		position: absolute;
+		top: 0; bottom: 0; left: 0;
+		/*background-color: #f39c12;*/
+		border-radius: 5px;
+	}
+
 
 
 

@@ -13,6 +13,7 @@ class Resultat
     public $id_result = null;
     public $ref_session = null;
     public $ref_question = null;
+    public $ref_cat = null;
     public $ref_reponse_qcm = null;
     public $ref_reponse_qcm_correcte = null;
     public $reponse_champ = null;
@@ -34,6 +35,11 @@ class Resultat
     public function getRefQuestion()
     {
         return $this->ref_question;
+    }
+
+    public function getRefCat()
+    {
+        return $this->ref_cat;
     }
 
     public function getRefReponseQcm()

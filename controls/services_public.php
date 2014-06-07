@@ -467,12 +467,11 @@ class ServicesPublic extends Main
         $filters['start_date'] = false;
         $filters['end_date'] = false;
 
-
         if (!empty($this->formData['date_debut']))
         {
             if (preg_match("`^[0-3][0-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$`", $this->formData['date_debut']))
             {
-                $filters['start_date'] = Tools::toggleDate($this->formData['date_debut'], "us");
+                $filters['start_date'] = Tools::toggleDate($this->formData['date_debut'], "us")." 00:00:00";
             }
             else
             {
@@ -480,12 +479,11 @@ class ServicesPublic extends Main
             }
         }
 
-
         if (!empty($this->formData['date_fin']))
         {
             if (preg_match("`^[0-3][0-9]\/[0-1][0-9]\/[0-9][0-9][0-9][0-9]$`", $this->formData['date_fin']))
             {
-                $filters['end_date'] = Tools::toggleDate($this->formData['date_fin'], "us");
+                $filters['end_date'] = Tools::toggleDate($this->formData['date_fin'], "us")." 23:59:59";
             }
             else
             {
@@ -496,9 +494,6 @@ class ServicesPublic extends Main
         
 
         $this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($filters['start_date'], $filters['end_date'], $this->formData['ref_organ']);
-
-        //var_dump($this->returnData['response']['stats']);
-        //exit();
 
 
 
@@ -516,7 +511,7 @@ class ServicesPublic extends Main
             }
         }
 
-        //Liste des organismes pour le combo-box
+        // Liste des organismes pour le combo-box
         $organismesList = $this->servicesRestitution->getOrganismesList(); 
         $this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
 
@@ -527,7 +522,6 @@ class ServicesPublic extends Main
         $this->setTemplate("template_page");
         $this->render("statistique");
         
-
     }
     
 }

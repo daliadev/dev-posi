@@ -42,7 +42,8 @@ if (isset($_GET['p']) && (!empty($_GET['p'])))
 
 if (!isset($requestParams[0]) || empty($requestParams[0]))
 {
-    $requestParams = array('inscription', 'formulaire', 'organisme'); 
+    //$requestParams = array('inscription', 'formulaire', 'organisme');
+    $requestParams = array('inscription', 'organisme');
 }
 
 
@@ -62,7 +63,8 @@ if (!isset($requestParams[1]) || empty($requestParams[1]))
     }
     else
     {
-        $requestParams = array('inscription', 'formulaire', 'organisme'); 
+        //$requestParams = array('inscription', 'formulaire', 'organisme');
+        $requestParams = array('inscription', 'organisme'); 
     }
 }
 

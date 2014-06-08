@@ -2,10 +2,10 @@
 
 
 // Fichiers requis pour le formulaire
-require_once('models/dao/question_dao.php');
-require_once('models/dao/reponse_dao.php');
-require_once('models/dao/categorie_dao.php');
-require_once('models/dao/degre_dao.php');
+require_once(ROOT.'models/dao/question_dao.php');
+require_once(ROOT.'models/dao/reponse_dao.php');
+require_once(ROOT.'models/dao/categorie_dao.php');
+require_once(ROOT.'models/dao/degre_dao.php');
 
 require_once(ROOT.'controls/services_admin_categorie.php');
 

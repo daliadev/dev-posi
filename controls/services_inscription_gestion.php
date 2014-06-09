@@ -45,6 +45,9 @@ class ServicesInscriptionGestion extends Main
     }
     
     
+
+
+
     public function getOrganismes()
     {
         $resultset = $this->organismeDAO->selectAll();
@@ -68,84 +71,139 @@ class ServicesInscriptionGestion extends Main
 
 
 
+
     public function filterDataOrganisme(&$formData, $postData)
     {
         $dataOrganisme = array();
         
-        // Récupération de la référence de l'organisme 
-        
-        if (isset($formData['ref_organ']) && !empty($formData['ref_organ']))
+
+        // Récupération du champ caché "ref_organ" si il existe
+        /*   
+        if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
         {
-            $dataOrganisme['ref_organ'] = $formData['ref_organ'];
+            $this->formData['ref_organ'] = $_POST['ref_organ'];
         }
-        
-        // Récupération de la référence de l'intervenant
-        
-        if (isset($formData['ref_intervenant']) && !empty($formData['ref_intervenant']))
+        */
+        // Récupération du champ caché "ref_intervenant" si il existe
+        /*
+        if (isset($_POST['ref_intervenant']) && !empty($_POST['ref_intervenant']))
         {
-            $dataOrganisme['ref_intervenant'] = $formData['ref_intervenant'];
-        }
-
-
-        // Récupération du code organisme
-        //if (!isset($_POST['code_identification']) || empty($_POST['code_identification']))
-        //{
-        //    $this->registerError("form_empty", "Aucun code organisme n'a été saisi");
-        //}
-
-
-        /*** Récupèration du code organisme ***/
-
-        //$formData['code_identification'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", true, "Aucun code organisme n'a été saisi.", "Le code organisme n'est pas correctement saisi.");
-        //$dataOrganisme['code_identification'] = $formData['code_identification'];
-
-
-        
-        /*** Récupèration de la référence du degré d'aptitude ***/
-        /* 
-        if (isset($postData['ref_degre']) && !empty($postData['ref_degre']) && $postData['ref_degre'] != "aucun")
-        {
-            $formData['ref_degre'] = $postData['ref_degre'];
-            $dataOrganisme['ref_degre'] = $formData['ref_degre'];
-        }
-        else
-        {
-            $formData['ref_degre'] = "aucun";
-            $dataOrganisme['ref_degre'] = null;
+            $this->formData['ref_intervenant'] = $_POST['ref_intervenant'];
         }
         */
 
-        //var_dump($formData);
-        //exit();
+        /*** Récupèration de la référence de l'organisme dans le combo-box ***/
 
-        // Récupèration du nom de l'organisme
-        $formData['nom_organ'] = $this->validatePostData($postData['nom_organ'], "nom_organ", "string", true, "Aucun nom d'organisme n'a été sélectionné.", "Le nom de l'organisme n'est pas correctement sélectionné.");
-        $dataOrganisme['nom_organ'] = $formData['nom_organ'];
+        //if (!empty($_POST['ref_organ_cbox']) && empty($this->formData['ref_organ']))
+        if (!empty($_POST['ref_organ_cbox']))
+        {
+            $this->formData['ref_organ_cbox'] = $_POST['ref_organ_cbox'];
+                    
+            if ($_POST['ref_organ_cbox'] == "select_cbox")
+            {
+                $this->registerError("form_empty", "Aucun organisme n'a été sélectionné");
+            }
+            else if ($_POST['ref_organ_cbox'] == "new")
+            {
+                // Un nom a été saisi, il faut donc inserer les données de l'organisme
+                $this->formData['ref_organ'] = null;
 
-        // Récupèration de l'adresse de l'organisme
-        $formData['adresse_organ'] = $this->validatePostData($postData['adresse_organ'], "adresse_organ", "string", false, "Aucune adresse n'a été saisie.", "L'adresse l'organisme n'est pas correctement saisie.");
-        $dataOrganisme['adresse_organ'] = $formData['adresse_organ'];
+                // Génération d'un numero interne de l'organisme qui sert à vérifier l'organisme lors de la restitution par les intervenants
+                // on ne garde que les 8 premiers caractères
+                $code = substr(dechex(round(microtime(true) * 10000)), 0, 8);
+                $this->formData['numero_interne'] = $code;
+            }
+            else 
+            {
+                $this->formData['ref_organ'] = $_POST['ref_organ_cbox'];
+            }
+        }
+        $dataOrganisme['ref_organ'] = $this->formData['ref_organ'];
+        
 
-        // Récupèration du code postal de l'organisme
-        $formData['code_postal_organ'] = $this->validatePostData($postData['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'a été saisi.", "Le code postal de l'organisme n'est pas correctement saisi.");
-        $dataOrganisme['code_postal_organ'] = $formData['code_postal_organ'];
+        
+        
 
-        // Récupèration de la ville de l'organisme
-        $formData['ville_organ'] = $this->validatePostData($postData['ville_organ'], "ville_organ", "string", false, "Aucune ville n'a été saisie.", "La ville de l'organisme n'est pas correctement saisie.");
-        $dataOrganisme['ville_organ'] = $formData['ville_organ'];
+        if ($_POST['ref_organ_cbox'] == "new")
+        {
+            // Récupèration du nom de l'organisme
+            $formData['nom_organ'] = $this->validatePostData($postData['nom_organ'], "nom_organ", "string", true, "Aucun nom d'organisme n'a été sélectionné.", "Le nom de l'organisme n'est pas correctement sélectionné.");
+            $dataOrganisme['nom_organ'] = $formData['nom_organ'];
 
-        // Récupèration du téléphone de l'organisme
-        $formData['tel_organ'] = $this->validatePostData($postData['tel_organ'], "tel_organ", "string", true, "Aucun téléphone n'a été saisi.", "Le téléphone de l'organisme n'est pas correctement saisi.");
-        $dataOrganisme['tel_organ'] = $formData['tel_organ'];
 
-        // Récupèration du fax de l'organisme
-        $formData['fax_organ'] = $this->validatePostData($postData['fax_organ'], "fax_organ", "string", false, "Aucun fax n'a été saisi.", "Le fax de l'organisme n'est pas correctement saisi.");
-        $dataOrganisme['fax_organ'] = $formData['fax_organ'];
+            /* Traitement particulier de doublon du nom de l'organisme */
+            
+            // Si le nom de l'organisme n'est pas vide, il a été saisi et il doit être comparé aux autres noms d'organisme.
+            if (!empty($formData['nom_organ']))
+            {
+                $nomOrganisme = preg_replace("#[^A-Z]#", "", strtoupper($formData['nom_organ']));
+                var_dump($nomOrganisme);
 
-        // Récupèration de l'email de l'organisme
-        $formData['email_organ'] = $this->validatePostData($postData['email_organ'], "email_organ", "string", false, "Aucun email n'a été saisi.", "L'email de l'organisme n'est pas correctement saisi.");
-        $dataOrganisme['email_organ'] = $formData['email_organ'];
+                // On va chercher tous les noms d'organismes dans la base.
+                $resultsetNoms = $this->getOrganismes();
+                
+                // Traitement des erreurs de la requête.
+                if (!$this->filterDataErrors($resultsetNoms['response']))
+                {
+                    // Si le résultat est unique.
+                    if (!empty($resultsetNoms['response']['organisme']) && count($resultsetNoms['response']['organisme']) == 1)
+                    { 
+                        $organisme = $resultsetNoms['response']['organisme'];
+                        $resultsetNoms['response']['organisme'] = array($organisme);
+                    }
 
+                    foreach ($resultsetNoms['response']['organisme'] as $organ)
+                    {
+                        $nomOrgan = strtoupper($organ->getNom());
+
+                        // On enlève les espaces, les caractères spéciaux et on met le tout en majuscules.
+                        $securNomOrgan = preg_replace("#[^A-Z]#", "", $nomOrgan);
+
+                        var_dump($securNomOrgan);
+                    }
+                }
+
+                
+
+                // Si les 2 noms sont similaires, on envoie une erreur.
+                if (!empty($nomOrganisme['response']['organisme']))
+                {
+                    $this->registerError("form_valid", "Le nom de l'organisme existe déjà");
+                }
+
+                
+            }
+
+
+            // Récupèration de l'adresse de l'organisme
+            //$formData['adresse_organ'] = $this->validatePostData($postData['adresse_organ'], "adresse_organ", "string", false, "Aucune adresse n'a été saisie.", "L'adresse l'organisme n'est pas correctement saisie.");
+            //$dataOrganisme['adresse_organ'] = $formData['adresse_organ'];
+
+            // Récupèration du code postal de l'organisme
+            $formData['code_postal_organ'] = $this->validatePostData($postData['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'a été saisi.", "Le code postal de l'organisme n'est pas correctement saisi.");
+            $dataOrganisme['code_postal_organ'] = $formData['code_postal_organ'];
+
+            // Récupèration de la ville de l'organisme
+            //$formData['ville_organ'] = $this->validatePostData($postData['ville_organ'], "ville_organ", "string", false, "Aucune ville n'a été saisie.", "La ville de l'organisme n'est pas correctement saisie.");
+            //$dataOrganisme['ville_organ'] = $formData['ville_organ'];
+
+            // Récupèration du téléphone de l'organisme
+            $formData['tel_organ'] = $this->validatePostData($postData['tel_organ'], "tel_organ", "integer", true, "Aucun numéro de téléphone n'a été saisi.", "Le numéro de téléphone de l'organisme n'est pas correctement saisi.");
+            $dataOrganisme['tel_organ'] = $formData['tel_organ'];
+
+            // Récupèration du fax de l'organisme
+            //$formData['fax_organ'] = $this->validatePostData($postData['fax_organ'], "fax_organ", "string", false, "Aucun numéro de fax n'a été saisi.", "Le numéro de fax de l'organisme n'est pas correctement saisi.");
+            //$dataOrganisme['fax_organ'] = $formData['fax_organ'];
+
+            // Récupèration de l'email de l'organisme
+            //$formData['email_organ'] = $this->validatePostData($postData['email_organ'], "email_organ", "email", false, "Aucun email n'a été saisi.", "L'email de l'organisme n'est pas correctement saisi.");
+            //$dataOrganisme['email_organ'] = $formData['email_organ'];
+            
+        }
+        
+
+        var_dump($formData);
+        exit();
 
         return $dataOrganisme;
     }
@@ -158,6 +216,21 @@ class ServicesInscriptionGestion extends Main
     {
         $dataIntervenant = array();
 
+        // Récupèration du nom de l'intervenant
+        //$formData['nom_intervenant'] = $this->validatePostData($postData['nom_intervenant'], "nom_intervenant", "string", true, "Aucun nom n'a été saisi.", "Le nom de l'intervenant n'est pas correctement saisi.");
+        //$dataIntervenant['nom_intervenant'] = $formData['nom_intervenant'];
+        
+        // Récupèration du téléphone de l'intervenant
+        //$formData['tel_intervenant'] = $this->validatePostData($postData['tel_intervenant'], "tel_intervenant", "integer", true, "Aucun numéro de téléphone n'a été saisi.", "Le numéro de téléphone de l'intervenant n'est pas correctement saisi.");
+        //$dataIntervenant['tel_intervenant'] = $formData['tel_intervenant'];
+
+        // Récupèration de l'email de l'intervenant
+        $formData['email_intervenant'] = $this->validatePostData($postData['email_intervenant'], "email_intervenant", "email", false, "Aucun email n'a été saisi.", "L'email de l'intervenant n'est pas correctement saisi.");
+        $dataIntervenant['email_intervenant'] = $formData['email_intervenant'];
+
+
+        //$this->formData['date_inscription'] = date("Y-m-d");
+        //$dataIntervenant['date_inscription'] = $formData['date_inscription'];
 
 
         return $dataIntervenant;
@@ -167,38 +240,42 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    public function setOrganismeProperties($mode, $dataOrganisme, &$formData)
+    public function setOrganismeProperties($dataOrganisme, &$formData)
     {
+        $mode = "insert";
+
+        if (isset($dataOrganisme['ref_organ']) && !empty($dataOrganisme['ref_organ']))
+        {
+            $mode = "update";
+        }
 
         /*** Insertion du nouvel organisme ***/
 
-        if ($previousMode == "insert")
+        if ($mode == "insert")
         {
-
             // Insertion de la question dans la bdd
             $resultsetOrgan = $this->setOrganisme("insert", $dataOrganisme);
 
-            if (isset($resultsetOrgan['response']['organisme']['last_insert_id']) && !empty($resultsetOrgan['response']['organisme']['last_insert_id']))
-            {
+            //if (isset($resultsetOrgan['response']['organisme']['last_insert_id']) && !empty($resultsetOrgan['response']['organisme']['last_insert_id']))
+            //{
 
-            }
+            //}
         }
 
         /*** Mise à jour de l'organisme ***/
 
-        else if ($previousMode == "update")
+        else if ($mode == "update")
         {
+            $formData['ref_organ'] = $dataQuestion['ref_organ'];
 
-            if (isset($dataQuestion['ref_question']) && !empty($dataQuestion['ref_question']))
+            $resultsetOrgan = $this->setOrganisme("update", $dataOrganisme);
+            
+            if ($resultsetOrgan)
             {
-                //$formData['ref_question'] = $dataQuestion['ref_question'];
 
-                $resultsetOrgan = $this->setOrganisme("update", $dataOrganisme);
 
-                if ($resultsetQuestion)
-                {
+            }
 
-                }
         }
 
         else
@@ -210,10 +287,11 @@ class ServicesInscriptionGestion extends Main
 
 
 
+
     public function setOrganisme($mode, $dataOrganisme)
     {
 
-        if (!empty($dataQuestion) && is_array($dataQuestion))
+        if (!empty($dataOrganisme) && is_array($dataOrganisme))
         {
             
             if ($mode == "insert")
@@ -308,13 +386,21 @@ class ServicesInscriptionGestion extends Main
             default :
                 break;
         }
-        
-        //var_dump($resultset['response']);
-        
+
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        if ($resultset['response'] && !$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
+            return $resultset;
+        }
         
-        return $resultset;
+        return false;
     }
     
     

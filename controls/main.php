@@ -123,7 +123,6 @@ class Main
     
     /***   Outils   ***/
     
-    // Utilisé dans la partie admin - question
     public function validatePostData($value, $key, $type, $required = false, $errorEmpty = "", $errorData = "")
     {
         $filteredData = "";

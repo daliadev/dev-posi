@@ -321,8 +321,8 @@ label
 
 
 #form-posi .input {
-	/*margin: 10px 0;*/
-	margin: 10px 40px 10px 0;
+	margin: 10px 0;
+	/*margin: 10px 40px 10px 0;*/
 }
 
 
@@ -564,6 +564,7 @@ form input[type="text"][disabled]
 
 #zone-erreur li{
 	margin-left: -30px;
+	list-style: disc outside none;
 }
 
     
@@ -579,6 +580,7 @@ form input[type="text"][disabled]
 
 #zone-success li{
     margin-left: -20px;
+    list-style: disc outside none;
 }
 
 

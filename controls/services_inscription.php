@@ -832,7 +832,8 @@ class ServicesInscription extends Main
             'tel_organ' => "text",
             'fax_organ' => "text",
             'email_organ' => "text",
-            'nbre_posi_max' => "text",
+            // 'nbre_posi' => "text",
+            // 'nbre_posi_max' => "text",
             //'ref_intervenant' => "text",
             'nom_intervenant' => "text",
             'tel_intervenant' => "text",
@@ -843,78 +844,75 @@ class ServicesInscription extends Main
 
 
 
-        
-        
-        /*** Authentification du code organisme ***/
+        if (!empty($_POST))
+        {
             
-        // Récupération du code
-        if (!isset($_POST['code_identification']) || empty($_POST['code_identification']))
-        {
-            $this->registerError("form_empty", "Aucun code organisme n'a été saisi");
-        }
-        else 
-        {
-            $code = servicesAuth::hashPassword($_POST['code_identification']);
-
-            if ($code == Config::getCodeOrganisme())
+            /*** Authentification du code organisme ***/
+                
+            // Récupération du code
+            if (isset($_POST['code_identification']) && !empty($_POST['code_identification'])) 
             {
-                // authentifié
-                servicesAuth::login("user");
+                $code = servicesAuth::hashPassword($_POST['code_identification']);
+
+                if ($code == Config::getCodeOrganisme())
+                {
+                    // authentifié
+                    servicesAuth::login("user");
+                }
+                else
+                {
+                    $this->registerError("form_valid", "Le code organisme n'est pas valide");
+                }
             }
             else
             {
-                $this->registerError("form_valid", "Le code organisme n'est pas valide");
+                $this->registerError("form_empty", "Aucun code organisme n'a été saisi");
             }
+
+
+            /*** Récupération des données postées ***/
+
+            // Traitement et récupération des infos saisies de l'organisme
+            $dataOrganisme = $this->servicesInscriptGestion->filterDataOrganisme($this->formData, $_POST); 
+
+            // Traitement et récupération des infos saisies de l'intervenant
+            $dataIntervenant = $this->servicesInscriptGestion->filterDataIntervenant($this->formData, $_POST);
+
+            //var_dump($dataOrganisme);
+            //exit();
+
+            /*** Sauvegarde des données dans la base ***/
+
+            // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
+            if (empty($this->servicesInscriptGestion->errors) && empty($this->errors)) 
+            {
+                $this->servicesInscriptGestion->setOrganismeProperties($dataOrganisme, $this->formData);
+            }
+
         }
-
-
-        /*** Récupération des données postées ***/
-
-        // Récupération des champs cachés
-        
-        // Récupération du champ "ref_organ" si il existe
-        
-        if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
-        {
-            $this->formData['ref_organ'] = $_POST['ref_organ'];
-        }
-        
-        // Récupération du champ "ref_intervenant" si il existe
-        
-        if (isset($_POST['ref_intervenant']) && !empty($_POST['ref_intervenant']))
-        {
-            $this->formData['ref_intervenant'] = $_POST['ref_intervenant'];
-        }
-        
-
-
-        // Traitement et récupération des infos saisies de l'organisme
-        $dataOrganisme = $this->servicesInscriptGestion->filterDataOrganisme($this->formData, $_POST); 
-
-        // Traitement et récupération des infos saisies de l'intervenant
-        $dataIntervenant = $this->servicesInscriptGestion->filterDataIntervenant($this->formData, $_POST); 
 
 
 
         /*** Retour des données traitées du formulaire ***/
 
-        $this->returnData['response']['form_data'] = array();
+        //$this->returnData['response']['form_data'] = array();
         $this->returnData['response']['form_data'] = $this->formData;
+        $this->returnData['response']['url'] = $this->url;
 
         
         /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
         
-        if ((!empty($this->servicesQuestion->errors) && count($this->servicesQuestion->errors) > 0) || !empty($this->errors))
+        if ((!empty($this->servicesInscriptGestion->errors) && count($this->servicesInscriptGestion->errors) > 0) || !empty($this->errors))
         {
-            $this->errors = array_merge($this->servicesQuestion->errors, $this->errors);
+            $this->errors = array_merge($this->servicesInscriptGestion->errors, $this->errors);
             foreach($this->errors as $error)
             {
                 $this->returnData['response']['errors'][] = $error;
             }
         }
-        else if ((!empty($this->servicesQuestion->success) && count($this->servicesQuestion->success) > 0) || !empty($this->success))
+        else if ((!empty($this->servicesInscriptGestion->success) && count($this->servicesInscriptGestion->success) > 0) || !empty($this->success))
         {
-            $this->success = array_merge($this->servicesQuestion->success, $this->success);
+            $this->success = array_merge($this->servicesInscriptGestion->success, $this->success);
             foreach($this->success as $success)
             {
                 $this->returnData['response']['success'][] = $success;
@@ -936,20 +934,19 @@ class ServicesInscription extends Main
 
         /*** Envoi des données et rendu de la vue ***/
 
-        $this->setResponse($this->returnData);
-        $this->setTemplate("template_page");
-        $this->render("organisme");
+        //$this->setResponse($this->returnData);
+        //$this->setTemplate("template_page");
+        //$this->render("organisme");
 
 
 
-        if (empty($this->errors) && )
+        if (empty($this->errors) && !empty($_POST))
         {
             // On doit conserver certaines informations pour le formulaire utilisateur
-            //$this->returnData['response'] = array();
-            //$this->returnData['response']['ref_intervenant'] = $this->formData['ref_intervenant'];
-            //$this->returnData['response']['date_inscription'] = $this->formData['date_inscription'];
+            //ServicesAuth::setSessionData('ref_intervenant', $this->formData['ref_intervenant']);
+            //ServicesAuth::setSessionData('date_inscription', $this->formData['date_inscription']);
 
-            // Redirection vers le formulaire utilisateur
+            // Redirection vers le formulaire utilisateurs
             header("Location: ".SERVER_URL."inscription/utilisateur/");
             exit;
 
@@ -958,55 +955,25 @@ class ServicesInscription extends Main
         else
         {
             $this->setResponse($this->returnData);
+            
             $this->setTemplate("template_page");
             $this->render("organisme");
-        }
-
-         
-        if (!empty($this->errors))
-        {
-            $this->formulaire($requestParams, $this->returnData);
-        }
-        else
-        {
-            // Sinon redirection vers la page suivante (recharge la page)
-            if ($requestParams[0] == "organisme")
-            {
-                // On doit conserver certaines informations pour le formulaire utilisateur
-                $this->returnData['response'] = array();
-                $this->returnData['response']['ref_intervenant'] = $this->formData['ref_intervenant'];
-                $this->returnData['response']['date_inscription'] = $this->formData['date_inscription'];
-
-                
-            }
-            else if ($requestParams[0] == "utilisateur")
-            {
-                // On doit conserver l'id de l'utilisateur pour le positionnement             
-                ServicesAuth::setSessionData('ref_inscription', $this->formData['ref_inscription']);
-                ServicesAuth::setSessionData('ref_intervenant', $this->formData['ref_intervenant']);
-                ServicesAuth::setSessionData('ref_user', $this->formData['ref_user']);
-                
-                // Redirection vers la première page du positionnement
-                header("Location: ".SERVER_URL."positionnement/intro/");
-                exit;
-            }
-            else 
-            {
-                header("Location: ".SERVER_URL."erreur/page404");
-                exit();
-            }
         }
 
     }
     
 
-    /*
+    
+
+    
     public function utilisateur($requestParams = array())
     {
+        // $this->setResponse($this->returnData);
 
-
+        $this->setTemplate("template_page");
+        $this->render("utilisateur");
     }
-    */
+    
 }
 
 ?>

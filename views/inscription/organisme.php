@@ -2,6 +2,24 @@
 
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
+$formData['ref_organ_cbox'] = "";
+$formData['ref_organ'] = "";
+$formData['nom_organ'] = "";
+$formData['numero_interne'] = "";
+$formData['adresse_organ'] = "";
+$formData['code_postal_organ'] = "";
+$formData['ville_organ'] = "";
+$formData['tel_organ'] = "";
+$formData['fax_organ'] = "";
+$formData['email_organ'] = "";
+//$formData['nbre_posi'] = 0;
+//$formData['nbre_posi_max'] = 0;
+$formData['ref_intervenant'] = "";
+$formData['nom_intervenant'] = "";
+$formData['tel_intervenant'] = "";
+$formData['email_intervenant'] = "";
+$formData['date_inscription'] = "";
+
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
@@ -252,7 +270,7 @@ $form_url = $response['url'];
 
                 if ($(this).val() == "new") {
 
-                  $('#third-part').show(200);
+                $('#third-part').show(200);
                 }
                 else {
 

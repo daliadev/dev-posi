@@ -75,53 +75,55 @@ class ServicesInscriptionGestion extends Main
     public function filterDataOrganisme(&$formData, $postData)
     {
         $dataOrganisme = array();
-        
+        $formData['mode_organ'] = "none";
+        $formData['ref_organ'] = null;
 
-        // Récupération du champ caché "ref_organ" si il existe
-        /*   
+        /*** Récupération du champ caché "ref_organ" si il existe ***/
+           
         if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
         {
-            $this->formData['ref_organ'] = $_POST['ref_organ'];
+            $formData['ref_organ'] = $_POST['ref_organ'];
         }
-        */
         
 
         /*** Récupèration de la référence de l'organisme dans le combo-box ***/
 
-        //if (!empty($_POST['ref_organ_cbox']) && empty($this->formData['ref_organ']))
         if (!empty($_POST['ref_organ_cbox']))
         {
-            $this->formData['ref_organ_cbox'] = $_POST['ref_organ_cbox'];
+            $formData['ref_organ_cbox'] = $_POST['ref_organ_cbox'];
                     
             if ($_POST['ref_organ_cbox'] == "select_cbox")
             {
-                $this->registerError("form_empty", "Aucun organisme n'a été sélectionné");
+                $this->registerError("form_empty", "Aucun organisme n'a été sélectionné.");
             }
             else if ($_POST['ref_organ_cbox'] == "new")
             {
                 // Un nom a été saisi, il faut donc inserer les données de l'organisme
-                $this->formData['ref_organ'] = null;
+                $formData['ref_organ'] = null;
+                $formData['mode_organ'] = "insert";
 
                 // Génération d'un numero interne de l'organisme qui sert à vérifier l'organisme lors de la restitution par les intervenants
                 // on ne garde que les 8 premiers caractères
                 $code = substr(dechex(round(microtime(true) * 10000)), 0, 8);
-                $this->formData['numero_interne'] = $code;
+                $formData['numero_interne'] = $code;
+                $dataOrganisme['numero_interne'] = $formData['numero_interne'];
             }
             else 
             {
-                $this->formData['ref_organ'] = $_POST['ref_organ_cbox'];
+                $formData['ref_organ'] = $_POST['ref_organ_cbox'];
             }
         }
-        $dataOrganisme['ref_organ'] = $this->formData['ref_organ'];
-        
 
-        
-        
-
-        if ($_POST['ref_organ_cbox'] == "new")
+        if ($formData['ref_organ'])
         {
-            /* Traitement particulier de doublon du nom de l'organisme */
-            
+            $dataOrganisme['ref_organ'] = $formData['ref_organ'];
+        }
+        
+
+        if ($formData['mode_organ'] == "insert")
+        {
+            /*** Traitement particulier de doublon du nom de l'organisme ***/
+
             // Si le nom de l'organisme n'est pas vide, il a été saisi et il doit être comparé aux autres noms d'organisme.
             if (!empty($formData['nom_organ']))
             {
@@ -133,17 +135,11 @@ class ServicesInscriptionGestion extends Main
 
                 // On va chercher tous les noms d'organismes dans la base.
                 $resultsetNoms = $this->getOrganismes();
-                
-                // Traitement des erreurs de la requête.
-                if (!$this->filterDataErrors($resultsetNoms['response']))
-                {
-                    // Si le résultat est unique.
-                    if (!empty($resultsetNoms['response']['organisme']) && count($resultsetNoms['response']['organisme']) == 1)
-                    { 
-                        $organisme = $resultsetNoms['response']['organisme'];
-                        $resultsetNoms['response']['organisme'] = array($organisme);
-                    }
 
+                var_dump($resultsetNoms);
+
+                if ($resultsetNoms)
+                {
                     foreach ($resultsetNoms['response']['organisme'] as $organ)
                     {
                         $nomOrgan = strtoupper($organ->getNom());
@@ -151,28 +147,19 @@ class ServicesInscriptionGestion extends Main
                         // On enlève les espaces, les caractères spéciaux et on met le tout en majuscules.
                         $securNomOrgan = preg_replace("#[^A-Z]#", "", $nomOrgan);
 
+                        echo $nomOrganisme." -> ".$securNomOrgan."<br>";
                         // Si les 2 noms sont similaires, on envoie une erreur.
                         if ($securNomOrgan == $nomOrganisme)
                         {
-                            //$this->registerError("form_valid", "Le nom de l'organisme existe déjà");
                             $duplicateOrgan = true;
                             break;
                         }
-
-                        //var_dump($securNomOrgan);
-                        /*
-                        if (preg_match("/php/i", "PHP est le meilleur langage de script du web.")) {
-                            echo "Un résultat a été trouvé.";
-                        } else {
-                            echo "Aucun résultat n'a été trouvé.";
-                        }
-                        */
                     }
                 }
 
                 if ($duplicateOrgan)
                 {
-                    $this->registerError("form_valid", "Le nom de l'organisme existe déjà");
+                    $this->registerError("form_valid", "Le nom de l'organisme existe déjà.");
                 }
                 else
                 {
@@ -212,7 +199,7 @@ class ServicesInscriptionGestion extends Main
             //$dataOrganisme['email_organ'] = $formData['email_organ'];
             
         }
-        
+        exit();
         return $dataOrganisme;
     }
 
@@ -223,14 +210,20 @@ class ServicesInscriptionGestion extends Main
     public function filterDataIntervenant(&$formData, $postData)
     {
         $dataIntervenant = array();
+        $formData['mode_inter'] = "insert";
 
         // Récupération du champ caché "ref_intervenant" si il existe
-        /*
+        
         if (isset($_POST['ref_intervenant']) && !empty($_POST['ref_intervenant']))
         {
-            $this->formData['ref_intervenant'] = $_POST['ref_intervenant'];
+            $formData['ref_intervenant'] = $_POST['ref_intervenant'];
         }
-        */
+        else
+        {
+            $formData['ref_intervenant'] = null;
+        }
+        
+        $dataOrganisme['ref_intervenant'] = $formData['ref_intervenant'];
 
         // Récupèration du nom de l'intervenant
         //$formData['nom_intervenant'] = $this->validatePostData($postData['nom_intervenant'], "nom_intervenant", "string", true, "Aucun nom n'a été saisi.", "Le nom de l'intervenant n'est pas correctement saisi.");
@@ -249,6 +242,26 @@ class ServicesInscriptionGestion extends Main
         //$dataIntervenant['date_inscription'] = $formData['date_inscription'];
 
 
+        // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
+        $request = $this->getIntervenant("email", $formData['email_intervenant']);
+        
+        if (isset($request['response']['intervenant']) && !empty($request['response']['intervenant']))
+        {
+            if ($request['response']['intervenant']->getRefOrganisme == $formData['ref_orgen'])
+            {
+                $formData['mode_inter'] = "none";
+            }
+            else 
+            {
+                $formData['mode_inter'] = "update";
+            }
+            
+            // On récupère la référence de l'intervenant
+            $formData['ref_intervenant'] = $request['response']['intervenant']->getId();
+            $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
+        }
+
+
         return $dataIntervenant;
     }
 
@@ -259,41 +272,88 @@ class ServicesInscriptionGestion extends Main
     public function setOrganismeProperties($dataOrganisme, &$formData)
     {
         $resultsetOrgan = false;
-        $mode = "insert";
         
-        if (isset($dataOrganisme['ref_organ']) && !empty($dataOrganisme['ref_organ']))
+        $mode = $formData['mode_organ'];
+
+        if ((empty($dataOrganisme['ref_organ']) && !empty($dataOrganisme['nom_organ']) && !empty($dataOrganisme['code_postal_organ']) && !empty($dataOrganisme['tel_organ'])) || !empty($dataOrganisme['ref_organ']))
         {
-            $mode = "update";
+            /*** Insertion du nouvel organisme ***/
+
+            if ($mode == "insert")
+            {
+                $resultsetOrgan = $this->setOrganisme("insert", $dataOrganisme);
+
+                if (!$resultsetOrgan)
+                {
+                    $this->registerError("form_valid", "L'organisme n'a pu être enregistré.");
+                }
+                else
+                {
+                    $formData['ref_organ'] = $resultsetOrgan['response']['organisme'][0]->getId();
+                }
+            }
+
+            /*** Mise à jour de l'organisme ***/
+
+            else if ($mode == "update")
+            {
+                $formData['ref_organ'] = $dataOrganisme['ref_organ'];
+
+                $resultsetOrgan = $this->setOrganisme("update", $dataOrganisme);
+
+                if (!$resultsetOrgan)
+                {
+                    $this->registerError("form_valid", "L'organisme n'a pu être mis à jour.");
+                }
+            }
         }
+    }
 
-        /*** Insertion du nouvel organisme ***/
 
-        if ($mode == "insert")
+
+
+
+    
+    public function setIntervenantProperties($dataIntervenant, &$formData)
+    {
+        $resultsetInter = false;
+
+        $mode = $formData['mode_inter'];
+
+        if (!empty($this->dataIntervenant['email_intervenant']) && isset($formData['ref_organ']) && !empty($formData['ref_organ']))
         {
-            $resultsetOrgan = $this->setOrganisme("insert", $dataOrganisme);
+            $dataIntervenant['ref_organ'] = $formData['ref_organ'];
+
+            /*** Insertion du nouvel organisme ***/
+
+            if ($mode == "insert")
+            {
+                $resultsetInter = $this->setIntervenant("insert", $dataIntervenant);
+            }
+
+            /*** Mise à jour de l'organisme ***/
+
+            else if ($mode == "update")
+            {
+                $formData['ref_intervenant'] = $dataIntervenant['ref_intervenant'];
+
+                $resultsetInter = $this->setIntervenant("update", $dataIntervenant);
+            }
         }
-
-        /*** Mise à jour de l'organisme ***/
-
-        else if ($mode == "update")
-        {
-            $formData['ref_organ'] = $dataOrganisme['ref_organ'];
-
-            $resultsetOrgan = $this->setOrganisme("update", $dataOrganisme);
-        }
-
         //else
         //{
 
             //header("Location: ".SERVER_URL."erreur/page404");
             //exit();
         //}
-
+        /*
         if (!$resultsetOrgan)
         {
-            $this->registerError("form_valid", "L'organisme n'a pu être enregistré.");
+            $this->registerError("form_valid", "L'intervenant n'a pu être enregistré.");
         }
+        */
     }
+
 
 
 
@@ -353,50 +413,6 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    public function setIntervenantProperties($dataIntervenant, &$formData)
-    {
-        $resultsetInter = false;
-        $mode = "insert";
-        
-        if (isset($dataIntervenant['ref_intervenant']) && !empty($dataIntervenant['ref_intervenant']))
-        {
-            $mode = "update";
-        }
-
-        /*** Insertion du nouvel organisme ***/
-
-        if ($mode == "insert")
-        {
-            $resultsetInter = $this->setIntervenant("insert", $dataIntervenant);
-        }
-
-        /*** Mise à jour de l'organisme ***/
-
-        else if ($mode == "update")
-        {
-            $formData['ref_intervenant'] = $dataIntervenant['ref_intervenant'];
-
-            $resultsetInter = $this->setIntervenant("update", $dataIntervenant);
-        }
-
-        //else
-        //{
-
-            //header("Location: ".SERVER_URL."erreur/page404");
-            //exit();
-        //}
-
-        if (!$resultsetOrgan)
-        {
-            $this->registerError("form_valid", "L'intervenant n'a pu être enregistré.");
-        }
-    }
-
-
-
-
-
-
     private function setIntervenant($mode, $dataIntervenant)
     {
         if (!empty($dataIntervenant) && is_array($dataIntervenant))
@@ -439,7 +455,7 @@ class ServicesInscriptionGestion extends Main
         }
         else 
         {
-            $this->registerError("form_request", "Insertion de l'intervenant non autorisée");
+            $this->registerError("form_request", "Insertion de l'intervenant non autorisée.");
         }
         
         return false;

@@ -216,7 +216,7 @@ class ServicesInscription extends Main
             // Récupération du code
             if (!isset($_POST['code_identification']) || empty($_POST['code_identification']))
             {
-                $this->registerError("form_empty", "Aucun code organisme n'a été saisi");
+                $this->registerError("form_empty", "Aucun code organisme n'a été saisi.");
             }
             else 
             {
@@ -233,7 +233,7 @@ class ServicesInscription extends Main
                 }
                 else
                 {
-                    $this->registerError("form_valid", "Le code organisme n'est pas valide");
+                    $this->registerError("form_valid", "Le code organisme n'est pas valide.");
                 }
                 
                 // Vérification du code organisme
@@ -281,7 +281,7 @@ class ServicesInscription extends Main
                 if ($_POST['ref_organ_cbox'] == "select_cbox")
                 {
                     // Aucun nom n'a été sélectionné ou saisi : erreur
-                    $this->registerError("form_empty", "Aucun nom d'organisme n'a été sélectionné");
+                    $this->registerError("form_empty", "Aucun nom d'organisme n'a été sélectionné.");
                 }
                 else if ($_POST['ref_organ_cbox'] == "new")
                 {
@@ -325,7 +325,7 @@ class ServicesInscription extends Main
                     // Si la requête trouve un nom d'organisme correspondant, c'est un doublon !
                     if (!empty($nomOrganisme['response']['organisme']))
                     {
-                        $this->registerError("form_valid", "Le nom de l'organisme existe déjà");
+                        $this->registerError("form_valid", "Le nom de l'organisme existe déjà.");
                     }
                 }
                 else 
@@ -358,6 +358,7 @@ class ServicesInscription extends Main
             //$this->formData['date_inscription'] = $this->validatePostData($_POST['date_inscription'], "date_inscription", "date", true, "La date d'inscription n'est pas valide.", "La date d'inscription n'a pas été saisie.");
             $this->formData['date_inscription'] = date("Y-m-d");
             
+
             /*** Traitement de doublon de l'email de l'intervenant et définition du mode de la requête ***/
             
             $modeIntervenant = "insert";
@@ -368,6 +369,7 @@ class ServicesInscription extends Main
             if (isset($request['response']['intervenant']) && !empty($request['response']['intervenant']))
             {
                 $modeIntervenant = "update";
+
                 // On récupère la référence de l'intervenant
                 $this->formData['ref_intervenant'] = $request['response']['intervenant']->getId();
                 $dataIntervenant['ref_intervenant'] = $this->formData['ref_intervenant'];
@@ -413,7 +415,7 @@ class ServicesInscription extends Main
                         }
                         else 
                         {
-                            $this->registerError("form_request", "Insertion de l'organisme impossible");
+                            $this->registerError("form_request", "Insertion de l'organisme impossible.");
                         }
                     }
                 }
@@ -878,6 +880,7 @@ class ServicesInscription extends Main
             // Traitement et récupération des infos saisies de l'intervenant
             $dataIntervenant = $this->servicesInscriptGestion->filterDataIntervenant($this->formData, $_POST);
             
+            var_dump($this->formData);
             var_dump($dataOrganisme);
             var_dump($dataIntervenant);
             var_dump($this->servicesInscriptGestion->errors);

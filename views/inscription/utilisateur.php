@@ -86,17 +86,67 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                         <div class="input" style="float:left; width:80px;">
                             <label for="jour_naiss_user">Jour <span class="asterix">*</span></label>
-                            <input type="text" name="jour_naiss_user" id="jour_naiss_user" style="width:40px;" title="Veuillez entrer le jour de votre date de naissance" value="" required />
+                            <select name="jour_naiss_user" id="jour_naiss_user" style="width:60px;">
+                                <option value="select_cbox">---</option>
+
+                                <?php
+
+                                for ($i = 1; $i <= 31; $i++)
+                                {
+                                    $jour = $i;
+                                    $selected = "";
+
+                                    echo '<option value="'.$jour.'" '.$selected.'>'.$jour.'</option>';
+                                }
+                                ?>
+                            </select>
+
+                            <!-- <label for="jour_naiss_user">Jour <span class="asterix">*</span></label> -->
+                            <!-- <input type="text" name="jour_naiss_user" id="jour_naiss_user" style="width:40px;" title="Veuillez entrer le jour de votre date de naissance" value="" required /> -->
                         </div>
 
                         <div class="input" style="float:left; width:80px;">
                             <label for="mois_naiss_user">Mois <span class="asterix">*</span></label>
-                            <input type="text" name="mois_naiss_user" id="mois_naiss_user" style="width:40px;" title="Veuillez entrer le mois de votre date de naissance" value="" required />
+                            <select name="mois_naiss_user" id="mois_naiss_user" style="width:60px;">
+                                <option value="select_cbox">---</option>
+
+                                <?php
+
+                                for ($i = 1; $i <= 12; $i++)
+                                {
+                                    $mois = $i;
+                                    $selected = "";
+
+                                    echo '<option value="'.$mois.'" '.$selected.'>'.$mois.'</option>';
+                                }
+                                ?>
+                            </select>
+
+                            <!-- <label for="mois_naiss_user">Mois <span class="asterix">*</span></label> -->
+                            <!-- <input type="text" name="mois_naiss_user" id="mois_naiss_user" style="width:40px;" title="Veuillez entrer le mois de votre date de naissance" value="" required /> -->
                         </div>
 
                         <div class="input" style="float:left; width:100px;">
                             <label for="annee_naiss_user">Année <span class="asterix">*</span></label>
-                            <input type="text" name="annee_naiss_user" id="annee_naiss_user" style="width:80px;" title="Veuillez entrer l'année de votre date de naissance" value="" required />
+                            <select name="annee_naiss_user" id="annee_naiss_user" style="width:80px;">
+                                <option value="select_cbox">---</option>
+
+                                <?php
+                                $minYear = intval(date('Y')) - 70;
+                                $maxYear = intval(date('Y')) - 10;
+
+                                for ($i = $maxYear; $i >= $minYear; $i--)
+                                {
+                                    $year = $i;
+                                    $selected = "";
+
+                                    echo '<option value="'.$year.'" '.$selected.'>'.$year.'</option>';
+                                }
+                                ?>
+                            </select>
+
+                            <!-- <label for="annee_naiss_user">Année <span class="asterix">*</span></label> -->
+                            <!-- <input type="text" name="annee_naiss_user" id="annee_naiss_user" style="width:80px;" title="Veuillez entrer l'année de votre date de naissance" value="" required /> -->
                         </div>
 
                         <div style="clear:both;"></div>

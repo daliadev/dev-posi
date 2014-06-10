@@ -59,9 +59,6 @@ $form_url = $response['url'];
         ?>
 
 
-    <!--********************************* Formulaire ********************************************-->
-
-
         
         <div id="organisme">
             <div class="zone-formu">
@@ -144,8 +141,7 @@ $form_url = $response['url'];
 
                             <div class="input">
                                 <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
-                                <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format Email requis(exemple@xxx.yy)" />
-                                <!-- <label class="texte-petit"></label> -->
+                                <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)" />
                             </div>
 
                         </div>

@@ -211,30 +211,21 @@ class Tools {
     
     
     
-    
-    /*
-    static function convertToPDF($contentFile, $downloadable = false)
-    {
-        require_once(ROOT.'lib/html2pdf/html2pdf.class.php');
-        
-        ob_clean();
-        ob_start();
-        require($contentFile);
-        $content = ob_get_clean();
 
-        try
-        {
-            $pdf = new HTML2PDF();
-            $pdf->writeHTML($content);
-            $pdf->Output(ROOT.'download/pdf/essai-doc.pdf');
-        }
-        catch (HTML2PDF_exception $e)
-        {
-            echo 'Erreur : '.$e->getMessage();
-        }
-        
+
+    static function stripSpecialCharsFromString($string)
+    {
+        $specialChars = "àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ";
+        $cleanedChars = "aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY";
+
+        $string = utf8_decode($string);    
+        $string = strtr($string, utf8_decode($specialChars), $cleanedChars);
+
+        return utf8_encode($string);
     }
-    */
+
+
+
 
 }
 

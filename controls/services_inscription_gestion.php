@@ -125,29 +125,28 @@ class ServicesInscriptionGestion extends Main
             /*** Traitement particulier de doublon du nom de l'organisme ***/
 
             // Si le nom de l'organisme n'est pas vide, il a été saisi et il doit être comparé aux autres noms d'organisme.
-            if (!empty($formData['nom_organ']))
+            if (!empty($_POST['nom_organ']))
             {
                 $duplicateOrgan = false;
 
                 // On enlève les espaces, les caractères spéciaux et on met le nom saisi tout en majuscules.
-                $nomOrganisme = preg_replace("#[^A-Z]#", "", strtoupper($formData['nom_organ']));
-                //var_dump($nomOrganisme);
+                $cleanNom = Tools::stripSpecialCharsFromString($_POST['nom_organ']);
+                $nomOrganisme = preg_replace("#[^A-Z]#", "", strtoupper($cleanNom));
 
                 // On va chercher tous les noms d'organismes dans la base.
-                $resultsetNoms = $this->getOrganismes();
+                $resultsetOrgan = $this->getOrganismes();
 
-                var_dump($resultsetNoms);
-
-                if ($resultsetNoms)
+                if ($resultsetOrgan)
                 {
-                    foreach ($resultsetNoms['response']['organisme'] as $organ)
+                    foreach ($resultsetOrgan['response']['organisme'] as $organ)
                     {
-                        $nomOrgan = strtoupper($organ->getNom());
+                        $nomOrgan = Tools::stripSpecialCharsFromString($organ->getNom());
 
                         // On enlève les espaces, les caractères spéciaux et on met le tout en majuscules.
-                        $securNomOrgan = preg_replace("#[^A-Z]#", "", $nomOrgan);
+                        $securNomOrgan = preg_replace("#[^A-Z]#", "", strtoupper($nomOrgan));
 
-                        echo $nomOrganisme." -> ".$securNomOrgan."<br>";
+                        //echo $nomOrganisme." -> ".$securNomOrgan."<br>";
+
                         // Si les 2 noms sont similaires, on envoie une erreur.
                         if ($securNomOrgan == $nomOrganisme)
                         {
@@ -161,18 +160,20 @@ class ServicesInscriptionGestion extends Main
                 {
                     $this->registerError("form_valid", "Le nom de l'organisme existe déjà.");
                 }
+                /*
                 else
                 {
                     $dataOrganisme['nom_organ'] = $formData['nom_organ'];
                 }
- 
+                */
             }
-            else
-            {
+
+            //else
+            //{
                 // Récupèration du nom de l'organisme
                 $formData['nom_organ'] = $this->validatePostData($postData['nom_organ'], "nom_organ", "string", true, "Aucun nom d'organisme n'a été sélectionné.", "Le nom de l'organisme n'est pas correctement sélectionné.");
                 $dataOrganisme['nom_organ'] = $formData['nom_organ'];
-            }
+            //}
 
             // Récupèration de l'adresse de l'organisme
             //$formData['adresse_organ'] = $this->validatePostData($postData['adresse_organ'], "adresse_organ", "string", false, "Aucune adresse n'a été saisie.", "L'adresse l'organisme n'est pas correctement saisie.");
@@ -199,7 +200,7 @@ class ServicesInscriptionGestion extends Main
             //$dataOrganisme['email_organ'] = $formData['email_organ'];
             
         }
-        exit();
+        
         return $dataOrganisme;
     }
 
@@ -243,11 +244,12 @@ class ServicesInscriptionGestion extends Main
 
 
         // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
-        $request = $this->getIntervenant("email", $formData['email_intervenant']);
+        /*
+        $resultsetInter = $this->getIntervenant("email", $formData['email_intervenant']);
         
-        if (isset($request['response']['intervenant']) && !empty($request['response']['intervenant']))
+        if (isset($resultsetInter['response']['intervenant']) && !empty($resultsetInter['response']['intervenant']))
         {
-            if ($request['response']['intervenant']->getRefOrganisme == $formData['ref_orgen'])
+            if ($resultsetInter['response']['intervenant'][0]->getRefOrganisme() == $formData['ref_organ'])
             {
                 $formData['mode_inter'] = "none";
             }
@@ -257,10 +259,10 @@ class ServicesInscriptionGestion extends Main
             }
             
             // On récupère la référence de l'intervenant
-            $formData['ref_intervenant'] = $request['response']['intervenant']->getId();
+            $formData['ref_intervenant'] = $resultsetInter['response']['intervenant']->getId();
             $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
         }
-
+        */
 
         return $dataIntervenant;
     }
@@ -578,9 +580,19 @@ class ServicesInscriptionGestion extends Main
         $resultset = $this->intervenantDAO->selectAll();
 
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
+            { 
+                $intervenant = $resultset['response']['intervenant'];
+                $resultset['response']['intervenant'] = array($intervenant);
+            }
+
+            return $resultset;
+        }
         
-        return $resultset;
+        return false;
     }
     
     

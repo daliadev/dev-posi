@@ -101,7 +101,9 @@ class ServicesInscriptionGestion extends Main
             // Si le nom de l'organisme n'est pas vide, il a été saisi et il doit être comparé aux autres noms d'organisme.
             if (!empty($_POST['nom_organ']))
             {
-                $duplicateOrgan = false;
+                $duplicateNomOrgan = false;
+                //$similarNomOrgan = "";
+                //$formData['suggest_name'] = "";
 
                 // On enlève les espaces, les caractères spéciaux et on met le nom saisi tout en majuscules.
                 $cleanNom = Tools::stripSpecialCharsFromString($_POST['nom_organ']);
@@ -114,26 +116,39 @@ class ServicesInscriptionGestion extends Main
                 {
                     foreach ($resultsetOrgan['response']['organisme'] as $organ)
                     {
-                        $nomOrgan = Tools::stripSpecialCharsFromString($organ->getNom());
+                        $nomOrgan = $organ->getNom();
+
+                        $cleanNomOrgan = Tools::stripSpecialCharsFromString($nomOrgan);
 
                         // On enlève les espaces, les caractères spéciaux et on met le tout en majuscules.
-                        $securNomOrgan = preg_replace("#[^A-Z]#", "", strtoupper($nomOrgan));
-
-                        //echo $nomOrganisme." -> ".$securNomOrgan."<br>";
+                        $securNomOrgan = preg_replace("#[^A-Z]#", "", strtoupper($cleanNomOrgan));
 
                         // Si les 2 noms sont similaires, on envoie une erreur.
                         if ($securNomOrgan == $nomOrganisme)
                         {
-                            $duplicateOrgan = true;
+                            $duplicateNomOrgan = true;
                             break;
                         }
+                        /*
+                        else if (strstr($securNomOrgan, $nomOrganisme) || strstr($securNomOrgan, $nomOrganisme))
+                        {
+                            $similarNomOrgan = $nomOrgan;
+                            break;
+                        }
+                        */
                     }
                 }
 
-                if ($duplicateOrgan)
+                if ($duplicateNomOrgan)
                 {
                     $this->registerError("form_valid", "Le nom de l'organisme existe déjà.");
                 }
+                /*
+                else if (!empty($similarNomOrgan))
+                {
+                    $formData['suggest_name'] = $similarNomOrgan;
+                }
+                */
                 /*
                 else
                 {
@@ -220,21 +235,30 @@ class ServicesInscriptionGestion extends Main
         /*** Traitement de doublon de l'email de l'intervenant et définition du mode de la requête ***/
             
         //------------------
-        /*
-        $modeIntervenant = "insert";
+        
+        //$modeIntervenant = "insert";
         
         // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
-        $request = $this->servicesInscriptGestion->getIntervenant("email", $this->formData['email_intervenant']);
+        $resultsetInter = $this->getIntervenant("email", $formData['email_intervenant']);
         
-        if (isset($request['response']['intervenant']) && !empty($request['response']['intervenant']))
+        if (isset($resultsetInter['response']['intervenant']) && !empty($resultsetInter['response']['intervenant']))
         {
-            $modeIntervenant = "update";
+            $idOrgan = $resultsetInter['response']['intervenant'][0]->getRefOrganisme();
+
+            if (!empty($formData['ref_organ']) && $idOrgan == $formData['ref_organ'])
+            {
+                $formData['mode_inter'] = "update";
+            }
+            else
+            {
+            }
+            
 
             // On récupère la référence de l'intervenant
-            $this->formData['ref_intervenant'] = $request['response']['intervenant']->getId();
-            $dataIntervenant['ref_intervenant'] = $this->formData['ref_intervenant'];
+            $formData['ref_intervenant'] = $resultsetInter['response']['intervenant'][0]->getId();
+            $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
         }
-        */
+        
 
         /*** Valeurs finales des champs qui seront inserés dans la table intervenant ***/
 

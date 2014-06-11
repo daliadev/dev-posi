@@ -221,13 +221,13 @@ if (isset($response['form_data']) && !empty($response['form_data']))
     
     <script language="javascript" type="text/javascript">
         
-    /*
+        /*
         function getMonthDays(monthNumber) 
         {
             var monthDays = 0;
 
-            if () {
-
+            if (monthNumber == 2) {
+                monthDays = 
             }
 
             return monthDays;
@@ -268,9 +268,9 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                 $("#jour_naiss_user").get(0).options.length = 1;
                 
-                var days = getNombreJour();
-                var i;
-                //$("jour_naiss_user").
+                //var days = getNombreJour($("jour_naiss_user").val());
+                //var i;
+                
                 /*
                 for (i = 1; i <= days; i++) {
                 

@@ -105,20 +105,21 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                             <!-- <input type="text" name="jour_naiss_user" id="jour_naiss_user" style="width:40px;" title="Veuillez entrer le jour de votre date de naissance" value="" required /> -->
                         </div>
 
-                        <div class="input" style="float:left; width:80px;">
+                        <div class="input" style="float:left; width:100px;">
                             <label for="mois_naiss_user">Mois <span class="asterix">*</span></label>
-                            <select name="mois_naiss_user" id="mois_naiss_user" style="width:60px;">
+                            <select name="mois_naiss_user" id="mois_naiss_user" style="width:80px;">
                                 <option value="select_cbox">---</option>
 
                                 <?php
+                                $monthsName = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre');
 
                                 for ($i = 1; $i <= 12; $i++)
                                 {
-                                    $mois = $i;
                                     $selected = "";
 
-                                    echo '<option value="'.$mois.'" '.$selected.'>'.$mois.'</option>';
+                                    echo '<option value="'.$i.'" '.$selected.'>'.$monthsName[($i - 1)].'</option>';
                                 }
+
                                 ?>
                             </select>
 
@@ -220,6 +221,19 @@ if (isset($response['form_data']) && !empty($response['form_data']))
     
     <script language="javascript" type="text/javascript">
         
+    /*
+        function getMonthDays(monthNumber) 
+        {
+            var monthDays = 0;
+
+            if () {
+
+            }
+
+            return monthDays;
+        }
+        */
+
         // jQuery object
         $(function() {
             /*
@@ -245,6 +259,27 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                 yearSuffix: ''
             });
             */
+
+
+
+            $("#mois_naiss_user").change(function(event) {
+
+                //alert("change");
+
+                $("#jour_naiss_user").get(0).options.length = 1;
+                
+                var days = getNombreJour();
+                var i;
+                //$("jour_naiss_user").
+                /*
+                for (i = 1; i <= days; i++) {
+                
+                    $("jour_naiss_user").options[i] = new Option(days[i], i, false, false);
+                }
+                */
+            });
+
+
         });
 
     </script>

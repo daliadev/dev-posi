@@ -46,32 +46,6 @@ class ServicesInscriptionGestion extends Main
     
     
 
-
-
-    public function getOrganismes()
-    {
-        $resultset = $this->organismeDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
-            { 
-                $organisme = $resultset['response']['organisme'];
-                $resultset['response']['organisme'] = array($organisme);
-            }
-
-            return $resultset;
-        }
-        
-        return false;
-    }
-    
-
-
-
-
     public function filterDataOrganisme(&$formData, $postData)
     {
         $dataOrganisme = array();
@@ -224,7 +198,8 @@ class ServicesInscriptionGestion extends Main
             $formData['ref_intervenant'] = null;
         }
         
-        $dataOrganisme['ref_intervenant'] = $formData['ref_intervenant'];
+        //$dataOrganisme['ref_intervenant'] = $formData['ref_intervenant'];
+
 
         // Récupèration du nom de l'intervenant
         //$formData['nom_intervenant'] = $this->validatePostData($postData['nom_intervenant'], "nom_intervenant", "string", true, "Aucun nom n'a été saisi.", "Le nom de l'intervenant n'est pas correctement saisi.");
@@ -242,14 +217,39 @@ class ServicesInscriptionGestion extends Main
         //$this->formData['date_inscription'] = date("Y-m-d");
         //$dataIntervenant['date_inscription'] = $formData['date_inscription'];
 
+        /*** Traitement de doublon de l'email de l'intervenant et définition du mode de la requête ***/
+            
+        //------------------
+        /*
+        $modeIntervenant = "insert";
+        
+        // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
+        $request = $this->servicesInscriptGestion->getIntervenant("email", $this->formData['email_intervenant']);
+        
+        if (isset($request['response']['intervenant']) && !empty($request['response']['intervenant']))
+        {
+            $modeIntervenant = "update";
+
+            // On récupère la référence de l'intervenant
+            $this->formData['ref_intervenant'] = $request['response']['intervenant']->getId();
+            $dataIntervenant['ref_intervenant'] = $this->formData['ref_intervenant'];
+        }
+        */
+
+        /*** Valeurs finales des champs qui seront inserés dans la table intervenant ***/
+
+        //$dataIntervenant['email_intervenant'] = $this->formData['email_intervenant'];
+
+        //--------------------
+
 
         // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
         /*
         $resultsetInter = $this->getIntervenant("email", $formData['email_intervenant']);
         
-        if (isset($resultsetInter['response']['intervenant']) && !empty($resultsetInter['response']['intervenant']))
+        if ($resultsetInter && $resultsetInter['response']['intervenant'])
         {
-            if ($resultsetInter['response']['intervenant'][0]->getRefOrganisme() == $formData['ref_organ'])
+            if (count($resultsetInter['response']['intervenant']) > 0)
             {
                 $formData['mode_inter'] = "none";
             }
@@ -361,7 +361,7 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    private function setOrganisme($mode, $dataOrganisme)
+    public function setOrganisme($mode, $dataOrganisme)
     {
         
         if (!empty($dataOrganisme) && is_array($dataOrganisme))
@@ -415,7 +415,7 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    private function setIntervenant($mode, $dataIntervenant)
+    public function setIntervenant($mode, $dataIntervenant)
     {
         if (!empty($dataIntervenant) && is_array($dataIntervenant))
         {
@@ -475,17 +475,29 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    /*
     public function getOrganismes()
     {
         $resultset = $this->organismeDAO->selectAll();
-
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
         
-        return $resultset;
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
     }
-    */
+
+
+
+
     
     public function getOrganisme($fieldName, $value)
     {
@@ -521,60 +533,11 @@ class ServicesInscriptionGestion extends Main
         
         return false;
     }
+
+    
     
     
     /*
-    public function setOrganisme($modeRequête, $dataOrganisme)
-    {
-        if (!empty($dataOrganisme) && is_array($dataOrganisme))
-        {
-            $success = false;
-            
-            if ($modeRequête == "insert")
-            {
-                $resultset = $this->organismeDAO->insert($dataOrganisme);
-                
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['organisme']['last_insert_id']) && !empty($resultset['response']['organisme']['last_insert_id']))
-                {
-                    return $resultset;
-                }
-                else 
-                {
-                    $this->registerError("form_request", "L'organisme n'a pu être inséré.");
-                }
-            }
-            else if ($modeRequête == "update")
-            {
-                $resultset = $this->organismeDAO->update($dataOrganisme);
-
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['organisme']['row_count']) && !empty($resultset['response']['organisme']['row_count']))
-                {
-                    return $resultset;
-                } 
-                else 
-                {
-                    $this->registerError("form_request", "L'organisme n'a pu être mis à jour.");
-                }
-            }
-            else 
-            {
-                return true;
-            }
-        }
-        else 
-        {
-            $this->registerError("form_request", "Insertion de l'organisme non autorisée");
-        }
-            
-        return false;
-    }
-    */
-    
-    
-    
-    
     public function getIntervenants()
     {
         $resultset = $this->intervenantDAO->selectAll();
@@ -594,8 +557,11 @@ class ServicesInscriptionGestion extends Main
         
         return false;
     }
+    */
     
-    
+
+
+
     public function getIntervenant($fieldName, $fieldValue)
     {
         switch($fieldName) 
@@ -613,11 +579,25 @@ class ServicesInscriptionGestion extends Main
         }
         
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
+            { 
+                $intervenant = $resultset['response']['intervenant'];
+                $resultset['response']['intervenant'] = array($intervenant);
+            }
+
+            return $resultset;
+        }
         
-        return $resultset;
+        return false;
     }
     
+
+
+
+
     /*
     public function setIntervenant($modeRequête, $dataIntervenant)
     {
@@ -667,7 +647,7 @@ class ServicesInscriptionGestion extends Main
     
     /* requêtes niveaux d'études */
     /*
-    private function getNiveauxEtudes()
+    public function getNiveauxEtudes()
     {
         $resultset = $this->niveauEtudesDAO->selectAll();
         

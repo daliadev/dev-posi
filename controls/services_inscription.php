@@ -881,8 +881,10 @@ class ServicesInscription extends Main
             $dataIntervenant = $this->servicesInscriptGestion->filterDataIntervenant($this->formData, $_POST);
             
             var_dump($this->formData);
+            
             var_dump($dataOrganisme);
             var_dump($dataIntervenant);
+
             var_dump($this->servicesInscriptGestion->errors);
             var_dump($this->errors);
             exit();

@@ -200,19 +200,22 @@ class ServicesInscriptionGestion extends Main
     public function filterDataIntervenant(&$formData, $postData)
     {
         $dataIntervenant = array();
-        $formData['mode_inter'] = "insert";
+        $formData['mode_inter'] = "none";
+        $formData['ref_intervenant'] = null;
 
         // Récupération du champ caché "ref_intervenant" si il existe
         
         if (isset($_POST['ref_intervenant']) && !empty($_POST['ref_intervenant']))
         {
             $formData['ref_intervenant'] = $_POST['ref_intervenant'];
-        }
-        else
-        {
-            $formData['ref_intervenant'] = null;
+            $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
         }
         
+        if (isset($formData['ref_organ']) && !empty($formData['ref_organ']))
+        {
+            $dataIntervenant['ref_organ'] = $formData['ref_organ'];
+        }
+
         //$dataOrganisme['ref_intervenant'] = $formData['ref_intervenant'];
 
 
@@ -227,6 +230,7 @@ class ServicesInscriptionGestion extends Main
         // Récupèration de l'email de l'intervenant
         $formData['email_intervenant'] = $this->validatePostData($postData['email_intervenant'], "email_intervenant", "email", false, "Aucun email n'a été saisi.", "L'email de l'intervenant n'est pas correctement saisi.");
         $dataIntervenant['email_intervenant'] = $formData['email_intervenant'];
+
 
 
         //$this->formData['date_inscription'] = date("Y-m-d");
@@ -245,48 +249,25 @@ class ServicesInscriptionGestion extends Main
         {
             $idOrgan = $resultsetInter['response']['intervenant'][0]->getRefOrganisme();
 
-            if (!empty($formData['ref_organ']) && $idOrgan == $formData['ref_organ'])
+            if (isset($formData['ref_organ']) && !empty($formData['ref_organ']) && $idOrgan == $formData['ref_organ'])
             {
                 $formData['mode_inter'] = "update";
+                $formData['ref_intervenant'] = $resultsetInter['response']['intervenant'][0]->getId();
+                $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
             }
             else
             {
+                $formData['mode_inter'] = "insert";
+                
             }
             
-
-            // On récupère la référence de l'intervenant
-            $formData['ref_intervenant'] = $resultsetInter['response']['intervenant'][0]->getId();
-            $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
+            // On récupère la référence de l'organisme
+            //$formData['ref_organ'] = $resultsetInter['response']['intervenant'][0]->getId();
         }
-        
-
-        /*** Valeurs finales des champs qui seront inserés dans la table intervenant ***/
-
-        //$dataIntervenant['email_intervenant'] = $this->formData['email_intervenant'];
-
-        //--------------------
-
-
-        // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
-        /*
-        $resultsetInter = $this->getIntervenant("email", $formData['email_intervenant']);
-        
-        if ($resultsetInter && $resultsetInter['response']['intervenant'])
+        else
         {
-            if (count($resultsetInter['response']['intervenant']) > 0)
-            {
-                $formData['mode_inter'] = "none";
-            }
-            else 
-            {
-                $formData['mode_inter'] = "update";
-            }
-            
-            // On récupère la référence de l'intervenant
-            $formData['ref_intervenant'] = $resultsetInter['response']['intervenant']->getId();
-            $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
+            $formData['mode_inter'] = "insert";
         }
-        */
 
         return $dataIntervenant;
     }
@@ -315,7 +296,9 @@ class ServicesInscriptionGestion extends Main
                 }
                 else
                 {
-                    $formData['ref_organ'] = $resultsetOrgan['response']['organisme'][0]->getId();
+                    var_dump($resultsetOrgan['response']['organisme']['last_insert_id']);
+                    $formData['ref_organ'] = $resultsetOrgan['response']['organisme']['last_insert_id'];
+                    $dataIntervenant['ref_organ'] = $formData['ref_organ'];
                 }
             }
 
@@ -332,6 +315,11 @@ class ServicesInscriptionGestion extends Main
                     $this->registerError("form_valid", "L'organisme n'a pu être mis à jour.");
                 }
             }
+        }
+        else
+        {
+
+            $this->registerError("form_empty", "Des données sont manquantes.");
         }
     }
 
@@ -350,34 +338,41 @@ class ServicesInscriptionGestion extends Main
         {
             $dataIntervenant['ref_organ'] = $formData['ref_organ'];
 
-            /*** Insertion du nouvel organisme ***/
+            /*** Insertion du nouvel intervenant ***/
 
             if ($mode == "insert")
             {
                 $resultsetInter = $this->setIntervenant("insert", $dataIntervenant);
+
+                if (!$resultsetOrgan)
+                {
+                    $this->resultsetInter("form_valid", "L'intervenant n'a pu être enregistré.");
+                }
+                else
+                {
+                    $formData['ref_intervenant'] = $resultsetInter['response']['intervenant']['last_insert_id'];
+                }
             }
 
-            /*** Mise à jour de l'organisme ***/
+            /*** Mise à jour de l'intervenant ***/
 
             else if ($mode == "update")
             {
                 $formData['ref_intervenant'] = $dataIntervenant['ref_intervenant'];
 
                 $resultsetInter = $this->setIntervenant("update", $dataIntervenant);
+
+                if (!$resultsetInter)
+                {
+                    $this->registerError("form_valid", "L'intervenant n'a pu être mis à jour.");
+                }
             }
         }
-        //else
-        //{
-
-            //header("Location: ".SERVER_URL."erreur/page404");
-            //exit();
-        //}
-        /*
-        if (!$resultsetOrgan)
+        else
         {
-            $this->registerError("form_valid", "L'intervenant n'a pu être enregistré.");
+
+            $this->registerError("form_empty", "Des données sont manquantes.");
         }
-        */
     }
 
 
@@ -407,7 +402,7 @@ class ServicesInscriptionGestion extends Main
 
             else if ($mode == "update")
             {
-                if (!empty($dataQuestion['ref_organ']))
+                if (!empty($dataOrganisme['ref_organ']))
                 {
                     $resultset = $this->organismeDAO->update($dataOrganisme);
 

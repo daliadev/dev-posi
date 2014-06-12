@@ -879,13 +879,9 @@ class ServicesInscription extends Main
 
             // Traitement et récupération des infos saisies de l'intervenant
             $dataIntervenant = $this->servicesInscriptGestion->filterDataIntervenant($this->formData, $_POST);
-            /*
-            var_dump($dataOrganisme);
-            var_dump($dataIntervenant);
-            var_dump($this->servicesInscriptGestion->errors);
-            var_dump($this->errors);
-            exit();
-            */
+
+
+
             /*** Sauvegarde des données dans la base ***/
 
             // Sauvegarde ou mise à jour des données de l'organisme (aucune erreur ne doit être enregistrée).
@@ -894,21 +890,18 @@ class ServicesInscription extends Main
                 $this->servicesInscriptGestion->setOrganismeProperties($dataOrganisme, $this->formData);
             }
 
-            var_dump($dataIntervenant);
-
-           
-
             // Sauvegarde ou mise à jour des données de l'intervenant (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesInscriptGestion->errors) && empty($this->errors)) 
             {
                 $this->servicesInscriptGestion->setIntervenantProperties($dataIntervenant, $this->formData);
             }
 
+            var_dump($this->formData);
+            var_dump($dataOrganisme);
+            var_dump($dataIntervenant);
             var_dump($this->servicesInscriptGestion->errors);
             var_dump($this->errors);
             exit();
-
-
         }
 
 

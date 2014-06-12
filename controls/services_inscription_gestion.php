@@ -44,7 +44,9 @@ class ServicesInscriptionGestion extends Main
         $this->inscriptionDAO = new InscriptionDAO();
     }
     
-    
+
+
+
 
     public function filterDataOrganisme(&$formData, $postData)
     {
@@ -296,9 +298,7 @@ class ServicesInscriptionGestion extends Main
                 }
                 else
                 {
-                    var_dump($resultsetOrgan['response']['organisme']['last_insert_id']);
                     $formData['ref_organ'] = $resultsetOrgan['response']['organisme']['last_insert_id'];
-                    $dataIntervenant['ref_organ'] = $formData['ref_organ'];
                 }
             }
 
@@ -334,7 +334,9 @@ class ServicesInscriptionGestion extends Main
 
         $mode = $formData['mode_inter'];
 
-        if (!empty($this->dataIntervenant['email_intervenant']) && isset($formData['ref_organ']) && !empty($formData['ref_organ']))
+        //var_dump($formData['ref_organ']);
+
+        if (!empty($dataIntervenant['email_intervenant']) && isset($formData['ref_organ']) && !empty($formData['ref_organ']))
         {
             $dataIntervenant['ref_organ'] = $formData['ref_organ'];
 
@@ -344,9 +346,9 @@ class ServicesInscriptionGestion extends Main
             {
                 $resultsetInter = $this->setIntervenant("insert", $dataIntervenant);
 
-                if (!$resultsetOrgan)
+                if (!$resultsetInter)
                 {
-                    $this->resultsetInter("form_valid", "L'intervenant n'a pu être enregistré.");
+                    $this->registerError("form_valid", "L'intervenant n'a pu être enregistré.");
                 }
                 else
                 {
@@ -399,7 +401,6 @@ class ServicesInscriptionGestion extends Main
                     $this->registerError("form_request", "L'organisme n'a pu être inséré.");
                 }
             }
-
             else if ($mode == "update")
             {
                 if (!empty($dataOrganisme['ref_organ']))
@@ -438,7 +439,7 @@ class ServicesInscriptionGestion extends Main
     {
         if (!empty($dataIntervenant) && is_array($dataIntervenant))
         {
-            if ($modeRequête == "insert")
+            if ($mode == "insert")
             {
                 $resultset = $this->intervenantDAO->insert($dataIntervenant);
                 
@@ -452,10 +453,13 @@ class ServicesInscriptionGestion extends Main
                     $this->registerError("form_request", "L'intervenant n'a pu être inséré.");
                 }
             }
-            else if ($modeRequête == "update")
+            else if ($mode == "update")
             {
-                if (!empty($dataQuestion['ref_organ']))
+                if (!empty($dataIntervenant['ref_intervenant']))
                 {
+                    //$dataIntervenant['ref_intervenant'] = $dataIntervenant['ref_intervenant'];
+                    //unset($dataIntervenant['ref_intervenant']);
+
                     $resultset = $this->intervenantDAO->update($dataIntervenant);
 
                     // Traitement des erreurs de la requête

@@ -64,6 +64,39 @@ $form_url = $response['url'];
             <div class="zone-formu">
 
                 <div class="titre-form" id="titre-organ">Organisme</div>
+                
+                <?php
+
+                    if (isset($response['errors']) && !empty($response['errors']))
+                    {
+                        echo '<div id="zone-erreur">';
+                        echo '<ul>';
+                        foreach($response['errors'] as $error)
+                        {
+                            if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                            {
+                                echo '<li>'.$error['message'].'</li>';
+                            }
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+                    else if (isset($response['success']) && !empty($response['success']))
+                    {
+                        echo '<div id="zone-success">';
+                        echo '<ul>';
+                        foreach($response['success'] as $message)
+                        {
+                            if ($message)
+                            {
+                                echo '<li>'.$message.'</li>';
+                            }
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+
+                ?>
 
                 <form id="form-posi" name="form_organisme" action="<?php echo $form_url; ?>" method="post">
                     
@@ -146,24 +179,6 @@ $form_url = $response['url'];
 
                         </div>
 
-                        
-
-                        <?php
-                        if (isset($response['errors']) && !empty($response['errors']))
-                        {
-                            echo '<div id="zone-erreur">';
-                            echo '<ul>';
-                            foreach($response['errors'] as $error)
-                            {
-                                if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-                                {
-                                    echo '<li>'.$error['message'].'</li>';
-                                }
-                            }
-                            echo '</ul>';
-                            echo '</div>';
-                        }
-                        ?>
                 
                         <div id="submit">
                             <input type="submit" value="Envoyer" name="valid_form_organ" onclick="verifOrgan();" />

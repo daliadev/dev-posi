@@ -152,9 +152,13 @@ class IntervenantDAO extends ModelDAO
         
         if (!empty($values))
         {
-            $request = $this->createQueryString("update", $values, "intervenant");
+            $idInter = $values['ref_intervenant'];
+            unset($values['ref_intervenant']);
 
+            $request = $this->createQueryString("update", $values, "intervenant", "WHERE id_intervenant = ".$idInter);
+            var_dump($request);
             $this->resultset['response'] = $this->executeRequest("update", $request, "intervenant", "Intervenant");
+            var_dump($this->resultset['response']);
         }
         else
         {

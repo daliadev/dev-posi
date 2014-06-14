@@ -84,9 +84,9 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                         <p style="margin-bottom:0px;">Date de naissance</p>
 
-                        <div class="input" style="float:left; width:80px;">
-                            <label for="jour_naiss_user">Jour <span class="asterix">*</span></label>
-                            <select name="jour_naiss_user" id="jour_naiss_user" style="width:60px;">
+                        <div class="input" style="float:left; width:90px;">
+                            <label for="jour_naiss_user_cbox">Jour <span class="asterix">*</span></label>
+                            <select name="jour_naiss_user_cbox" id="jour_naiss_user_cbox" style="width:80px;">
                                 <option value="select_cbox">---</option>
 
                                 <?php
@@ -105,9 +105,9 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                             <!-- <input type="text" name="jour_naiss_user" id="jour_naiss_user" style="width:40px;" title="Veuillez entrer le jour de votre date de naissance" value="" required /> -->
                         </div>
 
-                        <div class="input" style="float:left; width:100px;">
-                            <label for="mois_naiss_user">Mois <span class="asterix">*</span></label>
-                            <select name="mois_naiss_user" id="mois_naiss_user" style="width:80px;">
+                        <div class="input" style="float:left; width:110px;">
+                            <label for="mois_naiss_user_cbox">Mois <span class="asterix">*</span></label>
+                            <select name="mois_naiss_user_cbox" id="mois_naiss_user_cbox" style="width:100px;">
                                 <option value="select_cbox">---</option>
 
                                 <?php
@@ -128,8 +128,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                         </div>
 
                         <div class="input" style="float:left; width:100px;">
-                            <label for="annee_naiss_user">Année <span class="asterix">*</span></label>
-                            <select name="annee_naiss_user" id="annee_naiss_user" style="width:80px;">
+                            <label for="annee_naiss_user_cbox">Année <span class="asterix">*</span></label>
+                            <select name="annee_naiss_user" id="annee_naiss_user_cbox" style="width:100px;">
                                 <option value="select_cbox">---</option>
 
                                 <?php
@@ -154,7 +154,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 
                         <div class="input">
-                            <label for="niveau_etude">Niveau de formation <span class="asterix">*</span></label>
+                            <label for="ref_niveau_cbox">Niveau de formation <span class="asterix">*</span></label>
                             <select name="ref_niveau_cbox" id="ref_niveau_cbox">
                                 <option value="select_cbox">---</option>
                                 <?php
@@ -262,11 +262,11 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 
 
-            $("#mois_naiss_user").change(function(event) {
+            // $("#mois_naiss_user").change(function(event) {
 
                 //alert("change");
 
-                $("#jour_naiss_user").get(0).options.length = 1;
+                // $("#jour_naiss_user").get(0).options.length = 1;
                 
                 //var days = getNombreJour($("jour_naiss_user").val());
                 //var i;
@@ -277,7 +277,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                     $("jour_naiss_user").options[i] = new Option(days[i], i, false, false);
                 }
                 */
-            });
+            // });
 
 
         });

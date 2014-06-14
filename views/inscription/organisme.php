@@ -75,7 +75,7 @@ $form_url = $response['url'];
                         {
                             if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
                             {
-                                echo '<li>'.$error['message'].'</li>';
+                                echo '<li>- '.$error['message'].'</li>';
                             }
                         }
                         echo '</ul>';

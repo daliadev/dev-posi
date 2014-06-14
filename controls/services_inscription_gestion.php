@@ -241,34 +241,24 @@ class ServicesInscriptionGestion extends Main
         /*** Traitement de doublon de l'email de l'intervenant et définition du mode de la requête ***/
             
         //------------------
-        
-        //$modeIntervenant = "insert";
+        //
+        $formData['mode_inter'] = "insert";
         
         // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
         $resultsetInter = $this->getIntervenant("email", $formData['email_intervenant']);
         
         if (isset($resultsetInter['response']['intervenant']) && !empty($resultsetInter['response']['intervenant']))
         {
-            $idOrgan = $resultsetInter['response']['intervenant'][0]->getRefOrganisme();
+            $refOrgan = $resultsetInter['response']['intervenant'][0]->getRefOrganisme();
 
-            if (isset($formData['ref_organ']) && !empty($formData['ref_organ']) && $idOrgan == $formData['ref_organ'])
+            if (isset($formData['ref_organ']) && !empty($formData['ref_organ']) && $refOrgan == $formData['ref_organ'])
             {
-                $formData['mode_inter'] = "update";
-                $formData['ref_intervenant'] = $resultsetInter['response']['intervenant'][0]->getId();
-                $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
+                $formData['mode_inter'] = "none";
             }
             else
             {
-                $formData['mode_inter'] = "insert";
-                
+                $this->registerError("form_valid", "L'email a déjà été saisi pour un autre organisme.");
             }
-            
-            // On récupère la référence de l'organisme
-            //$formData['ref_organ'] = $resultsetInter['response']['intervenant'][0]->getId();
-        }
-        else
-        {
-            $formData['mode_inter'] = "insert";
         }
 
         return $dataIntervenant;
@@ -370,9 +360,8 @@ class ServicesInscriptionGestion extends Main
                 }
             }
         }
-        else
+        else 
         {
-
             $this->registerError("form_empty", "Des données sont manquantes.");
         }
     }

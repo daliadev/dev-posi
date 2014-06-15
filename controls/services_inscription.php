@@ -953,8 +953,8 @@ class ServicesInscription extends Main
         if (empty($this->errors) && !empty($_POST))
         {
             // On doit conserver certaines informations pour le formulaire utilisateur
+            ServicesAuth::setSessionData('ref_organ', $this->formData['ref_organ']);
             ServicesAuth::setSessionData('ref_intervenant', $this->formData['ref_intervenant']);
-            //ServicesAuth::setSessionData('date_inscription', $this->formData['date_inscription']);
 
             // Redirection vers le formulaire utilisateurs
             header("Location: ".SERVER_URL."inscription/utilisateur/");
@@ -991,7 +991,7 @@ class ServicesInscription extends Main
         $dataUtilisateur = array();
 
 
-        // On initialise les données qui vont être validées et renvoyées au formulaire
+        // On initialise les données qui vont être validées et renvoyées au formulaire5
         
         $initializedData = array(
             'ref_intervenant' => "text",
@@ -1024,20 +1024,19 @@ class ServicesInscription extends Main
 
             /*** Récupération des données postées ***/
 
-            // Traitement et récupération des infos saisies pour l'inscription
-            //$dataInscription = $this->servicesInscriptGestion->filterDataInscription($this->formData, $_POST); 
-
             // Traitement et récupération des infos saisies de l'utilisateur
-            //$dataUtilisateur = $this->servicesInscriptGestion->filterDataUtilisateur($this->formData, $_POST);
+            $dataUtilisateur = $this->servicesInscriptGestion->filterDataUtilisateur($this->formData, $_POST);
 
-            /*
+            // Traitement et récupération des infos saisies pour l'inscription
+            $dataInscription = $this->servicesInscriptGestion->filterDataInscription($this->formData, $_POST); 
+            
             var_dump($this->formData);
             var_dump($dataInscription);
             var_dump($dataUtilisateur);
             var_dump($this->servicesInscriptGestion->errors);
             var_dump($this->errors);
             exit();
-            */
+            
 
             /*** Sauvegarde des données dans la base ***/
 
@@ -1053,10 +1052,8 @@ class ServicesInscription extends Main
                 //$this->servicesInscriptGestion->setUtilisateurProperties($dataUtilisateur, $this->formData);
             }
 
-
             
         }
-
 
 
         /*** Retour des données traitées du formulaire ***/
@@ -1090,7 +1087,6 @@ class ServicesInscription extends Main
         /*** Collecte des données pour l'affichage de la page ***/
 
         $listeNiveaux = $this->servicesInscriptGestion->getNiveauxEtudes();
-
 
         // Assemblage de toutes les données de la réponse
         if ($listeNiveaux)

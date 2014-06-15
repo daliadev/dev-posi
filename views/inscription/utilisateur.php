@@ -1,43 +1,49 @@
 <?php
 
-$form_url = WEBROOT."inscription/validation/utilisateur";
-
 
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
-$formData['ref_user'] = "";
 $formData['ref_intervenant'] = "";
-if (isset($response['ref_intervenant']) && !empty($response['ref_intervenant']))
-{ 
-    $formData['ref_intervenant'] = $response['ref_intervenant'];
-}
 $formData['date_inscription'] = "";
-if (isset($response['date_inscription']) && !empty($response['date_inscription']))
-{ 
-    $formData['date_inscription'] = $response['date_inscription'];
-}
-
+$formData['ref_user'] = "";
 $formData['ref_niveau_cbox'] = "";
 $formData['ref_niveau'] = "";
 $formData['nom_user'] = "";
 $formData['prenom_user'] = "";
+$formData['jour_naiss_user_cbox'] = "";
+$formData['jour_naiss_user'] = "";
+$formData['mois_naiss_user_cbox'] = "";
+$formData['mois_naiss_user'] = "";
+$formData['annee_naiss_user_cbox'] = "";
+$formData['annee_naiss_user'] = "";
 $formData['date_naiss_user'] = "";
 $formData['adresse_user'] = "";
 $formData['code_postal_user'] = "";
 $formData['ville_user'] = "";
 $formData['email_user'] = "";
- 
+
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
-{
+{      
     foreach($response['form_data'] as $key => $value)
     {
-        $formData[$key] = $value;
+        if (is_array($response['form_data'][$key]) && count($response['form_data'][$key]) > 0)
+        {
+            for ($i = 0; $i < count($response['form_data'][$key]); $i++)
+            {
+                $formData[$key][$i] = $response['form_data'][$key][$i];
+            }
+        }
+        else 
+        {
+            $formData[$key] = $value;
+        }
     }
 }
 
-//var_dump($response);
+// url vers laquel doit pointer le formulaire
+$form_url = $response['url'];
 
 ?>
 
@@ -62,18 +68,18 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                     <div class="form-small">
 
                         <input type="hidden" value="<?php echo $formData['ref_user']; ?>" name="ref_user">
-                        <input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">
+                        <!-- <input type="hidden" value="<?php //echo $formData['ref_intervenant']; ?>" name="ref_intervenant"> -->
                         <input type="hidden" value="<?php echo $formData['date_inscription']; ?>" name="date_inscription">
 
 
                         <div class="input">
                             <label for="nom_user">Nom <span class="asterix">*</span></label>
-                            <input type="text" name="nom_user" id="nom_user" value="<?php echo $formData['nom_user']; ?>" required />
+                            <input type="text" name="nom_user" id="nom_user" value="<?php echo $formData['nom_user']; ?>" required>
                         </div>
 
                         <div class="input">
                             <label for="prenom_user">Prénom <span class="asterix">*</span></label>
-                            <input type="text" name="prenom_user" id="prenom_user" value="<?php echo $formData['prenom_user']; ?>" required />
+                            <input type="text" name="prenom_user" id="prenom_user" value="<?php echo $formData['prenom_user']; ?>" required>
                         </div>
                         <!-- 
                         <div class="input">
@@ -91,11 +97,16 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                                 <?php
 
+                                $selected = "";
+
                                 for ($i = 1; $i <= 31; $i++)
                                 {
                                     $jour = $i;
-                                    $selected = "";
 
+                                    if (!empty($formData['jour_naiss_user_cbox']) && $formData['jour_naiss_user_cbox'] != "select_cbox" && $formData['jour_naiss_user_cbox'] == $i)
+                                    {
+                                        $selected = "selected";
+                                    }
                                     echo '<option value="'.$jour.'" '.$selected.'>'.$jour.'</option>';
                                 }
                                 ?>
@@ -113,11 +124,18 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                                 <?php
                                 $monthsName = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre');
 
+                                $selected = "";
+
                                 for ($i = 1; $i <= 12; $i++)
                                 {
-                                    $selected = "";
+                                    $nomMois = $monthsName[($i - 1)];
 
-                                    echo '<option value="'.$i.'" '.$selected.'>'.$monthsName[($i - 1)].'</option>';
+                                    if (!empty($formData['mois_naiss_user_cbox']) && $formData['mois_naiss_user_cbox'] != "select_cbox" && $formData['mois_naiss_user_cbox'] == $i)
+                                    {
+                                        $selected = "selected";
+                                    }
+
+                                    echo '<option value="'.$i.'" '.$selected.'>'.$nomMois.'</option>';
                                 }
 
                                 ?>
@@ -129,17 +147,23 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
                         <div class="input" style="float:left; width:100px;">
                             <label for="annee_naiss_user_cbox">Année <span class="asterix">*</span></label>
-                            <select name="annee_naiss_user" id="annee_naiss_user_cbox" style="width:100px;">
+                            <select name="annee_naiss_user_cbox" id="annee_naiss_user_cbox" style="width:100px;">
                                 <option value="select_cbox">---</option>
 
                                 <?php
                                 $minYear = intval(date('Y')) - 70;
                                 $maxYear = intval(date('Y')) - 10;
 
+                                $selected = "";
+
                                 for ($i = $maxYear; $i >= $minYear; $i--)
                                 {
                                     $year = $i;
-                                    $selected = "";
+                                    
+                                    if (!empty($formData['annee_naiss_user_cbox']) && $formData['annee_naiss_user_cbox'] != "select_cbox" && $formData['annee_naiss_user_cbox'] == $i)
+                                    {
+                                        $selected = "selected";
+                                    }
 
                                     echo '<option value="'.$year.'" '.$selected.'>'.$year.'</option>';
                                 }
@@ -191,7 +215,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                         ?>
 
                         <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();" />
+                            <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();">
                         </div>
 
                     </div>

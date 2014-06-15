@@ -110,7 +110,7 @@ $form_url = $response['url'];
 
                             <div class="input"> 
                                 <label for="code_identification">Code organisme <span class="asterix">*</span></label><br/>
-                                <input type="password" name="code_identification" id="code_identification" value="" required title="Entrer votre code organisme" />
+                                <input type="password" name="code_identification" id="code_identification" value="" required title="Entrer votre code organisme">
                             </div>
 
                         </div>
@@ -154,17 +154,17 @@ $form_url = $response['url'];
 
                             <div class="input">
                                 <label for="nom_organ">Veuillez entrer votre organisme <span class="asterix">*</span></label><br/>
-                                <input value="<?php echo $formData['nom_organ']; ?>" name="nom_organ" id="nom_organ" type="text" />
+                                <input value="<?php echo $formData['nom_organ']; ?>" name="nom_organ" id="nom_organ" type="text">
                             </div>
 
                             <div class="input">
                                 <label for="code_postal_organ">Code postal <span class="asterix">*</span></label><br/>
-                                <input type="tel" value="<?php echo $formData['code_postal_organ']; ?>" name="code_postal_organ" id="code_postal_organ"  pattern="[0-9]{5}" title="Ex:76000" />
+                                <input type="tel" value="<?php echo $formData['code_postal_organ']; ?>" name="code_postal_organ" id="code_postal_organ"  pattern="[0-9]{5}" title="Ex:76000">
                             </div>
 
                             <div class="input">
                                 <label for="tel_organ">Téléphone <span class="asterix">*</span></label><br/>
-                                <input type="tel" value="<?php echo $formData['tel_organ']; ?>" name="tel_organ" id="tel_organ" pattern="[0-9]{10}" />
+                                <input type="tel" value="<?php echo $formData['tel_organ']; ?>" name="tel_organ" id="tel_organ" pattern="[0-9]{10}">
                             </div>
 
                         </div>
@@ -174,14 +174,14 @@ $form_url = $response['url'];
 
                             <div class="input">
                                 <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
-                                <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)" />
+                                <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
                             </div>
 
                         </div>
 
                 
                         <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_organ" onclick="verifOrgan();" />
+                            <input type="submit" value="Envoyer" name="valid_form_organ" onclick="verifOrgan();">
                         </div>
 
                     </div>

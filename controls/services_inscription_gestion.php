@@ -7,9 +7,8 @@
  * @author Nicolas Beurion
  */
 
-require_once(ROOT.'controls/authentication.php');
+//require_once(ROOT.'controls/authentication.php');
 
-//require_once(ROOT.'models/dao/model_dao.php');
 
 // Fichiers requis pour le formulaire organisme
 require_once(ROOT.'models/dao/organisme_dao.php');
@@ -46,6 +45,57 @@ class ServicesInscriptionGestion extends Main
     
 
 
+
+    public function getOrganismes()
+    {
+        $resultset = $this->organismeDAO->selectAll();
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+
+
+
+
+    public function getNiveauxEtudes()
+    {
+        $resultset = $this->niveauEtudesDAO->selectAll();
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
+            { 
+                $niveau = $resultset['response']['niveau_etudes'];
+                $resultset['response']['niveau_etudes'] = array($niveau);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+
+
+
+
+
+
+
+    /***   Filtrage et traitement des données des formulaires   ***/
 
 
     public function filterDataOrganisme(&$formData, $postData)
@@ -264,6 +314,251 @@ class ServicesInscriptionGestion extends Main
         return $dataIntervenant;
     }
 
+
+
+
+
+    public function filterDataUtilisateur(&$formData, $postData)
+    {
+
+        $dataUtilisateur = array();
+
+        $formData['mode_user'] = "none";
+        $formData['ref_user'] = null;
+
+
+        /*** Récupération du champ caché "référence utilisateur" si il existe ***/
+        if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
+        {
+            $this->formData['ref_user'] = $_POST['ref_user'];
+        }
+        
+
+        /*** Traitement de la valeur de la liste(combo-box) niveau d'études ***/
+         
+        // Récupération de l'id du niveau d'études s'il a été correctement sélectionné ou saisi
+        if (!empty($_POST['ref_niveau_cbox']))
+        {
+            $formData['ref_niveau_cbox'] = $_POST['ref_niveau_cbox'];
+                    
+            if ($_POST['ref_niveau_cbox'] == "select_cbox")
+            {
+                // Aucun niveau n'a été sélectionné ou saisi : erreur
+                $this->registerError("form_empty", "Aucun niveau d'études n'a été sélectionné.");
+            }
+            else 
+            {
+                // Un niveau a été sélectionné dans la liste
+                $formData['ref_niveau'] = $_POST['ref_niveau_cbox'];
+            }
+        }
+        
+        if ($formData['ref_niveau'])
+        {
+            $dataUtilisateur['ref_niveau'] = $formData['ref_niveau'];
+        }
+        
+
+
+        /*** Traitement des valeur des listes(combo-box) de la date de naissance ***/
+
+        // Récupération du jour de naissance
+        if (!empty($_POST['jour_naiss_user_cbox']))
+        {
+            $formData['jour_naiss_user_cbox'] = $_POST['jour_naiss_user_cbox'];
+                    
+            if ($_POST['jour_naiss_user_cbox'] == "select_cbox")
+            {
+                $this->registerError("form_empty", "Aucun jour de naissance n'a été sélectionné.");
+            }
+            else 
+            {
+                $formData['jour_naiss_user'] = $_POST['jour_naiss_user_cbox'];
+            }
+        }
+
+        // Récupération du mois de naissance
+        if (!empty($_POST['mois_naiss_user_cbox']))
+        {
+            $formData['mois_naiss_user_cbox'] = $_POST['mois_naiss_user_cbox'];
+                    
+            if ($_POST['mois_naiss_user_cbox'] == "select_cbox")
+            {
+                $this->registerError("form_empty", "Aucun mois de naissance n'a été sélectionné.");
+            }
+            else 
+            {
+                $formData['mois_naiss_user'] = $_POST['mois_naiss_user_cbox'];
+            }
+        }
+
+        // Récupération de l'année de naissance
+        if (!empty($_POST['annee_naiss_user_cbox']))
+        {
+            $formData['annee_naiss_user_cbox'] = $_POST['annee_naiss_user_cbox'];
+                    
+            if ($_POST['annee_naiss_user_cbox'] == "select_cbox")
+            {
+                $this->registerError("form_empty", "Aucune année de naissance n'a été sélectionné.");
+            }
+            else 
+            {
+                $formData['annee_naiss_user'] = $_POST['annee_naiss_user_cbox'];
+            }
+        }
+
+        // On en déduit la date de naissance, et on crée la date au format us pour la sauvegarde des données
+        if ($formData['jour_naiss_user'] && $formData['mois_naiss_user'] && $formData['annee_naiss_user'])
+        {
+            $formData['date_naiss_user'] = $formData['jour_naiss_user']."/".$formData['mois_naiss_user']."/".$formData['annee_naiss_user'];
+            $dataUtilisateur['date_naiss_user'] = $formData['annee_naiss_user']."-".$formData['mois_naiss_user']."-".$formData['jour_naiss_user'];
+        }
+        else
+        {
+            $this->registerError("form_data", "La date de naissance n'a pas été sélectionnée correctement.");
+        }
+
+        var_dump($formData['date_naiss_user']);
+
+
+
+        /*** Récupèration du nom et du prénom de l'utilisateur ***/
+
+        $formData['nom_user'] = $this->validatePostData($postData['nom_user'], "nom_user", "string", true, "Aucun nom n'a été saisi.", "Le nom de l'utilisateur n'est pas correctement saisi.");
+        $formData['prenom_user'] = $this->validatePostData($postData['prenom_user'], "prenom_user", "string", true, "Aucun prénom n'a été saisi.", "Le nom de l'utilisateur n'est pas correctement saisi.");
+
+
+
+        /*** Traitement de l'identification d'un utilisateur similaire à la saisie ***/
+
+        $formData['mode_user'] = "insert";
+
+        $duplicateNomsUser = false;
+
+
+        // On assaini d'abord le nom et le prenom saisi
+        $cleanPrenomSaisi = Tools::stripSpecialCharsFromString($formData['prenom_user']);
+        $cleanNomSaisi = Tools::stripSpecialCharsFromString($formData['nom_user']);
+
+        $prenomUserSaisi = preg_replace("#[^A-Z]#", "", strtoupper($cleanPrenomSaisi));
+        $nomUserSaisi = preg_replace("#[^A-Z]#", "", strtoupper($cleanNomSaisi));
+
+        echo "Noms saisis = ".$prenomUserSaisi." ".$nomUserSaisi."<br/>";
+
+        
+        
+        // On va chercher tous les utilisateurs qui ont la même date de naissance que la saisie
+        $resultsetUser = $this->getUtilisateur("date_naissance", Tools::toggleDate($formData['date_naiss_user'], "us"));
+        
+        if ($resultsetUser)
+        {
+            foreach ($resultsetUser['response']['utilisateur'] as $user)
+            {
+                $prenomUser = $user->getPrenom();
+                $nomUser = $user->getNom();
+
+                // On enlève les espaces, les caractères spéciaux et on met le nom saisi tout en majuscules.
+                $cleanPrenom = Tools::stripSpecialCharsFromString($formData['prenom_user']);
+                $cleanNom = Tools::stripSpecialCharsFromString($formData['nom_user']);
+
+                $prenomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanPrenom));
+                $nomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanNom));
+
+                echo "Noms bdd = ".$prenomUser." ".$nomUser."<br/>";
+
+                if (($prenomUser == $prenomUserSaisi) && ($nomUser == $nomUserSaisi))
+                {
+                    $formData['mode_user'] = "update";
+
+                    if ($formData['ref_niveau'] == $user->getRefNiveau())
+                    {
+                        $formData['mode_user'] = "none";
+                    }
+
+                    $duplicateNomsUser = true;
+                    break;
+                }
+                
+            }
+        }
+
+        if ($duplicateNomsUser)
+        {
+            $this->registerError("form_valid", "Le nom de l'utilisateur existe déjà.");
+        }
+        else
+        {
+            // Traitement du nom et prénom de l'utilisateur pour l'insertion en base de données
+            $dataUtilisateur['nom_user'] = $formData['nom_user'];
+            $dataUtilisateur['prenom_user'] = $formData['prenom_user'];
+        }
+
+
+        /*** Récupèration des autres champs de l'utilisateur ***/
+
+        // Récupèration de l'adresse de l'organisme
+        //$formData['adresse_user'] = $this->validatePostData($postData['adresse_user'], "adresse_user", "string", false, "Aucune adresse n'a été saisie.", "L'adresse l'utilisateur n'est pas correctement saisie.");
+        //$dataUtilisateur['adresse_user'] = $formData['adresse_user'];
+
+        // Récupèration du code postal de l'organisme
+        //$formData['code_postal_user'] = $this->validatePostData($postData['code_postal_user'], "code_postal_user", "integer", false, "Aucun code postal n'a été saisi.", "Le code postal de l'utilisateur n'est pas correctement saisi.");
+        //$dataUtilisateur['code_postal_user'] = $formData['code_postal_user'];
+
+        // Récupèration de la ville de l'organisme
+        //$formData['ville_user'] = $this->validatePostData($postData['ville_user'], "ville_user", "string", false, "Aucune ville n'a été saisie.", "La ville de l'utilisateur n'est pas correctement saisie.");
+        //$dataUtilisateur['ville_user'] = $formData['ville_user'];
+
+        // Récupèration du téléphone de l'organisme
+        //$formData['tel_user'] = $this->validatePostData($postData['tel_user'], "tel_user", "integer", false, "Aucun numéro de téléphone n'a été saisi.", "Le numéro de téléphone de l'utilisateur n'est pas correctement saisi.");
+        //$dataUtilisateur['tel_user'] = $formData['tel_user'];
+
+        // Récupèration de l'email de l'organisme
+        //$formData['email_user'] = $this->validatePostData($postData['email_user'], "email_user", "email", false, "Aucun email n'a été saisi.", "L'email de l'utilisateur n'est pas correctement saisi.");
+        //$dataUtilisateur['email_user'] = $formData['email_user'];
+        
+        return $dataUtilisateur;
+    }
+
+
+
+
+
+    public function filterDataInscription(&$formData, $postData)
+    {
+
+        $dataInscription = array();
+
+        $formData['mode_user'] = "none";
+        $formData['ref_inscription'] = null;
+        $formData['ref_user'] = null;
+        //$formData['ref_intervenant'] = null;
+
+
+        /*** Récupération du champ caché "référence inscription" si il existe ***/
+
+        if (isset($_POST['ref_inscription']) && !empty($_POST['ref_inscription']))
+        {
+            $this->formData['ref_inscription'] = $_POST['ref_inscription'];
+        }
+
+        /*** Récupération du champ caché "référence utilisateur" si il existe ***/
+
+        if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
+        {
+            $this->formData['ref_user'] = $_POST['ref_user'];
+        }
+
+        $dataInscription['date_inscription'] = date("Y-m-d");
+
+        return $dataInscription;
+    }
+
+
+
+
+
+
+    /***   Insertions et mises à jour dans la base avec les données des formulaires   ***/
 
 
 
@@ -487,25 +782,7 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    public function getOrganismes()
-    {
-        $resultset = $this->organismeDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
-            { 
-                $organisme = $resultset['response']['organisme'];
-                $resultset['response']['organisme'] = array($organisme);
-            }
-
-            return $resultset;
-        }
-        
-        return false;
-    }
+    
 
 
 
@@ -657,37 +934,7 @@ class ServicesInscriptionGestion extends Main
     }
     */
     
-    /* requêtes niveaux d'études */
-    /*
-    public function getNiveauxEtudes()
-    {
-        $resultset = $this->niveauEtudesDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
-            { 
-                $niveau = $resultset['response']['niveau_etudes'];
-                $resultset['response']['niveau_etudes'] = array($niveau);
-            }
-
-            return $resultset;
-        }
-        
-        return false;
-    }
-    */
-    public function getNiveauxEtudes()
-    {
-        $resultset = $this->niveauEtudesDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        return $resultset;
-    }
+    
     
     
     public function getUtilisateurs()
@@ -715,6 +962,11 @@ class ServicesInscriptionGestion extends Main
                 
                 $resultset = $this->utilisateurDAO->selectByName($fieldValue);
                 break;
+
+            case 'date_naissance':
+                
+                $resultset = $this->utilisateurDAO->selectByDateNaissance($fieldValue);
+                break;
             
             case 'duplicate_user':
                 
@@ -733,9 +985,19 @@ class ServicesInscriptionGestion extends Main
         }
         
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        if ($resultset['response'] && !$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultset['response']['utilisateur'];
+                $resultset['response']['utilisateur'] = array($utilisateur);
+            }
+
+            return $resultset;
+        }
         
-        return $resultset;
+        return false;
     }
     
     

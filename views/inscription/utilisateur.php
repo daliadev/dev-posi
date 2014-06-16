@@ -21,6 +21,7 @@ $formData['adresse_user'] = "";
 $formData['code_postal_user'] = "";
 $formData['ville_user'] = "";
 $formData['email_user'] = "";
+$formData['name_validation'] = "";
 
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -68,29 +69,42 @@ $duplicate_name = "";
 
                 <?php
 
+                    $showErrors = true;
+                    //$duplicate_name = "false";
+
                     if (isset($response['errors']) && !empty($response['errors']))
                     {
+                        
                         foreach($response['errors'] as $error)
                         {
                             if ($error['type'] == "duplicate_name")
                             {
-                                $duplicate_name = $error['message'];
+                                //$duplicate_name = "true";
+                                $showErrors = false;
+                                break;
+                            }
+                            //else
+                            //{
+                            //    $showErrors = true;
+                            //}
+                        }
+                        
+                        if ($showErrors)
+                        {
+                            echo '<div id="zone-erreur">';
+                            echo '<ul>';
+                            foreach($response['errors'] as $error)
+                            {
+                                if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                                {
+                                    echo '<li>- '.$error['message'].'</li>';
+                                }
                                 
                             }
+                            echo '</ul>';
+                            echo '</div>';
                         }
-
-                        echo '<div id="zone-erreur">';
-                        echo '<ul>';
-                        foreach($response['errors'] as $error)
-                        {
-                            if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-                            {
-                                echo '<li>- '.$error['message'].'</li>';
-                            }
-                            
-                        }
-                        echo '</ul>';
-                        echo '</div>';
+                        
                     }
                     else if (isset($response['success']) && !empty($response['success']))
                     {
@@ -116,7 +130,8 @@ $duplicate_name = "";
 
                         <input type="hidden" value="<?php echo $formData['ref_user']; ?>" name="ref_user">
                         <!-- <input type="hidden" value="<?php //echo $formData['date_inscription']; ?>" name="date_inscription"> -->
-                        <input type="hidden" value="<?php echo $duplicate_name; ?>" id="error_duplicate">
+                        <!-- <input type="hidden" value="<?php //echo $duplicate_name; ?>" id="error_duplicate"> -->
+                        <input type="hidden" value="<?php echo $formData['name_validation']; ?>" name="name_validation" id="name-validation">
 
                         <div class="input">
                             <label for="nom_user">Nom <span class="asterix">*</span></label>
@@ -292,19 +307,21 @@ $duplicate_name = "";
             });
             */
 
-            //$(".form-small").hide();
 
+            if ($("#name-validation").val() === "false") {
 
-
-            if ($("#error_duplicate").val() != "") {
-
-                $.message('Voulez-vous continuer la navigation ?', {
-                    icon: 'alert', 
-                    buttons: ['Oui', 'Non'], 
+                $.message(
+                    'Une personne portant le même nom a déjà effectuée un positionnement. S\'il s\'agit bien de vous, cliquez sur "Continuer".<br>Sinon, cliquez sur "Annuler" pour corriger la saisie de vos nom, prénom et date de naissance.', {
+                    icon: 'info', 
+                    buttons: ['Continuer', 'Annuler'], 
                     callback: function(buttonText) {
-                        if (buttonText === 'Oui') {
-                            // Proceed and delete record
+                        if (buttonText === 'Continuer') {
+                            $("#name-validation").val("true");
                             $("#form-posi").submit();
+                        }
+                        else
+                        {
+                            $("#name-validation").val("false");
                         }
                     }
                 });

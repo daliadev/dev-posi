@@ -14,14 +14,13 @@
 			this.text = text;
 			this.el = $('<div>', {'class': 'message-box', 'style': 'display:none'});
 			var posX = $(window).width() / 2 - this.el.outerWidth() / 2;
-			var posY = $(window).height() / 2 - this.el.outerHeight() / 2;
+			//var posY = $(window).height() / 3 - this.el.outerHeight() / 2;
+			var posY = 0;
 			this.el.css('left', posX).css('top', posY);
-
 
 			this.settings = $.extend({}, $.message.defaults, settings);
 			var buttons = this.createButtons(this.settings.buttons);
 			
-
 			this.el.html(this.template(text, buttons, this.settings.icon));
 			this.events();
 			return this;
@@ -48,7 +47,7 @@
 			});
 		},
 		show: function() {
-			this.el.appendTo("#content").animate({top: $(window).height() / 2 - this.el.outerHeight() / 2, opacity: 'show'}, 500);
+			this.el.appendTo("#content").animate({top: $(window).height() / 3 - this.el.outerHeight() / 2, opacity: 'show'}, 500);
 			
 		}
 	};

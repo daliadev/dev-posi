@@ -2063,6 +2063,9 @@ body:after {
 
 
 
+
+
+
 /*----------------------------------   Boite de dialogue modal   --------------------------------*/
 
 
@@ -2077,7 +2080,7 @@ body:after {
 	text-align: left;
 	background-color: #ffffff;
 	font-family: Tahoma, Helvetica, Arial, sans-serif;
-	font-size: 14px;
+	font-size: 13px;
 	color: #000000;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;

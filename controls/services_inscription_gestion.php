@@ -330,7 +330,16 @@ class ServicesInscriptionGestion extends Main
         /*** Récupération du champ caché "référence utilisateur" si il existe ***/
         if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
         {
-            $this->formData['ref_user'] = $_POST['ref_user'];
+            $formData['ref_user'] = $_POST['ref_user'];
+        }
+
+        /*** Récupération du champ caché "validation du nom" si il existe ***/
+
+        $formData['name_validation'] = "none";
+
+        if (isset($_POST['name_validation']) && !empty($_POST['name_validation']))
+        {
+            $formData['name_validation'] = $_POST['name_validation'];
         }
         
 
@@ -491,8 +500,33 @@ class ServicesInscriptionGestion extends Main
 
         if ($duplicateNomsUser)
         {
-            $this->registerError("duplicate_name", "Le nom de l'utilisateur existe déjà.");
+            // Ajout de la validation du nom
+
+            // Si click sur oui (a validé son nom)
+                // validation ok -> même utilisateur
+
+            // Si click sur non (n'a pas validé son nom)
+                // Si même nom
+                    // La boîte de dialogue s'affiche
+                    // validation pas ok -> même utilisateur
+
+                // Sinon ne passe pas par là
+
+            // N'a pas cliqué
+
+            if (!empty($formData['name_validation']))
+            {
+                if ($formData['name_validation'] == "false" && $formData['name_validation'] == "none")
+                {
+                    $formData['name_validation'] = "false";
+                    $this->registerError("duplicate_name", "Le nom de l'utilisateur existe déjà.");
+                }
+            }
         }
+        //else
+        //{
+        //    $formData['name_validation'] = "none";
+        //}
         //else
         //{
             // Traitement du nom et prénom de l'utilisateur pour l'insertion en base de données

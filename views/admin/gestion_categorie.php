@@ -100,7 +100,7 @@ $form_url = WEBROOT."admin/categorie/";
                         </div>
 
                         <div id="submit">
-                            <input type="submit" name="selection" class="ie7" value="Sélectionner" />
+                            <input type="submit" name="selection" value="Sélectionner" />
                         </div>
 
 

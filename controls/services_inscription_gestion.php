@@ -323,7 +323,7 @@ class ServicesInscriptionGestion extends Main
 
         $dataUtilisateur = array();
 
-        $formData['mode_user'] = "none";
+        $formData['mode_user'] = "insert";
         $formData['ref_user'] = null;
 
 
@@ -418,8 +418,6 @@ class ServicesInscriptionGestion extends Main
             $this->registerError("form_data", "La date de naissance n'a pas été sélectionnée correctement.");
         }
 
-        var_dump($formData['date_naiss_user']);
-
 
 
         /*** Récupèration du nom et du prénom de l'utilisateur ***/
@@ -431,7 +429,7 @@ class ServicesInscriptionGestion extends Main
 
         /*** Traitement de l'identification d'un utilisateur similaire à la saisie ***/
 
-        $formData['mode_user'] = "insert";
+        //$formData['mode_user'] = "insert";
 
         $duplicateNomsUser = false;
 
@@ -443,7 +441,7 @@ class ServicesInscriptionGestion extends Main
         $prenomUserSaisi = preg_replace("#[^A-Z]#", "", strtoupper($cleanPrenomSaisi));
         $nomUserSaisi = preg_replace("#[^A-Z]#", "", strtoupper($cleanNomSaisi));
 
-        echo "Noms saisis = ".$prenomUserSaisi." ".$nomUserSaisi."<br/>";
+        //echo "Noms saisis = ".$prenomUserSaisi." ".$nomUserSaisi."<br/>";
 
         
         
@@ -458,19 +456,28 @@ class ServicesInscriptionGestion extends Main
                 $nomUser = $user->getNom();
 
                 // On enlève les espaces, les caractères spéciaux et on met le nom saisi tout en majuscules.
-                $cleanPrenom = Tools::stripSpecialCharsFromString($formData['prenom_user']);
-                $cleanNom = Tools::stripSpecialCharsFromString($formData['nom_user']);
+                $cleanPrenom = Tools::stripSpecialCharsFromString($prenomUser);
+                $cleanNom = Tools::stripSpecialCharsFromString($nomUser);
 
                 $prenomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanPrenom));
                 $nomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanNom));
 
-                echo "Noms bdd = ".$prenomUser." ".$nomUser."<br/>";
+                //echo "Noms bdd = ".$prenomUser." ".$nomUser."<br/>";
+                //echo "ref_niveau = ".$user->getRefNiveau()."<br/>";
 
-                if (($prenomUser == $prenomUserSaisi) && ($nomUser == $nomUserSaisi))
+                //echo "Comp prenoms 1 = ".strpos($prenomUser, $prenomUserSaisi)."<br/>";
+                //echo "Comp prenoms 2 = ".strpos($prenomUserSaisi, $prenomUser)."<br/>";
+                //echo "Comp noms 1 = ".strpos($nomUser, $nomUserSaisi)."<br/>";
+                //echo "Comp noms 2 = ".strpos($nomUserSaisi, $nomUser)."<br/>";
+
+                //if ($prenomUser == $prenomUserSaisi && $nomUser == $nomUserSaisi)
+                if ((strpos($prenomUser, $prenomUserSaisi) !== false || strpos($prenomUserSaisi, $prenomUser) !== false) && (strpos($nomUser, $nomUserSaisi) !== false || strpos($nomUserSaisi, $nomUser) !== false))
                 {
+                    $formData['ref_user'] = $user->getId();
+
                     $formData['mode_user'] = "update";
 
-                    if ($formData['ref_niveau'] == $user->getRefNiveau())
+                    if (intval($formData['ref_niveau']) === intval($user->getRefNiveau()))
                     {
                         $formData['mode_user'] = "none";
                     }
@@ -484,14 +491,14 @@ class ServicesInscriptionGestion extends Main
 
         if ($duplicateNomsUser)
         {
-            $this->registerError("form_valid", "Le nom de l'utilisateur existe déjà.");
+            $this->registerError("duplicate_name", "Le nom de l'utilisateur existe déjà.");
         }
-        else
-        {
+        //else
+        //{
             // Traitement du nom et prénom de l'utilisateur pour l'insertion en base de données
             $dataUtilisateur['nom_user'] = $formData['nom_user'];
             $dataUtilisateur['prenom_user'] = $formData['prenom_user'];
-        }
+        //}
 
 
         /*** Récupèration des autres champs de l'utilisateur ***/
@@ -528,7 +535,7 @@ class ServicesInscriptionGestion extends Main
 
         $dataInscription = array();
 
-        $formData['mode_user'] = "none";
+        $formData['mode_inscript'] = "insert";
         $formData['ref_inscription'] = null;
         $formData['ref_user'] = null;
         //$formData['ref_intervenant'] = null;
@@ -558,8 +565,7 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    /***   Insertions et mises à jour dans la base avec les données des formulaires   ***/
-
+    /***   Insertions et mises à jour dans la base avec les données des formulaires et traitements des résultats   ***/
 
 
 
@@ -663,6 +669,114 @@ class ServicesInscriptionGestion extends Main
 
 
 
+
+
+
+    public function setUtilisateurProperties($dataUtilisateur, &$formData)
+    {
+        $resultsetUser = false;
+        
+        $mode = $formData['mode_user'];
+
+        //if (!empty($dataUtilisateur['nom_user']) && !empty($dataOrganisme['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']) && !empty($dataUtilisateur['ref_niveau']))
+        if ((empty($dataUtilisateur['ref_user']) && !empty($dataUtilisateur['nom_user']) && !empty($dataUtilisateur['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']) && !empty($dataUtilisateur['ref_niveau'])) || !empty($dataUtilisateur['ref_user']))
+        {
+            /*** Insertion du nouvel utilisateur ***/
+
+            if ($mode == "insert")
+            {
+                $resultsetUser = $this->setUtilisateur("insert", $dataUtilisateur);
+
+                if (!$resultsetUser)
+                {
+                    $this->registerError("form_valid", "L'utilisateur n'a pu être enregistré.");
+                }
+                else
+                {
+                    $formData['ref_user'] = $resultsetUser['response']['utilisateur']['last_insert_id'];
+                }
+            }
+
+            /*** Mise à jour de l'utilisateur ***/
+
+            else if ($mode == "update")
+            {
+                $formData['ref_user'] = $dataUtilisateur['ref_user'];
+
+                $resultsetUser = $this->setUtilisateur("update", $dataUtilisateur);
+
+                if (!$resultsetUser)
+                {
+                    $this->registerError("form_valid", "L'utilisateur n'a pu être mis à jour.");
+                }
+            }
+        }
+        else
+        {
+            $this->registerError("form_empty", "Des données sont manquantes.");
+        }
+    }
+
+
+
+
+
+    public function setInscriptionProperties($dataInscription, &$formData)
+    {
+        /*
+        $resultsetUser = false;
+        
+        $mode = $formData['mode_user'];
+
+        //if (!empty($dataUtilisateur['nom_user']) && !empty($dataOrganisme['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']) && !empty($dataUtilisateur['ref_niveau']))
+        if ((empty($dataInscription['ref_user']) && !empty($dataInscription['nom_user']) && !empty($dataInscription['prenom_user']) && !empty($dataInscription['date_naiss_user']) && !empty($dataInscription['ref_niveau'])) || !empty($dataInscription['ref_user']))
+        {
+            */
+            /*** Insertion du nouvel utilisateur ***/
+            /*
+            if ($mode == "insert")
+            {
+                $resultsetUser = $this->setInscription("insert", $dataInscription);
+
+                if (!$resultsetUser)
+                {
+                    $this->registerError("form_valid", "L'utilisateur n'a pu être enregistré.");
+                }
+                else
+                {
+                    $formData['ref_user'] = $resultsetUser['response']['utilisateur']['last_insert_id'];
+                }
+            }
+            */
+            /*** Mise à jour de l'utilisateur ***/
+            /*
+            else if ($mode == "update")
+            {
+                $formData['ref_user'] = $dataInscription['ref_user'];
+
+                $resultsetUser = $this->setInscription("update", $dataInscription);
+
+                if (!$resultsetUser)
+                {
+                    $this->registerError("form_valid", "L'utilisateur n'a pu être mis à jour.");
+                }
+            }
+        }
+        else
+        {
+            $this->registerError("form_empty", "Des données sont manquantes.");
+        }
+        */
+    }
+
+
+
+
+
+
+
+
+    /***   Insertions et mises à jour dans la base   ***/
 
 
 
@@ -774,6 +888,54 @@ class ServicesInscriptionGestion extends Main
 
 
 
+    public function setUtilisateur($mode, $dataUtilisateur)
+    {
+        
+        if (!empty($dataUtilisateur) && is_array($dataUtilisateur))
+        {
+            if ($mode == "insert")
+            {
+                $resultset = $this->utilisateurDAO->insert($dataUtilisateur);
+                
+                // Traitement des erreurs de la requête
+                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['last_insert_id']) && !empty($resultset['response']['utilisateur']['last_insert_id']))
+                {
+                    return $resultset;
+                }
+                else 
+                {
+                    $this->registerError("form_request", "L'utilisateur n'a pu être inséré.");
+                }
+            }
+            else if ($mode == "update")
+            {
+                if (!empty($dataUtilisateur['ref_user']))
+                {
+                    $resultset = $this->utilisateurDAO->update($dataUtilisateur);
+
+                    // Traitement des erreurs de la requête
+                    if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['row_count']) && !empty($resultset['response']['utilisateur']['row_count']))
+                    {
+                        return $resultset;
+                    } 
+                    else 
+                    {
+                        $this->registerError("form_request", "L'utilisateur n'a pu être mis à jour.");
+                    }
+                }
+                else 
+                {
+                    $this->registerError("form_request", "L'identifiant de l'utilisateur est manquant.");
+                }
+            }
+        }
+        else 
+        {
+            $this->registerError("form_request", "Insertion de l'utilisateur non autorisée.");
+        }
+            
+        return false;
+    }
 
 
 
@@ -788,7 +950,7 @@ class ServicesInscriptionGestion extends Main
 
 
     
-    public function getOrganisme($fieldName, $value)
+    private function getOrganisme($fieldName, $value)
     {
         switch($fieldName) 
         {
@@ -851,7 +1013,9 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    public function getIntervenant($fieldName, $fieldValue)
+
+
+    private function getIntervenant($fieldName, $fieldValue)
     {
         switch($fieldName) 
         {
@@ -936,7 +1100,7 @@ class ServicesInscriptionGestion extends Main
     
     
     
-    
+    /*
     public function getUtilisateurs()
     {
         $resultset = $this->utilisateurDAO->selectAll();
@@ -946,10 +1110,10 @@ class ServicesInscriptionGestion extends Main
         
         return $resultset;
     }
+    */
     
     
-    
-    public function getUtilisateur($fieldName, $fieldValue)
+    private function getUtilisateur($fieldName, $fieldValue)
     {
         switch($fieldName) 
         {
@@ -1001,7 +1165,7 @@ class ServicesInscriptionGestion extends Main
     }
     
     
-    
+    /*
     public function setUtilisateur($dataUtilisateur, $modeRequête)
     {
         if (!empty($dataUtilisateur) && is_array($dataUtilisateur))
@@ -1065,9 +1229,10 @@ class ServicesInscriptionGestion extends Main
         
         return $resultset;
     }
+    */
     
     
-    
+
     public function setInscription($dataInscription, $modeRequête = "insert")
     {
         if (!empty($dataInscription) && is_array($dataInscription))

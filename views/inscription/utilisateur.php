@@ -45,6 +45,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 // url vers laquel doit pointer le formulaire
 $form_url = $response['url'];
 
+$duplicate_name = "";
+
 ?>
 
 
@@ -62,15 +64,59 @@ $form_url = $response['url'];
             <div class="zone-formu">
                 
                 <div class="titre-form" id="titre-utili">Utilisateur</div>
+                
+
+                <?php
+
+                    if (isset($response['errors']) && !empty($response['errors']))
+                    {
+                        foreach($response['errors'] as $error)
+                        {
+                            if ($error['type'] == "duplicate_name")
+                            {
+                                $duplicate_name = $error['message'];
+                                
+                            }
+                        }
+
+                        echo '<div id="zone-erreur">';
+                        echo '<ul>';
+                        foreach($response['errors'] as $error)
+                        {
+                            if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                            {
+                                echo '<li>- '.$error['message'].'</li>';
+                            }
+                            
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+                    else if (isset($response['success']) && !empty($response['success']))
+                    {
+                        echo '<div id="zone-success">';
+                        echo '<ul>';
+                        foreach($response['success'] as $message)
+                        {
+                            if ($message)
+                            {
+                                echo '<li>'.$message.'</li>';
+                            }
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+
+                ?>
+
 
                 <form id="form-posi" action="<?php echo $form_url; ?>" method="POST">
                     
                     <div class="form-small">
 
                         <input type="hidden" value="<?php echo $formData['ref_user']; ?>" name="ref_user">
-                        <!-- <input type="hidden" value="<?php //echo $formData['ref_intervenant']; ?>" name="ref_intervenant"> -->
-                        <input type="hidden" value="<?php echo $formData['date_inscription']; ?>" name="date_inscription">
-
+                        <!-- <input type="hidden" value="<?php //echo $formData['date_inscription']; ?>" name="date_inscription"> -->
+                        <input type="hidden" value="<?php echo $duplicate_name; ?>" id="error_duplicate">
 
                         <div class="input">
                             <label for="nom_user">Nom <span class="asterix">*</span></label>
@@ -81,12 +127,7 @@ $form_url = $response['url'];
                             <label for="prenom_user">Prénom <span class="asterix">*</span></label>
                             <input type="text" name="prenom_user" id="prenom_user" value="<?php echo $formData['prenom_user']; ?>" required>
                         </div>
-                        <!-- 
-                        <div class="input">
-                            <label for="date_naiss_user">Date de naissance <span class="asterix">*</span></label>
-                            <input type="text" name="date_naiss_user" id="date_naiss_user" title="Veuillez entrer votre date de naissance" value="" required />
-                        </div>
-                         -->
+
 
                         <p style="margin-bottom:0px;">Date de naissance</p>
 
@@ -97,11 +138,10 @@ $form_url = $response['url'];
 
                                 <?php
 
-                                $selected = "";
-
                                 for ($i = 1; $i <= 31; $i++)
                                 {
                                     $jour = $i;
+                                    $selected = "";
 
                                     if (!empty($formData['jour_naiss_user_cbox']) && $formData['jour_naiss_user_cbox'] != "select_cbox" && $formData['jour_naiss_user_cbox'] == $i)
                                     {
@@ -124,11 +164,10 @@ $form_url = $response['url'];
                                 <?php
                                 $monthsName = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre');
 
-                                $selected = "";
-
                                 for ($i = 1; $i <= 12; $i++)
                                 {
                                     $nomMois = $monthsName[($i - 1)];
+                                    $selected = "";
 
                                     if (!empty($formData['mois_naiss_user_cbox']) && $formData['mois_naiss_user_cbox'] != "select_cbox" && $formData['mois_naiss_user_cbox'] == $i)
                                     {
@@ -154,12 +193,11 @@ $form_url = $response['url'];
                                 $minYear = intval(date('Y')) - 70;
                                 $maxYear = intval(date('Y')) - 10;
 
-                                $selected = "";
-
                                 for ($i = $maxYear; $i >= $minYear; $i--)
                                 {
                                     $year = $i;
-                                    
+                                    $selected = "";
+
                                     if (!empty($formData['annee_naiss_user_cbox']) && $formData['annee_naiss_user_cbox'] != "select_cbox" && $formData['annee_naiss_user_cbox'] == $i)
                                     {
                                         $selected = "selected";
@@ -195,28 +233,11 @@ $form_url = $response['url'];
                             </select>
                         </div>
 
-                        
-                        <?php
-
-                        if (isset($response['errors']) && !empty($response['errors']))
-                        {
-                            echo '<div id="zone-erreur">';
-                            echo '<ul>';
-                            foreach($response['errors'] as $error)
-                            {
-                                if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-                                {
-                                    echo '<li>'.$error['message'].'</li>';
-                                }
-                            }
-                            echo '</ul>';
-                            echo '</div>';
-                        }
-                        ?>
 
                         <div id="submit">
                             <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();">
                         </div>
+
 
                     </div>
                 </form>
@@ -244,22 +265,9 @@ $form_url = $response['url'];
     <script src="<?php echo SERVER_URL; ?>media/js/modernizr-2.6.2.min.js"></script>
     
     <script language="javascript" type="text/javascript">
-        
-        /*
-        function getMonthDays(monthNumber) 
-        {
-            var monthDays = 0;
-
-            if (monthNumber == 2) {
-                monthDays = 
-            }
-
-            return monthDays;
-        }
-        */
 
         // jQuery object
-        $(function() {
+        $(function() { 
             /*
             $( "#date_naiss_user" ).datepicker({
                 dateFormat: "dd/mm/yy",
@@ -284,26 +292,27 @@ $form_url = $response['url'];
             });
             */
 
+            //$(".form-small").hide();
 
 
-            // $("#mois_naiss_user").change(function(event) {
 
-                //alert("change");
+            if ($("#error_duplicate").val() != "") {
 
-                // $("#jour_naiss_user").get(0).options.length = 1;
-                
-                //var days = getNombreJour($("jour_naiss_user").val());
-                //var i;
-                
-                /*
-                for (i = 1; i <= days; i++) {
-                
-                    $("jour_naiss_user").options[i] = new Option(days[i], i, false, false);
-                }
-                */
-            // });
+                $.message('Voulez-vous continuer la navigation ?', {
+                    icon: 'alert', 
+                    buttons: ['Oui', 'Non'], 
+                    callback: function(buttonText) {
+                        if (buttonText === 'Oui') {
+                            // Proceed and delete record
+                            $("#form-posi").submit();
+                        }
+                    }
+                });
+            }
+            
 
+        })(jQuery);
 
-        });
+       
 
     </script>

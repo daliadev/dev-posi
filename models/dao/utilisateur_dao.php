@@ -252,6 +252,7 @@ class UtilisateurDAO extends ModelDAO
     {
         $this->initialize();
         
+
         if (!empty($values) && isset($values['ref_user']) && !empty($values['ref_user']))
         {
             $refUser = $values['ref_user'];

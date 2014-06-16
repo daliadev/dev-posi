@@ -994,8 +994,7 @@ class ServicesInscription extends Main
         // On initialise les données qui vont être validées et renvoyées au formulaire5
         
         $initializedData = array(
-            'ref_intervenant' => "text",
-            'date_inscription' => "text",
+            // 'ref_intervenant' => "text",
             'ref_user' => "text",
             'nom_user' => "text",
             'prenom_user' => "text",
@@ -1011,7 +1010,8 @@ class ServicesInscription extends Main
             'tel_user' => "text",
             'email_user' => "text",
             'ref_niveau_cbox' => "select",
-            'ref_niveau' => "text"
+            'ref_niveau' => "text",
+            'date_inscription' => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
 
@@ -1030,29 +1030,29 @@ class ServicesInscription extends Main
             // Traitement et récupération des infos saisies pour l'inscription
             $dataInscription = $this->servicesInscriptGestion->filterDataInscription($this->formData, $_POST); 
             
-            var_dump($this->formData);
-            var_dump($dataInscription);
-            var_dump($dataUtilisateur);
-            var_dump($this->servicesInscriptGestion->errors);
-            var_dump($this->errors);
-            exit();
-            
 
             /*** Sauvegarde des données dans la base ***/
 
             // Sauvegarde ou mise à jour des données de l'inscription (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesInscriptGestion->errors) && empty($this->errors)) 
             {
-                //$this->servicesInscriptGestion->setInscriptionProperties($dataInscription, $this->formData);
+                $this->servicesInscriptGestion->setUtilisateurProperties($dataUtilisateur, $this->formData);
             }
 
             // Sauvegarde ou mise à jour des données de l'utilisateur (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesInscriptGestion->errors) && empty($this->errors)) 
             {
-                //$this->servicesInscriptGestion->setUtilisateurProperties($dataUtilisateur, $this->formData);
+                $this->servicesInscriptGestion->setInscriptionProperties($dataInscription, $this->formData);
             }
 
-            
+            /*
+            var_dump($this->formData);
+            var_dump($dataInscription);
+            var_dump($dataUtilisateur);
+            var_dump($this->servicesInscriptGestion->errors);
+            var_dump($this->errors);
+            exit();
+            */
         }
 
 
@@ -1094,11 +1094,32 @@ class ServicesInscription extends Main
             $this->returnData['response'] = array_merge($listeNiveaux['response'], $this->returnData['response']);
         }
 
-        
+        /*
         $this->setResponse($this->returnData);
 
         $this->setTemplate("template_page");
         $this->render("utilisateur");
+        */
+
+        if (empty($this->errors) && !empty($_POST))
+        {
+            // On doit conserver certaines informations pour le formulaire utilisateur
+            ServicesAuth::setSessionData('ref_organ', $this->formData['ref_organ']);
+            ServicesAuth::setSessionData('ref_intervenant', $this->formData['ref_intervenant']);
+
+            // Redirection vers le formulaire utilisateurs
+            header("Location: ".SERVER_URL."positionnement/intro/");
+            exit;
+
+        }
+        // Si c'est la première visite ou s'il y a des erreurs on affiche le formulaire utilisateur
+        else
+        {
+            $this->setResponse($this->returnData);
+            
+            $this->setTemplate("template_page");
+            $this->render("utilisateur");
+        }
     }
     
 }

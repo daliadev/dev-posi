@@ -46,7 +46,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 // url vers laquel doit pointer le formulaire
 $form_url = $response['url'];
 
-$duplicate_name = "";
+//$duplicate_name = "";
 
 ?>
 
@@ -70,23 +70,16 @@ $duplicate_name = "";
                 <?php
 
                     $showErrors = true;
-                    //$duplicate_name = "false";
 
                     if (isset($response['errors']) && !empty($response['errors']))
-                    {
-                        
+                    { 
                         foreach($response['errors'] as $error)
                         {
                             if ($error['type'] == "duplicate_name")
                             {
-                                //$duplicate_name = "true";
                                 $showErrors = false;
                                 break;
                             }
-                            //else
-                            //{
-                            //    $showErrors = true;
-                            //}
                         }
                         
                         if ($showErrors)
@@ -250,7 +243,7 @@ $duplicate_name = "";
 
 
                         <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();">
+                            <input type="submit" value="Envoyer" name="valid_form_utili">
                         </div>
 
 
@@ -277,12 +270,13 @@ $duplicate_name = "";
     
     <!--   Script spécifiques à la page   -->
     
-    <script src="<?php echo SERVER_URL; ?>media/js/modernizr-2.6.2.min.js"></script>
-    
+    <!--<script src="<?php //echo SERVER_URL; ?>media/js/modernizr-2.6.2.min.js"></script>-->
+    <script src="<?php echo SERVER_URL; ?>media/js/message-box.js"></script>
     <script language="javascript" type="text/javascript">
 
         // jQuery object
-        $(function() { 
+        jQuery(function($){
+
             /*
             $( "#date_naiss_user" ).datepicker({
                 dateFormat: "dd/mm/yy",
@@ -307,11 +301,11 @@ $duplicate_name = "";
             });
             */
 
+            /*  Fenêtre de validation du nom dupliqué */
 
             if ($("#name-validation").val() === "false") {
 
-                $.message(
-                    'Une personne portant le même nom a déjà effectuée un positionnement. S\'il s\'agit bien de vous, cliquez sur "Continuer".<br>Sinon, cliquez sur "Annuler" pour corriger la saisie de vos nom, prénom et date de naissance.', {
+                $.message('Une personne portant le même nom a déjà effectuée un positionnement. S\'il s\'agit bien de vous, cliquez sur "Continuer".<br>Sinon, cliquez sur "Annuler" pour corriger la saisie de vos nom, prénom et date de naissance.', {
                     icon: 'info', 
                     buttons: ['Continuer', 'Annuler'], 
                     callback: function(buttonText) {
@@ -324,11 +318,11 @@ $duplicate_name = "";
                             $("#name-validation").val("false");
                         }
                     }
-                });
+                }, "body");
             }
             
 
-        })(jQuery);
+        });
 
        
 

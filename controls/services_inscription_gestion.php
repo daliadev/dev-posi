@@ -516,7 +516,7 @@ class ServicesInscriptionGestion extends Main
 
             if (!empty($formData['name_validation']))
             {
-                if ($formData['name_validation'] == "false" && $formData['name_validation'] == "none")
+                if ($formData['name_validation'] == "false" || $formData['name_validation'] == "none")
                 {
                     $formData['name_validation'] = "false";
                     $this->registerError("duplicate_name", "Le nom de l'utilisateur existe déjà.");
@@ -572,24 +572,72 @@ class ServicesInscriptionGestion extends Main
         $formData['mode_inscript'] = "insert";
         $formData['ref_inscription'] = null;
         $formData['ref_user'] = null;
-        //$formData['ref_intervenant'] = null;
+        $formData['ref_intervenant'] = null;
 
 
-        /*** Récupération du champ caché "référence inscription" si il existe ***/
-
-        if (isset($_POST['ref_inscription']) && !empty($_POST['ref_inscription']))
-        {
-            $this->formData['ref_inscription'] = $_POST['ref_inscription'];
-        }
-
-        /*** Récupération du champ caché "référence utilisateur" si il existe ***/
+        /*** Récupération du champ caché "référence utilisateur" si il existe. ***/
 
         if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
         {
-            $this->formData['ref_user'] = $_POST['ref_user'];
+            $formData['ref_user'] = $_POST['ref_user'];
+            $dataInscription['ref_user'] = $formData['ref_user'];
         }
 
+
+        /*** Récupération du champ caché "référence inscription" si il existe. ***/
+
+        if (isset($_POST['ref_inscription']) && !empty($_POST['ref_inscription']))
+        {
+            $formData['ref_inscription'] = $_POST['ref_inscription'];
+            $dataInscription['ref_inscription'] = $formData['ref_inscription'];
+        }
+
+
+        /*** Récupération de la référence de l'intervenant dans les variables de session. ***/
+        //if (isset(ServicesAuth::getSessionData('ref_intervenant')) && !empty(ServicesAuth::getSessionData('ref_intervenant')))
+        //{
+            $formData['ref_intervenant'] = ServicesAuth::getSessionData('ref_intervenant');
+            $dataInscription['ref_intervenant'] = $formData['ref_inscription'];
+        //}
+
+
+        /*** Création de la date d'inscription qui correspond à la date du jour. ***/
+
         $dataInscription['date_inscription'] = date("Y-m-d");
+
+        /*
+        if (isset($resultsetInter['response']['intervenant']) && !empty($resultsetInter['response']['intervenant']))
+        {
+            $refOrgan = $resultsetInter['response']['intervenant'][0]->getRefOrganisme();
+
+            if (isset($formData['ref_organ']) && !empty($formData['ref_organ']) && $refOrgan == $formData['ref_organ'])
+            {
+                $formData['mode_inter'] = "none";
+            }
+            else
+            {
+                $this->registerError("form_valid", "L'email a déjà été saisi pour un autre organisme.");
+            }
+        }
+        */
+
+        // Si l'utilisateur a été enregistré
+        if ($formData['ref_user'] && $formData['ref_intervenant'])
+        {
+            // On doit vérifié si l'inscription n'a pas déjà été faite avec le même intervenant et le même utilisateur.
+            $inscript = $this->servicesInscriptGestion->getInscription('references', array('ref_user' => $formData['ref_user'], 'ref_intervenant' => $formData['ref_intervenant']));
+            
+            // Si oui, on ne fait rien
+            if ($inscript)
+            {
+                if ($inscript['response']['inscription'][0]->getRefUtilisateur() == $formData['ref_user'] && $inscript['response']['inscription'][0]->getRefIntervenant() == $formData['ref_intervenant'])
+                {
+                    $formData['ref_inscription'] = $inscript['response']['inscription'][0]->getId();
+                    $formData['mode_inscript'] = "none";
+                }
+            }
+        }
+        
 
         return $dataInscription;
     }
@@ -757,50 +805,51 @@ class ServicesInscriptionGestion extends Main
 
     public function setInscriptionProperties($dataInscription, &$formData)
     {
-        /*
-        $resultsetUser = false;
-        
-        $mode = $formData['mode_user'];
 
-        //if (!empty($dataUtilisateur['nom_user']) && !empty($dataOrganisme['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']) && !empty($dataUtilisateur['ref_niveau']))
-        if ((empty($dataInscription['ref_user']) && !empty($dataInscription['nom_user']) && !empty($dataInscription['prenom_user']) && !empty($dataInscription['date_naiss_user']) && !empty($dataInscription['ref_niveau'])) || !empty($dataInscription['ref_user']))
+        $resultsetInscript = false;
+
+        $mode = $formData['mode_inscript'];
+
+        //var_dump($formData['ref_organ']);
+
+        if (!empty($dataInscription['ref_intervenant']) && !empty($dataInscription['date_inscription']) && isset($formData['ref_user']) && !empty($formData['ref_user']))
         {
-            */
-            /*** Insertion du nouvel utilisateur ***/
-            /*
+            $dataInscription['ref_user'] = $formData['ref_user'];
+
+            /*** Insertion du nouvel inscription ***/
+
             if ($mode == "insert")
             {
-                $resultsetUser = $this->setInscription("insert", $dataInscription);
+                $resultsetInscript = $this->setInscription("insert", $dataInscription);
 
-                if (!$resultsetUser)
+                if (!$resultsetInscript)
                 {
-                    $this->registerError("form_valid", "L'utilisateur n'a pu être enregistré.");
+                    $this->registerError("form_valid", "L'inscription n'a pu être enregistré.");
                 }
                 else
                 {
-                    $formData['ref_user'] = $resultsetUser['response']['utilisateur']['last_insert_id'];
+                    $formData['ref_inscription'] = $resultsetInscript['response']['inscription']['last_insert_id'];
                 }
             }
-            */
-            /*** Mise à jour de l'utilisateur ***/
-            /*
+
+            /*** Mise à jour de l'inscription ***/
+
             else if ($mode == "update")
             {
-                $formData['ref_user'] = $dataInscription['ref_user'];
+                $formData['ref_inscription'] = $dataInscription['ref_inscription'];
 
-                $resultsetUser = $this->setInscription("update", $dataInscription);
+                $resultsetInscript = $this->setInscription("update", $dataInscription);
 
-                if (!$resultsetUser)
+                if (!$resultsetInscript)
                 {
-                    $this->registerError("form_valid", "L'utilisateur n'a pu être mis à jour.");
+                    $this->registerError("form_valid", "L'inscription n'a pu être mis à jour.");
                 }
             }
         }
-        else
+        else 
         {
             $this->registerError("form_empty", "Des données sont manquantes.");
         }
-        */
     }
 
 
@@ -973,6 +1022,56 @@ class ServicesInscriptionGestion extends Main
 
 
 
+
+
+    public function setInscription($mode, $dataInscription)
+    {
+        if (!empty($dataInscription) && is_array($dataInscription))
+        {
+            if ($mode == "insert")
+            {
+                $resultset = $this->inscriptionDAO->insert($dataInscription);
+                
+                // Traitement des erreurs de la requête
+                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['inscription']['last_insert_id']) && !empty($resultset['response']['inscription']['last_insert_id']))
+                {
+                    return $resultset;
+                }
+                else 
+                {
+                    $this->registerError("form_request", "L'inscription n'a pas pu être insérée.");
+                }
+            }
+            else if ($mode == "update")
+            {
+                if (!empty($dataUtilisateur['ref_inscription']))
+                {
+                    $resultset = $this->inscriptionDAO->update($dataInscription);
+
+                    // Traitement des erreurs de la requête
+                    if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['inscription']['row_count']) && !empty($resultset['response']['inscription']['row_count']))
+                    {
+                        return $resultset;
+                    } 
+                    else 
+                    {
+                        $this->registerError("form_request", "L'inscription n'a pas été mis à jour.");
+                    }
+                }
+                else 
+                {
+                    $this->registerError("form_request", "L'identifiant de l'inscription est manquant.");
+                }
+            } 
+        }
+        else 
+        {
+            $this->registerError("form_request", "L'inscription n'est pas autorisée.");
+        }
+            
+        return false;
+    
+    }
 
 
 
@@ -1244,9 +1343,14 @@ class ServicesInscriptionGestion extends Main
             
         return false;
     }
+    */
     
-    
-    public function getInscription($fieldName, $fieldValues)
+
+
+
+
+
+    private function getInscription($fieldName, $fieldValues)
     {
         switch($fieldName) 
         {
@@ -1259,59 +1363,26 @@ class ServicesInscriptionGestion extends Main
         }
         
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
+        if ($resultset['response'] && !$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['inscription']) && count($resultset['response']['inscription']) == 1)
+            { 
+                $inscription = $resultset['response']['inscription'];
+                $resultset['response']['inscription'] = array($inscription);
+            }
+
+            return $resultset;
+        }
         
-        return $resultset;
-    }
-    */
-    
-    
-
-    public function setInscription($dataInscription, $modeRequête = "insert")
-    {
-        if (!empty($dataInscription) && is_array($dataInscription))
-        {
-            if ($modeRequête == "insert")
-            {
-                $resultset = $this->inscriptionDAO->insert($dataInscription);
-                
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['inscription']['last_insert_id']) && !empty($resultset['response']['inscription']['last_insert_id']))
-                {
-                    return $resultset;
-                }
-                else 
-                {
-                    $this->registerError("form_request", "L'inscription n'a pas pu être insérée.");
-                }
-            }
-            else if ($modeRequête == "update")
-            {
-                $resultset = $this->inscriptionDAO->update($dataInscription);
-
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['inscription']['row_count']) && !empty($resultset['response']['inscription']['row_count']))
-                {
-                    return $resultset;
-                } 
-                else 
-                {
-                    $this->registerError("form_request", "L'inscription n'a pas été mis à jour.");
-                }
-            }
-            else 
-            {
-                return true;
-            }  
-        }
-        else 
-        {
-            $this->registerError("form_request", "L'inscription n'est pas autorisée.");
-        }
-            
         return false;
-    
     }
+    
+
+    
+    
+
+    
 }
 
 

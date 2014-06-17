@@ -7,7 +7,7 @@
  * @author Nicolas Beurion
  */
 
-//require_once(ROOT.'controls/authentication.php');
+require_once(ROOT.'controls/authentication.php');
 
 
 // Fichiers requis pour le formulaire organisme
@@ -304,6 +304,7 @@ class ServicesInscriptionGestion extends Main
             if (isset($formData['ref_organ']) && !empty($formData['ref_organ']) && $refOrgan == $formData['ref_organ'])
             {
                 $formData['mode_inter'] = "none";
+                $formData['ref_intervenant'] = $resultsetInter['response']['intervenant'][0]->getId();
             }
             else
             {

@@ -1011,6 +1011,7 @@ class ServicesInscription extends Main
             'email_user' => "text",
             'ref_niveau_cbox' => "select",
             'ref_niveau' => "text",
+            'ref_intervenant' => "text",
             'date_inscription' => "text",
             'name_validation' => "text"
         );
@@ -1031,6 +1032,7 @@ class ServicesInscription extends Main
             // Traitement et récupération des infos saisies pour l'inscription
             $dataInscription = $this->servicesInscriptGestion->filterDataInscription($this->formData, $_POST); 
             
+            $dataInscription['ref_intervenant'] = ServicesAuth::getSessionData('ref_intervenant');
 
             /*** Sauvegarde des données dans la base ***/
 
@@ -1043,17 +1045,17 @@ class ServicesInscription extends Main
             // Sauvegarde ou mise à jour des données de l'utilisateur (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesInscriptGestion->errors) && empty($this->errors)) 
             {
-                $this->servicesInscriptGestion->setInscriptionProperties($dataInscription, $this->formData);
+                //$this->servicesInscriptGestion->setInscriptionProperties($dataInscription, $this->formData);
             }
 
-            /*
+            
             var_dump($this->formData);
-            var_dump($dataInscription);
             var_dump($dataUtilisateur);
+            var_dump($dataInscription);
             var_dump($this->servicesInscriptGestion->errors);
             var_dump($this->errors);
             exit();
-            */
+            
         }
 
 

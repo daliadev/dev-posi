@@ -223,13 +223,13 @@ class ServicesInscription extends Main
                 //$this->formData['code_identification'] = $_POST['code_identification'];
                 
 
-                $code = servicesAuth::hashPassword($_POST['code_identification']);
+                $code = ServicesAuth::hashPassword($_POST['code_identification']);
 
 
                 if ($code == Config::getCodeOrganisme())
                 {
                     // authentifié
-                    servicesAuth::login("user");
+                    ServicesAuth::login("user");
                 }
                 else
                 {
@@ -848,12 +848,12 @@ class ServicesInscription extends Main
             // Récupération du code
             if (isset($_POST['code_identification']) && !empty($_POST['code_identification'])) 
             {
-                $code = servicesAuth::hashPassword($_POST['code_identification']);
+                $code = ServicesAuth::hashPassword($_POST['code_identification']);
 
                 if ($code == Config::getCodeOrganisme())
                 {
                     // authentifié
-                    servicesAuth::login("user");
+                    ServicesAuth::login("user");
                 }
                 else
                 {
@@ -979,6 +979,10 @@ class ServicesInscription extends Main
     public function utilisateur($requestParams = array())
     {
 
+        // Authentification du visiteur necessaire (code organisme)
+        ServicesAuth::checkAuthentication("user");
+        
+
         $this->initialize();
         
         $this->url = SERVER_URL."inscription/utilisateur/";
@@ -1031,8 +1035,7 @@ class ServicesInscription extends Main
 
             // Traitement et récupération des infos saisies pour l'inscription
             $dataInscription = $this->servicesInscriptGestion->filterDataInscription($this->formData, $_POST); 
-            
-            $dataInscription['ref_intervenant'] = ServicesAuth::getSessionData('ref_intervenant');
+
 
             /*** Sauvegarde des données dans la base ***/
 
@@ -1101,8 +1104,8 @@ class ServicesInscription extends Main
         if (empty($this->errors) && !empty($_POST))
         {
             // On doit conserver certaines informations pour le formulaire utilisateur
-            //ServicesAuth::setSessionData('ref_organ', $this->formData['ref_organ']);
-            //ServicesAuth::setSessionData('ref_intervenant', $this->formData['ref_intervenant']);
+            ServicesAuth::setSessionData('ref_user', $this->formData['ref_user']);
+            ServicesAuth::setSessionData('ref_inscription', $this->formData['ref_inscription']);
 
             // Redirection vers le formulaire utilisateurs
             //header("Location: ".SERVER_URL."positionnement/intro/");

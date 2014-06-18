@@ -24,8 +24,6 @@ require_once(ROOT.'models/dao/inscription_dao.php');
 class ServicesInscriptionGestion extends Main
 {
     
-    //private $servicesAuth = null;
-    
     private $organismeDAO = null;
     private $intervenantDAO = null;
     private $utilisateurDAO = null;
@@ -598,7 +596,7 @@ class ServicesInscriptionGestion extends Main
         //if (isset(ServicesAuth::getSessionData('ref_intervenant')) && !empty(ServicesAuth::getSessionData('ref_intervenant')))
         //{
             $formData['ref_intervenant'] = ServicesAuth::getSessionData('ref_intervenant');
-            $dataInscription['ref_intervenant'] = $formData['ref_inscription'];
+            $dataInscription['ref_intervenant'] = $formData['ref_intervenant'];
         //}
 
 
@@ -811,7 +809,7 @@ class ServicesInscriptionGestion extends Main
 
         $mode = $formData['mode_inscript'];
 
-        //var_dump($formData['ref_organ']);
+        var_dump($dataInscription);
 
         if (!empty($dataInscription['ref_intervenant']) && !empty($dataInscription['date_inscription']) && isset($formData['ref_user']) && !empty($formData['ref_user']))
         {
@@ -843,7 +841,7 @@ class ServicesInscriptionGestion extends Main
 
                 if (!$resultsetInscript)
                 {
-                    $this->registerError("form_valid", "L'inscription n'a pu être mis à jour.");
+                    $this->registerError("form_valid", "L'inscription n'a pu être mise à jour.");
                 }
             }
         }

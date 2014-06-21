@@ -175,7 +175,7 @@ class Main
                 break;
 
             case "email" :
-                $validValue = filter_var($value, FILTER_VALIDATE_EMAIL);
+                $validValue = strtolower(filter_var($value, FILTER_VALIDATE_EMAIL));
                 break;
 
             default :

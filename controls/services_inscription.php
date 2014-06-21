@@ -1112,7 +1112,7 @@ class ServicesInscription extends Main
             ServicesAuth::setSessionData('ref_inscription', $this->formData['ref_inscription']);
 
             // Redirection vers la page d'intro
-            var_dump("positionnement/intro/");
+            header("Location: ".SERVER_URL."positionnement/intro/");
             exit;
 
         }

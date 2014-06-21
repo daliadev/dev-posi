@@ -437,8 +437,6 @@ class ServicesInscriptionGestion extends Main
 
         /*** Traitement de l'identification d'un utilisateur similaire à la saisie ***/
 
-        //$formData['mode_user'] = "insert";
-
         $duplicateNomsUser = false;
 
 
@@ -483,11 +481,13 @@ class ServicesInscriptionGestion extends Main
                 {
                     $formData['ref_user'] = $user->getId();
 
-                    $formData['mode_user'] = "update";
-
                     if (intval($formData['ref_niveau']) === intval($user->getRefNiveau()))
                     {
                         $formData['mode_user'] = "none";
+                    }
+                    else
+                    {
+                        $formData['mode_user'] = "update";
                     }
 
                     $duplicateNomsUser = true;
@@ -499,19 +499,7 @@ class ServicesInscriptionGestion extends Main
 
         if ($duplicateNomsUser)
         {
-            // Ajout de la validation du nom
-
-            // Si click sur oui (a validé son nom)
-                // validation ok -> même utilisateur
-
-            // Si click sur non (n'a pas validé son nom)
-                // Si même nom
-                    // La boîte de dialogue s'affiche
-                    // validation pas ok -> même utilisateur
-
-                // Sinon ne passe pas par là
-
-            // N'a pas cliqué
+            $dataUtilisateur['ref_user'] = $formData['ref_user'];
 
             if (!empty($formData['name_validation']))
             {
@@ -521,6 +509,8 @@ class ServicesInscriptionGestion extends Main
                     $this->registerError("duplicate_name", "Le nom de l'utilisateur existe déjà.");
                 }
             }
+
+
         }
         //else
         //{
@@ -570,8 +560,8 @@ class ServicesInscriptionGestion extends Main
 
         $formData['mode_inscript'] = "insert";
         $formData['ref_inscription'] = null;
-        $formData['ref_user'] = null;
-        $formData['ref_intervenant'] = null;
+        //$formData['ref_user'] = null;
+        //$formData['ref_intervenant'] = null;
 
 
         /*** Récupération du champ caché "référence utilisateur" si il existe. ***/
@@ -624,7 +614,7 @@ class ServicesInscriptionGestion extends Main
         if ($formData['ref_user'] && $formData['ref_intervenant'])
         {
             // On doit vérifié si l'inscription n'a pas déjà été faite avec le même intervenant et le même utilisateur.
-            $inscript = $this->servicesInscriptGestion->getInscription('references', array('ref_user' => $formData['ref_user'], 'ref_intervenant' => $formData['ref_intervenant']));
+            $inscript = $this->getInscription('references', array('ref_user' => $formData['ref_user'], 'ref_intervenant' => $formData['ref_intervenant']));
             
             // Si oui, on ne fait rien
             if ($inscript)
@@ -640,7 +630,6 @@ class ServicesInscriptionGestion extends Main
 
         return $dataInscription;
     }
-
 
 
 
@@ -809,7 +798,6 @@ class ServicesInscriptionGestion extends Main
 
         $mode = $formData['mode_inscript'];
 
-        var_dump($dataInscription);
 
         if (!empty($dataInscription['ref_intervenant']) && !empty($dataInscription['date_inscription']) && isset($formData['ref_user']) && !empty($formData['ref_user']))
         {
@@ -1072,11 +1060,6 @@ class ServicesInscriptionGestion extends Main
     
     }
 
-
-
-
-
-    
 
 
 

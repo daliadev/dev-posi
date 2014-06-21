@@ -1048,17 +1048,20 @@ class ServicesInscription extends Main
             // Sauvegarde ou mise à jour des données de l'utilisateur (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesInscriptGestion->errors) && empty($this->errors)) 
             {
-                //$this->servicesInscriptGestion->setInscriptionProperties($dataInscription, $this->formData);
+                $this->servicesInscriptGestion->setInscriptionProperties($dataInscription, $this->formData);
             }
 
-            
-            var_dump($this->formData);
-            var_dump($dataUtilisateur);
-            var_dump($dataInscription);
-            var_dump($this->servicesInscriptGestion->errors);
-            var_dump($this->errors);
-            exit();
-            
+            /*
+            if (!empty($this->formData['name_validation']) && $this->formData['name_validation'] == "true")
+            {
+                var_dump($this->formData);
+                var_dump($dataUtilisateur);
+                var_dump($dataInscription);
+                var_dump($this->servicesInscriptGestion->errors);
+                var_dump($this->errors);
+                exit();
+            }
+            */
         }
 
 
@@ -1101,14 +1104,14 @@ class ServicesInscription extends Main
         }
 
 
+        // S'il n'y a aucune erreur, On passe à la page d'intro du positionnement
         if (empty($this->errors) && !empty($_POST))
         {
-            // On doit conserver certaines informations pour le formulaire utilisateur
+            // On doit conserver certaines informations du formulaire utilisateur
             ServicesAuth::setSessionData('ref_user', $this->formData['ref_user']);
             ServicesAuth::setSessionData('ref_inscription', $this->formData['ref_inscription']);
 
-            // Redirection vers le formulaire utilisateurs
-            //header("Location: ".SERVER_URL."positionnement/intro/");
+            // Redirection vers la page d'intro
             var_dump("positionnement/intro/");
             exit;
 

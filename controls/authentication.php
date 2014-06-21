@@ -7,7 +7,6 @@
  * @author Nicolas Beurion
  */
 
-//require_once('utils/config.php');
 
 
 class ServicesAuth
@@ -15,7 +14,7 @@ class ServicesAuth
 
     static function login($droit)
     {
-        if (!isset($_SESSION))
+        if (!isset($_SESSION) || empty($_SESSION))
         {
             session_start();
         }
@@ -33,9 +32,7 @@ class ServicesAuth
         {
             $_SESSION['droit'] = "user";
         }
-        
-        //var_dump($_SESSION);
-        //exit();
+
     }
     
     
@@ -54,7 +51,7 @@ class ServicesAuth
     
     static function checkAuthentication($right)
     {
-        if (!isset($_SESSION))
+        if (!isset($_SESSION) || empty($_SESSION))
         {
             session_start();
         }
@@ -73,7 +70,7 @@ class ServicesAuth
     
     static function getAuthenticationRight()
     {
-        if (!isset($_SESSION))
+        if (!isset($_SESSION) || empty($_SESSION))
         {
             session_start();
         }
@@ -93,19 +90,7 @@ class ServicesAuth
         return false;
     }
     
-    /*
-    static function getAuthentication()
-    {
-        if ($_SESSION['authenticate'])
-        {
-            return true;
-        }
-        else 
-        {
-            return false;
-        }
-    }
-    */
+    
     
     static function openUserSession()
     {
@@ -152,7 +137,7 @@ class ServicesAuth
     
     static function setSessionData($key, $value)
     {
-        if (!isset($_SESSION))
+        if (!isset($_SESSION) || empty($_SESSION))
         {
             session_start();
         }
@@ -163,7 +148,7 @@ class ServicesAuth
     
     static function getSessionData($key)
     {
-        if (!isset($_SESSION))
+        if (!isset($_SESSION) || empty($_SESSION))
         {
             session_start();
         }

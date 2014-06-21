@@ -123,7 +123,6 @@ class Main
     
     /***   Outils   ***/
     
-    // Utilisé dans la partie admin - question
     public function validatePostData($value, $key, $type, $required = false, $errorEmpty = "", $errorData = "")
     {
         $filteredData = "";
@@ -176,7 +175,7 @@ class Main
                 break;
 
             case "email" :
-                $validValue = filter_var($value, FILTER_VALIDATE_EMAIL);
+                $validValue = strtolower(filter_var($value, FILTER_VALIDATE_EMAIL));
                 break;
 
             default :

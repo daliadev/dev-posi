@@ -165,9 +165,12 @@ class InscriptionDAO extends ModelDAO
     {
         $this->initialize();
         
-        if (!empty($values))
+        if (!empty($values) && isset($values['ref_inscription']) && !empty($values['ref_inscription']))
         {
-            $request = $this->createQueryString("update", $values, "inscription");
+            $refInscript = $values['ref_inscription'];
+            unset($values['ref_inscription']);
+
+            $request = $this->createQueryString("update", $values, "inscription", "WHERE id_inscription = ".$refInscript);
             
             $this->resultset['response'] = $this->executeRequest("update", $request, "inscription", "Inscription");
         }

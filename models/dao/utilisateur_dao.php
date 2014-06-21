@@ -115,6 +115,31 @@ class UtilisateurDAO extends ModelDAO
         
         return $this->resultset;
     }
+
+    /**
+     * selectByDateNaissance - Récupère l'utilisateur grâce à sa date de naissance
+     * 
+     * @param int Date de naissance de l'utilisateur
+     * @return array Utilisateur correspondant sinon erreurs
+     */
+    public function selectByDateNaissance($dateNaiss) 
+    {
+        $this->initialize();
+        
+        if(!empty($dateNaiss))
+        {
+            $request = "SELECT * FROM utilisateur ";
+            $request .= "WHERE date_naiss_user = '".$dateNaiss."' ";
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "utilisateur", "Utilisateur");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+        }
+        
+        return $this->resultset;
+    }
     
     
     
@@ -227,6 +252,7 @@ class UtilisateurDAO extends ModelDAO
     {
         $this->initialize();
         
+
         if (!empty($values) && isset($values['ref_user']) && !empty($values['ref_user']))
         {
             $refUser = $values['ref_user'];

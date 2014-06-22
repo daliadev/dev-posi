@@ -515,12 +515,20 @@ class ServicesPublic extends Main
         $organismesList = $this->servicesRestitution->getOrganismesList(); 
         $this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
 
-
-
+        // On envoie les infos de la page à la vue
         $this->setResponse($this->returnData);
 
-        $this->setTemplate("template_page");
-        $this->render("statistique");
+        // Si l'utilisateur a cliqué sur le bouton d'export, on génère le fichier excel au format CSV
+        if (isset($_POST['export_xls']) && !empty($_POST['export_xls']))
+        {
+            $this->render("fichier_stat_global_xls");
+        }
+        else
+        {
+            // Sinon on affiche la page normalement
+            $this->setTemplate("template_page");
+            $this->render("statistique");
+        }
         
     }
     

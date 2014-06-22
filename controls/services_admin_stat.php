@@ -55,6 +55,7 @@ class ServicesAdminStat extends Main
 
         $stats['global']['niveaux'] = array();
         $stats['global']['categories'] = array();
+        $stats['global']['organismes'] = array();
 
 
 

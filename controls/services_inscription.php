@@ -944,12 +944,6 @@ class ServicesInscription extends Main
 
         /*** Envoi des données et rendu de la vue ***/
 
-        //$this->setResponse($this->returnData);
-        //$this->setTemplate("template_page");
-        //$this->render("organisme");
-
-
-
         if (empty($this->errors) && !empty($_POST))
         {
             // On doit conserver certaines informations pour le formulaire utilisateur
@@ -998,7 +992,6 @@ class ServicesInscription extends Main
         // On initialise les données qui vont être validées et renvoyées au formulaire5
         
         $initializedData = array(
-            // 'ref_intervenant' => "text",
             'ref_user' => "text",
             'nom_user' => "text",
             'prenom_user' => "text",

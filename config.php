@@ -11,12 +11,13 @@ class Config
 
     const DEBUG_MODE = 0; // Activer (1) / désactiver (0) l'affichage du débuguage
     
-    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) la gestion des activités dans la partie admin (prédiction d'un parcours, orientation)
+    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté)
     
-    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) le lecteur audio flash
+    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) le lecteur audio flash (non implémenté)
 
-    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...)
+    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...) (non implémenté)
  
+
 
     const POSI_NAME = "Positionnement Chantier-École"; // Nom du positionnement
     
@@ -25,10 +26,14 @@ class Config
     const ADMIN_TITLE = "Gestion du positionnement"; // Titre de la partie admin
 
 
-    const EMAIL_REFERENT = "xxx.xx@xxx.xx"; // Email de destination des positionnements éffectués
+    const EMAIL_REFERENT = "xxx.xx@xxx.xx"; // Email de destination des positionnements effectués (non implémenté)
 
+
+    const NBRE_POSI_MAX = 0; // Nombre de positionnements maximum que peut effectuer l'organisme client (0: illimité) (non implémenté)
     
     
+
+
     // Coordonnées de la base de données
     public static $database = array(
         'driver'    =>  "mysql",
@@ -37,6 +42,8 @@ class Config
         'username'  =>  "root",
         'password'  =>  ""
     );
+
+
 
 
     // Tableau du menu admin
@@ -109,6 +116,8 @@ class Config
         )
     );
     
+
+
 
 
     const SALT = "#zE'rGr[kj+KtCH£>FjF|fm-76s}T'Yjk<]JDs[{hj,[fbS*"; // Sert au hashage du mot de passe

@@ -15,6 +15,7 @@ require_once(ROOT.'models/dao/reponse_dao.php');
 require_once(ROOT.'models/dao/resultat_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_dao.php');
+require_once(ROOT.'models/dao/organisme_dao.php');
 
 
 
@@ -28,6 +29,7 @@ class ServicesPositionnement extends Main
     private $resultatDAO = null;
     private $questionCatDAO = null;
     private $categorieDAO = null;
+    private $organismeDAO = null;
     
     
     
@@ -43,6 +45,7 @@ class ServicesPositionnement extends Main
         $this->resultatDAO = new ResultatDAO();
         $this->questionCatDAO = new QuestionCategorieDAO();
         $this->categorieDAO = new CategorieDAO();
+        $this->organismeDAO = new OrganismeDAO();
     }
     
     
@@ -507,6 +510,7 @@ class ServicesPositionnement extends Main
         
         // Mise à jour du nbre de sessions terminée de l'utilisateur
 
+        $dataUser = array();
         $resultsetUser = $this->utilisateurDAO->selectById(ServicesAuth::getSessionData("ref_user"));
 
         if (!$this->filterDataErrors($resultsetUser['response']))
@@ -518,7 +522,25 @@ class ServicesPositionnement extends Main
             // On met a jour la table "utilisateur"
             $resultset = $this->utilisateurDAO->update($dataUser);
         }
-      
+        
+
+
+        // Mise à jour du nbre de positionnements total de l'organisme
+
+        $dataOrgan = array();
+        $resultsetOrgan = $this->organismeDAO->selectById(ServicesAuth::getSessionData('ref_organ'));
+
+        if (!$this->filterDataErrors($resultsetOrgan['response']))
+        {
+            $nbrePosiTotal = $resultsetOrgan['response']['organisme']->getNbrePosiTotal();
+            $dataOrgan['nbre_posi_total'] = intval($nbrePosiTotal) + 1;
+            $dataOrgan['ref_organ'] = ServicesAuth::getSessionData('ref_organ');
+
+            // On met a jour la table "organisme"
+            $resultset = $this->organismeDAO->update($dataOrgan);
+        }
+
+
         
         /*** Calcul du nombre total de questions par catégories et le nombre de bonnes réponses pour chaque catégorie.  ***/
         

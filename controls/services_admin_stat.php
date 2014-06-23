@@ -1,8 +1,8 @@
 <?php
 
-
 require_once(ROOT.'models/dao/utilisateur_dao.php');
 require_once(ROOT.'models/dao/niveau_etudes_dao.php');
+require_once(ROOT.'models/dao/organisme_dao.php');
 require_once(ROOT.'models/dao/session_dao.php');
 require_once(ROOT.'models/dao/resultat_dao.php');
 require_once(ROOT.'models/dao/degre_dao.php');
@@ -15,6 +15,7 @@ class ServicesAdminStat extends Main
     
     private $utilisateurDAO = null;
     private $niveauEtudesDAO = null;
+    private $organismeDAO = null;
     private $sessionDAO = null;
     private $degreDAO = null;
     private $resultatDAO = null;
@@ -29,6 +30,7 @@ class ServicesAdminStat extends Main
 
         $this->utilisateurDAO = new UtilisateurDAO();
         $this->niveauEtudesDAO = new NiveauEtudesDAO();
+        $this->organismeDAO = new OrganismeDAO();
         $this->sessionDAO = new SessionDAO();
         $this->degreDAO = new DegreDAO();
         $this->resultatDAO = new ResultatDAO();
@@ -63,6 +65,7 @@ class ServicesAdminStat extends Main
         $resultsetSessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
 
 
+        
        
         /*****   Calcul des statistiques générales  *****/
 
@@ -130,7 +133,7 @@ class ServicesAdminStat extends Main
                         $timestampAge = strtotime($today) - strtotime($dateNaissance);
 
                         $age = floor((($timestampAge / 3600) / 24) / 365.24219879);
-                        //var_dump($age);
+                        
                         $stats['global']['age_total'] += $age;
 
                         $usersList[] = $user;
@@ -139,8 +142,6 @@ class ServicesAdminStat extends Main
                 }
             }
         }
-
-        //exit();
 
         $stats['global']['moyenne_temps_session'] = Tools::timeToString(round($stats['global']['temps_total'] / $stats['global']['nbre_sessions']));
         $stats['global']['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($stats['global']['temps_total']), "h:m"))." min";
@@ -152,6 +153,157 @@ class ServicesAdminStat extends Main
         //var_dump("age moyen");
         //var_dump($stats['global']['age_moyen']);
         //exit();
+
+
+
+
+        /*****   Calcul des stats par organismes (Prendre les stats de base pour un organisme si un seul sélectionné)   *****/
+
+
+        if (!empty($ref_organ))
+        {
+            $resultsetOrgan = $this->getOrganisme($ref_organ);
+
+            if ($resultsetOrgan)
+            {
+                $stats['global']['organismes'][0]['ref_organ'] = $resultsetOrgan['response']['organisme'][0]->getId();
+                $stats['global']['organismes'][0]['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
+            }
+
+        }
+        else
+        {
+            // Récupération de tous les organismes
+            $organsInfos = array();
+
+            $resultsetOrgan = $this->getOrganismes();
+
+
+            if ($resultsetOrgan && count($resultsetOrgan) > 0)
+            {
+                $organList = $resultsetOrgan['response']['organisme'];
+
+                $i = 0;
+
+                foreach ($organList as $organ)
+                {
+                    $refOrgan = $organ->getId();
+                    
+                    $organsInfos[$i]['ref_organ'] = $organ->getId();
+                    $organsInfos[$i]['nom_organ'] = $organ->getNom();
+
+                    $organsInfos[$i]['nbre_sessions'] = 0;
+                    $organsInfos[$i]['nbre_users'] = 0;
+                    $organsInfos[$i]['temps_total'] = 0;
+                    $organsInfos[$i]['moyenne_temps_session'] = 0;
+                    $organsInfos[$i]['score_total'] = 0;
+                    $organsInfos[$i]['moyenne_score_session'] = 0;
+                    $organsInfos[$i]['age_total'] = 0;
+                    $organsInfos[$i]['age_moyen'] = 0;
+
+                    $tabRefsUsers = array();
+
+                    //$organsInfos[$i]['total_users'] = count($usersList);
+                    reset($sessionsList);
+
+                    foreach ($sessionsList as $session)
+                    {
+                        if ($session->getRefOrgan() == $refOrgan)
+                        {
+                            // $organsInfos[$i]['nbre_users']++;
+                            $organsInfos[$i]['nbre_sessions']++;
+
+                            $organsInfos[$i]['temps_total'] += $session->getTempsTotal();
+                            $organsInfos[$i]['score_total'] += $session->getScorePourcent();
+
+
+                            $userId = $session->getRefUser();
+
+                            if (count($tabRefsUsers) > 0)
+                            {
+                                $isToken = false;
+
+                                foreach($tabRefsUsers as $refUser)
+                                {
+                                    if ($refUser == $userId)
+                                    {
+                                        $isToken = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!$isToken)
+                                {
+                                    $tabRefsUsers[] = $userId;
+                                    $organsInfos[$i]['nbre_users']++;
+                                }
+                            }
+                            else
+                            {
+                                $tabRefsUsers[] = $userId;
+                                $organsInfos[$i]['nbre_users']++;
+                            }    
+
+
+
+                        }
+
+
+                    }
+                    
+
+                    //reset($resultsetUsers);
+                    if (count($resultsetUsers['response']['utilisateur']) > 0 && count($tabRefsUsers) > 0)
+                    {
+                        foreach($tabRefsUsers as $refUser)
+                        {
+                            foreach ($resultsetUsers['response']['utilisateur'] as $user) 
+                            {
+                                if ($refUser == $user->getId())
+                                {
+                                    $today = date("Y-m-d");
+                                    $dateNaissance = $user->getDateNaiss();
+
+                                    $timestampAge = strtotime($today) - strtotime($dateNaissance);
+
+                                    $age = floor((($timestampAge / 3600) / 24) / 365.24219879);
+                                    
+                                    $organsInfos[$i]['age_total'] += $age;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+
+
+                    $organsInfos[$i]['moyenne_temps_session'] = Tools::timeToString(round($organsInfos[$i]['temps_total'] / $organsInfos[$i]['nbre_sessions']));
+                    $organsInfos[$i]['temps_total'] = str_replace(":", " h ", Tools::timeToString(round($organsInfos[$i]['temps_total']), "h:m"))." min";
+
+                    $organsInfos[$i]['moyenne_score_session'] = round($organsInfos[$i]['score_total'] / $organsInfos[$i]['nbre_sessions']);
+                    
+                    $organsInfos[$i]['age_moyen'] = round($organsInfos[$i]['age_total'] / $organsInfos[$i]['nbre_users']);
+
+
+                    $i++;
+                }
+
+            }
+            else
+            {
+                //erreur pas d'organismes
+                $this->registerError('form_valid', "Il n'y a aucun organisme pour effectuer des statistiques.");
+            }
+
+            $stats['global']['organismes'] = $organsInfos;
+
+        }
+
+
+
+
+
 
         /*****   Calcul du nombre d'utilisateurs par niveaux d'etudes   *****/
 
@@ -315,8 +467,57 @@ class ServicesAdminStat extends Main
 
 
 
+
+
+
+    private function getOrganismes()
+    {
+        $resultset = $this->organismeDAO->selectAll();
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+
+
+
+
+    private function getOrganisme($refOrgan)
+    {
+        $resultset = $this->organismeDAO->selectById($refOrgan);
+        
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
+
+
     
     
+
+
     private function getNiveaux()
     {
         $resultset = $this->niveauEtudesDAO->selectAll();

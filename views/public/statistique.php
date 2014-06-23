@@ -68,7 +68,7 @@ if (Config::DEBUG_MODE)
 }
 
 
-//var_dump($response['stats']['global']);
+var_dump($response['stats']);
 
 
 ?>
@@ -410,7 +410,32 @@ if (Config::DEBUG_MODE)
                 $(this).val('');
             });
 
-            $(".search-date").datepicker({
+            $("#date_debut").datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true, 
+                changeYear: true, 
+                yearRange: "2014:"+year,
+                closeText: 'Fermer',
+                prevText: 'Précédent',
+                nextText: 'Suivant',
+                currentText: 'Aujourd\'hui',
+                monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+                monthNamesShort: ['janv.', 'févr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+                dayNames: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+                dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+                dayNamesMin: ['D','L','M','M','J','V','S'],
+                weekHeader: 'Sem.',
+                firstDay: 1,
+                showMonthAfterYear: false,
+                onSelect: function(dateText, inst) {
+                    arrayDate = dateText.split('/');
+                    //var theDate = new Date(dateText);
+                    theDate = new Date(arrayDate[2], arrayDate[1], arrayDate[3]);
+                    alert(theDate);
+                }
+            });
+
+            $("#date_fin").datepicker({
                 dateFormat: "dd/mm/yy",
                 changeMonth: true, 
                 changeYear: true, 

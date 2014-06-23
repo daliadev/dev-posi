@@ -429,9 +429,8 @@ var_dump($response['stats']);
                 showMonthAfterYear: false,
                 onSelect: function(dateText, inst) {
                     arrayDate = dateText.split('/');
-                    //var theDate = new Date(dateText);
-                    theDate = new Date(arrayDate[2], arrayDate[1], arrayDate[3]);
-                    alert(theDate);
+                    theDate = new Date(arrayDate[2], arrayDate[1] - 1, arrayDate[0]);
+                    $("#date_fin").datepicker('option', 'minDate', theDate);
                 }
             });
 
@@ -451,7 +450,12 @@ var_dump($response['stats']);
                 dayNamesMin: ['D','L','M','M','J','V','S'],
                 weekHeader: 'Sem.',
                 firstDay: 1,
-                showMonthAfterYear: false
+                showMonthAfterYear: false,
+                onSelect: function(dateText, inst) {
+                    arrayDate = dateText.split('/');
+                    theDate = new Date(arrayDate[2], arrayDate[1] - 1, arrayDate[0]);
+                    $("#date_debut").datepicker('option', 'maxDate', theDate);
+                }
             });
             
             $("#infos-posi").tabs();

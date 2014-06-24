@@ -6,6 +6,8 @@ $formData = array();
 $formData['nom_organ'] = "";
 $formData['code_postal_organ'] = "";
 $formData['tel_organ'] = "";
+$formData['nbre_posi_total'] = "";
+$formData['nbre_posi_max'] = "";
 
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -141,6 +143,19 @@ $form_url = WEBROOT."admin/organisme/";
                         <div class="input">
                             <label for="tel_organ">Téléphone <span class="asterix">*</span></label>
                             <input type="text" name="tel_organ" id="tel_organ" value="<?php echo $formData['tel_organ']; ?>" <?php echo $formData['disabled']; ?>>
+                        </div>
+
+
+                        <hr>
+
+                        <div class="input">
+                            Nombre de positionnements effectué : <?php echo $formData['nbre_posi_total']; ?>
+                            <!-- <input type="text" name="nbre_posi_total" id="nbre_posi_total" value="<?php //echo $formData['nbre_posi_total']; ?>" disabled> -->
+                        </div>
+
+                        <div class="input">
+                            <label for="nbre_posi_max">Nombre de positionnements maximum (0 : illimité)</label>
+                            <input type="text" name="nbre_posi_max" id="nbre_posi_max" value="<?php echo $formData['nbre_posi_max']; ?>" <?php echo $formData['disabled']; ?>>
                         </div>
 
 

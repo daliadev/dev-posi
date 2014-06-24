@@ -21,6 +21,8 @@ class Organisme
     public $tel_organ = NULL;
     public $fax_organ = NULL;
     public $email_organ = NULL;
+    public $nbre_posi_total = NULL;
+    public $nbre_posi_max = NULL;
 
     /*
     public function __construct($idOrgan, $refCodeOrgan, $numInterne = null, $nomOrgan = null, $adresseOrgan = null, $codePostalOrgan = null, $villeOrgan = null, $telOrgan = null, $faxOrgan = null, $emailOrgan = null) 
@@ -86,6 +88,16 @@ class Organisme
     public function getEmail()
     {
         return $this->email_organ;
+    }
+
+    public function getNbrePosiTotal()
+    {
+        return $this->nbre_posi_total;
+    }
+
+    public function getNbrePosiMax()
+    {
+        return $this->nbre_posi_max;
     }
 
     

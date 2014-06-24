@@ -68,7 +68,7 @@ if (Config::DEBUG_MODE)
 }
 
 
-//var_dump($response['stats']['global']);
+//var_dump($response['stats']);
 
 
 ?>
@@ -147,7 +147,23 @@ if (Config::DEBUG_MODE)
 
                         <fieldset>
                                 
-                            <legend>Résultats</legend>
+                            <!-- <legend>Résultats</legend> -->
+                            
+                            <legend>
+
+                            <?php 
+                                if(count($response['stats']['global']['organismes'])>1)
+                                {
+                                echo 'Résultats'; 
+                                }
+                                else
+                                {
+                                echo 'Résultats pour '.$response['stats']['global']['organismes'][0]['nom_organ'];  
+                                }     
+                            ?>
+
+                            </legend>
+
 
                             <!-- <div class="stats-global">
 
@@ -217,7 +233,7 @@ if (Config::DEBUG_MODE)
 
                                         <div class="progressbar">
                                             <div class="progressbar-title" title="<?php echo $response['stats']['global']['niveaux'][$i]['descript_niveau']; ?>">
-                                                <?php echo $response['stats']['global']['niveaux'][$i]['nom_niveau']; ?> / <strong><?php echo $response['stats']['global']['niveaux'][$i]['nbre_users']; ?></strong> utilisateurs
+                                                <?php echo $response['stats']['global']['niveaux'][$i]['nom_niveau']; ?> / <strong><?php echo $response['stats']['global']['niveaux'][$i]['nbre_users']; ?></strong> utilisateurs sur <?php echo $response['stats']['global']['nbre_users']; ?>
                                                 <div class="progressbar-bg">
                                                     <span style="width:<?php echo $response['stats']['global']['niveaux'][$i]['pourcent']; ?>%; background-color: #f39c12;"></span>
                                                 </div>
@@ -263,127 +279,12 @@ if (Config::DEBUG_MODE)
 
         					</div>
 
-                        <fieldset>
-                    </div>
-                </div>
-
-            
-                <!-- 
-                <div class="zone-formu2">
-
-                    <div id="select-organ" class="form-full">
-                        
-                        <fieldset>
-                                
-                            <legend>Statistiques par organisme</legend>
-                            
-                            
-
-                            &nbsp;
-
-                            <input type="submit" name="select-organ" value="Sélectionner"/>
-
                         </fieldset>
-
                     </div>
                 </div>
-                 -->
-
-
-                <!-- <div class="zone-formu2">
-
-                    <div id="infos-posi" class="form-full"> -->
-
-                        <!-- <fieldset>
-                                
-                            <legend>Statistiques organisme</legend> -->
-                            <!-- <ul>
-                                <li><a href="#infos">1 - Statistique globale de l'organisme</a></li> 
-                            </ul> -->
-
-                            <!-- <div id="infos" class="zone-liste-restitution"> -->
-
-                                <!-- <div class="bloc-stat">
-                                    <div class="bloc-stat-title">Nombre de positionnements</div>
-                                    <div class="bloc-stat-number"><strong><?php //echo $response['stats']['organ']['nbre_sessions']; ?></strong></div>
-                                </div>
-
-                                <div class="bloc-stat">
-                                    <div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
-                                    <div class="bloc-stat-number"><strong><?php //echo $response['stats']['organ']['nbre_users']; ?></strong></div>
-                                </div>
-                                
-                                <div class="bloc-stat">
-                                    <div class="bloc-stat-title">Score moyen global</div>
-                                    <div class="bloc-stat-number"><strong><?php //echo $response['stats']['organ']['moyenne_score_session']; ?>%</strong></div>
-                                </div>
-
-
-                                <div class="bloc-stat">
-                                    <div class="bloc-stat-title">Temps de passation moyen</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:11px;"><?php //echo $response['stats']['organ']['moyenne_temps_session']; ?></strong></div>
-                                </div>
-
-                                <div class="bloc-stat">
-                                    <div class="bloc-stat-title">Temps total</div>
-                                    <div class="bloc-stat-number"><strong style="font-size:9px;"><?php //echo $response['stats']['organ']['temps_total']; ?></strong></div>
-                                </div>
-
-                                <div class="bloc-stat last">
-                                    <div class="bloc-stat-title">Age moyen des utilisateurs</div>
-                                    <div class="bloc-stat-number"><strong>26 ans</strong></div>
-                                </div>
-
-                                <div style="clear:both;"></div> -->
-
-                                <!-- <p>Nombre de positionnement: <strong>40</strong></p>
-        						<p>Nombre de personne positionnées: <strong>40</strong></p>
-        						<p>Temps de passation moyen: <strong>17 min</strong></p>
-        						<p>Temps total: <strong>20h45</strong></p>
-        						<p>Nombre de candidats réparti par Niveau de formation : 
-        							<ul>
-        								<li>Niveau VI et Vbis : abandon CAP - BEP - 3e : <strong> 7</strong></li>
-        								<li>Niveau V : CAP - BEP - 2e cycle : <strong> 6</strong></li>
-        								<li>Niveau IV : Bac : <strong> 8</strong></li>
-        								<li>Niveau III : Bac+2 : <strong> 3</strong></li>
-        								<li>Niveau II : Bac+3, bac+4 : <strong> 10</strong></li>
-        								<li>Niveau I : Bac+5 et plus : <strong> 6</strong></li>
-        							</ul>
-        						</p>
-        						
-        						<p>Score moyen par compétence :</p>
-        							<ul>
-        								<li>Oral<strong> 80 %</strong></li>
-        								<li>Ecrit : <strong> 100 %</strong></li>
-        								<li>Calcul: <strong> 68%</strong></li>
-        								<li>Espace temps : <strong> 90%</strong></li>
-        								<li>Informatique : <strong> 48%</strong></li>
-        							</ul>
-        						<hr>
-        						<p>Score moyen global: <strong>60%</strong></p> -->
-
-
-                            <!-- </div> -->
-
-                            <!-- 
-                            <div id="exports" class="zone-liste-restitution">
-
-                                <div class="export-files">
-
-                                    <div class="info">Aucun export n'est disponible.</div>
-                                
-                                </div>
-                            
-                            </div>
-                             -->
-                       <!--  </fieldset> -->
-
-                    <!-- </div> -->
-
-                <!-- </div> -->
-
 
             </form>
+
         </div>
         
         <div style="clear:both;"></div>
@@ -410,7 +311,7 @@ if (Config::DEBUG_MODE)
                 $(this).val('');
             });
 
-            $(".search-date").datepicker({
+            $("#date_debut").datepicker({
                 dateFormat: "dd/mm/yy",
                 changeMonth: true, 
                 changeYear: true, 
@@ -426,8 +327,46 @@ if (Config::DEBUG_MODE)
                 dayNamesMin: ['D','L','M','M','J','V','S'],
                 weekHeader: 'Sem.',
                 firstDay: 1,
-                showMonthAfterYear: false
+                showMonthAfterYear: false,
+                onSelect: function(dateText, inst)
+                {
+                    var the_date = dateText.split('/'); 
+                    var dateUs = new Date(the_date[2], the_date[1]-1, the_date[0]);
+                    $("#date_fin").datepicker('option', 'minDate', dateUs);
+                }
+
+                        
             });
+            
+            
+            
+            $("#date_fin").datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true, 
+                changeYear: true, 
+                yearRange: "2014:"+year,
+                closeText: 'Fermer',
+                prevText: 'Précédent',
+                nextText: 'Suivant',
+                currentText: 'Aujourd\'hui',
+                monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+                monthNamesShort: ['janv.', 'févr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+                dayNames: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+                dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+                dayNamesMin: ['D','L','M','M','J','V','S'],
+                weekHeader: 'Sem.',
+                firstDay: 1,
+                showMonthAfterYear: false,
+                onSelect: function(dateText, inst)
+                {
+                    var the_date = dateText.split('/'); 
+                    var dateUs = new Date(the_date[2], the_date[1]-1, the_date[0]);
+                    $("#date_debut").datepicker('option', 'maxDate', dateUs);
+                }
+                            
+            
+            });
+
             
             $("#infos-posi").tabs();
 

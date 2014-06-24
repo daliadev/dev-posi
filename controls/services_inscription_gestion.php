@@ -141,6 +141,20 @@ class ServicesInscriptionGestion extends Main
         if ($formData['ref_organ'])
         {
             $dataOrganisme['ref_organ'] = $formData['ref_organ'];
+
+
+            $resultsetOrgan = $this->getOrganisme('id_organ', $formData['ref_organ']);
+
+            if ($resultsetOrgan)
+            {
+                $nbrePosiTotal = $resultsetOrgan['response']['organisme'][0]->getNbrePosiTotal();
+                $nbrePosiMax = $resultsetOrgan['response']['organisme'][0]->getNbrePosiMax();
+
+                if ($nbrePosiMax > 0 && $nbrePosiTotal >= $nbrePosiMax)
+                {
+                    $this->registerError("form_valid", "Il n'est plus possible d'effectuer de positionnements avec cet organisme.");
+                }
+            }
         }
         
 
@@ -207,12 +221,9 @@ class ServicesInscriptionGestion extends Main
                 */
             }
 
-            //else
-            //{
-                // Récupèration du nom de l'organisme
-                $formData['nom_organ'] = $this->validatePostData($postData['nom_organ'], "nom_organ", "string", true, "Aucun nom d'organisme n'a été sélectionné.", "Le nom de l'organisme n'est pas correctement sélectionné.");
-                $dataOrganisme['nom_organ'] = $formData['nom_organ'];
-            //}
+            // Récupèration du nom de l'organisme
+            $formData['nom_organ'] = $this->validatePostData($postData['nom_organ'], "nom_organ", "string", true, "Aucun nom d'organisme n'a été sélectionné.", "Le nom de l'organisme n'est pas correctement sélectionné.");
+            $dataOrganisme['nom_organ'] = $formData['nom_organ'];
 
             // Récupèration de l'adresse de l'organisme
             //$formData['adresse_organ'] = $this->validatePostData($postData['adresse_organ'], "adresse_organ", "string", false, "Aucune adresse n'a été saisie.", "L'adresse l'organisme n'est pas correctement saisie.");

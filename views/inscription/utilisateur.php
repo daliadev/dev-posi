@@ -243,7 +243,7 @@ $form_url = $response['url'];
 
 
                         <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_utili">
+                            <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();">
                         </div>
 
 
@@ -274,32 +274,15 @@ $form_url = $response['url'];
     <script src="<?php echo SERVER_URL; ?>media/js/message-box.js"></script>
     <script language="javascript" type="text/javascript">
 
+        function verifUtil()
+        {
+
+            
+        }
+
+
         // jQuery object
         jQuery(function($){
-
-            /*
-            $( "#date_naiss_user" ).datepicker({
-                dateFormat: "dd/mm/yy",
-                changeMonth: true, 
-                changeYear: true, 
-                yearRange: "1950:2014",
-                closeText: 'Fermer',
-                prevText: 'Précédent',
-                nextText: 'Suivant',
-                currentText: 'Aujourd\'hui',
-                monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
-                monthNamesShort: ['janv.', 'févr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
-                dayNames: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
-                dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
-                dayNamesMin: ['D','L','M','M','J','V','S'],
-                weekHeader: 'Sem.',
-                dateFormat: 'dd/mm/yy',
-                firstDay: 1,
-                isRTL: false,
-                showMonthAfterYear: false,
-                yearSuffix: ''
-            });
-            */
 
             /*  Fenêtre de validation du nom dupliqué */
 

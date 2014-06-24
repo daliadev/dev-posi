@@ -1038,7 +1038,8 @@ class ServicesAdmin extends Main
             "ref_organ_cbox"    => "select", 
             "nom_organ"         => "text", 
             "code_postal_organ" => "text", 
-            "tel_organ"         => "text"
+            "tel_organ"         => "text",
+            "nbre_posi_max"     => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
 
@@ -1100,6 +1101,7 @@ class ServicesAdmin extends Main
             $this->formData['nom_organ'] = null;
             $this->formData['code_postal_organ'] = null;
             $this->formData['tel_organ'] = null;
+            $this->formData['nbre_posi_max'] = null;
         }
 
 

@@ -214,9 +214,9 @@ $form_url = $response['url'];
 
         function verifOrgan()
         {
+            /*
             if (window.navigator.appName == 'Microsoft Internet Explorer')
             {
-                // var code_identification = document.formulaire.code_identification.value;
                 if (document.formulaire.code_identification.value == "")
                 {
                     alert ('Veuillez entrer votre code organisme');
@@ -224,25 +224,16 @@ $form_url = $response['url'];
                     return false;
                 }
 
-                // var date_inscription = document.formulaire.date_inscription.value;
-                if (document.formulaire.date_inscription.value == "")
-                {
-                    alert ('Veuillez entrer la date');
-                    document.formulaire.date_inscription.focus();
-                    return false;
-                }
-
-                // var email_intervenant = document.formulaire.email_intervenant.value;
                 if(document.formulaire.email_intervenant.value.indexOf('@') == -1) 
                 { 
                     alert("Il y a une erreur à votre adresse électronique! format Email requis(exemple@xxx.yy)"); 
                     document.formulaire.email_intervenant.focus(); 
                     return false; 
                 }
-                // var ref_organ_cbox = document.formulaire.ref_organ_cbox.value;
+
                 if (document.formulaire.ref_organ_cbox.value == "new" || document.formulaire.organismes.value == "")
                 {
-                    // var nom_organ = document.formulaire.nom_organ.value;
+
                     if (document.formulaire.nom_organ.value == "")
                     {
                         alert ('Veuillez entrer votre organisme');
@@ -263,6 +254,7 @@ $form_url = $response['url'];
                     }
                 }
             }
+            */
         }
 
 
@@ -281,16 +273,13 @@ $form_url = $response['url'];
 
                 if ($(this).val() == "new") {
 
-                $('#third-part').show(200);
+                    $('#third-part').show(200);
                 }
                 else {
 
-                  $('#third-part').hide(200);
+                    $('#third-part').hide(200);
                 }
             });
-
-
-            $('#date_inscription').datepicker({dateFormat:"dd/mm/yy"}); 
 
         });
 

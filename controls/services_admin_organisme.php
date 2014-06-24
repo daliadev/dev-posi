@@ -2,7 +2,6 @@
 
 
 require_once(ROOT.'models/dao/organisme_dao.php');
-// require_once(ROOT.'models/dao/niveau_etudes_dao.php');
 
 
 
@@ -10,7 +9,6 @@ class ServicesAdminOrganisme extends Main
 {
 
 	private $organismeDAO = null;
-    // private $niveauEtudesDAO = null;
     
     
     public function __construct() 
@@ -18,7 +16,6 @@ class ServicesAdminOrganisme extends Main
         $this->controllerName = "adminOrganisme";
 
         $this->organismeDAO = new OrganismeDAO();
-        // $this->niveauEtudesDAO = new NiveauEtudesDAO();
     }
 
     
@@ -55,10 +52,18 @@ class ServicesAdminOrganisme extends Main
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
             return $resultset;
         }
-
+        
         return false;
+
     }
 
 
@@ -72,6 +77,8 @@ class ServicesAdminOrganisme extends Main
         $organDetails['nom_organ'] = "";
         $organDetails['code_postal_organ'] = "";
         $organDetails['tel_organ'] = "";
+        $organDetails['nbre_posi_total'] = "";
+        $organDetails['nbre_posi_max'] = "";
 
         $resultset = $this->organismeDAO->selectById($refOrgan);
         
@@ -81,6 +88,8 @@ class ServicesAdminOrganisme extends Main
             $organDetails['nom_organ'] = $resultset['response']['organisme']->getNom();
             $organDetails['code_postal_organ'] = $resultset['response']['organisme']->getCodePostal();
             $organDetails['tel_organ'] = $resultset['response']['organisme']->getTelephone();
+            $organDetails['nbre_posi_total'] = $resultset['response']['organisme']->getNbrePosiTotal();
+            $organDetails['nbre_posi_max'] = $resultset['response']['organisme']->getNbrePosiMax();
         }
 
         return $organDetails;
@@ -91,29 +100,33 @@ class ServicesAdminOrganisme extends Main
 
     public function filterOrganData(&$formData, $postData)
     {
-        $dataUser = array();
+        $dataOrgan = array();
         
-        /*** Récupération de la référence de l'utilisateur ***/
+        /*** Récupération de la référence de l'organisme ***/
         
         if (isset($formData['ref_organ']) && !empty($formData['ref_organ']))
         {
-            $dataUser['ref_organ'] = $formData['ref_organ'];
+            $dataOrgan['ref_organ'] = $formData['ref_organ'];
         }
         
-        // Formatage du nom de l'utilisateur
+        // Formatage du nom de l'organisme
         $formData['nom_organ'] = $this->validatePostData($_POST['nom_organ'], "nom_organ", "string", true, "Aucun nom n'a été saisi", "Le nom n'est pas correctement saisi.");
-        $dataUser['nom_organ'] = $formData['nom_organ'];
+        $dataOrgan['nom_organ'] = $formData['nom_organ'];
         
-        // Formatage du prénom de l'utilisateur
+        // Formatage du code postal de l'organisme
         $formData['code_postal_organ'] = $this->validatePostData($_POST['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'est saisi", "Le code postal n'est pas correctement saisi.");
-        $dataUser['code_postal_organ'] = $formData['code_postal_organ'];
+        $dataOrgan['code_postal_organ'] = $formData['code_postal_organ'];
         
-        // Formatage du prénom de l'utilisateur
+        // Formatage du téléphone de l'organisme
         $formData['tel_organ'] = $this->validatePostData($_POST['tel_organ'], "tel_organ", "integer", true, "Aucun numéro de téléphone n'a été saisi", "Le numéro de téléphone n'est pas correctement saisi.");
-        $dataUser['tel_organ'] = $formData['tel_organ'];
+        $dataOrgan['tel_organ'] = $formData['tel_organ'];
+
+        // Formatage du nombre de positionnements maximum
+        $formData['nbre_posi_max'] = $this->validatePostData($_POST['nbre_posi_max'], "nbre_posi_max", "integer", false, "Aucun nombre de positionnements n'a été saisi", "Le nombre de positionnements n'est pas correctement saisi.");
+        $dataOrgan['nbre_posi_max'] = $formData['nbre_posi_max'];
 
 
-        return $dataUser;
+        return $dataOrgan;
     }
 
 

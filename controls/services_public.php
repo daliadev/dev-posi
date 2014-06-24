@@ -424,7 +424,7 @@ class ServicesPublic extends Main
     {
 
         /*** Authentification avec les droits admin ***/
-        //ServicesAuth::checkAuthentication("admin");
+        ServicesAuth::checkAuthentication("admin");
         
         $this->initialize();
         
@@ -518,18 +518,28 @@ class ServicesPublic extends Main
         // On envoie les infos de la page à la vue
         $this->setResponse($this->returnData);
 
-        // Si l'utilisateur a cliqué sur le bouton d'export, on génère le fichier excel au format CSV
-        if (isset($_POST['export_xls']) && !empty($_POST['export_xls']))
+        
+        
+        // Si l'utilisateur a cliqué sur un des boutons d'export, on génère le fichier excel au format CSV
+        if (isset($_POST['export_total_organisme']) && !empty($_POST['export_total_organisme']))
         {
-            $this->render("fichier_stat_global_xls");
+            $this->render("statistique_posi_organ_xls");
         }
+        else if (isset($_POST['export_niveau_nombre']) && !empty($_POST['export_niveau_nombre']))
+        {
+            $this->render("statistique_niveau_xls");
+        }
+        else if (isset($_POST['export_score_competences']) && !empty($_POST['export_score_competences']))
+        {
+            $this->render("statistique_competences_xls");
+        }
+        
         else
         {
             // Sinon on affiche la page normalement
             $this->setTemplate("template_page");
             $this->render("statistique");
         }
-        
     }
     
 }

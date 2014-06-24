@@ -10,6 +10,7 @@ require_once(ROOT.'controls/authentication.php');
 
 require_once(ROOT.'models/dao/session_dao.php');
 require_once(ROOT.'models/dao/utilisateur_dao.php');
+require_once(ROOT.'models/dao/intervenant_dao.php');
 require_once(ROOT.'models/dao/question_dao.php');
 require_once(ROOT.'models/dao/reponse_dao.php');
 require_once(ROOT.'models/dao/resultat_dao.php');
@@ -24,6 +25,7 @@ class ServicesPositionnement extends Main
 
     private $sessionDAO = null;
     private $utilisateurDAO = null;
+    private $intervenantDAO = null;
     private $questionDAO = null;
     private $reponseDAO = null;
     private $resultatDAO = null;
@@ -40,6 +42,7 @@ class ServicesPositionnement extends Main
         
         $this->sessionDAO = new SessionDAO();
         $this->utilisateurDAO = new UtilisateurDAO();
+        $this->intervenantDAO = new IntervenantDAO();
         $this->questionDAO = new QuestionDAO();
         $this->reponseDAO = new ReponseDAO();
         $this->resultatDAO = new ResultatDAO();
@@ -411,7 +414,7 @@ class ServicesPositionnement extends Main
     public function resultat()
     {
         /*** Test d'authentification de l'intervenant/utilisateur ***/
-        ServicesAuth::checkAuthentication("user");
+        //ServicesAuth::checkAuthentication("user");
 
 
         // On commence par récupérer la liste complète des categories.
@@ -688,8 +691,100 @@ class ServicesPositionnement extends Main
 
         
         /*** Déconnexion automatique de l'utilisateur ***/
-        ServicesAuth::logout();
+        //ServicesAuth::logout();
         
+
+
+
+        /*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
+
+        $emailInfos = array();
+
+        $emailInfos['nom_organ'] = "";
+        $emailInfos['code_postal_organ'] = "";
+        $emailInfos['tel_organ'] = "";
+
+        $emailInfos['nom_user'] = "";
+        $emailInfos['prenom_user'] = "";
+
+        $emailInfos['email_intervenant'] = "";
+
+        $emailInfos['date_posi'] = "";
+        $emailInfos['temps_posi'] = "";
+
+
+        // Organisme
+
+        $refOrgan = ServicesAuth::getSessionData('ref_organ');
+        $resultsetOrgan = $this->organismeDAO->selectById($refOrgan);
+
+        if (!$this->filterDataErrors($resultsetOrgan['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetOrgan['response']['organisme']) && count($resultsetOrgan['response']['organisme']) == 1)
+            { 
+                $organisme = $resultsetOrgan['response']['organisme'];
+                $resultsetOrgan['response']['organisme'] = array($organisme);
+            }
+
+            $emailInfos['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
+            $emailInfos['code_postal_organ'] = $resultsetOrgan['response']['organisme'][0]->getCodePostal();
+            $emailInfos['tel_organ'] = $resultsetOrgan['response']['organisme'][0]->getTelephone();
+        }
+
+
+        // Utilisateur
+
+        $refUser = ServicesAuth::getSessionData('ref_user');
+        $resultsetUser = $this->utilisateurDAO->selectById($refUser);
+
+        if (!$this->filterDataErrors($resultsetUser['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetUser['response']['utilisateur']) && count($resultsetUser['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultsetUser['response']['utilisateur'];
+                $resultsetUser['response']['utilisateur'] = array($utilisateur);
+            }
+
+            $emailInfos['nom_user'] = $resultsetUser['response']['utilisateur'][0]->getNom();
+            $emailInfos['prenom_user'] = $resultsetUser['response']['utilisateur'][0]->getPrenom();
+        }
+
+
+        // Intervenant
+
+        $refInter = ServicesAuth::getSessionData('ref_intervenant');
+        $resultsetInter = $this->intervenantDAO->selectById($refInter);
+
+        if (!$this->filterDataErrors($resultsetInter['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultsetInter['response']['intervenant']) && count($resultsetInter['response']['intervenant']) == 1)
+            { 
+                $intervenant = $resultsetInter['response']['intervenant'];
+                $resultsetInter['response']['intervenant'] = array($intervenant);
+            }
+
+            $emailInfos['email_intervenant'] = $resultsetInter['response']['intervenant'][0]->getEmail();
+        }
+
+
+        // Détails du positionnement
+        
+        $date_posi = ServicesAuth::getSessionData('date_session');
+        $emailInfos['date_posi'] = $date_posi;
+
+        $emailInfos['temps_posi'] = $stringTime;
+
+
+        $dataPage['response']['email_infos'] = $emailInfos;
+
+
+
+
+
+
         /*** Gestion des erreurs ***/
         
         if (!empty($this->errors))

@@ -36,6 +36,8 @@
 
     //var_dump($response);
 
+    var_dump($response['email_infos']);
+
 ?>
 
 

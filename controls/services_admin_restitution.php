@@ -100,28 +100,29 @@ class ServicesAdminRestitution extends Main
     {
         $resultset = $this->sessionDAO->selectByUser($refUser, $refOrganisme);
         
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        // Si la session est unique
-        if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
-        { 
-            $session = $resultset['response']['session'];
-            $resultset['response']['session'] = array($session);
-        }
-        
-        for ($i = 0; $i < count($resultset['response']['session']); $i++)
+        if (!$this->filterDataErrors($resultset['response']))
         {
-            if (!$resultset['response']['session'][$i]->getSessionAccomplie())
-            {
-                unset($resultset['response']['session'][$i]);
+            if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
+            { 
+                $session = $resultset['response']['session'];
+                $resultset['response']['session'] = array($session);
             }
+            
+            for ($i = 0; $i < count($resultset['response']['session']); $i++)
+            {
+                if ($resultset['response']['session'][$i]->getSessionAccomplie() == 1)
+                {
+                    unset($resultset['response']['session'][$i]);
+                }
+            }
+
+            return $resultset;
         }
         
-        return $resultset;
+        return false;
     }
     
-    
+    /*
     public function getSession($refSession)
     {
         $resultset = $this->sessionDAO->selectById($refSession);
@@ -139,7 +140,7 @@ class ServicesAdminRestitution extends Main
         
         return $resultset;
     }
-    
+    */
     
     public function getIntervenant($refIntervenant)
     {

@@ -48,7 +48,7 @@ p {
     min-height: 100%;
 }
 
-#content-large{
+#content-large {
     width: 960px;
     margin: 20px auto;
 }
@@ -584,6 +584,16 @@ form input[type="text"][disabled]
 }
 
 
+
+	#content-large #zone-erreur {
+
+		margin: 20px 30px 10px 30px;
+	}
+
+	#content-large #zone-success {
+
+		margin: 20px 30px 10px 30px;
+	}
 
 
 

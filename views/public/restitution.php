@@ -40,7 +40,7 @@ if (Config::DEBUG_MODE)
     var_dump($response);
 }
 
-//var_dump($response['stats']);
+var_dump($response);
 
 
 ?>
@@ -59,25 +59,23 @@ if (Config::DEBUG_MODE)
         <div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?></div>
 
 
-
         <?php
 
-        if (isset($response['errors']) && !empty($response['errors']))
-        {
-            echo '<div id="zone-erreur">';
-            foreach($response['errors'] as $error)
+            if (isset($response['errors']) && !empty($response['errors']))
             {
-                if ($error['type'] == "form_empty" || $error['type'] == "form_data")
+                echo '<div id="zone-erreur">';
+                echo '<ul>';
+                foreach($response['errors'] as $error)
                 {
-                    echo '<div class="bt-sup">'.$error['message']."</div>";
-                }    
-                else
-                {
-                    echo '<p>'.$error['message'].'<p>';
+                    if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                    {
+                        echo '<li>'.$error['message'].'</li>';
+                    }
                 }
+                echo '</ul>';
+                echo '</div>';
             }
-            echo '</div>';
-        }
+
         ?>
 
 

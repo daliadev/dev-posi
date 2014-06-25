@@ -414,7 +414,7 @@ class ServicesPositionnement extends Main
     public function resultat()
     {
         /*** Test d'authentification de l'intervenant/utilisateur ***/
-        //ServicesAuth::checkAuthentication("user");
+        ServicesAuth::checkAuthentication("user");
 
 
         // On commence par récupérer la liste complète des categories.
@@ -691,7 +691,7 @@ class ServicesPositionnement extends Main
 
         
         /*** Déconnexion automatique de l'utilisateur ***/
-        //ServicesAuth::logout();
+        ServicesAuth::logout();
         
 
 
@@ -713,7 +713,7 @@ class ServicesPositionnement extends Main
         $emailInfos['temps_posi'] = "";
 
 
-        // Organisme
+        // Email -> infos organisme
 
         $refOrgan = ServicesAuth::getSessionData('ref_organ');
         $resultsetOrgan = $this->organismeDAO->selectById($refOrgan);
@@ -733,7 +733,7 @@ class ServicesPositionnement extends Main
         }
 
 
-        // Utilisateur
+        // Email -> infos utilisateur
 
         $refUser = ServicesAuth::getSessionData('ref_user');
         $resultsetUser = $this->utilisateurDAO->selectById($refUser);
@@ -752,7 +752,7 @@ class ServicesPositionnement extends Main
         }
 
 
-        // Intervenant
+        // Email -> infos intervenant
 
         $refInter = ServicesAuth::getSessionData('ref_intervenant');
         $resultsetInter = $this->intervenantDAO->selectById($refInter);
@@ -770,7 +770,7 @@ class ServicesPositionnement extends Main
         }
 
 
-        // Détails du positionnement
+        // Email -> infos détails du positionnement
         
         $date_posi = ServicesAuth::getSessionData('date_session');
         $emailInfos['date_posi'] = $date_posi;

@@ -57,17 +57,20 @@ class ServicesAdminRestitution extends Main
     public function getOrganismesList()
     {
         $resultset = $this->organismeDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
 
-        if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
-        { 
-            $organisme = $resultset['response']['organisme'];
-            $resultset['response']['organisme'] = array($organisme);
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+            { 
+                $organisme = $resultset['response']['organisme'];
+                $resultset['response']['organisme'] = array($organisme);
+            }
+
+            return $resultset;
         }
 
-        return $resultset;
+        return false;
     }
     
     
@@ -79,16 +82,26 @@ class ServicesAdminRestitution extends Main
         $resultset = $this->utilisateurDAO->selectByOrganisme($refOrganisme);
         
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        // Si l'utilisateur est unique
-        if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
-        { 
-            $utilisateur = $resultset['response']['utilisateur'];
-            $resultset['response']['utilisateur'] = array($utilisateur);
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultset['response']['utilisateur'];
+                $resultset['response']['utilisateur'] = array($utilisateur);
+            }
+
+            for ($i = 0; $i < count($resultset['response']['utilisateur']); $i++)
+            {
+                if ($resultset['response']['utilisateur'][$i]->getSessionsAccomplies() == 0)
+                {
+                    unset($resultset['response']['utilisateur'][$i]);
+                }
+            }
+
+            return $resultset;
         }
-        
-        return $resultset;
+
+        return false;
     }
     
     
@@ -110,7 +123,7 @@ class ServicesAdminRestitution extends Main
             
             for ($i = 0; $i < count($resultset['response']['session']); $i++)
             {
-                if ($resultset['response']['session'][$i]->getSessionAccomplie() == 1)
+                if ($resultset['response']['session'][$i]->getSessionAccomplie() == 0)
                 {
                     unset($resultset['response']['session'][$i]);
                 }
@@ -122,91 +135,195 @@ class ServicesAdminRestitution extends Main
         return false;
     }
     
-    /*
+
+
+
+    
     public function getSession($refSession)
     {
         $resultset = $this->sessionDAO->selectById($refSession);
         
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        // Si la session est unique
-        
-        if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
-        { 
-            $session = $resultset['response']['session'];
-            $resultset['response']['session'] = array($session);
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
+            { 
+                $session = $resultset['response']['session'];
+                $resultset['response']['session'] = array($session);
+            }
         }
-        
+
         return $resultset;
     }
-    */
+   
     
+
+
+
     public function getIntervenant($refIntervenant)
     {
         $resultset = $this->intervenantDAO->selectById($refIntervenant);
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
 
-        return $resultset;
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
+            { 
+                $intervenant = $resultset['response']['intervenant'];
+                $resultset['response']['intervenant'] = array($intervenant);
+            }
+
+            return $resultset;
+        }
+
+        return false;
     }
     
-    /*
+
+
+
+   
     public function getUser($refUser)
     {
         $resultset = $this->utilisateurDAO->selectById($refUser);
-        
+
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        return $resultset;
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultset['response']['utilisateur'];
+                $resultset['response']['utilisateur'] = array($utilisateur);
+            }
+
+            return $resultset;
+        }
+
+        return false;
     }
-    */
     
     
-    /*
+    
+
     public function getNiveau($refNiveau)
     {
         $resultset = $this->niveauEtudesDAO->selectById($refNiveau);
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
 
-        return $resultset;
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
+            { 
+                $niveauEtudes = $resultset['response']['niveau_etudes'];
+                $resultset['response']['niveau_etudes'] = array($niveauEtudes);
+            }
+
+            return $resultset;
+        }
+
+        return false;
     }
-    */
+
+
     
     
     public function getCategories()
     {
         $resultset = $this->categorieDAO->selectAll();
-        
+
         // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-        { 
-            $categorie = $resultset['response']['categorie'];
-            $resultset['response']['categorie'] = array($categorie);
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
+            return $resultset;
         }
-        
-        return $resultset;
+
+        return false;
     }
 
     
     
+
+    public function getResultatsBySession($refSession)
+    {
+        $resultset = $this->resultatDAO->selectBySession($refSession);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['resultat']) && count($resultset['response']['resultat']) == 1)
+            { 
+                $resultat = $resultset['response']['resultat'];
+                $resultset['response']['resultat'] = array($resultat);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
     
+
+    
+
+    public function getQuestion($refQuestion)
+    {
+        $resultset = $this->questionDAO->selectById($refQuestion);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
+            { 
+                $question = $resultset['response']['question'];
+                $resultset['response']['question'] = array($question);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+    public function getQuestionCategorie($refQuestion)
+    {
+        $resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['question_cat']) && count($resultset['response']['question_cat']) == 1)
+            { 
+                $question_cat = $resultset['response']['question_cat'];
+                $resultset['response']['question_cat'] = array($question_cat);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
  
     public function getResultatsByCategories($refSession)
     {
         $tabResultats = array();
         
         // On sélectionne tous les résultats correspondant à la session en cours
-        $resultsetResultats = $this->resultatDAO->selectBySession($refSession);
+        $resultsetResultats = $this->getResultatsBySession($refSession);
         
-        if (!$this->filterDataErrors($resultsetResultats['response']))
-        { 
+        if ($resultsetResultats)
+        {
             $i = 0;
             
             foreach ($resultsetResultats['response']['resultat'] as $resultat)
@@ -224,16 +341,16 @@ class ServicesAdminRestitution extends Main
                     }
                     
                     // Ensuite on va chercher les données sur la question correspondant au résultat
-                    $resultsetQuestion = $this->questionDAO->selectById($resultat->getRefQuestion());
+                    $resultsetQuestion = $this->getQuestion($resultat->getRefQuestion());
 
-                    if (!$this->filterDataErrors($resultsetQuestion['response']))
+                    if ($resultsetQuestion)
                     {        
                         // On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
-                        $resultsetCatQuestion = $this->questionCatDAO->selectByRefQuestion($resultsetQuestion['response']['question']->getId());
+                        $resultsetCatQuestion = $this->getQuestionCategorie($resultsetQuestion['response']['question'][0]->getId());
 
-                        if (!$this->filterDataErrors($resultsetCatQuestion['response']))
+                        if ($resultsetCatQuestion)
                         {
-                            $tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat']->getCodeCat();
+                            $tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat'][0]->getCodeCat();
                         }
                         else 
                         {
@@ -249,32 +366,16 @@ class ServicesAdminRestitution extends Main
                 }
             }
         }
+        else
+        {
+            $this->registerError("form_request", "Aucun resultat n'a été trouvé.");
+        }
         
         return $tabResultats;
         
     }
     
-    
-    
-    /*
-    public function getResultatsBySession($refSession)
-    {
-        $resultset = $this->sessionDAO->selectById($refSession);
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        // Si la session est unique
-        
-        if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
-        { 
-            $session = $resultset['response']['session'];
-            $resultset['response']['session'] = array($session);
-        }
-        
-        return $resultset;
-    }
-    */
+
     
     /*
     public function getQuestions()
@@ -319,36 +420,30 @@ class ServicesAdminRestitution extends Main
         $userInfos['descript_niveau'] = null;
         $userInfos['nbre_positionnements'] = null;
         $userInfos['date_last_posi'] = null;
-        
-        $resultsetUser = $this->utilisateurDAO->selectById($refUser);
-        
-        if (!$this->filterDataErrors($resultsetUser['response']))
+
+
+        $resultsetUser = $this->getUser($refUser);
+
+        if ($resultsetUser)
         {
-            if (!empty($resultsetUser['response']['utilisateur']) && count($resultsetUser['response']['utilisateur']) == 1)
-            { 
-                $user = $resultsetUser['response']['utilisateur'];
-                $resultsetUser['response']['utilisateur'] = array($user);
-                
-                if (!empty($resultsetUser['response']['utilisateur']))
-                {
-                    $utilisateur = $resultsetUser['response']['utilisateur'][0];
-                    
-                    $userInfos['nom'] = $utilisateur->getNom();
-                    $userInfos['prenom'] = $utilisateur->getPrenom();
-                    $userInfos['date_naiss'] = Tools::toggleDate($utilisateur->getDateNaiss());
-                    $userInfos['adresse'] = $utilisateur->getAdresse();
-                    $userInfos['code_postal'] = $utilisateur->getCodePostal();
-                    $userInfos['ville'] = $utilisateur->getVille();
-                    $userInfos['email'] = $utilisateur->getEmail();
-                    $userInfos['tel'] = $utilisateur->getTel();
-                    $userInfos['nbre_positionnements'] = $utilisateur->getSessionsAccomplies();
-                    
-                    $resultsetNiveau = $this->niveauEtudesDAO->selectById($utilisateur->getRefNiveau());
-                    $this->filterDataErrors($resultsetNiveau['response']);
-                    $userInfos['nom_niveau'] = $resultsetNiveau['response']['niveau_etudes']->getNom();
-                    $userInfos['descript_niveau'] = $resultsetNiveau['response']['niveau_etudes']->getDescription();
-                }
-                
+            $utilisateur = $resultsetUser['response']['utilisateur'][0];
+            
+            $userInfos['nom'] = $utilisateur->getNom();
+            $userInfos['prenom'] = $utilisateur->getPrenom();
+            $userInfos['date_naiss'] = Tools::toggleDate($utilisateur->getDateNaiss());
+            $userInfos['adresse'] = $utilisateur->getAdresse();
+            $userInfos['code_postal'] = $utilisateur->getCodePostal();
+            $userInfos['ville'] = $utilisateur->getVille();
+            $userInfos['email'] = $utilisateur->getEmail();
+            $userInfos['tel'] = $utilisateur->getTel();
+            $userInfos['nbre_positionnements'] = $utilisateur->getSessionsAccomplies();
+            
+            $resultsetNiveau = $this->getNiveau($utilisateur->getRefNiveau());
+
+            if ($resultsetNiveau)
+            {
+                $userInfos['nom_niveau'] = $resultsetNiveau['response']['niveau_etudes'][0]->getNom();
+                $userInfos['descript_niveau'] = $resultsetNiveau['response']['niveau_etudes'][0]->getDescription();
             }
         }
         

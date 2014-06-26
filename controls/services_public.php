@@ -129,7 +129,7 @@ class ServicesPublic extends Main
                         {
                             $utilisateurs = $this->servicesRestitution->getUsersFromOrganisme($_POST['ref_organ']);
                             
-                            if ($utilisateurs['response']['utilisateur'])
+                            if ($utilisateurs)
                             {
                                 $response = array('error' => false, 'results' => $utilisateurs['response']);
                             }
@@ -140,7 +140,6 @@ class ServicesPublic extends Main
                         }
                         else
                         {
-                            
                             $response = array('error' => "Vous n'avez pas sélectionné d'organisme.");
                         }
                     }
@@ -151,9 +150,10 @@ class ServicesPublic extends Main
                         {
                             $sessions = $this->servicesRestitution->getUserSessions($_POST['ref_user'], $_POST['ref_organ']);
                             
-                            if ($sessions['response']['session'])
+                            if ($sessions)
                             {
                                 $i = 0;
+
                                 foreach($sessions['response']['session'] as $session)
                                 {
                                     $id = $session->getId();
@@ -344,8 +344,8 @@ class ServicesPublic extends Main
                         
                         /*** On récupère également les infos sur l'intervenant ***/
                         $resultsetIntervenant = $this->servicesRestitution->getIntervenant($resultsetSession['response']['session'][0]->getRefIntervenant());
-                        $this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant']->getNom();
-                        $this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant']->getEmail();
+                        $this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
+                        $this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
 
 
                         $refSession = $resultsetSession['response']['session'][0]->getId();

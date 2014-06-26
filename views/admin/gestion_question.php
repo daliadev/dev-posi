@@ -44,7 +44,7 @@ if (Config::DEBUG_MODE)
 $form_url = WEBROOT."admin/question/";
 
 //echo "\$formdata = ";
-//var_dump($formData);
+var_dump($response['errors']);
 
 ?>
 

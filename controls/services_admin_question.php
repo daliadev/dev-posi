@@ -253,10 +253,11 @@ class ServicesAdminQuestion extends Main
 
                     if (isset($postData['intitules_reponses'][$i]))
                     {
-                        $intituleQuestion = $this->filterData($postData['intitules_reponses'][$i], "string");
-                        if ($intituleQuestion != "empty" && $intituleQuestion != false)
+                        $intituleReponse = $this->filterData($postData['intitules_reponses'][$i], "string");
+
+                        if ($intituleReponse != "empty" && $intituleReponse != false)
                         {
-                            $formData['reponses'][$i]['intitule_reponse'] = $postData['intitules_reponses'][$i];
+                            $formData['reponses'][$i]['intitule_reponse'] = $intituleReponse;
                         }
                         else 
                         {

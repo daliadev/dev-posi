@@ -690,8 +690,7 @@ class ServicesPositionnement extends Main
 
 
         
-        /*** Déconnexion automatique de l'utilisateur ***/
-        ServicesAuth::logout();
+        
         
 
 
@@ -792,6 +791,10 @@ class ServicesPositionnement extends Main
             // S'il y a eu des erreurs, on les affiche dans la page "résultat".
             $dataPage['response']['errors'] = $this->errors;
         }
+        
+
+        /*** Déconnexion automatique de l'utilisateur ***/
+        ServicesAuth::logout();
         
         /*** Affichage de la page de résultat ***/
         $this->setResponse($dataPage);

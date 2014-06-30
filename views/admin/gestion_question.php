@@ -103,39 +103,7 @@ var_dump($response['errors']);
                             <input type="submit" name="edit" class="bt-admin-menu-modif-haut" value="Modifier" <?php //echo $formData['edit_disabled']; ?> />
                             <input type="submit" name="save" class="bt-admin-menu-enreg-haut" value="Enregistrer" <?php //echo $formData['save_disabled']; ?> />
                             -->
-                            <?php
-
-                            if (isset($response['errors']) && !empty($response['errors']))
-                            {
-                                echo '<div id="zone-erreur">';
-                                echo '<p><strong>Une erreur s\'est produite :</strong></p>';
-                                echo '<ul>';
-                                foreach($response['errors'] as $error)
-                                {
-                                    if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-                                    {
-                                        echo '<li>'.$error['message'].'</li>';
-                                    }
-                                }
-                                echo '</ul>';
-                                echo '</div>';
-                            }
-                            else if (isset($response['success']) && !empty($response['success']))
-                            {
-                                echo '<div id="zone-success">';
-                                echo '<ul>';
-                                foreach($response['success'] as $message)
-                                {
-                                    if ($message)
-                                    {
-                                        echo '<li>'.$message.'</li>';
-                                    }
-                                }
-                                echo '</ul>';
-                                echo '</div>';
-                            }
-
-                            ?>
+                            
                         <!-- </div> -->
                         
                     </div>
@@ -143,6 +111,40 @@ var_dump($response['errors']);
 
                 
                 <div style="clear:both"></div>
+                
+                <?php
+
+                    if (isset($response['errors']) && !empty($response['errors']))
+                    {
+                        echo '<div id="zone-erreur">';
+                        echo '<p><strong>Une erreur s\'est produite :</strong></p>';
+                        echo '<ul>';
+                        foreach($response['errors'] as $error)
+                        {
+                            if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+                            {
+                                echo '<li>'.$error['message'].'</li>';
+                            }
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+                    else if (isset($response['success']) && !empty($response['success']))
+                    {
+                        echo '<div id="zone-success">';
+                        echo '<ul>';
+                        foreach($response['success'] as $message)
+                        {
+                            if ($message)
+                            {
+                                echo '<li>'.$message.'</li>';
+                            }
+                        }
+                        echo '</ul>';
+                        echo '</div>';
+                    }
+
+                ?>
 
                 
                 <!-- Partie gauche : Affichage question en cours -->

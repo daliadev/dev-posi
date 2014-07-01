@@ -493,6 +493,8 @@ class ServicesPositionnement extends Main
         }
         
         
+
+
         /*-----   Mise à jour de la table "session"   -----*/
         
         $dataSession = array();
@@ -500,16 +502,8 @@ class ServicesPositionnement extends Main
         $dataSession['temps_total'] = $totalTime;
         
         $idSession = ServicesAuth::getSessionData("ref_session");
-        /*
-        // Mise à jour de la session
-        $resultset = $this->sessionDAO->update($dataSession, $idSession);
 
-        // Traitement des erreurs de la requête
-        if ($this->filterDataErrors($resultset['response']) || !isset($resultset['response']['session']['row_count']) || empty($resultset['response']['session']['row_count']))
-        {
-            $this->registerError("form_request", "La session n'a pu être mises à jour.");
-        }
-        */
+
         
         // Mise à jour du nbre de sessions terminée de l'utilisateur
 
@@ -781,9 +775,6 @@ class ServicesPositionnement extends Main
 
 
 
-
-
-
         /*** Gestion des erreurs ***/
         
         if (!empty($this->errors))
@@ -796,6 +787,8 @@ class ServicesPositionnement extends Main
         /*** Déconnexion automatique de l'utilisateur ***/
         ServicesAuth::logout();
         
+
+
         /*** Affichage de la page de résultat ***/
         $this->setResponse($dataPage);
         

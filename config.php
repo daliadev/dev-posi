@@ -26,15 +26,13 @@ class Config
     const ADMIN_TITLE = "Gestion du positionnement"; // Titre de la partie admin
 
 
-    // const EMAIL_REFERENT = "xxx.xx@xxx.xx"; // Email de destination des positionnements effectués (non implémenté)
-
-
     const NBRE_POSI_MAX = 0; // Nombre de positionnements maximum que peut effectuer l'organisme client (0: illimité) (non implémenté)
     
-    // Tableau du menu admin
-    public static $emails_admin = array(
-        "xxx.xx@xxx.xx",
 
+    // Tableau des emails des administrateurs (pour les positionnements effectués)
+    public static $emails_admin = array(
+        "g.billard@educationetformation.fr", 
+        "n.beurion@educationetformation.fr"
     );
 
 

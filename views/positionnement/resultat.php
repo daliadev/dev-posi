@@ -1,6 +1,63 @@
 <?php
 
+    /*-------------------- Envoi d'emails ----------------------*/
+
+    $content = "";
+    foreach ($response['correction'] as $correction)
+        {
+                        if ($correction['parent'])
+                        {         
+                                if ($correction['total'] > 0)
+                                {
+                                        $content .= '</br>';
+                                        $content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
+                                }
+                                
+                        }
+        }
     
+    $Destinataire = "";
+    foreach (Config::$emails_admin as $email_admin) 
+    {
+        $Destinataire .=  $email_admin.',';
+        
+    }
+    
+    //$Destinataire = ;
+    $pourqui = "g.billard@educationetformation.fr";
+    $Sujet = Config::POSI_NAME;
+    //$Sujet =$where ;
+
+    $From  = "From:" ;
+    $From .= $pourqui ;
+    $From .= "\n";
+    $From .= "MIME-version: 1.0\n";
+    $From .= 'Content-Type: text/html; charset=utf-8'."\n"; 
+
+    //$message = $response['email_infos']['date_posi'];
+    
+    $message =   '<html><head><title>'.Config::POSI_NAME.'</title></head>';
+    $message .=  '<body>';
+    $message .=  'Date du positionnement: '.$response['email_infos']['date_posi'].'</br>';
+    $message .=  'Organisme: '.$response['email_infos']['nom_organ'].'</br>';
+    $message .= '</br>';
+    $message .=  'Nom: '.$response['email_infos']['nom_user'].'</br>';
+    $message .=  'Prénom: '.$response['email_infos']['prenom_user'].'</br>';
+    $message .=  'Email intervenant: '.$response['email_infos']['email_intervenant'].'</br>';
+    $message .=  'Temps :'.$response['email_infos']['temps_posi'].'</br>';
+    $message .= '</br>';
+    $message .=  '<strong>Score:</strong></br> '.$content;
+    $message .= '</body>';
+    $message .= '</html>';
+                         
+    mail($Destinataire,$Sujet,$message,$From);
+
+
+    /*-------------------------------------------------*/
+
+
+    // Attribut une couleur selon le pourcentage du résultat
+
     function getColor($percent)
     {
         $percent = intval($percent);
@@ -92,48 +149,6 @@
                     <div>
                         <p>Taux de réussite globale : <strong class="<?php echo getColor($percentGlobal); ?>"><?php echo $percentGlobal; ?>%</strong> (<?php echo $totalCorrectGlobal; ?>/<?php echo $totalGlobal; ?>)</p>
                     </div>
-
-
-                    <!-- <div id="R-CCSP"> -->
-                        <?php
-                        /*
-                        foreach ($response['correction'] as $correction)
-                        {
-                            //var_dump($correction);
-                            
-                            if ($correction['parent'])
-                            {
-                                $percent = $correction['percent'];
-
-
-                                if ($correction['total'] > 0)
-                                {
-                                    $color = getColor($correction['percent']);
-
-                                    $title = "";
-                                    
-                                    if (!empty($correction['children']) && is_array($correction['children']) && count($correction['children']) > 0)
-                                    {
-                                        //$title .= "Dont :";
-                                        //$title .= "<ul>";
-
-                                        foreach ($correction['children'] as $child)
-                                        {
-                                            //var_dump($child);
-                                            //$title .= "<li>";
-                                            //$title .= $child['nom'].' ('.$child['total_correct'].'/'.$child['total'].')';
-                                            //$title .= "</li>";
-                                        }
-                                        //$title .= "</ul>";
-                                    }
-                                    
-                                    echo '<p>'.$correction['nom_categorie'].' : <strong class="'.$color.'">'.$percent.'%</strong> ('.$correction['total_correct'].'/'.$correction['total'].')</p>';
-                                }
-                            }
-                        }
-                        */
-                        ?>
-                    <!-- </div> -->
                     
                     <div id="R-CCSP" class="progressbars" style="width:270px;">
 
@@ -153,7 +168,6 @@
                                 {
                                     $color = getColor($correction['percent']);
 
-                                    //echo '<p>'.$correction['nom_categorie'].' : <strong class="'.$color.'">'.$percent.'%</strong> ('.$correction['total_correct'].'/'.$correction['total'].')</p>';
                                     echo '<div class="progressbar">';
                                         echo '<div class="progressbar-title" title="">';
                                             echo $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';

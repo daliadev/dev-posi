@@ -674,10 +674,6 @@ class ServicesAdminQuestion extends Main
                     $this->registerError("form_request", "L'identifiant de la question est manquant.");
                 }
             }
-            else 
-            {
-                return false;
-            }
         }
         else 
         {
@@ -704,15 +700,24 @@ class ServicesAdminQuestion extends Main
             if (!$this->filterDataErrors($resultsetDelete['response']))
             {
                 // On supprime les fichiers médias   
-                if ($question->getImage() && $question->getSon())
+                if ($question->getImage())
                 {
+                    /*
                     $imageFile = ROOT.IMG_PATH.$question->getImage();
                     $thumbFile = ROOT.THUMBS_PATH."thumb_".$question->getImage();
                     $soundFile = ROOT.AUDIO_PATH.$question->getSon();
                     
                     if (file_exists($imageFile)) : unlink($imageFile); endif;
                     if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-                    if (file_exists($soundFile)) : unlink($soundFile); endif;   
+                    if (file_exists($soundFile)) : unlink($soundFile); endif;
+                    */
+                    $this->deleteMedia(ROOT.IMG_PATH, $question->getImage());
+                    $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$question->getImage());
+                }
+
+                if ($question->getSon())
+                {
+                    $this->deleteMedia(ROOT.AUDIO_PATH, $question->getSon());
                 }
 
                 // On décale toutes les questions qui suivent d'un cran
@@ -1025,7 +1030,7 @@ class ServicesAdminQuestion extends Main
     
     
 
-    public function getMediaName($type, $numOrdreQuestion)
+    public function getMedia($type, $numOrdreQuestion)
     {
 
         $resultsetQuestion = $this->questionDAO->selectByOrdre($numOrdreQuestion);
@@ -1059,70 +1064,70 @@ class ServicesAdminQuestion extends Main
 
     public function setMedia($type, &$files, $numOrdreQuestion, $mediaExt)
     {
-        
+        $oldMediaName = $this->getMedia($type, $numOrdreQuestion);
 
-        if (isset($files['image_file']['name']) && !empty($files['image_file']['name']))
+        if ($type == "image" && isset($files['image_file']['name']) && !empty($files['image_file']['name']))
         {
-            $oldMediaName = $this->getMediaName($type, $numOrdreQuestion);
 
-            if ($type == "image")
+            if ($oldMediaName)
             {
-                if ($oldMediaName)
-                {
-                    $this->deleteMedia(ROOT.IMG_PATH, $oldMediaName);
-                    $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$oldMediaName);
-                }
-
-                $mediaName = "img_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
-
-                $imageFile = ROOT.IMG_PATH.$mediaName;
-                $thumbFile = ROOT.THUMBS_PATH."thumb_".$mediaName;
-                
-                $this->uploadMedia($files['image_file'], "image", array($mediaExt), ROOT.IMG_PATH, $mediaName);
-
-                if (!empty($this->errors))
-                {
-                    $this->registerError("form_valid", "L'image n'a pas pu être enregistrée.");
-                    $this->deleteMedia(ROOT.IMG_PATH, $mediaName);
-                    $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$mediaName);
-                }
+                $this->deleteMedia(ROOT.IMG_PATH, $oldMediaName);
+                $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$oldMediaName);
             }
-            else if ($type == "audio")
+
+            $mediaName = "img_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
+
+            $imageFile = ROOT.IMG_PATH.$mediaName;
+            $thumbFile = ROOT.THUMBS_PATH."thumb_".$mediaName;
+            
+            $this->uploadMedia($files['image_file'], "image", array($mediaExt), ROOT.IMG_PATH, $mediaName);
+
+            if (!empty($this->errors))
             {
-                if ($oldMediaName)
-                {
-                    $this->deleteMedia(ROOT.AUDIO_PATH, $oldMediaName);
-                }
-
-                $mediaName = "audio_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
-
-                $soundFile = ROOT.AUDIO_PATH.$mediaName;
-
-                $this->uploadMedia($_FILES['audio_file'], "son", array($mediaExt), ROOT.AUDIO_PATH, $mediaName);
-
-                if (!empty($this->errors)) 
-                {
-                    $this->registerError("form_valid", "Le son n'a pas pu être enregistré.");
-                    $this->deleteMedia(ROOT.AUDIO_PATH, $mediaName);
-                }
+                $this->registerError("form_valid", "L'image n'a pas pu être enregistrée.");
+                $this->deleteMedia(ROOT.IMG_PATH, $mediaName);
+                $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$mediaName);
             }
+
+            return $mediaName;
+        }
+        else if ($type == "audio" && isset($files['audio_file']['name']) && !empty($files['audio_file']['name']))
+        {
+            if ($oldMediaName)
+            {
+                $this->deleteMedia(ROOT.AUDIO_PATH, $oldMediaName);
+            }
+
+            $mediaName = "audio_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
+
+            $soundFile = ROOT.AUDIO_PATH.$mediaName;
+
+            $this->uploadMedia($_FILES['audio_file'], "son", array($mediaExt), ROOT.AUDIO_PATH, $mediaName);
+
+            if (!empty($this->errors)) 
+            {
+                $this->registerError("form_valid", "Le son n'a pas pu être enregistré.");
+                $this->deleteMedia(ROOT.AUDIO_PATH, $mediaName);
+            }
+
+            return $mediaName;
         }
 
-        return $mediaName;
+        return false;
     }
 
 
 
     public function deleteMedia($path, $mediaName)
     {
-        if (file_exists($path.$mediaName)) : unlink($path.$mediaName); endif;
+        if (file_exists($path.$mediaName))
+        {
+            unlink($path.$mediaName);
+        }
     }
     
     
 
-
-    
-    
     public function getNumsOrdreList()
     {
         $resultset = $this->questionDAO->selectAll();
@@ -1222,12 +1227,9 @@ class ServicesAdminQuestion extends Main
             {
                 $newNumOrdre = $i + $offset;
 
-                $oldImageName = $this->getMediaName("image", $i);
-                //$oldImageName = "img_".$i.".jpg";
+                $oldImageName = $this->getMedia("image", $i);
                 $oldThumbName = "thumb_".$oldImageName;
-                //$oldThumbName = "thumb_"."img_".$i.".jpg";
-                $oldAudioName = $this->getMediaName("audio", $i);
-                //$oldAudioName = "audio_".$i.".mp3";
+                $oldAudioName = $this->getMedia("audio", $i);
 
                 $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
                 $newThumbName = "thumb_".$newImageName;
@@ -1252,9 +1254,9 @@ class ServicesAdminQuestion extends Main
             {
                 $newNumOrdre = $i + $offset;
 
-                $oldImageName = $this->getMediaName("image", $i);
+                $oldImageName = $this->getMedia("image", $i);
                 $oldThumbName = "thumb_".$oldImageName;
-                $oldAudioName = $this->getMediaName("audio", $i);
+                $oldAudioName = $this->getMedia("audio", $i);
 
                 $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
                 $newThumbName = "thumb_".$newImageName;

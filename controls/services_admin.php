@@ -341,10 +341,10 @@ class ServicesAdmin extends Main
             if (!empty($this->formData['ref_question']))
             {
                 // On récupère les données de la question.
-                $resultsetQuestion = $this->servicesQuestion->getQuestion($this->formData['ref_question']);
+                //$resultsetQuestion = $this->servicesQuestion->getQuestion($this->formData['ref_question']);
 
                 // On récupère le numero d'ordre de la question à supprimer.
-                $this->formData['num_ordre_question'] = $resultsetQuestion['response']['question']->getNumeroOrdre();
+                //$this->formData['num_ordre_question'] = $resultsetQuestion['response']['question']->getNumeroOrdre();
 
                 // Enfin, on supprime la question dans la base.
                 $resultsetQuestion = $this->servicesQuestion->deleteQuestion($this->formData['ref_question']);
@@ -353,7 +353,7 @@ class ServicesAdmin extends Main
                 if ($resultsetQuestion)
                 {   
                     // On décale l'ordre des questions avec n-1 pour toutes les questions supérieures à la question active. 
-                    $shiftOrdre = $this->servicesQuestion->shiftNumsOrdre($this->formData['num_ordre_question'], -1);
+                    //$shiftOrdre = $this->servicesQuestion->shiftNumsOrdre($this->formData['num_ordre_question'], -1);
                     $this->registerSuccess("La question a été supprimée avec succès.");
                 }
                 else

@@ -20,9 +20,10 @@
     foreach (Config::$emails_admin as $email_admin) 
     {
         $Destinataire .=  $email_admin.',';
-        
     }
     
+    // $Destinataire .=  $response['email_infos']['email_intervenant'].',';
+
     //$Destinataire = ;
     $pourqui = "g.billard@educationetformation.fr";
     $Sujet = Config::POSI_NAME;

@@ -157,7 +157,7 @@ class UtilisateurDAO extends ModelDAO
         
         if (!empty($refOrganisme))
         {
-            $request = "SELECT id_user, nom_user, prenom_user FROM intervenant, inscription, utilisateur ";
+            $request = "SELECT id_user, nom_user, prenom_user, nbre_sessions_accomplies FROM intervenant, inscription, utilisateur ";
             $request .= "WHERE intervenant.ref_organ = ".$refOrganisme." ";
             $request .= "AND inscription.ref_intervenant = intervenant.id_intervenant ";
             $request .= "AND inscription.ref_user = utilisateur.id_user ";

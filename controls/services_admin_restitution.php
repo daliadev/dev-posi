@@ -80,7 +80,7 @@ class ServicesAdminRestitution extends Main
     public function getUsersFromOrganisme($refOrganisme)
     {
         $resultset = $this->utilisateurDAO->selectByOrganisme($refOrganisme);
-        
+
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
@@ -89,15 +89,15 @@ class ServicesAdminRestitution extends Main
                 $utilisateur = $resultset['response']['utilisateur'];
                 $resultset['response']['utilisateur'] = array($utilisateur);
             }
-
+            
             for ($i = 0; $i < count($resultset['response']['utilisateur']); $i++)
             {
-                if ($resultset['response']['utilisateur'][$i]->getSessionsAccomplies() == 0)
+                if (intval($resultset['response']['utilisateur'][$i]->getSessionsAccomplies()) === 0)
                 {
                     unset($resultset['response']['utilisateur'][$i]);
                 }
             }
-
+            
             return $resultset;
         }
 

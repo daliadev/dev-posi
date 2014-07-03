@@ -40,7 +40,7 @@ if (Config::DEBUG_MODE)
     var_dump($response);
 }
 
-var_dump($response);
+//var_dump($response);
 
 
 ?>

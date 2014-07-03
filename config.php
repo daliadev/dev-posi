@@ -19,11 +19,11 @@ class Config
  
 
 
-    const POSI_NAME = "Positionnement Chantier-École"; // Nom du positionnement
+    const POSI_NAME = "Positionnement XXX"; // Nom du positionnement
     
     const POSI_TITLE = "Test de positionnement"; // Titre/accroche du positionnement
 
-    const ADMIN_TITLE = "Gestion du positionnement"; // Titre de la partie admin
+    const ADMIN_TITLE = "Gestion du positionnement XXX"; // Titre de la partie admin
 
 
     const NBRE_POSI_MAX = 0; // Nombre de positionnements maximum que peut effectuer l'organisme client (0: illimité) (non implémenté)

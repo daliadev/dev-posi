@@ -539,20 +539,24 @@ $form_url = WEBROOT."admin/question/";
                                     $isChecked = false;
                                     $checked = "";
 
-                                    foreach($response['degre'] as $degre)
+                                    if (isset($response['degre']) && !empty($response['degre']))
                                     {
-                                        $checked = "";
-
-                                        if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId() && $formData['ref_degre'] != "aucun")
+                                        foreach($response['degre'] as $degre)
                                         {
-                                            $checked = "checked";
-                                            $isChecked = true;
-                                        }
-                                        echo '<p>';
-                                        echo '<input type="radio" name="ref_degre" class="radio_degre" value="'.$degre->getId().'" title="'.$degre->getDescription().'" '.$checked.' '.$formData['disabled'].' /> <span class="checkbox-'.$formData['disabled'].'">'.$degre->getNom().'</span>';
-                                        echo '</p>';
-                                    }
+                                            $checked = "";
 
+                                            if (!empty($formData['ref_degre']) && $formData['ref_degre'] == $degre->getId() && $formData['ref_degre'] != "aucun")
+                                            {
+                                                $checked = "checked";
+                                                $isChecked = true;
+                                            }
+                                            echo '<p>';
+                                            echo '<input type="radio" name="ref_degre" class="radio_degre" value="'.$degre->getId().'" title="'.$degre->getDescription().'" '.$checked.' '.$formData['disabled'].' /> <span class="checkbox-'.$formData['disabled'].'">'.$degre->getNom().'</span>';
+                                            echo '</p>';
+                                        }
+
+                                    }
+                                    
                                     if (!$isChecked) 
                                     {
                                         $checked = "checked";

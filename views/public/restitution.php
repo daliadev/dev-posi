@@ -209,11 +209,12 @@ if (Config::DEBUG_MODE)
 
                                 <!-- <div id="titre-question-h3">2 - Informations utilisateur</div></br> -->
                                 <div class="tab-block">
+
                                 <?php if (!empty($response['infos_user'])) : $infos_user = $response['infos_user'] ?>
 
                                     <div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
                                     <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
-                                    <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>">ici</a> pour acceder à la restitution publique de cet organisme)</div>
+                                    <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>" target="_blank">ici</a> pour acceder à la restitution publique de cet organisme)</div>
                                     <?php endif; ?>
                                     <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php echo $infos_user['nom_intervenant']; ?></strong></div> -->
                                     <div class="info">Email de l'intervenant : <strong><a href="mailto:<?php echo $infos_user['email_intervenant']; ?>" target="_top"><?php echo $infos_user['email_intervenant']; ?></a></strong></div>
@@ -446,7 +447,7 @@ if (Config::DEBUG_MODE)
 
             <?php if (Config::ALLOW_AJAX) : ?>
 
-                $('#submit-posi').prop('disabled', true);
+                // $('#submit-posi').prop('disabled', true);
 
 
                 /* Listes dynamiques en ajax */
@@ -455,11 +456,11 @@ if (Config::DEBUG_MODE)
                     
                     if ($(this).attr('id') == 'ref_session_cbox')
                     {
-                        $('#submit-posi').removeProp('disabled');
+                        // $('#submit-posi').removeProp('disabled');
                     }
                     else{
 
-                        $('#submit-posi').prop('disabled', true);
+                        // $('#submit-posi').prop('disabled', true);
                     }
                     
                     var select = $(this);
@@ -479,7 +480,7 @@ if (Config::DEBUG_MODE)
                     }
                     else if (sortOf === "session") {
 
-                        $('#submit-posi').removeProp('disabled');
+                        // $('#submit-posi').removeProp('disabled');
 
                         $('.organ-option').each(function() {
                             var option = $(this)[0];

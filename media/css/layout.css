@@ -364,8 +364,10 @@ label
 	#form-posi input:focus, #contact textarea:focus {
 		border: 1px solid #ccc8c8;
 		outline: medium none; 
-		background-color: #FFF;
+		/*background-color: #FFF;*/
 	}
+
+
 
 
 #form-posi input[type=text], #form-posi input[type=email], #form-posi input[type=tel], #form-posi input[type=password]   {
@@ -422,9 +424,22 @@ label
 
 
 #form-posi input[type="file"] {
+	float: left;
 	height: 30px;
-	width: 385px;
+	width: 333px;
 }
+
+	#form-posi input.reset-button {
+		width: 42px !important;
+		height: 42px;
+		margin-left: 10px;
+		background: url(../images/icon-reset.png) 50% 50% no-repeat;
+	}
+
+	#form-posi input.reset-button[disabled] {
+		background-color: #f0f0f0;
+		cursor: default;
+	}
 
 #form-posi input[type=text] {
 	/*color: #403b3b;*/
@@ -1210,6 +1225,8 @@ color: #BDC3C7;
     padding: 0px;
     margin: 10px 0 20px 0;
 }
+
+	
 
 /*
 select {

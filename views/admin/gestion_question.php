@@ -176,31 +176,6 @@ $form_url = WEBROOT."admin/question/";
 
                                 </legend>
 
-                                <!--
-                                <div>
-                                    <div id="titre-question-h3">Question
-
-                                        <div id="num_ordre">
-
-                                            <?php
-                                            //$numOrdre = $formData['num_ordre_question'];
-                                            /*
-                                            if (!empty($numOrdre))
-                                            {
-                                                echo $numOrdre;
-                                            }
-                                            else 
-                                            {
-                                                echo "-"; 
-                                            }
-                                            */
-                                            ?>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                -->
-
                                 <!-- Intitulé -->
 
                                 <div id="intitule">
@@ -229,15 +204,9 @@ $form_url = WEBROOT."admin/question/";
                                         <div id="responses-items">
                                             <?php
 
-                                            $nbReponses = 5;
-                                            /*
-                                            if (isset($formData['reponses']) && is_array($formData['reponses']) && count($formData['reponses']) > 0)
-                                            {
-                                                $nbReponses = count($formData['reponses']);
-                                            }
-                                            */
+                                            $nbReponsesMax = 5;
 
-                                            for ($i = 0; $i < $nbReponses; $i++) 
+                                            for ($i = 0; $i < $nbReponsesMax; $i++) 
                                             {
                                                 
                                                 echo '<p class="response-item">';
@@ -332,11 +301,12 @@ $form_url = WEBROOT."admin/question/";
                                         if ($formData['image_question']) :
                                             $imageName = $formData['image_question'];
                                         ?>
-                                            <label for="image_file"><strong>Fichier image : </strong><?php echo $imageName; ?></label><br/>
-                                            <input type="file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> /> <?php //echo $formData['image_question']; ?>
-                                            <input type="hidden" name="image_question" value="<?php echo $formData['image_question']; ?>" />
-                                            
-                                            <div>
+                                            <strong>Fichier image : </strong><label id="image_label" for="image_file"><?php echo $imageName; ?></label> &nbsp; <a id="del_image" class="del-media" name="del_image" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
+                                            <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> />
+                                            <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
+                                            <input type="hidden" id="image_cache" name="image_question" value="<?php echo $formData['image_question']; ?>" />
+                                            <div style="clear:both;"></div>
+                                            <div id="image-thumb">
                                                 <a rel="lightbox" href="<?php echo WEBROOT.IMG_PATH.$imageName; ?>">
                                                     <img src="<?php echo WEBROOT.THUMBS_PATH; ?>thumb_<?php echo $imageName; ?>" />
                                                 </a>
@@ -345,8 +315,10 @@ $form_url = WEBROOT."admin/question/";
                                         else :
                                         ?>
                                             <label for="image_file">Sélectionner un fichier image (format "jpeg")</label><br/>
-                                            <input type="file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> /> <?php //echo $imageName; ?>
+                                            <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> />
+                                            <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
                                             <!-- <input type="hidden" name="image_question" value="<?php //echo $imageName; ?>" /> -->
+                                            <div style="clear:both;"></div>
                                         <?php
                                         endif;
                                         ?>
@@ -790,6 +762,32 @@ $form_url = WEBROOT."admin/question/";
                 });
             });
             
+
+
+
+
+
+            /*** Gestion de la partie médias  ***/
+            
+            var inputFile = $("#image_file").clone(true);
+
+            $('#reset_image').click(function(event) {
+                $("#image_file").replaceWith(inputFile);
+                inputFile = $("#image_file").clone(true);
+            });
+
+
+            $("#del_image").click(function(event) {
+
+                $("#image_cache").val("");
+                $("#image_label").text("Pour valider la suppression, cliquez sur \"Enregistrer\"");
+                $("#image-thumb").remove();
+                $("#image_file").prop("disabled", true);
+                $('#reset_image').prop("disabled", true);
+                $(this).remove();
+                //console.log($("#image_label").text(""));
+
+            });
 
 
 

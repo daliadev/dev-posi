@@ -123,7 +123,7 @@ class ServicesAdminRestitution extends Main
             
             for ($i = 0; $i < count($resultset['response']['session']); $i++)
             {
-                if ($resultset['response']['session'][$i]->getSessionAccomplie() == 0)
+                if (intval($resultset['response']['session'][$i]->getSessionAccomplie()) === 0)
                 {
                     unset($resultset['response']['session'][$i]);
                 }

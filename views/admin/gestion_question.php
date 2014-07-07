@@ -43,6 +43,7 @@ if (Config::DEBUG_MODE)
 
 $form_url = WEBROOT."admin/question/";
 
+var_dump($formData['mode']);
 
 ?>
 
@@ -297,31 +298,36 @@ $form_url = WEBROOT."admin/question/";
                                     <div id="image-question">
                                         <strong>Image :</strong>
                                         <p>
-                                        <?php
-                                        if ($formData['image_question']) :
-                                            $imageName = $formData['image_question'];
-                                        ?>
-                                            <strong>Fichier image : </strong><label id="image_label" for="image_file"><?php echo $imageName; ?></label> &nbsp; <a id="del_image" class="del-media" name="del_image" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
-                                            <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> />
-                                            <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
-                                            <input type="hidden" id="image_cache" name="image_question" value="<?php echo $formData['image_question']; ?>" />
-                                            <div style="clear:both;"></div>
+
+                                        <?php if ($formData['image_question']) : $imageName = $formData['image_question']; ?>
+
+                                            <strong>Fichier image : </strong>
+                                                <label id="image_label" for="image_file"><?php echo $imageName; ?></label> &nbsp; 
+                                                
+                                                <?php if($formData['mode'] == "edit") : ?>
+                                                    <a id="del_image" class="del-media" name="del_image" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
+                                                <?php endif; ?>
+                                            
                                             <div id="image-thumb">
                                                 <a rel="lightbox" href="<?php echo WEBROOT.IMG_PATH.$imageName; ?>">
-                                                    <img src="<?php echo WEBROOT.THUMBS_PATH; ?>thumb_<?php echo $imageName; ?>" />
+                                                    <img src="<?php echo WEBROOT.THUMBS_PATH; ?>thumb_<?php echo $imageName; ?>">
                                                 </a>
                                             </div>
-                                        <?php
-                                        else :
-                                        ?>
-                                            <label for="image_file">Sélectionner un fichier image (format "jpeg")</label><br/>
-                                            <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?> />
+
+                                            <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
-                                            <!-- <input type="hidden" name="image_question" value="<?php //echo $imageName; ?>" /> -->
+                                            <input type="hidden" id="image_cache" name="image_question" value="<?php echo $imageName; ?>">
                                             <div style="clear:both;"></div>
-                                        <?php
-                                        endif;
-                                        ?>
+                                            
+                                        <?php else : ?>
+
+                                            <label for="image_file">Sélectionner un fichier image (format "jpeg")</label><br/>
+
+                                            <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?>>
+                                            <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
+                                            <div style="clear:both;"></div>
+
+                                        <?php endif; ?>
                                         </p>
                                     </div>
 
@@ -330,31 +336,40 @@ $form_url = WEBROOT."admin/question/";
                                     <div id="audio-question">
                                         <strong>Son :</strong>
                                         <p>
-                                        <?php
-                                        if ($formData['audio_question']) :
-                                            $audioName = $formData['audio_question'];
-                                        ?>
-                                            <label for="audio_file"><strong>Fichier audio : </strong><?php echo $audioName; ?></label><br/>
-                                            <input type="file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?> /> <?php //echo $audioName; ?>
-                                            <input type="hidden" name="audio_question" value="<?php echo $audioName ?>" />
+
+                                        <?php if ($formData['audio_question']) : $audioName = $formData['audio_question']; ?>
+                                            <strong>Fichier audio : </strong>
+                                                <label id="audio_label" for="audio_file"><?php echo $audioName; ?></label> &nbsp;
+                                                
+                                                <?php if($formData['mode'] == "edit") : ?>
+                                                    <a id="del_audio" class="del-audio" name="del_audio" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
+                                                <?php endif; ?>
+
+                                            <?php if (Config::ALLOW_AUDIO) : ?>
+                                                <div id="audio-player">
+                                                    <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
+                                                    <param name="wmode" value="transparent" />
+                                                    <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
+                                                    <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />
+                                                    <param name="wmode" value="transparent" />
+                                                    </object>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <input type="file" id="audio_file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?>>
+                                            <input type="button" id="reset_audio" class="reset-button" name="reset_audio" value="" <?php echo $formData['disabled']; ?>>
+                                            <input type="hidden" id="audio_cache" name="audio_question" value="<?php echo $audioName; ?>">
+                                            <div style="clear:both;"></div>
                                             
-                                            <div>
-                                                <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                                                <param name="wmode" value="transparent" />
-                                                <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                                                <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />
-                                                <param name="wmode" value="transparent" />
-                                                </object>
-                                            </div>
-                                        <?php
-                                        else :
-                                        ?>
+                                        <?php else : ?>
+
                                             <label for="audio_file">Sélectionner un fichier audio (format "mp3")</label><br/>
-                                            <input type="file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?> /> <?php //echo $audioName; ?>
-                                            <!-- <input type="hidden" name="audio_question" value="<?php //echo $audioName ?>" /> -->
-                                        <?php
-                                        endif;
-                                        ?>
+
+                                            <input type="file" id="audio_file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?>>
+                                            <input type="button" id="reset_audio" class="reset-button" name="reset_audio" value="" <?php echo $formData['disabled']; ?>>
+                                            <div style="clear:both;"></div>
+
+                                        <?php endif; ?>
                                         </p>
                                         
                                     </div>
@@ -769,41 +784,79 @@ $form_url = WEBROOT."admin/question/";
 
             /*** Gestion de la partie médias  ***/
             
-            var inputFile = $("#image_file").clone(true);
+            // Actualisation du téléchargement d'image
+            var inputImageFile = $("#image_file").clone(true);
 
             $('#reset_image').click(function(event) {
-                $("#image_file").replaceWith(inputFile);
-                inputFile = $("#image_file").clone(true);
+                $("#image_file").replaceWith(inputImageFile);
+                inputImageFile = $("#image_file").clone(true);
             });
 
+
+            // Suppression de l'image
+            var imageCacheValue = $("#image_cache").val();
+            var imageName = $("#image_label").text();
 
             $("#del_image").click(function(event) {
 
-                $("#image_cache").val("");
-                $("#image_label").text("Pour valider la suppression, cliquez sur \"Enregistrer\"");
-                $("#image-thumb").remove();
-                $("#image_file").prop("disabled", true);
-                $('#reset_image').prop("disabled", true);
-                $(this).remove();
-                //console.log($("#image_label").text(""));
+                if ($(this).text() == "Supprimer") {
+
+                    $("#image_cache").val("");
+                    $("#image_label").text("");
+                    $("#image-thumb").hide();
+                    $("#image_file").prop("disabled", true);
+                    $('#reset_image').prop("disabled", true);
+                    $(this).text("Annuler la suppression");
+                }
+                else {
+
+                    $("#image_cache").val(imageCacheValue);
+                    $("#image_label").text(imageName);
+                    $("#image-thumb").show();
+                    $("#image_file").prop("disabled", false);
+                    $('#reset_image').prop("disabled", false);
+                    $(this).text("Supprimer");
+                }
 
             });
 
 
+            // Actualisation du téléchargement de l'audio
+            var inputAudioFile = $("#audio_file").clone(true);
 
-            /*** Bouton de déselection de tous les radio buttons de la partie degrés ***/
-            /*
-            $('input[name=remove-degrees]').click(function(event) {
-
-                $('.radio_degre').each(function() {
-
-                    if ($(this).attr("checked", true))
-                    {
-                        $(this).removeProp("checked");
-                    }
-                });
+            $('#reset_audio').click(function(event) {
+                $("#audio_file").replaceWith(inputAudioFile);
+                inputAudioFile = $("#audio_file").clone(true);
             });
-            */
+
+
+            // Suppression de l'audio
+            var audioCacheValue = $("#image_cache").val();
+            var audioName = $("#image_label").text();
+
+            $("#del_audio").click(function(event) {
+
+                if ($(this).text() == "Supprimer") {
+
+                    $("#audio_cache").val("");
+                    $("#audio_label").text("");
+                    $("#audio-player").hide();
+                    $("#audio_file").prop("disabled", true);
+                    $('#reset_audio').prop("disabled", true);
+                    $(this).text("Annuler la suppression");
+                }
+                else {
+
+                    $("#audio_cache").val(audioCacheValue);
+                    $("#audio_label").text(audioName);
+                    $("#audio-player").show();
+                    $("#audio_file").prop("disabled", false);
+                    $('#reset_audio').prop("disabled", false);
+                    $(this).text("Supprimer");
+                }
+            });
+
+
 
 
 

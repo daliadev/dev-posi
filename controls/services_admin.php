@@ -239,7 +239,7 @@ class ServicesAdmin extends Main
                 {
                     // Déverrouillage des boutons "modifier" et "supprimer"
                     $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
                 }
                 
                 $questionDetails = array();

@@ -133,7 +133,7 @@ if (Config::DEBUG_MODE)
                                             {
                                                 $selected = "selected";
                                             }
-                                            echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.strtoupper($utilisateur->getNom()).' '.$utilisateur->getPrenom().'</option>';
+                                            echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
                                         }
                                         
                                         ?>

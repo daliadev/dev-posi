@@ -118,7 +118,7 @@ $form_url = $response['url'];
                         <div id="second-part">
 
                             <div class="input"> 
-                                <label for="ref_organ_cbox">Organisme <span class="asterix">*</span></label><br/>
+                                <label for="ref_organ_cbox">Sélectionnez ou ajoutez votre organisme <span class="asterix">*</span></label><br/>
                                 <select name="ref_organ_cbox" id="ref_organ_cbox">
                                     <option value="select_cbox">---</option>
 

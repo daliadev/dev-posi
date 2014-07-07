@@ -2,7 +2,6 @@
 
 
 // Initialisation par défaut des valeurs du formulaire
-
 $formData = array();
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -25,25 +24,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 }
 
 
-if (Config::DEBUG_MODE)
-{
-    
-    if (isset($response['errors']) && !empty($response['errors']))
-    {
-        echo "\$response['errors'] = ";
-        var_dump($response['errors']);
-    }
-    
-    //echo "\$response = ";
-    //var_dump($response);
-    
-    echo "\$formdata = ";
-    var_dump($formData);
-}
-
 $form_url = WEBROOT."admin/question/";
-
-var_dump($formData['mode']);
 
 ?>
 
@@ -96,14 +77,7 @@ var_dump($formData['mode']);
 
                             </select> &nbsp;
 
-
                             <input type="submit" name="selection" value="Sélectionner"/>
-                            <!--
-                            <input type="submit" name="edit" class="bt-admin-menu-modif-haut" value="Modifier" <?php //echo $formData['edit_disabled']; ?> />
-                            <input type="submit" name="save" class="bt-admin-menu-enreg-haut" value="Enregistrer" <?php //echo $formData['save_disabled']; ?> />
-                            -->
-                            
-                        <!-- </div> -->
                         
                     </div>
                 </div>
@@ -245,13 +219,6 @@ var_dump($formData['mode']);
                                             ?>
 
                                         </div>
-                                        
-                                        <!-- <div id="responses-btn">
-                                            <p>
-                                                <input type="button" class="bt-admin-simple-button" name="add_response" id="add_response" value="Ajouter" <?php //echo $formData['disabled']; ?> /> 
-                                                <input type="button" class="bt-admin-simple-button" name="delete_response" id="delete_response" value="Supprimer" <?php //echo $formData['disabled']; ?> />
-                                            </p>
-                                        </div> -->
                                     
                                     </div>
 
@@ -383,9 +350,6 @@ var_dump($formData['mode']);
                 </div>
 
 
-                <!-- <div style="clear:both"></div> -->
-
-
                 <!-- Partie droite : Propriétés question en cours -->
 
                 <div style="float:right;">
@@ -397,7 +361,6 @@ var_dump($formData['mode']);
 
                             <div id="competences">
                                 
-                                <!-- <div id="titre-question-h3">Catégories / compétences</div> -->
                                 <fieldset>
                                 
                                     <legend>Catégories / compétences</legend>
@@ -449,49 +412,6 @@ var_dump($formData['mode']);
                                                 echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
                                             }
 
-                                            /*
-                                            else if (strlen($categorie->getCode()) == 4)
-                                            {
-                                                
-                                                //echo '<option value="'.$categorie->getCode().'" style="margin-left:20px" '.$selected.'>- '.$categorie->getNom().'</option>';
-                                            }
-                                            else if (strlen($categorie->getCode()) == 6)
-                                            {
-                                                //
-                                                echo '<option value="'.$categorie->getCode().'" style="margin-left:40px" '.$selected.'>- '.$categorie->getNom().'</option>';
-                                            }
-                                            else if (strlen($categorie->getCode()) == 8)
-                                            {
-                                                //
-                                                echo '<option value="'.$categorie->getCode().'" style="margin-left:60px" '.$selected.'>- '.$categorie->getNom().'</option>';
-                                            }
-                                            else if (strlen($categorie->getCode()) == 10)
-                                            {
-                                                echo '<option value="'.$categorie->getCode().'" style="margin-left:80px" '.$selected.'>- '.$categorie->getNom().'</option>';
-                                            }
-                                            else
-                                            {
-                                                echo '<option value="">Impossible d\'afficher cette catégorie</option>';
-                                            }
-                                            */
-
-                                            
-                                            
-                                            
-                                            /*
-                                            if (strlen($categorie->getCode()) == 4)
-                                            {
-                                                echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; - '.$categorie->getNom().'</option>';
-                                            }
-                                            else if (strlen($categorie->getCode()) == 6)
-                                            {
-                                                echo '<option value="'.$categorie->getCode().'" '.$selected.'> &nbsp; &nbsp; &nbsp; - '.$categorie->getNom().'</option>';
-                                            }
-                                            else 
-                                            {
-                                                echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-                                            }
-                                            */
                                         }
 
                                         if ($optgroup)

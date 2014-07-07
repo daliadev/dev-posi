@@ -25,7 +25,7 @@ class ServicesAdminQuestion extends Main
     
     public function __construct() 
     {
-        //$this->errors = array();
+
         $this->controllerName = "adminQuestion";
         
         $this->questionDAO = new QuestionDAO();
@@ -51,7 +51,6 @@ class ServicesAdminQuestion extends Main
         { 
             $question = $resultset['response']['question'];
             $resultset['response']['question'] = array($question);
-            //$resultset['response']['question'] = $question;
         }
         
         return $resultset;
@@ -126,10 +125,6 @@ class ServicesAdminQuestion extends Main
     public function getQuestionCategories($idQuestion)
     {
         $categories = array();
-        //$categories['code_cat'] = "";
-        //$categories['nom_cat'] = "";
-        //$categories['descript_cat'] = "";
-        //$categories['type_lien_cat'] = "";
         
         $resultsetCategories = $this->categorieDAO->selectByQuestion($idQuestion);
         

@@ -549,7 +549,7 @@ class ServicesAdmin extends Main
                 {
                     // Déverrouillage des boutons "modifier" et "supprimer"
                     $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
                 }
                 
                 $catDetails = array();
@@ -811,7 +811,7 @@ class ServicesAdmin extends Main
                 {
                     // Déverrouillage des boutons "modifier" et "supprimer"
                     $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
                 }
                 
                 $degreDetails = array();
@@ -1075,7 +1075,7 @@ class ServicesAdmin extends Main
                 {
                     // Déverrouillage des boutons "modifier" et "supprimer"
                     $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
                 }
                 
                 $organDetails = array();
@@ -1340,7 +1340,7 @@ class ServicesAdmin extends Main
                 {
                     // Déverrouillage des boutons "modifier" et "supprimer"
                     $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
                 }
                 
                 $userDetails = array();
@@ -1669,7 +1669,7 @@ class ServicesAdmin extends Main
                 {
                     // Déverrouillage des boutons "modifier" et "supprimer"
                     $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
                 }
                 
                 $catDetails = array();

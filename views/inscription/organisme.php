@@ -118,7 +118,8 @@ $form_url = $response['url'];
                         <div id="second-part">
 
                             <div class="input"> 
-                                <label for="ref_organ_cbox">Sélectionnez ou ajoutez votre organisme <span class="asterix">*</span></label><br/>
+
+                                <label for="ref_organ_cbox">Veuillez entrer votre organisme <span class="asterix">*</span></label><br/>
                                 <select name="ref_organ_cbox" id="ref_organ_cbox">
                                     <option value="select_cbox">---</option>
 
@@ -153,7 +154,7 @@ $form_url = $response['url'];
                         <div id="third-part">
 
                             <div class="input">
-                                <label for="nom_organ">Veuillez entrer votre organisme <span class="asterix">*</span></label><br/>
+                                <label for="nom_organ">Nom de votre organisme <span class="asterix">*</span></label><br/>
                                 <input value="<?php echo $formData['nom_organ']; ?>" name="nom_organ" id="nom_organ" type="text">
                             </div>
 

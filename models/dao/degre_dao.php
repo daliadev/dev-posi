@@ -66,6 +66,9 @@ class DegreDAO extends ModelDAO
      */
     public function insert($values) 
     {
+        var_dump($values);
+        
+        
         $this->initialize();
         
         if (!empty($values))

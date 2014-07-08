@@ -31,7 +31,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/degre/";
 
-//var_dump($response);
 ?>
     
     

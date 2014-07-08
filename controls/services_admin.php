@@ -833,6 +833,7 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "new");
 
+            $this->formData['ref_degre'] = null;
             $this->formData['nom_degre'] = null;
             $this->formData['descript_degre'] = null;
         }
@@ -859,7 +860,7 @@ class ServicesAdmin extends Main
                 }
             }
             
-
+            
             /*-----  Traitement des infos saisies   -----*/
             
             $dataDegre = $this->servicesDegre->filterDegreData($this->formData, $_POST);
@@ -892,6 +893,8 @@ class ServicesAdmin extends Main
                     $this->formData['mode'] = "edit";
                 }
             }
+
+            exit();
             
         }
         

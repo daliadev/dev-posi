@@ -75,7 +75,7 @@ class ServicesAdminDegre extends Main
     {
         $dataDegre = array();
         
-        /*** Récupération de la référence de la question ***/
+        /*** Récupération de la référence du degre ***/
         
         if (isset($formData['ref_degre']) && !empty($formData['ref_degre']))
         {
@@ -150,6 +150,7 @@ class ServicesAdminDegre extends Main
 
     public function setDegre($modeDegre, $dataDegre)
     {
+
         if (!empty($dataDegre) && is_array($dataDegre))
         {
             if (!empty($dataDegre['nom_degre']))

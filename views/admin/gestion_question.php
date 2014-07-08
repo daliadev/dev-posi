@@ -571,7 +571,8 @@ $form_url = WEBROOT."admin/question/";
         
 
         $(function() { 
-            
+   
+
             /*** Ajout de réponse automatique ***/
             /*
             var responseItem = $('#responses-items').first().html();
@@ -604,6 +605,13 @@ $form_url = WEBROOT."admin/question/";
             /*** Tableau des éléments du cache des réponses ***/
 
             var cacheInputs = new Array();
+
+
+            /*** Verrouillage initiale des questions du "qcm" ***/
+
+            $('#responses-items').find('input').each(function() {
+                $(this).prop('disabled', true);
+            });
 
 
             /*** Gestion du clic sur le type "qcm" ***/
@@ -697,9 +705,7 @@ $form_url = WEBROOT."admin/question/";
                 });
             });
             
-
-
-
+            
 
 
             /*** Gestion de la partie médias  ***/

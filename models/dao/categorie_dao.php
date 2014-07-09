@@ -51,7 +51,7 @@ class CategorieDAO extends ModelDAO
         
         if (!empty($codeCat))
         {   
-            $request = "SELECT * FROM categorie WHERE code_cat LIKE ".$codeCat." ORDER BY code_cat ASC";
+            $request = "SELECT * FROM categorie WHERE code_cat = ".$codeCat." ORDER BY code_cat ASC";
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
         }

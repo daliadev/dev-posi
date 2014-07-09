@@ -688,7 +688,7 @@ class ServicesAdminRestitution extends Main
             $i = 0;
             foreach ($resultsetQuestions['response']['question'] as $question)
             {
-                 /*** Les informations suivantes qui concernent les résultats sont initialisées ***/
+                /*** Les informations suivantes concernant les résultats sont initialisées ***/
                 
                 $questionsDetails[$i] = array();
                 $questionsDetails[$i]['ref_question'] = $question->getId();
@@ -795,6 +795,8 @@ class ServicesAdminRestitution extends Main
                 $i++;
             }
         }
+
+        
 
         
         $resultsetResultats = $this->resultatDAO->selectBySession($refSession);

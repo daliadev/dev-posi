@@ -33,7 +33,6 @@ class ServicesAdminCategorie extends Main
         
         if (!$this->filterDataErrors($resultset['response']))
         {
-
             if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
             { 
                 $categorie = $resultset['response']['categorie'];
@@ -51,9 +50,15 @@ class ServicesAdminCategorie extends Main
     public function getCategorie($codeCat)
     {
         $resultset = $this->categorieDAO->selectByCode($codeCat);
-        
+
         if (!$this->filterDataErrors($resultset['response']))
         {
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
             return $resultset;
         }
 
@@ -91,19 +96,35 @@ class ServicesAdminCategorie extends Main
     public function filterCategorieData(&$formData, $postData)
     {
         $dataCategorie = array();
-        
-
+        /*
         // Récupèration du code catégorie original s'il y en a un
         if (isset($postData['code']) && !empty($postData['code']))
         {
             $formData['code'] = $postData['code'];
             $dataCategorie['code'] = $formData['code'];
         }
-        
+        */
         // Formatage du code catégorie
         $formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
         $dataCategorie['code_cat'] = $formData['code_cat'];
         
+        // Il faut vérifier si le code est au bon format et si il n'existe pas déjà
+        if (!empty($formData['code_cat']))
+        {
+            if (strlen($formData['code_cat']) % 2 != 0)
+            {
+                $this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir schéma explicatif).");
+            }
+            
+            $resultsetCode = $this->getCategorie($formData['code_cat']);
+
+            if (!empty($resultsetCode['response']) && $resultsetCode !== false)
+            {
+                $this->registerError("form_valid", "Le code de la catégorie existe déjà.");
+            }
+        }
+
+
         // Formatage du nom de la catégorie
         $formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
         $dataCategorie['nom_cat'] = $formData['nom_cat'];
@@ -138,12 +159,12 @@ class ServicesAdminCategorie extends Main
         {
             // Insertion de la catégorie dans la bdd
             $resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
-                    
+
             // Traitement des erreurs de la requête
             if ($resultsetCategorie['response'])
             {
-                $formData['code_cat'] = $resultsetCategorie['response']['categorie']['code_cat'];
-                $dataCategorie['code_cat'] = $formData['code_cat'];
+                //$formData['code_cat'] = $resultsetCategorie['response']['categorie']['code_cat'];
+                //$dataCategorie['code_cat'] = $formData['code_cat'];
                 $this->registerSuccess("La catégorie a été enregistrée.");
             }
             else 
@@ -182,6 +203,7 @@ class ServicesAdminCategorie extends Main
 
     public function setCategorie($modeCategorie, $dataCategorie)
     {
+
         if (!empty($dataCategorie) && is_array($dataCategorie))
         {
             if (!empty($dataCategorie['code_cat']) && !empty($dataCategorie['nom_cat']))

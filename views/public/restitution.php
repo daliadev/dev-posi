@@ -216,7 +216,7 @@ if (Config::DEBUG_MODE)
                                     <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
                                     <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>" target="_blank">ici</a> pour acceder à la restitution publique de cet organisme)</div>
                                     <?php endif; ?>
-                                    <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php echo $infos_user['nom_intervenant']; ?></strong></div> -->
+                                    <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php //echo $infos_user['nom_intervenant']; ?></strong></div> -->
                                     <div class="info">Email de l'intervenant : <strong><a href="mailto:<?php echo $infos_user['email_intervenant']; ?>" target="_top"><?php echo $infos_user['email_intervenant']; ?></a></strong></div>
                                     <hr>
                                     <div class="info">Nom : <strong><?php echo strtoupper($infos_user['nom']); ?></strong></div>

@@ -139,8 +139,6 @@ $form_url = WEBROOT."admin/categorie/";
                         }
 
                         ?>
-
-
                                 
                         <div class="input">
                             <label for="code_cat">Code * <a target="blank" class="lien-no-underline" rel="lightbox" href="<?php echo SERVER_URL; ?>media/images/code.jpg"><small>Mode d'emploi</small></a></label>

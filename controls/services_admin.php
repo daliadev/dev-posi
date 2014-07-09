@@ -586,11 +586,11 @@ class ServicesAdmin extends Main
             $this->servicesGestion->switchFormButtons($this->formData, "save");
 
             // Récupèration de l'id de la question s'il y en a une.
-            if (!empty($this->formData['code']))
+            if (!empty($this->formData['code_cat']))
             {
                 if ($previousMode == "edit")
                 {
-                    $dataCategorie['code'] = $this->formData['code'];
+                    $dataCategorie['code_cat'] = $this->formData['code_cat'];
                 }
             }
 
@@ -1381,7 +1381,7 @@ class ServicesAdmin extends Main
             $this->servicesGestion->switchFormButtons($this->formData, "save");
 
             // Récupèration de l'id de l'utilisateur s'il y en a un.
-            if (!empty($this->formData['code']))
+            if (!empty($this->formData['ref_user']))
             {
                 if ($previousMode == "edit")
                 {

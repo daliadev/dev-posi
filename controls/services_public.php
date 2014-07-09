@@ -358,6 +358,8 @@ class ServicesPublic extends Main
                         $this->returnData['response']['details']['questions'] = array();
                         $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);         
 
+                        var_dump($this->returnData['response']['details']['questions']);
+                        exit();
                     }
                 }
 

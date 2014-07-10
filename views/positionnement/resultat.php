@@ -4,30 +4,25 @@
 
     $content = "";
     foreach ($response['correction'] as $correction)
-        {
-                        if ($correction['parent'])
-                        {         
-                                if ($correction['total'] > 0)
-                                {
-                                        $content .= '</br>';
-                                        $content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
-                                }
-                                
-                        }
+    {
+        if ($correction['parent'])
+        {         
+            if ($correction['total'] > 0)
+            {
+                    $content .= '</br>';
+                    $content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
+            }
         }
+    }
     
     $Destinataire = "";
     foreach (Config::$emails_admin as $email_admin) 
     {
         $Destinataire .=  $email_admin.',';
     }
-    
-    // $Destinataire .=  $response['email_infos']['email_intervenant'].',';
 
-    //$Destinataire = ;
     $pourqui = "g.billard@educationetformation.fr";
     $Sujet = Config::POSI_NAME;
-    //$Sujet =$where ;
 
     $From  = "From:" ;
     $From .= $pourqui ;
@@ -35,7 +30,6 @@
     $From .= "MIME-version: 1.0\n";
     $From .= 'Content-Type: text/html; charset=utf-8'."\n"; 
 
-    //$message = $response['email_infos']['date_posi'];
     
     $message =   '<html><head><title>'.Config::POSI_NAME.'</title></head>';
     $message .=  '<body>';
@@ -46,6 +40,7 @@
     $message .=  'Prénom: '.$response['email_infos']['prenom_user'].'</br>';
     $message .=  'Email intervenant: '.$response['email_infos']['email_intervenant'].'</br>';
     $message .=  'Temps :'.$response['email_infos']['temps_posi'].'</br>';
+    $message .= 'Score globale:'.$response['percent_global'].' %';
     $message .= '</br>';
     $message .=  '<strong>Score:</strong></br> '.$content;
     $message .= '</body>';
@@ -92,7 +87,7 @@
     $totalCorrectGlobal = $response['total_correct_global'];
 
 
-    //var_dump($response);
+    // var_dump($response);
     // var_dump($response['errors']);
 
 ?>

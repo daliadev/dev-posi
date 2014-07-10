@@ -178,7 +178,6 @@ class ServicesPublic extends Main
                         }
                         else
                         {
-                            
                             $response = array('error' => "Vous n'avez pas sélectionné d'utilisateur.");
                         }
 
@@ -358,8 +357,8 @@ class ServicesPublic extends Main
                         $this->returnData['response']['details']['questions'] = array();
                         $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);         
 
-                        var_dump($this->returnData['response']['details']['questions']);
-                        exit();
+                        // var_dump($this->returnData['response']['details']['questions']);
+                        // exit();
                     }
                 }
 

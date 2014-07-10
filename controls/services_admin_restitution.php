@@ -73,10 +73,10 @@ class ServicesAdminRestitution extends Main
         return false;
     }
     
+
+
     
-    
-    
-    
+
     public function getUsersFromOrganisme($refOrganisme)
     {
         $resultset = $this->utilisateurDAO->selectByOrganisme($refOrganisme);
@@ -105,10 +105,9 @@ class ServicesAdminRestitution extends Main
     }
     
     
-    
-    
-    
-    
+
+
+
     public function getUserSessions($refUser, $refOrganisme)
     {
         $resultset = $this->sessionDAO->selectByUser($refUser, $refOrganisme);
@@ -134,11 +133,11 @@ class ServicesAdminRestitution extends Main
         
         return false;
     }
+
+
     
 
 
-
-    
     public function getSession($refSession)
     {
         $resultset = $this->sessionDAO->selectById($refSession);
@@ -155,8 +154,8 @@ class ServicesAdminRestitution extends Main
 
         return $resultset;
     }
-   
-    
+
+
 
 
 
@@ -178,226 +177,8 @@ class ServicesAdminRestitution extends Main
 
         return false;
     }
-    
 
 
-
-   
-    public function getUser($refUser)
-    {
-        $resultset = $this->utilisateurDAO->selectById($refUser);
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
-            { 
-                $utilisateur = $resultset['response']['utilisateur'];
-                $resultset['response']['utilisateur'] = array($utilisateur);
-            }
-
-            return $resultset;
-        }
-
-        return false;
-    }
-    
-    
-    
-
-    public function getNiveau($refNiveau)
-    {
-        $resultset = $this->niveauEtudesDAO->selectById($refNiveau);
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
-            { 
-                $niveauEtudes = $resultset['response']['niveau_etudes'];
-                $resultset['response']['niveau_etudes'] = array($niveauEtudes);
-            }
-
-            return $resultset;
-        }
-
-        return false;
-    }
-
-
-    
-    
-    public function getCategories()
-    {
-        $resultset = $this->categorieDAO->selectAll();
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-            { 
-                $categorie = $resultset['response']['categorie'];
-                $resultset['response']['categorie'] = array($categorie);
-            }
-
-            return $resultset;
-        }
-
-        return false;
-    }
-
-    
-    
-
-    public function getResultatsBySession($refSession)
-    {
-        $resultset = $this->resultatDAO->selectBySession($refSession);
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['resultat']) && count($resultset['response']['resultat']) == 1)
-            { 
-                $resultat = $resultset['response']['resultat'];
-                $resultset['response']['resultat'] = array($resultat);
-            }
-
-            return $resultset;
-        }
-
-        return false;
-    }
-    
-
-    
-
-    public function getQuestion($refQuestion)
-    {
-        $resultset = $this->questionDAO->selectById($refQuestion);
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
-            { 
-                $question = $resultset['response']['question'];
-                $resultset['response']['question'] = array($question);
-            }
-
-            return $resultset;
-        }
-
-        return false;
-    }
-
-
-
-
-    public function getQuestionCategorie($refQuestion)
-    {
-        $resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['question_cat']) && count($resultset['response']['question_cat']) == 1)
-            { 
-                $question_cat = $resultset['response']['question_cat'];
-                $resultset['response']['question_cat'] = array($question_cat);
-            }
-
-            return $resultset;
-        }
-
-        return false;
-    }
-
-
-
- 
-    public function getResultatsByCategories($refSession)
-    {
-        $tabResultats = array();
-        
-        // On sélectionne tous les résultats correspondant à la session en cours
-        $resultsetResultats = $this->getResultatsBySession($refSession);
-        
-        if ($resultsetResultats)
-        {
-            $i = 0;
-            
-            foreach ($resultsetResultats['response']['resultat'] as $resultat)
-            {      
-                // On établit si le résultat est correct ou non
-                if ($resultat->getRefReponseQcm() && $resultat->getRefReponseQcmCorrecte())
-                {
-                    if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
-                    {
-                        $tabResultats[$i]['correct'] = true;
-                    }
-                    else 
-                    {
-                        $tabResultats[$i]['correct'] = false;
-                    }
-                    
-                    // Ensuite on va chercher les données sur la question correspondant au résultat
-                    $resultsetQuestion = $this->getQuestion($resultat->getRefQuestion());
-
-                    if ($resultsetQuestion)
-                    {        
-                        // On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
-                        $resultsetCatQuestion = $this->getQuestionCategorie($resultsetQuestion['response']['question'][0]->getId());
-
-                        if ($resultsetCatQuestion)
-                        {
-                            $tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat'][0]->getCodeCat();
-                        }
-                        else 
-                        {
-                            $this->registerError("form_request", "Aucune categorie ne correspond à la question.");
-                        }
-                    }
-                    else 
-                    {
-                        $this->registerError("form_request", "Aucune question n'a été trouvée.");
-                    }
-                    
-                    $i++;
-                }
-            }
-        }
-        else
-        {
-            $this->registerError("form_request", "Aucun resultat n'a été trouvé.");
-        }
-        
-        return $tabResultats;
-        
-    }
-    
-
-    
-    /*
-    public function getQuestions()
-    {
-        $resultset = $this->questionDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        // Si la session est unique
-        
-        if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
-        { 
-            $question = $resultset['response']['question'];
-            $resultset['response']['question'] = array($question);
-        }
-        
-        return $resultset;
-    }
-    */
-    
-    
     
     
 
@@ -571,11 +352,6 @@ class ServicesAdminRestitution extends Main
 
                     for ($j = 0; $j < count($tabStats); $j++)
                     {
-                        //if (strlen($tabStats[$j]['code_cat']) == 2 && $tabStats[$j]['code_cat'] == $parentCode)
-                        //{
-                            
-                        //}
-                        //else 
                         if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
                         {
                             $tabStats[$i]['total'] += $tabStats[$j]['total'];
@@ -601,9 +377,7 @@ class ServicesAdminRestitution extends Main
         
         
         /*** Données envoyées à la page de résultat ***/
-        
-        //$dataPage = array();
-        //$posiStats = array();
+
         $posiStats['categories'] = array();
         $k = 0;
         
@@ -641,28 +415,8 @@ class ServicesAdminRestitution extends Main
         $posiStats['percent_global'] = $percentGlobal;
         $posiStats['total_global'] = $totalGlobal;
         $posiStats['total_correct_global'] = $totalCorrectGlobal;
+        
 
-        
-        
-        /*
-        $posiStats['nb_reponses'] = $totalGlobal;
-        $posiStats['nb_rep_correctes'] = $totalCorrectGlobal;
-        if ($totalGlobal > 0 && $totalCorrectGlobal > 0)
-        {
-            $posiStats['percent_total'] = round(($totalCorrectGlobal * 100) / $totalGlobal);
-        }
-        */
-        /*
-        if ($countValidCategories > 0)
-        {
-            $posiStats['percent_total'] = round($percentGlobal / $countValidCategories);
-        }
-        else 
-        {
-            $posiStats['percent_total'] =  0;
-        }
-        */
-        
         return  $posiStats;
     }
     
@@ -672,24 +426,21 @@ class ServicesAdminRestitution extends Main
     
     public function getQuestionsDetails($refSession)
     {
+
+        // Etape  1 : Regroupement des données sur toutes les questions du positionnement
         $questionsDetails = array();
                 
-        $resultsetQuestions = $this->questionDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultsetQuestions['response']))
+        $resultsetQuestions = $this->getQuestions();
+
+        if ($resultsetQuestions)
         {
-            if (!empty($resultsetQuestions['response']['question']) && count($resultsetQuestions['response']['question']) == 1)
-            { 
-                $question = $resultsetQuestions['response']['question'];
-                $resultsetQuestions['response']['question'] = array($question);
-            }
-            
             $i = 0;
+
+            // Pour chaque question
             foreach ($resultsetQuestions['response']['question'] as $question)
             {
-                /*** Les informations suivantes concernant les résultats sont initialisées ***/
-                
+
+                // Initialisation des données récupérée de la question    
                 $questionsDetails[$i] = array();
                 $questionsDetails[$i]['ref_question'] = $question->getId();
                 if (strlen($question->getNumeroOrdre()) == 1)
@@ -707,177 +458,514 @@ class ServicesAdminRestitution extends Main
 
                 $questionsDetails[$i]['nom_degre'] = "-";
                 $questionsDetails[$i]['descript_degre'] = "";
-                    
-                $questionsDetails[$i]['reponse_user_qcm'] = "-";
-                $questionsDetails[$i]['reponse_qcm_correcte'] = "-";
-                $questionsDetails[$i]['reponse_user_champ'] = "-";
+                
+                $questionsDetails[$i]['categories'] = array();
+
+                $questionsDetails[$i]['reponses'] = array();
+
+                $questionsDetails[$i]['reponse_user_qcm'] = "";
+                $questionsDetails[$i]['reponse_qcm_correcte'] = "";
+                $questionsDetails[$i]['reponse_user_champ'] = "";
                 $questionsDetails[$i]['intitule_reponse_user'] = "";
-                $questionsDetails[$i]['intitule_reponse_correcte'] = "-";
-                $questionsDetails[$i]['temps'] = "indisponible";
-                $questionsDetails[$i]['reussite'] = "-";
+                $questionsDetails[$i]['intitule_reponse_correcte'] = "";
+                $questionsDetails[$i]['temps'] = "";
+                $questionsDetails[$i]['reussite'] = "";
    
                 
                 /*** Degré ***/
+
                 $refDegre = $question->getRefDegre();
+
                 if (!empty($refDegre))
                 {
-                    $resultsetDegre = $this->degreDAO->selectById($question->getRefDegre());
-                    $this->filterDataErrors($resultsetDegre['response']);
-                    $questionsDetails[$i]['nom_degre'] = $resultsetDegre['response']['degre']->getNom();
-                    $questionsDetails[$i]['descript_degre'] = $resultsetDegre['response']['degre']->getDescription();
+                    $resultsetDegre = $this->getDegre($refDegre);
+
+                    if ($resultsetDegre)
+                    {
+                        $questionsDetails[$i]['nom_degre'] = $resultsetDegre['response']['degre']->getNom();
+                        $questionsDetails[$i]['descript_degre'] = $resultsetDegre['response']['degre']->getDescription();
+                    }
                 }
                 
                 
                 /*** Catégories ***/
                 
-                $resultsetCategories = $this->categorieDAO->selectByQuestion($question->getId());
-                $this->filterDataErrors($resultsetCategories['response']);
-                if (!empty($resultsetCategories['response']['categorie']) && count($resultsetCategories['response']['categorie']) == 1)
-                { 
-                    $categorie = $resultsetCategories['response']['categorie'];
-                    $resultsetCategories['response']['categorie'] = array($categorie);
-                }
+                $resultsetCategories = $this->getCategoriesByQuestion($question->getId());
 
                 $categories = array();
-                $j = 0;
-                foreach ($resultsetCategories['response']['categorie'] as $cat)
+
+                if ($resultsetCategories) 
                 {
-                    $categories[$j] = array();
-                    
-                    $code_cat = $cat->getCode();
-                    if (strlen($code_cat) > 2)
+                    $j = 0;
+
+                    foreach ($resultsetCategories['response']['categorie'] as $categorie)
                     {
-                        $parentCode = substr($code_cat, 0, 2);
-                        $resultCatParent = $this->categorieDAO->selectByCode($parentCode);
-                        //var_dump($resultCatParent['response']);
-                        //exit();
-                        if (!$this->filterDataErrors($resultCatParent['response']))
+                        $codeCat = $categorie->getCode();
+
+                        if (strlen($codeCat) > 2)
                         {
-                            $categories[$j]['nom_cat_parent'] = $resultCatParent['response']['categorie']->getNom();
-                            $categories[$j]['descript_cat_parent'] = $resultCatParent['response']['categorie']->getDescription();
+                            $parentCode = substr($codeCat, 0, 2);
+                            $resultsetCat = $this->getCategorie($parentCode);
+
+                            if ($resultsetCat)
+                            {
+                                $categories[$j]['nom_cat_parent'] = $resultsetCat['response']['categorie'][0]->getNom();
+                                $categories[$j]['descript_cat_parent'] = $resultsetCat['response']['categorie'][0]->getDescription();
+                            }  
                         }
                         
+                        $categories[$j]['nom_cat'] = $categorie->getNom();
+                        $categories[$j]['descript_cat'] = $categorie->getDescription();
+
+                        $j++;
                     }
-                    
-                    
-                    $categories[$j]['nom_cat'] = $cat->getNom();
-                    $categories[$j]['descript_cat'] = $cat->getDescription();
-                    $j++;
                 }
+
                 $questionsDetails[$i]['categories'] = $categories;
 
                 
                 /*** Réponses ***/
+
                 if ($question->getType() == "qcm")
                 {
-                    $resultsetReponses = $this->reponseDAO->selectByQuestion($question->getId());
-                    $this->filterDataErrors($resultsetReponses['response']);
-                    if (!empty($resultsetReponses['response']['reponse']) && count($resultsetReponses['response']['reponse']) == 1)
-                    { 
-                        $reponse = $resultsetReponses['response']['reponse'];
-                        $resultsetReponses['response']['reponse'] = array($reponse);
-                    }
-                    
                     $reponses = array();
-                    $j = 0;
-                    foreach ($resultsetReponses['response']['reponse'] as $rep)
-                    {
-                        $reponses[$j] = array();
-                        $reponses[$j]['ref_reponse'] = $rep->getId();
-                        $reponses[$j]['num_ordre_reponse'] = $rep->getNumeroOrdre();
-                        $reponses[$j]['intitule_reponse'] = $rep->getIntitule();
-                        $reponses[$j]['est_correcte'] = $rep->getEstCorrect();
-                        $j++;
-                    }
-                    $questionsDetails[$i]['reponses'] = $reponses;
+
+                    $resultsetReponses = $this->getReponsesByQuestion($question->getId());
+
+                    if ($resultsetReponses)
+                    { 
+                        $j = 0;
+                        foreach ($resultsetReponses['response']['reponse'] as $reponse)
+                        {
+                            $reponses[$j] = array();
+                            $reponses[$j]['ref_reponse'] = $reponse->getId();
+                            $reponses[$j]['num_ordre_reponse'] = $reponse->getNumeroOrdre();
+                            $reponses[$j]['intitule_reponse'] = $reponse->getIntitule();
+                            $reponses[$j]['est_correcte'] = $reponse->getEstCorrect();
+
+                            $j++;
+                        }
+                    }    
                 }
+
+                $questionsDetails[$i]['reponses'] = $reponses;
+
 
                 $i++;
             }
         }
 
-        
+        // Fin de la récupération des infos de chaque question
 
         
-        $resultsetResultats = $this->resultatDAO->selectBySession($refSession);
+
+        // Etape 2 : Regroupement de toutes les infos sur l'utilisateur sélectionné
+
+        $resultatsUser = array();
+
+        $resultsetResultats = $this->getResultatsBySession($refSession);
         
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultsetResultats['response']))
+        if ($resultsetResultats)
         {
-            if (!empty($resultsetResultats['response']['resultat']) && count($resultsetResultats['response']['resultat']) == 1)
-            { 
-                $resultat = $resultsetResultats['response']['resultat'];
-                $resultsetResultats['response']['resultat'] = array($resultat);
-            }
-            
-            
-            $resultatUser = array();
             $i = 0;
+
             foreach ($resultsetResultats['response']['resultat'] as $result)
             {
-                $resultatUser[$i] = array();
-                $resultatUser[$i]['ref_resultat'] = $result->getId();
-                $resultatUser[$i]['ref_reponse_qcm'] = $result->getRefReponseQcm();
-                $resultatUser[$i]['ref_reponse_qcm_correcte'] = $result->getRefReponseQcmCorrecte();
-                $resultatUser[$i]['reponse_champ'] = $result->getReponseChamp();
-                $resultatUser[$i]['temps_reponse'] = $result->getTempsReponse();
-                
-                
-                if (!empty($resultatUser[$i]['reponse_champ']))
+
+                $resultatsUser[$i] = array();
+                $resultatsUser[$i]['ref_resultat'] = $result->getId();
+                $resultatsUser[$i]['ref_question'] = $result->getRefQuestion();
+                $resultatsUser[$i]['ref_reponse_qcm'] = $result->getRefReponseQcm();
+                $resultatsUser[$i]['ref_reponse_qcm_correcte'] = $result->getRefReponseQcmCorrecte();
+                $resultatsUser[$i]['reponse_champ'] = $result->getReponseChamp();
+                $resultatsUser[$i]['temps_reponse'] = $result->getTempsReponse();
+  
+                $i++;
+            }
+        }
+
+
+        // Etape 3 : Recoupement entre les infos des questions et des résultats associés à chaque question
+        
+        for ($i = 0; $i < count($questionsDetails); $i++)
+        {
+            for ($j = 0; $j < count($resultatsUser); $j++)
+            {
+                if ($questionsDetails[$i]['ref_question'] == $resultatsUser[$j]['ref_question'])
                 {
-                    $questionsDetails[$i]['reponse_user_champ'] =  $resultatUser[$i]['reponse_champ'];
-                }
-                else if (!empty($resultatUser[$i]['ref_reponse_qcm']) && !empty($resultatUser[$i]['ref_reponse_qcm_correcte']))
-                {
-                    for ($j = 0; $j < count($questionsDetails[$i]['reponses']); $j++)
+
+                    $questionsDetails[$i]['reponse_user_qcm'] = "-";
+                    $questionsDetails[$i]['intitule_reponse_user'] = "-";
+                    $questionsDetails[$i]['reponse_qcm_correcte'] = "-";
+                    $questionsDetails[$i]['intitule_reponse_correcte'] = "-";
+                    $questionsDetails[$i]['temps'] = "-";
+                    $questionsDetails[$i]['reussite'] = "-";   
+
+                    if (!empty($resultatsUser[$j]['reponse_champ']))
                     {
-                        if (!empty($questionsDetails[$i]['reponses'][$j]))
+                        $questionsDetails[$i]['reponse_user_champ'] =  $resultatsUser[$j]['reponse_champ'];
+                    }
+                    else if (!empty($resultatsUser[$j]['ref_reponse_qcm']) && !empty($resultatsUser[$j]['ref_reponse_qcm_correcte']))
+                    {
+                        for ($k = 0; $k < count($questionsDetails[$i]['reponses']); $k++)
                         {
-                            if (!empty($resultatUser[$i]['ref_reponse_qcm']) && $questionsDetails[$i]['reponses'][$j]['ref_reponse'] == $resultatUser[$i]['ref_reponse_qcm'])
-                            {
-                                $questionsDetails[$i]['reponse_user_qcm'] = $questionsDetails[$i]['reponses'][$j]['num_ordre_reponse'];
-                                $questionsDetails[$i]['intitule_reponse_user'] = $questionsDetails[$i]['reponses'][$j]['intitule_reponse'];
-                            }
-                            if (!empty($resultatUser[$i]['ref_reponse_qcm_correcte']) && $questionsDetails[$i]['reponses'][$j]['ref_reponse'] == $resultatUser[$i]['ref_reponse_qcm_correcte'])
-                            {
-                                $questionsDetails[$i]['reponse_qcm_correcte'] = $questionsDetails[$i]['reponses'][$j]['num_ordre_reponse'];
-                                $questionsDetails[$i]['intitule_reponse_correcte'] = $questionsDetails[$i]['reponses'][$j]['intitule_reponse'];
+                            if (!empty($questionsDetails[$i]['reponses'][$k]))
+                            {   
+                                $reponse = $questionsDetails[$i]['reponses'][$k];
+
+                                if (!empty($resultatsUser[$j]['ref_reponse_qcm_correcte']) && $reponse['ref_reponse'] == $resultatsUser[$j]['ref_reponse_qcm'])
+                                {
+                                    $questionsDetails[$i]['reponse_user_qcm'] = $reponse['num_ordre_reponse'];
+                                    $questionsDetails[$i]['intitule_reponse_user'] = $reponse['intitule_reponse'];
+                                }
+
+                                if (!empty($resultatsUser[$j]['ref_reponse_qcm_correcte']) && $reponse['ref_reponse'] == $resultatsUser[$j]['ref_reponse_qcm_correcte'])
+                                {
+                                    $questionsDetails[$i]['reponse_qcm_correcte'] = $reponse['num_ordre_reponse'];
+                                    $questionsDetails[$i]['intitule_reponse_correcte'] = $reponse['intitule_reponse'];
+                                }
                             }
                         }
-                        else {
-                            $questionsDetails[$i]['reponse_user_qcm'] = "-";
-                            $questionsDetails[$i]['intitule_reponse_user'] = "-";
+
+                        $questionsDetails[$i]['reussite'] = "-";
+
+                        if ($questionsDetails[$i]['reponse_user_qcm'] != "-" || $questionsDetails[$i]['reponse_qcm_correcte'] != "-")
+                        {
+                            if ($questionsDetails[$i]['reponse_user_qcm'] == $questionsDetails[$i]['reponse_qcm_correcte'])
+                            {
+                                $questionsDetails[$i]['reussite'] = 1;
+                            }
+                            else 
+                            {
+                                $questionsDetails[$i]['reussite'] = 0;
+                            }
                         }
                     }
-                    
-                    if ($resultatUser[$i]['ref_reponse_qcm'] != "-" || $resultatUser[$i]['ref_reponse_qcm_correcte'] != "-")
+                   
+                    if (!empty($resultatsUser[$j]['temps_reponse']))
                     {
-                        if ($resultatUser[$i]['ref_reponse_qcm'] == $resultatUser[$i]['ref_reponse_qcm_correcte'])
+                        $questionsDetails[$i]['temps'] = $resultatsUser[$j]['temps_reponse'];
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        // var_dump($questionsDetails);
+        // exit();
+
+        return $questionsDetails;
+    }
+
+
+
+
+   
+    private function getUser($refUser)
+    {
+        $resultset = $this->utilisateurDAO->selectById($refUser);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultset['response']['utilisateur'];
+                $resultset['response']['utilisateur'] = array($utilisateur);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+    
+    
+    
+
+    private function getNiveau($refNiveau)
+    {
+        $resultset = $this->niveauEtudesDAO->selectById($refNiveau);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
+            { 
+                $niveauEtudes = $resultset['response']['niveau_etudes'];
+                $resultset['response']['niveau_etudes'] = array($niveauEtudes);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+    private function getDegre($refDegre)
+    {
+        $resultset = $this->degreDAO->selectById($refDegre);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['degre']) && count($resultset['response']['degre']) == 1)
+            { 
+                $degre = $resultset['response']['degre'];
+                $resultset['response']['degre'] = array($degre);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+    
+    
+    private function getCategories()
+    {
+        $resultset = $this->categorieDAO->selectAll();
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+    private function getCategorie($codeCat)
+    {
+        $resultset = $this->categorieDAO->selectByCode($codeCat);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+    private function getCategoriesByQuestion($refQuestion)
+    {
+        $resultset = $this->categorieDAO->selectByQuestion($refQuestion);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+            { 
+                $categorie = $resultset['response']['categorie'];
+                $resultset['response']['categorie'] = array($categorie);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+
+    private function getResultatsBySession($refSession)
+    {
+        $resultset = $this->resultatDAO->selectBySession($refSession);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['resultat']) && count($resultset['response']['resultat']) == 1)
+            { 
+                $resultat = $resultset['response']['resultat'];
+                $resultset['response']['resultat'] = array($resultat);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+    
+
+
+
+
+    private function getQuestions()
+    {
+        $resultset = $this->questionDAO->selectAll();
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
+            { 
+                $question = $resultset['response']['question'];
+                $resultset['response']['question'] = array($question);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+    
+
+    private function getQuestion($refQuestion)
+    {
+        $resultset = $this->questionDAO->selectById($refQuestion);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
+            { 
+                $question = $resultset['response']['question'];
+                $resultset['response']['question'] = array($question);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+    private function getQuestionCategorie($refQuestion)
+    {
+        $resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['question_cat']) && count($resultset['response']['question_cat']) == 1)
+            { 
+                $question_cat = $resultset['response']['question_cat'];
+                $resultset['response']['question_cat'] = array($question_cat);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+
+    private function getReponsesByQuestion($refQuestion)
+    {
+        $resultset = $this->reponseDAO->selectByQuestion($refQuestion);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['reponse']) && count($resultset['response']['reponse']) == 1)
+            { 
+                $reponse = $resultset['response']['reponse'];
+                $resultset['response']['reponse'] = array($reponse);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+ 
+    private function getResultatsByCategories($refSession)
+    {
+        $tabResultats = array();
+        
+        // On sélectionne tous les résultats correspondant à la session en cours
+        $resultsetResultats = $this->getResultatsBySession($refSession);
+        
+        if ($resultsetResultats)
+        {
+            $i = 0;
+            
+            foreach ($resultsetResultats['response']['resultat'] as $resultat)
+            {      
+                // On établit si le résultat est correct ou non
+                if ($resultat->getRefReponseQcm() && $resultat->getRefReponseQcmCorrecte())
+                {
+                    if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
+                    {
+                        $tabResultats[$i]['correct'] = true;
+                    }
+                    else 
+                    {
+                        $tabResultats[$i]['correct'] = false;
+                    }
+                    
+                    // Ensuite on va chercher les données sur la question correspondant au résultat
+                    $resultsetQuestion = $this->getQuestion($resultat->getRefQuestion());
+
+                    if ($resultsetQuestion)
+                    {        
+                        // On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
+                        $resultsetCatQuestion = $this->getQuestionCategorie($resultsetQuestion['response']['question'][0]->getId());
+
+                        if ($resultsetCatQuestion)
                         {
-                            $questionsDetails[$i]['reussite'] = 1;
+                            $tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat'][0]->getCodeCat();
                         }
                         else 
                         {
-                            $questionsDetails[$i]['reussite'] = 0;
+                            $this->registerError("form_request", "Aucune categorie ne correspond à la question.");
                         }
                     }
                     else 
                     {
-                        $questionsDetails[$i]['reussite'] = "-";
+                        $this->registerError("form_request", "Aucune question n'a été trouvée.");
                     }
+                    
+                    $i++;
                 }
-               
-                if (!empty($resultatUser[$i]['temps_reponse']))
-                {
-                    $questionsDetails[$i]['temps'] = $resultatUser[$i]['temps_reponse'];
-                }
-
-                $i++;
             }
         }
+        else
+        {
+            $this->registerError("form_request", "Aucun resultat n'a été trouvé.");
+        }
         
-        return $questionsDetails;
+        return $tabResultats;
+        
     }
+     
 
 }
 

@@ -1536,15 +1536,18 @@ select {
     border: none;
     font-family: Helvetica, Arial, sans-serif;
     background: #2C3E50;
+    outline: none;
 }
 
 
 #infos-posi .ui-state-default a, #infos-posi .ui-state-default a:link, #infos-posi .ui-state-default a:visited {
     color: #fff;
+    outline: none;
 }
 
 #infos-posi .ui-state-active a, #infos-posi .ui-state-active a:link, #infos-posi .ui-state-active a:visited {
     color: #EB8F00;
+    outline: none;
 }
 
 

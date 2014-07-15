@@ -496,8 +496,8 @@ if (Config::DEBUG_MODE)
                     }
                     else
                     {
-                        $("#ref_user_cbox").parents('.filter-item').hide();
-                        $("#ref_session_cbox").parents('.filter-item').hide();
+                        //$("#ref_user_cbox").parents('.filter-item').hide();
+                        //$("#ref_session_cbox").parents('.filter-item').hide();
                     }
 
 

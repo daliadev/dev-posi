@@ -290,7 +290,6 @@ class ServicesAdminQuestion extends Main
 
         /*** Traitement de l'image ***/
         
-        //$imageName = "";
 
         if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
         {
@@ -529,18 +528,7 @@ class ServicesAdminQuestion extends Main
                 {
                     $this->registerError("form_valid", "La mise à jour de la question a échouée.");
                 }
-                /*
-                if (!empty($this->errors)) 
-                {
-                    $imageFile = ROOT.IMG_PATH.$formData['image_question'];
-                    $thumbFile = ROOT.THUMBS_PATH."thumb_".$formData['image_question'];
-                    $soundFile = ROOT.AUDIO_PATH.$formData['audio_question'];
-                    
-                    if (file_exists($imageFile)) : unlink($imageFile); endif;
-                    if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-                    if (file_exists($soundFile)) : unlink($soundFile); endif;   
-                }
-                */
+                
             }
         }
         else
@@ -549,68 +537,6 @@ class ServicesAdminQuestion extends Main
             exit();
         }
 
-
-        //var_dump($this->errors);
-        //exit();
-
-        /*** Traitement de l'image ***/
-        
-        /*
-        if (empty($this->errors))
-        {
-            if ($formData['image_upload'] && isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
-            {
-                $imageFile = ROOT.IMG_PATH.$formData['image_question'];
-                $thumbFile = ROOT.THUMBS_PATH."thumb_".$formData['image_question'];
-
-                if (file_exists($imageFile)) : unlink($imageFile); endif;
-                if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-                
-                $this->uploadMedia($_FILES['image_file'], "image", array("jpg"), ROOT.IMG_PATH, $formData['image_question']);
-
-                if (!empty($this->errors))
-                {
-                    $this->registerError("form_valid", "L'image n'a pas pu être enregistrée.");
-                    if (file_exists($imageFile)) : unlink($imageFile); endif;
-                    if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-                }
-                else
-                {
-                    // On intégre le média à la base
-                }
-            }
-        }
-        else
-        {
-            $this->registerError("form_valid", "L'image n'a pas été enregistrée.");
-        }
-        */
-        
-
-        /*** Traitement du son ***/
-        /*
-        if (empty($this->errors))
-        {
-            if ($formData['audio_upload'] && isset($_FILES['audio_file']['name']) && !empty($_FILES['audio_file']['name']))
-            {
-                $soundFile = ROOT.AUDIO_PATH.$formData['audio_question'];
-
-                if (file_exists($soundFile)) : unlink($soundFile); endif;
-
-                $this->uploadMedia($_FILES['audio_file'], "son", array("mp3"), ROOT.AUDIO_PATH, $formData['audio_question']);
-
-                if (!empty($this->errors)) 
-                {
-                    $this->registerError("form_valid", "Le son n'a pas pu être enregistré.");
-                    if (file_exists($soundFile)) : unlink($soundFile); endif;
-                }
-            }
-        }
-        else
-        {
-            $this->registerError("form_valid", "Le son n'a pas été enregistré.");
-        }
-        */
     }
     
     

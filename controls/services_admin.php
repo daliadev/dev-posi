@@ -201,7 +201,7 @@ class ServicesAdmin extends Main
             "audio_question"     => "text",
             "code_cat_cbox"      => "select",
             "ref_activites"      => "multi",
-            "ref_degre"          => "text"
+            "ref_degre"          => "multi"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
@@ -1603,7 +1603,7 @@ class ServicesAdmin extends Main
         $this->url = SERVER_URL."admin/compte/";
         
         // Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
-        $dataCategorie = array();
+        $dataAccount = array();
 
 
         /*** Définition du mode précédent du formulaire (permet de connaître l'action précédemment choisie par l'utilisateur) ***/
@@ -1625,6 +1625,7 @@ class ServicesAdmin extends Main
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
+
 
 
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/

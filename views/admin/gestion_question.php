@@ -47,7 +47,7 @@ $form_url = WEBROOT."admin/question/";
 
             <form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
 
-                <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
+                <input type="hidden" name="mode" id="mode" value="<?php echo $formData['mode']; ?>" />
                 <input type="hidden" name="num_ordre_question" value="<?php echo $formData['num_ordre_question']; ?>" />
                 
 
@@ -608,10 +608,15 @@ $form_url = WEBROOT."admin/question/";
 
 
             /*** Verrouillage initiale des questions du "qcm" ***/
+            $mode = $("#mode").val();
 
-            $('#responses-items').find('input').each(function() {
-                $(this).prop('disabled', true);
-            });
+            if ($mode !== 'edit')
+            {
+                $('#responses-items').find('input').each(function() {
+                    $(this).prop('disabled', true);
+                });
+            }
+            
 
 
             /*** Gestion du clic sur le type "qcm" ***/

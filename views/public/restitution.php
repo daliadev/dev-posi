@@ -214,7 +214,7 @@ if (Config::DEBUG_MODE)
 
                                     <div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
                                     <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
-                                    <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (Cliquer <a href="<?php echo $form_url.$infos_user['code_organ']; ?>" target="_blank">ici</a> pour acceder à la restitution publique de cet organisme)</div>
+                                    <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (<a href="<?php echo $form_url.$infos_user['code_organ']; ?>" target="_blank"><?php echo $form_url.$infos_user['code_organ']; ?></a>)</div>
                                     <?php endif; ?>
                                     <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php //echo $infos_user['nom_intervenant']; ?></strong></div> -->
                                     <div class="info">Email de l'intervenant : <strong><a href="mailto:<?php echo $infos_user['email_intervenant']; ?>" target="_top"><?php echo $infos_user['email_intervenant']; ?></a></strong></div>
@@ -453,7 +453,8 @@ if (Config::DEBUG_MODE)
                 /* Listes dynamiques en ajax */
                
                 $('.ajax-list').change(function(event) {
-                    
+
+
                     if ($(this).attr('id') == 'ref_session_cbox')
                     {
                         // $('#submit-posi').removeProp('disabled');
@@ -493,7 +494,12 @@ if (Config::DEBUG_MODE)
 
                         refUser = $('#ref_user_cbox').val();
                     }
-                    
+                    else
+                    {
+                        $("#ref_user_cbox").parents('.filter-item').hide();
+                        $("#ref_session_cbox").parents('.filter-item').hide();
+                    }
+
 
                     $.post(url, {"ref_organ":refOrgan,"ref_user":refUser,"sort":sortOf}, function(data) {
                         
@@ -507,7 +513,6 @@ if (Config::DEBUG_MODE)
                             var $target = $(target).get(0);
                             $target.options.length = 1;
                             
-
                             if (data.results.utilisateur) {
                                 
                                 var i = 1;

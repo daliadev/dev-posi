@@ -49,6 +49,8 @@ class ServicesPublic extends Main
      */
     public function restitution($requestParams = array())
     {
+        //var_dump($requestParams);
+        //exit();
 
         $this->initialize();
 
@@ -61,7 +63,7 @@ class ServicesPublic extends Main
         // on vérifie s'il y a un code dans les parametres url
         if (isset($requestParams[0]) && !empty($requestParams[0]))
         {   
-            if (preg_match("`^[a-zA-Z0-9]*$`", $requestParams[0]) && strlen($requestParams[0]) == 8)
+            if (preg_match("`^[a-zA-Z0-9]*$`", $requestParams[0]))
             {
                 // On récupère le code
                 $codeOrgan = $requestParams[0];

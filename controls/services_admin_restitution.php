@@ -463,13 +463,13 @@ class ServicesAdminRestitution extends Main
 
                 $questionsDetails[$i]['reponses'] = array();
 
-                $questionsDetails[$i]['reponse_user_qcm'] = "";
-                $questionsDetails[$i]['reponse_qcm_correcte'] = "";
-                $questionsDetails[$i]['reponse_user_champ'] = "";
+                $questionsDetails[$i]['reponse_user_qcm'] = "-";
+                $questionsDetails[$i]['reponse_qcm_correcte'] = "-";
+                $questionsDetails[$i]['reponse_user_champ'] = "-";
                 $questionsDetails[$i]['intitule_reponse_user'] = "";
                 $questionsDetails[$i]['intitule_reponse_correcte'] = "";
                 $questionsDetails[$i]['temps'] = "";
-                $questionsDetails[$i]['reussite'] = "";
+                $questionsDetails[$i]['reussite'] = "-";
    
                 
                 /*** Degré ***/

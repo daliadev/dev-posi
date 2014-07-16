@@ -155,7 +155,7 @@ class ServicesAdminGestion extends Main
     {
         $this->adminDAO = new AdminDAO();
         
-        $mdp = servicesAuth::hashPassword($pass);
+        $mdp = Config::hashPassword($pass);
         
         $resultset = $this->adminDAO->authenticate($login, $mdp);
         

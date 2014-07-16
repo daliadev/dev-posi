@@ -482,8 +482,8 @@ class ServicesAdminRestitution extends Main
 
                     if ($resultsetDegre)
                     {
-                        $questionsDetails[$i]['nom_degre'] = $resultsetDegre['response']['degre']->getNom();
-                        $questionsDetails[$i]['descript_degre'] = $resultsetDegre['response']['degre']->getDescription();
+                        $questionsDetails[$i]['nom_degre'] = $resultsetDegre['response']['degre'][0]->getNom();
+                        $questionsDetails[$i]['descript_degre'] = $resultsetDegre['response']['degre'][0]->getDescription();
                     }
                 }
                 

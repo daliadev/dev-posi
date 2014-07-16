@@ -60,7 +60,7 @@ class ServicesAdmin extends Main
     
     public function login()
     {
-
+        
         $this->initialize();
  
         // Récupération des identifiants s'ils ont été saisis.

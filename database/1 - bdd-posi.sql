@@ -19,7 +19,7 @@ CREATE TABLE administrateur
 	id_admin INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_admin VARCHAR(100) NOT NULL UNIQUE,
 	pass_admin VARCHAR(50) NOT NULL,
-	droits ENUM("user", "admin") NOT NULL DEFAULT "user"
+	droits ENUM('user','custom','admin') NOT NULL DEFAULT 'user'
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

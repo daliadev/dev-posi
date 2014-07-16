@@ -17,7 +17,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
     }
 }
 
-
+//echo Config::hashPassword("0000");
 
 ?>
 

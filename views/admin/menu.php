@@ -14,63 +14,36 @@
                 <div class="titre-form" id="titre-menu">Administration</div>
 
                 <div id="menu-admin">
-                   
-					
-					<!--MENU - 1	-->
-					<div id="bt-menu-titre"><?php echo Config::$menu_gestion["titre"];?></div>
-					
-					<hr/>
-					<?php
-					foreach(Config::$menu_gestion as $menuElement)
+
+				<?php
+
+					$authType = ServicesAuth::getAuthenticationRight();
+
+					foreach (Config::$admin_menu as $menu)
 					{
-						if ($menuElement['type_lien_menu'] == "dynamic") {
-					?>		
-							<a href="<?php echo SERVER_URL.'admin/'.$menuElement['url_menu'];  ?>">
-							<div id="bt-menu-visible"><?php echo $menuElement['label_menu']; ?></div>
-							</a>
-					<?php 
-							}
-							elseif ($menuElement['type_lien_menu']  == "static")
+						$title = $menu['title'];
+						unset($menu['title']);
+
+						echo '<div class="main-menu-title">'.$title.'</div>';
+						echo '<hr>';
+
+						for ($i = 0; $i < count($menu); $i++)
+						{
+							$menuItem = $menu[$i];
+
+							$requiredAuth = explode(",", $menuItem['droits']);
+
+							if ($menuItem['display'] == true && in_array($authType, $requiredAuth))
 							{
-							
-					?>
-							<div id="bt-menu-cache" >
-                                <?php echo Config::$menu_gestion['label_menu']; ?>
-                            </div>
-					<?php } ?>
-					<?php 
-					}
-					?>
-					
-					
-					
-					<!--MENU - 2	-->
-					<div id="bt-menu-titre"><?php echo Config::$menu_stat["titre"];?></div>
-					<hr/>
-					<?php
-					foreach(Config::$menu_stat as $menuElement)
-					
-					{
-						if ($menuElement['type_lien_menu'] == "dynamic") {
-					?>		
-							 <a href="<?php echo SERVER_URL.'admin/'.$menuElement['url_menu'];  ?>">
-							 <div id="bt-menu-visible"><?php echo $menuElement['label_menu']; ?></div>
-							 </a>
-					<?php 
+								echo '<a href="'.SERVER_URL.'admin/'.$menuItem['url_menu'].'">';
+								echo '<div class="main-menu-btn">'.$menuItem['label_menu'].'</div>';
+								echo '</a>';
 							}
-							elseif ($menuElement['type_lien_menu']  == "static")
-							{	
-					?>
-							<div id="bt-menu-cache" ><?php echo Config::$menu_gestion['label_menu']; ?></div>
-					<?php 
-							} 
-					?>
-					<?php 
+						}
 					}
-					?>
-					
-					
-	
+
+				?>
+
                 </div>
             </div>
         </div>

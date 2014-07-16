@@ -28,6 +28,10 @@ class ServicesAuth
         {
             $_SESSION['droit'] = "admin";
         }
+        else if ($droit == "custom")
+        {
+            $_SESSION['droit'] = "custom";
+        }
         else
         {
             $_SESSION['droit'] = "user";
@@ -56,7 +60,7 @@ class ServicesAuth
             session_start();
         }
         
-        if (isset($_SESSION['token']) && ServicesAuth::hashPassword($_SESSION['token_uncrypted']) == $_SESSION['token'] && isset($_SESSION['droit']) && ($_SESSION['droit'] == $right || $_SESSION['droit'] == "admin"))
+        if (isset($_SESSION['token']) && ServicesAuth::hashPassword($_SESSION['token_uncrypted']) == $_SESSION['token'] && isset($_SESSION['droit']) && ($_SESSION['droit'] == $right || $_SESSION['droit'] == "admin" || $_SESSION['droit'] == "custom"))
         {
             return true;
         }
@@ -80,6 +84,10 @@ class ServicesAuth
             if ($_SESSION['droit'] == "admin")
             {
                 return "admin";
+            }
+            if ($_SESSION['droit'] == "custom")
+            {
+                return "custom";
             }
             else if ($_SESSION['droit'] == "user")
             {

@@ -49,88 +49,103 @@ class Config
 
 
     // Tableau du menu admin
-    public static $menu_gestion = array(
-    
-        'titre' =>"Gestion",
-    
+    public static $admin_menu = array(
+
+        // Partie Gestion du positionnement du menu
         array(
-            'code_menu' => "10",
-            'label_menu' => "Questions / Réponses",
-            'url_menu' => "question",
-            'type_lien_menu' => "dynamic",
+
+            'title' =>"Gestion",
+
+            array(
+                'code_menu' => "10",
+                'label_menu' => "Questions / Réponses",
+                'url_menu' => "question",
+                'display' => true,
+                'droits' => "admin"
+            ),
+            array(
+                'code_menu' => "20",
+                'label_menu' => "Catégories / Compétences",
+                'url_menu' => "categorie",
+                'display' => true,
+                'droits' => "admin"
+            ),
+            array(
+                'code_menu' => "30",
+                'label_menu' => "Degrés d'aptitude",
+                'url_menu' => "degre",
+                'display' => true,
+                'droits' => "admin"
+            ),
+            array(
+                'code_menu' => "40",
+                'label_menu' => "Activités",
+                'url_menu' => "activite",
+                'display' => false,
+                'droits' => "admin"
+            ),
+    		 array(
+                'code_menu' => "50",
+                'label_menu' => "Utilisateur",
+                'url_menu' => "utilisateur",
+                'display' => true,
+                'droits' => "custom,admin"
+            ),
+    		array(
+                'code_menu' => "60",
+                'label_menu' => "Organisme",
+                'url_menu' => "organisme",
+                'display' => true,
+                'droits' => "custom,admin"
+           ),
+            array(
+                'code_menu' => "70",
+                'label_menu' => "Comptes administrateur",
+                'url_menu' => "compte",
+                'display' => false,
+                'droits' => "admin"
+            
+           )
         ),
-        array(
-            'code_menu' => "20",
-            'label_menu' => "Catégories / Compétences",
-            'url_menu' => "categorie",
-            'type_lien_menu' => "dynamic"
-        ),
-        array(
-            'code_menu' => "30",
-            'label_menu' => "Degrés d'aptitude",
-            'url_menu' => "degre",
-            'type_lien_menu' => "dynamic"
-        ),
-        array(
-            'code_menu' => "40",
-            'label_menu' => "Activités",
-            'url_menu' => "activite",
-            'type_lien_menu' => "static"
-        ),
-		 array(
-            'code_menu' => "50",
-            'label_menu' => "Utilisateur",
-            'url_menu' => "utilisateur",
-            'type_lien_menu' => "dynamic"
-        ),
-		array(
-            'code_menu' => "60",
-            'label_menu' => "Organisme",
-            'url_menu' => "organisme",
-            'type_lien_menu' => "dynamic"
-		
-       ),
-        array(
-            'code_menu' => "70",
-            'label_menu' => "Comptes administrateur",
-            'url_menu' => "compte",
-            'type_lien_menu' => "static"
         
-       )
-    );
-    
-    
-    public static $menu_stat = array(
-    
-        'titre' =>"Gestion des résultats",
-    
+        // Partie Gestion des résultats du menu
         array(
-            'code_menu' => "10",
-            'label_menu' => "Restitution",
-            'url_menu' => "restitution",
-            'type_lien_menu' => "dynamic"
-        ),
-		 array(
-            'code_menu' => "20",
-            'label_menu' => "Statistique",
-            'url_menu' => "statistique",
-            'type_lien_menu' => "dynamic"
+
+            'title' =>"Résultats",
+        
+            array(
+                'code_menu' => "10",
+                'label_menu' => "Restitution",
+                'url_menu' => "restitution",
+                'display' => true,
+                'droits' => "custom,admin"
+            ),
+    		 array(
+                'code_menu' => "20",
+                'label_menu' => "Statistique",
+                'url_menu' => "statistique",
+                'display' => true,
+                'droits' => "custom,admin"
+            )
         )
     );
     
 
 
+    /* CodeOrganisme : dalia2013 (à remplacer si besoin) */
+    public static function getCodeOrganisme()
+    {
+        $pass = Config::hashPassword("dalia2013");
+        return $pass;
+    }
 
 
     const SALT = "#zE'rGr[kj+KtCH£>FjF|fm-76s}T'Yjk<]JDs[{hj,[fbS*"; // Sert au hashage du mot de passe
 
-
-    /* CodeOrganisme : dalia2013 (à remplacer si besoin) */
-    public static function getCodeOrganisme()
+    public static function hashPassword($pass)
     {
-        $pass = sha1(Config::SALT.md5("dalia2013".Config::SALT).sha1(Config::SALT));
-
-        return $pass;
+        $salt = Config::SALT;
+        return sha1($salt.md5($pass.$salt).sha1($salt));
     }
 
 }

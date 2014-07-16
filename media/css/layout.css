@@ -924,7 +924,21 @@ form input[type="text"][disabled]
 }
 
 
-#bt-menu-visible{
+
+
+
+/*---------------------------------------- Page menu admin -----------------------------------------------*/
+
+
+.main-menu-title {
+	margin-top:20px;
+	font-family:arial;
+	font-size:13px;
+	color:#8d8d8d;
+	font-weight:bold;
+}
+
+.main-menu-btn {
 	background: #f39c12;	
 	height: 40px;
 	margin-top: 15px;
@@ -938,37 +952,6 @@ form input[type="text"][disabled]
 }
 
 
-#bt-menu-cache{
-	display:none;
-}
-
-
-#bt-menu-titre{
-	margin-top:20px;
-	font-family:arial;
-	font-size:13px;
-	color:#8d8d8d;
-	font-weight:bold;
-}
-
-
-/* a supprimer */
-/*
-input[type="submit"][disabled] {
-	background-color: #BDC3C7;
-	cursor: default;
-}
-
-
-.checkbox-disabled {
-color:#BDC3C7;
-}
-
-.select-disabled {
-color: #BDC3C7;
-}
-*/
-/* fin suppression */
 
 /*--------------------------------------Page intro-------------------------------------------------*/
 

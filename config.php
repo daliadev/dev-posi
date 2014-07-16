@@ -3,31 +3,33 @@
 /**
  * Description of Config
  *
- * @author Nicolas Beurion
+ * @author Nicolas Beurion / Dalia Team
  */
 
 class Config 
 {
 
-    const DEBUG_MODE = 0; // Activer (1) / désactiver (0) l'affichage du débuguage
+    const POSI_NAME = "Positionnement XXX"; // Nom du positionnement.
     
-    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté)
+    const POSI_TITLE = "Test de positionnement"; // Titre/accroche du positionnement.
+
+    const ADMIN_TITLE = "Gestion du positionnement XXX"; // Titre de la partie admin.
+
+    const POSI_MAX_COUNT = 0; // Nombre de positionnements maximum que peut effectuer l'organisme client (0: illimité) (non implémenté).
     
-    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) le lecteur audio flash (non implémenté)
-
-    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...) (non implémenté)
- 
 
 
-    const POSI_NAME = "Positionnement XXX"; // Nom du positionnement
+    const DEBUG_MODE = 0; // Activer (1) / désactiver (0) - L'affichage du débuguage.
     
-    const POSI_TITLE = "Test de positionnement"; // Titre/accroche du positionnement
-
-    const ADMIN_TITLE = "Gestion du positionnement XXX"; // Titre de la partie admin
-
-
-    const NBRE_POSI_MAX = 0; // Nombre de positionnements maximum que peut effectuer l'organisme client (0: illimité) (non implémenté)
+    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) - La gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
     
+    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) - Le lecteur audio flash (non implémenté).
+
+    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) - Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...).
+    
+    const ALLOW_OTHER_ORGAN = 1; // Activer (1) / désactiver (0) Permet la saisie d'un organisme par un utilisateur lors de l'inscription.
+
+
 
     // Tableau des emails des administrateurs (pour les positionnements effectués)
     public static $emails_admin = array(

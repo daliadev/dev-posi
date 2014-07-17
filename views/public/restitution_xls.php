@@ -20,7 +20,10 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 		$content .= "\n";
 		$content .= '"';
 		$content .= $detail['num_ordre'].'";"';
-		$content .= utf8_decode($detail['categories'][0]['nom_cat_parent']).' // ';
+		if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
+		{
+			$content .= utf8_decode($detail['categories'][0]['nom_cat_parent']).' // ';
+		}
 		$content .= utf8_decode($detail['categories'][0]['nom_cat']).'";"';
 		$content .= $detail['nom_degre'].'";"';
 

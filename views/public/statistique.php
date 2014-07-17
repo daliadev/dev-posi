@@ -77,7 +77,7 @@ if (Config::DEBUG_MODE)
 
     <div id="content-large">
 
-        <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
+        <?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
         <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
 
         <div style="clear:both;"></div>

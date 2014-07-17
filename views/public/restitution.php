@@ -49,7 +49,7 @@ if (Config::DEBUG_MODE)
 
     <div id="content-large">
 
-        <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
+        <?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
         <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
 
         <div style="clear:both;"></div>
@@ -213,9 +213,11 @@ if (Config::DEBUG_MODE)
                                 <?php if (!empty($response['infos_user'])) : $infos_user = $response['infos_user'] ?>
 
                                     <div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
-                                    <?php if (ServicesAuth::getAuthenticationRight() == "admin") : ?>
+
+                                    <?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
                                     <div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (<a href="<?php echo $form_url.$infos_user['code_organ']; ?>" target="_blank"><?php echo $form_url.$infos_user['code_organ']; ?></a>)</div>
                                     <?php endif; ?>
+
                                     <!--<div class="info">Nom de l'intervenant - responsable : <strong><?php //echo $infos_user['nom_intervenant']; ?></strong></div> -->
                                     <div class="info">Email de l'intervenant : <strong><a href="mailto:<?php echo $infos_user['email_intervenant']; ?>" target="_top"><?php echo $infos_user['email_intervenant']; ?></a></strong></div>
                                     <hr>
@@ -224,7 +226,7 @@ if (Config::DEBUG_MODE)
                                     <div class="info">Date de naissance : <strong><?php echo $infos_user['date_naiss']; ?></strong></div>
                                     <div class="info">Niveau d'études : <strong><span title="<?php echo $infos_user['descript_niveau']; ?>"><?php echo $infos_user['nom_niveau']; ?></span></strong></div>
                                     <br/>
-                                    <div class="info">Nombre de positionnements terminés : <strong><?php $infos_user['nbre_positionnements']; ?></strong></div>
+                                    <div class="info">Nombre de positionnements terminés : <strong><?php echo $infos_user['nbre_positionnements']; ?></strong></div>
                                     <div class="info">Date du dernier positionnement : <strong><?php echo $infos_user['date_last_posi']; ?></strong></div>
 
                                 <?php else : ?>

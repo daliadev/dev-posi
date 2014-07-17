@@ -96,8 +96,8 @@ class ServicesPublic extends Main
         }
         else 
         {
-            // Sinon, authentification de l'admin necessaire
-            ServicesAuth::checkAuthentication("admin");
+            // Sinon, authentification necessaire
+            ServicesAuth::checkAuthentication("custom");
             $loggedAsAdmin = true;
         }
         
@@ -319,7 +319,7 @@ class ServicesPublic extends Main
 
                 if (empty($resultsetSessions['response']))
                 {
-                    $this->registerError("form_request", "Cette utilisateur n'a effectué aucun positionnement");
+                    $this->registerError("form_empty", "Cette utilisateur n'a effectué aucun positionnement");
                 }
                 else 
                 {
@@ -426,8 +426,8 @@ class ServicesPublic extends Main
     public function statistique($requestParams = array())
     {
 
-        /*** Authentification avec les droits admin ***/
-        ServicesAuth::checkAuthentication("admin");
+        // Sinon, authentification necessaire
+        ServicesAuth::checkAuthentication("custom");
         
         $this->initialize();
         

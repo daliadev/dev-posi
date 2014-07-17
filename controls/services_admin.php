@@ -60,7 +60,9 @@ class ServicesAdmin extends Main
     
     public function login()
     {
-        
+
+        ServicesAuth::logout();
+
         $this->initialize();
  
         // Récupération des identifiants s'ils ont été saisis.
@@ -90,10 +92,10 @@ class ServicesAdmin extends Main
                 $this->registerError("form_valid", "Identifiants non valides.");
             }
         }
-        else
-        {
-            ServicesAuth::logout();
-        }
+        //else
+        //{
+            //ServicesAuth::logout();
+        //}
         
              
         if (!empty($this->errors) && count($this->errors) > 0)
@@ -119,8 +121,10 @@ class ServicesAdmin extends Main
     {
         $this->initialize();
         
-        // Authentification de l'admin necessaire
-        ServicesAuth::checkAuthentication("admin");
+        // Authentification
+        ServicesAuth::checkAuthentication("custom");
+
+        
             
         // Requete pour obtenir la liste des questions
         $menuList = $this->menuAdminDAO->selectAll();
@@ -146,8 +150,9 @@ class ServicesAdmin extends Main
     public function question($requestParams = array())
     {  
 
-        /*** Authentification avec les droits admin ***/
+        // Authentification
         ServicesAuth::checkAuthentication("admin");
+
         
         $this->initialize();
         
@@ -472,8 +477,9 @@ class ServicesAdmin extends Main
     public function categorie($requestParams = array())
     {
 
-        /*** Authentification avec les droits admin ***/
+        // Authentification
         ServicesAuth::checkAuthentication("admin");
+
         
         $this->initialize();
         
@@ -735,8 +741,9 @@ class ServicesAdmin extends Main
     public function degre($requestParams = array())
     {        
                 
-        // Authentification de l'admin necessaire
+        // Authentification
         ServicesAuth::checkAuthentication("admin");
+
         
         $this->initialize();
         
@@ -1003,8 +1010,24 @@ class ServicesAdmin extends Main
      */
     public function organisme($requestParams = array())
     {
-        // Authentification de l'admin necessaire
-        ServicesAuth::checkAuthentication("admin");
+        
+        // Authentification
+        ServicesAuth::checkAuthentication("custom");
+
+
+        if ($right == "admin")
+        {
+            ServicesAuth::checkAuthentication("admin");
+        }
+        else if ($right == "custom") 
+        {
+            ServicesAuth::checkAuthentication("custom");
+        }
+        else
+        {
+
+        }
+
         
         $this->initialize();
         
@@ -1265,8 +1288,10 @@ class ServicesAdmin extends Main
      */
     public function utilisateur($requestParams = array())
     {
-        // Authentification de l'admin necessaire
-        ServicesAuth::checkAuthentication("admin");
+
+        // Authentification
+        ServicesAuth::checkAuthentication("custom");
+
 
         $this->initialize();
         
@@ -1575,7 +1600,8 @@ class ServicesAdmin extends Main
      */
     public function activite($requestParams = array())
     {
-        // Authentification de l'admin necessaire
+        
+        // Authentification
         ServicesAuth::checkAuthentication("admin");
         
         $this->setTemplate("template_page");
@@ -1595,8 +1621,9 @@ class ServicesAdmin extends Main
     public function compte($requestParams = array())
     {
 
-        /*** Authentification avec les droits admin ***/
+        // Authentification
         ServicesAuth::checkAuthentication("admin");
+
         
         $this->initialize();
         
@@ -1856,9 +1883,11 @@ class ServicesAdmin extends Main
     public function restitution()
     {
         
+        // Authentification
+        //ServicesAuth::checkAuthentication("custom");
+
         header("Location: ".SERVER_URL."public/restitution");
         exit();
-        
     }
 	
 
@@ -1867,10 +1896,12 @@ class ServicesAdmin extends Main
     /* Redirection de la page "admin/statistique" vers la page "public/statistique" */
 	public function statistique()
     {
+
+        // Authentification
+        //ServicesAuth::checkAuthentication("custom");
         
         header("Location: ".SERVER_URL."public/statistique");
         exit();
-		
 	}
     
 }

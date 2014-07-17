@@ -60,7 +60,7 @@ class ServicesAuth
             session_start();
         }
         
-        if (isset($_SESSION['token']) && ServicesAuth::hashPassword($_SESSION['token_uncrypted']) == $_SESSION['token'] && isset($_SESSION['droit']) && ($_SESSION['droit'] == $right || $_SESSION['droit'] == "admin" || $_SESSION['droit'] == "custom"))
+        if (isset($_SESSION['token']) && ServicesAuth::hashPassword($_SESSION['token_uncrypted']) == $_SESSION['token'] && isset($_SESSION['droit']) && ($_SESSION['droit'] == $right || $_SESSION['droit'] == "admin"))
         {
             return true;
         }

@@ -296,7 +296,7 @@ class ServicesPositionnement extends Main
                 {
                     if (!empty($_POST['reponse_champ']))
                     {
-                        $dataResultat['reponse_champ'] = $_POST['reponse_champ'];
+                        $dataResultat['reponse_champ'] = $this->filterData($_POST['reponse_champ'], "string");
                     }
                     else
                     {
@@ -683,11 +683,6 @@ class ServicesPositionnement extends Main
         }
 
 
-        
-        
-        
-
-
 
         /*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
 
@@ -765,9 +760,9 @@ class ServicesPositionnement extends Main
 
         // Email -> infos détails du positionnement
         
-        $date_posi = ServicesAuth::getSessionData('date_session');
-        $emailInfos['date_posi'] = $date_posi;
-
+        $date_posi = substr(ServicesAuth::getSessionData('date_session'), 0, 10);
+        $time_posi = substr(ServicesAuth::getSessionData('date_session'), 10);
+        $emailInfos['date_posi'] = Tools::toggleDate($date_posi, 'fr').' '.$time_posi;
         $emailInfos['temps_posi'] = $stringTime;
 
 

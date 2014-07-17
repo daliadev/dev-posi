@@ -10,7 +10,7 @@
             if ($correction['total'] > 0)
             {
                     $content .= '</br>';
-                    $content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
+                    $content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].' questions)';
             }
         }
     }
@@ -31,18 +31,19 @@
     $From .= 'Content-Type: text/html; charset=utf-8'."\n"; 
 
     
-    $message =   '<html><head><title>'.Config::POSI_NAME.'</title></head>';
-    $message .=  '<body>';
-    $message .=  'Date du positionnement: '.$response['email_infos']['date_posi'].'</br>';
-    $message .=  'Organisme: '.$response['email_infos']['nom_organ'].'</br>';
-    $message .= '</br>';
-    $message .=  'Nom: '.$response['email_infos']['nom_user'].'</br>';
-    $message .=  'Prénom: '.$response['email_infos']['prenom_user'].'</br>';
-    $message .=  'Email intervenant: '.$response['email_infos']['email_intervenant'].'</br>';
-    $message .=  'Temps :'.$response['email_infos']['temps_posi'].'</br>';
-    $message .= 'Score globale:'.$response['percent_global'].' %';
-    $message .= '</br>';
-    $message .=  '<strong>Score:</strong></br> '.$content;
+    $message = '<html><head><title>'.Config::POSI_NAME.'</title></head>';
+    $message .= '<body>';
+    $message .= 'Date du positionnement : <strong>'.$response['email_infos']['date_posi'].'</strong><br/>';
+    $message .= 'Organisme : <strong>'.$response['email_infos']['nom_organ'].'</strong><br/>';
+    $message .= '<br/>';
+    $message .= 'Nom : <strong>'.$response['email_infos']['nom_user'].'</strong><br/>';
+    $message .= 'Prénom : <strong>'.$response['email_infos']['prenom_user'].'</strong><br/>';
+    $message .= 'Email intervenant : <strong>'.$response['email_infos']['email_intervenant'].'</strong><br/>';
+    $message .= '<br/>';
+    $message .= 'Temps : <strong>'.$response['email_infos']['temps_posi'].'</strong><br/>';
+    $message .= 'Score globale : <strong>'.$response['percent_global'].' %</strong><br/>';
+    $message .= '<br/>';
+    $message .= 'Score détaillé : <br/>'.$content;
     $message .= '</body>';
     $message .= '</html>';
                          

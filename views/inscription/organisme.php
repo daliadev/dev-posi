@@ -175,12 +175,60 @@ $form_url = $response['url'];
 
 
                         <div id="fourth-part">
-
+                            
+                            <!--
                             <div class="input">
                                 <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
-                                <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
+                                <input type="email" value="<?php //echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
                             </div>
+                            -->
+                            
+                            <div class="input">
+                                <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
 
+                                <?php if (Config::ALLOW_REFERENT_INPUT) : ?>
+                
+                                    <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
+
+                                <?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
+                                    
+                                    <?php if (count(Config::$emails_referent) == 1) : ?>
+                                        
+                                        <input type="email" value="<?php echo Config::$emails_referent[0]; ?>" name="email_intervenant" id="email_intervenant" disabled>
+
+                                    <?php elseif (count(Config::$emails_referent) > 1) : ?>
+                                        
+                                        <select name="ref_inter_cbox" id="ref_inter_cbox">
+                                            <option value="select_cbox">---</option>
+
+                                            <?php
+            
+                                            foreach(Config::$emails_referent as $referent)
+                                            {  
+                                                $selected = "";
+                                                /*
+                                                if (!empty($formData['ref_inter_cbox']) && $formData['ref_inter_cbox'] != "select_cbox" && $formData['ref_inter_cbox'] == "")
+                                                {
+                                                    $selected = "selected";
+                                                }
+                                                */
+                                                echo '<option value="'.$referent.'" '.$selected.'>'.$referent.'</option>';
+                                            }
+                                            
+                                            ?>
+
+                                        </select>
+
+                                    <?php endif; ?>
+
+                                <?php else : ?>
+                                        
+                                    <input type="email" value="" name="email_intervenant" id="email_intervenant" disabled>
+
+                                <?php endif; ?>
+
+                            </div>
+                            
                         </div>
 
                 

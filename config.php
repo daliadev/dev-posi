@@ -27,19 +27,21 @@ class Config
 
     const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) - Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...).
     
+
+    // Gestion spécifique des organismes lors de l'inscription
     const ALLOW_OTHER_ORGAN = 1; // Activer (1) / désactiver (0) Permet la saisie d'un organisme par un utilisateur lors de l'inscription.
 
 
 
-    // Gestion spécifique des intervenants
-    const ALLOW_OTHER_REFERENT = 1; // Activer (1) / désactiver (0) Affiche un champ de saisie pour le référent/formateur par un utilisateur lors de l'inscription.
+
+    // Gestion spécifique des intervenants lors de l'inscription
+    const ALLOW_REFERENT_INPUT = 1; // Activer (1) / désactiver (0) Affiche un champ de saisie pour le référent/formateur, sinon affiche la liste des intervenants présaisis.
 
     // Tableau des emails des référents/formateurs présaisis
     public static $emails_referent = array(
-        "xxx.xxxx@educationetformation.fr"
+        //"xxx.xxxx@educationetformation.fr",
+        "xxx.xxxx@afpa.fr"
     );
-
-
 
 
 
@@ -49,6 +51,8 @@ class Config
         "g.billard@educationetformation.fr", 
         "n.beurion@educationetformation.fr"
     );
+
+
 
 
     // Coordonnées de la base de données

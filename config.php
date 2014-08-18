@@ -31,6 +31,19 @@ class Config
 
 
 
+    // Gestion spécifique des intervenants
+    const ALLOW_OTHER_REFERENT = 1; // Activer (1) / désactiver (0) Affiche un champ de saisie pour le référent/formateur par un utilisateur lors de l'inscription.
+
+    // Tableau des emails des référents/formateurs présaisis
+    public static $emails_referent = array(
+        "xxx.xxxx@educationetformation.fr"
+    );
+
+
+
+
+
+
     // Tableau des emails des administrateurs (pour les positionnements effectués)
     public static $emails_admin = array(
         "g.billard@educationetformation.fr", 

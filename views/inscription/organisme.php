@@ -184,20 +184,22 @@ $form_url = $response['url'];
                             -->
                             
                             <div class="input">
-                                <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
+                                
 
-                                <?php if (Config::ALLOW_REFERENT_INPUT) : ?>
-                
+                                <?php if (Config::ALLOW_REFERENT_INPUT == 1) : ?>
+                                    
+                                    <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
                                     <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
 
                                 <?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
                                     
-                                    <?php if (count(Config::$emails_referent) == 1) : ?>
+                                    <?php //if (count(Config::$emails_referent) == 1) : ?>
                                         
-                                        <input type="email" value="<?php echo Config::$emails_referent[0]; ?>" name="email_intervenant" id="email_intervenant" disabled>
+                                        <!-- <input type="email" value="<?php echo Config::$emails_referent[0]; ?>" name="email_intervenant" id="email_intervenant" disabled> -->
 
-                                    <?php elseif (count(Config::$emails_referent) > 1) : ?>
+                                    <?php //elseif (count(Config::$emails_referent) > 0) : ?>
                                         
+                                        <label for="ref_inter_cbox">EMail formateur <span class="asterix">*</span></label><br/>
                                         <select name="ref_inter_cbox" id="ref_inter_cbox">
                                             <option value="select_cbox">---</option>
 
@@ -219,11 +221,12 @@ $form_url = $response['url'];
 
                                         </select>
 
-                                    <?php endif; ?>
+                                    <?php //endif; ?>
 
-                                <?php else : ?>
-                                        
-                                    <input type="email" value="" name="email_intervenant" id="email_intervenant" disabled>
+                                <?php //else : ?>
+                                    
+                                    <!-- <label for="email_intervenant">EMail formateur</label><br/>  
+                                    <input type="email" value="" name="email_intervenant" id="email_intervenant" disabled> -->
 
                                 <?php endif; ?>
 

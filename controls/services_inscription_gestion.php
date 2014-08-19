@@ -104,23 +104,23 @@ class ServicesInscriptionGestion extends Main
 
         /*** Récupération du champ caché "ref_organ" si il existe ***/
            
-        if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+        if (isset($postData['ref_organ']) && !empty($postData['ref_organ']))
         {
-            $formData['ref_organ'] = $_POST['ref_organ'];
+            $formData['ref_organ'] = $postData['ref_organ'];
         }
         
 
         /*** Récupèration de la référence de l'organisme dans le combo-box ***/
 
-        if (!empty($_POST['ref_organ_cbox']))
+        if (!empty($postData['ref_organ_cbox']))
         {
-            $formData['ref_organ_cbox'] = $_POST['ref_organ_cbox'];
+            $formData['ref_organ_cbox'] = $postData['ref_organ_cbox'];
                     
-            if ($_POST['ref_organ_cbox'] == "select_cbox")
+            if ($postData['ref_organ_cbox'] == "select_cbox")
             {
                 $this->registerError("form_empty", "Aucun organisme n'a été sélectionné.");
             }
-            else if ($_POST['ref_organ_cbox'] == "new")
+            else if ($postData['ref_organ_cbox'] == "new")
             {
                 // Un nom a été saisi, il faut donc inserer les données de l'organisme
                 $formData['ref_organ'] = null;
@@ -134,7 +134,7 @@ class ServicesInscriptionGestion extends Main
             }
             else 
             {
-                $formData['ref_organ'] = $_POST['ref_organ_cbox'];
+                $formData['ref_organ'] = $postData['ref_organ_cbox'];
             }
         }
 
@@ -163,14 +163,14 @@ class ServicesInscriptionGestion extends Main
             /*** Traitement particulier de doublon du nom de l'organisme ***/
 
             // Si le nom de l'organisme n'est pas vide, il a été saisi et il doit être comparé aux autres noms d'organisme.
-            if (!empty($_POST['nom_organ']))
+            if (!empty($postData['nom_organ']))
             {
                 $duplicateNomOrgan = false;
                 //$similarNomOrgan = "";
                 //$formData['suggest_name'] = "";
 
                 // On enlève les espaces, les caractères spéciaux et on met le nom saisi tout en majuscules.
-                $cleanNom = Tools::stripSpecialCharsFromString($_POST['nom_organ']);
+                $cleanNom = Tools::stripSpecialCharsFromString($postData['nom_organ']);
                 $nomOrganisme = preg_replace("#[^A-Z]#", "", strtoupper($cleanNom));
 
                 // On va chercher tous les noms d'organismes dans la base.
@@ -263,12 +263,13 @@ class ServicesInscriptionGestion extends Main
         $dataIntervenant = array();
         $formData['mode_inter'] = "none";
         $formData['ref_intervenant'] = null;
+        $formData['ref_intervenant'] = null;
 
         // Récupération du champ caché "ref_intervenant" si il existe
         
-        if (isset($_POST['ref_intervenant']) && !empty($_POST['ref_intervenant']))
+        if (isset($postData['ref_intervenant']) && !empty($postData['ref_intervenant']))
         {
-            $formData['ref_intervenant'] = $_POST['ref_intervenant'];
+            $formData['ref_intervenant'] = $postData['ref_intervenant'];
             $dataIntervenant['ref_intervenant'] = $formData['ref_intervenant'];
         }
         
@@ -277,7 +278,6 @@ class ServicesInscriptionGestion extends Main
             $dataIntervenant['ref_organ'] = $formData['ref_organ'];
         }
 
-        //$dataOrganisme['ref_intervenant'] = $formData['ref_intervenant'];
 
 
         // Récupèration du nom de l'intervenant
@@ -289,18 +289,34 @@ class ServicesInscriptionGestion extends Main
         //$dataIntervenant['tel_intervenant'] = $formData['tel_intervenant'];
 
         // Récupèration de l'email de l'intervenant
-        $formData['email_intervenant'] = $this->validatePostData($postData['email_intervenant'], "email_intervenant", "email", false, "Aucun email n'a été saisi.", "L'email de l'intervenant n'est pas correctement saisi.");
-        $dataIntervenant['email_intervenant'] = $formData['email_intervenant'];
-
-
+        if (Config::ALLOW_REFERENT_INPUT == 1)
+        {
+            $formData['email_intervenant'] = $this->validatePostData($postData['email_intervenant'], "email_intervenant", "email", false, "Aucun email n'a été saisi.", "L'email de l'intervenant n'est pas correctement saisi.");
+            $dataIntervenant['email_intervenant'] = $formData['email_intervenant'];
+        }
+        else 
+        {
+            if (!empty($postData['ref_inter_cbox']))
+            {
+                $formData['ref_inter_cbox'] = $postData['ref_inter_cbox'];
+                        
+                if ($postData['ref_inter_cbox'] == "select_cbox" && isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0)
+                {
+                    $this->registerError("form_empty", "Aucun formateur n'a été sélectionné.");
+                }
+                else 
+                {
+                    $formData['email_intervenant'] = $postData['ref_inter_cbox'];
+                    $dataIntervenant['email_intervenant'] = $formData['email_intervenant'];
+                }
+            }
+        }
 
         //$this->formData['date_inscription'] = date("Y-m-d");
         //$dataIntervenant['date_inscription'] = $formData['date_inscription'];
 
         /*** Traitement de doublon de l'email de l'intervenant et définition du mode de la requête ***/
-            
-        //------------------
-        //
+        
         $formData['mode_inter'] = "insert";
         
         // Si l'email de l'intervenant existe déja pour cet organisme, on change de mode pour une mise à jour
@@ -321,6 +337,9 @@ class ServicesInscriptionGestion extends Main
             }
         }
 
+        //var_dump($dataIntervenant);
+        //exit();
+
         return $dataIntervenant;
     }
 
@@ -338,29 +357,29 @@ class ServicesInscriptionGestion extends Main
 
 
         /*** Récupération du champ caché "référence utilisateur" si il existe ***/
-        if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
+        if (isset($postData['ref_user']) && !empty($postData['ref_user']))
         {
-            $formData['ref_user'] = $_POST['ref_user'];
+            $formData['ref_user'] = $postData['ref_user'];
         }
 
         /*** Récupération du champ caché "validation du nom" si il existe ***/
 
         $formData['name_validation'] = "none";
 
-        if (isset($_POST['name_validation']) && !empty($_POST['name_validation']))
+        if (isset($postData['name_validation']) && !empty($postData['name_validation']))
         {
-            $formData['name_validation'] = $_POST['name_validation'];
+            $formData['name_validation'] = $postData['name_validation'];
         }
         
 
         /*** Traitement de la valeur de la liste(combo-box) niveau d'études ***/
          
         // Récupération de l'id du niveau d'études s'il a été correctement sélectionné ou saisi
-        if (!empty($_POST['ref_niveau_cbox']))
+        if (!empty($postData['ref_niveau_cbox']))
         {
-            $formData['ref_niveau_cbox'] = $_POST['ref_niveau_cbox'];
+            $formData['ref_niveau_cbox'] = $postData['ref_niveau_cbox'];
                     
-            if ($_POST['ref_niveau_cbox'] == "select_cbox")
+            if ($postData['ref_niveau_cbox'] == "select_cbox")
             {
                 // Aucun niveau n'a été sélectionné ou saisi : erreur
                 $this->registerError("form_empty", "Aucun niveau d'études n'a été sélectionné.");
@@ -368,7 +387,7 @@ class ServicesInscriptionGestion extends Main
             else 
             {
                 // Un niveau a été sélectionné dans la liste
-                $formData['ref_niveau'] = $_POST['ref_niveau_cbox'];
+                $formData['ref_niveau'] = $postData['ref_niveau_cbox'];
             }
         }
         
@@ -382,47 +401,47 @@ class ServicesInscriptionGestion extends Main
         /*** Traitement des valeur des listes(combo-box) de la date de naissance ***/
 
         // Récupération du jour de naissance
-        if (!empty($_POST['jour_naiss_user_cbox']))
+        if (!empty($postData['jour_naiss_user_cbox']))
         {
-            $formData['jour_naiss_user_cbox'] = $_POST['jour_naiss_user_cbox'];
+            $formData['jour_naiss_user_cbox'] = $postData['jour_naiss_user_cbox'];
                     
-            if ($_POST['jour_naiss_user_cbox'] == "select_cbox")
+            if ($postData['jour_naiss_user_cbox'] == "select_cbox")
             {
                 $this->registerError("form_empty", "Aucun jour de naissance n'a été sélectionné.");
             }
             else 
             {
-                $formData['jour_naiss_user'] = $_POST['jour_naiss_user_cbox'];
+                $formData['jour_naiss_user'] = $postData['jour_naiss_user_cbox'];
             }
         }
 
         // Récupération du mois de naissance
-        if (!empty($_POST['mois_naiss_user_cbox']))
+        if (!empty($postData['mois_naiss_user_cbox']))
         {
-            $formData['mois_naiss_user_cbox'] = $_POST['mois_naiss_user_cbox'];
+            $formData['mois_naiss_user_cbox'] = $postData['mois_naiss_user_cbox'];
                     
-            if ($_POST['mois_naiss_user_cbox'] == "select_cbox")
+            if ($postData['mois_naiss_user_cbox'] == "select_cbox")
             {
                 $this->registerError("form_empty", "Aucun mois de naissance n'a été sélectionné.");
             }
             else 
             {
-                $formData['mois_naiss_user'] = $_POST['mois_naiss_user_cbox'];
+                $formData['mois_naiss_user'] = $postData['mois_naiss_user_cbox'];
             }
         }
 
         // Récupération de l'année de naissance
-        if (!empty($_POST['annee_naiss_user_cbox']))
+        if (!empty($postData['annee_naiss_user_cbox']))
         {
-            $formData['annee_naiss_user_cbox'] = $_POST['annee_naiss_user_cbox'];
+            $formData['annee_naiss_user_cbox'] = $postData['annee_naiss_user_cbox'];
                     
-            if ($_POST['annee_naiss_user_cbox'] == "select_cbox")
+            if ($postData['annee_naiss_user_cbox'] == "select_cbox")
             {
                 $this->registerError("form_empty", "Aucune année de naissance n'a été sélectionné.");
             }
             else 
             {
-                $formData['annee_naiss_user'] = $_POST['annee_naiss_user_cbox'];
+                $formData['annee_naiss_user'] = $postData['annee_naiss_user_cbox'];
             }
         }
 
@@ -577,18 +596,18 @@ class ServicesInscriptionGestion extends Main
 
         /*** Récupération du champ caché "référence utilisateur" si il existe. ***/
 
-        if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
+        if (isset($postData['ref_user']) && !empty($postData['ref_user']))
         {
-            $formData['ref_user'] = $_POST['ref_user'];
+            $formData['ref_user'] = $postData['ref_user'];
             $dataInscription['ref_user'] = $formData['ref_user'];
         }
 
 
         /*** Récupération du champ caché "référence inscription" si il existe. ***/
 
-        if (isset($_POST['ref_inscription']) && !empty($_POST['ref_inscription']))
+        if (isset($postData['ref_inscription']) && !empty($postData['ref_inscription']))
         {
-            $formData['ref_inscription'] = $_POST['ref_inscription'];
+            $formData['ref_inscription'] = $postData['ref_inscription'];
             $dataInscription['ref_inscription'] = $formData['ref_inscription'];
         }
 
@@ -702,11 +721,12 @@ class ServicesInscriptionGestion extends Main
     
     public function setIntervenantProperties($dataIntervenant, &$formData)
     {
+
+        
         $resultsetInter = false;
 
         $mode = $formData['mode_inter'];
 
-        //var_dump($formData['ref_organ']);
 
         if (!empty($dataIntervenant['email_intervenant']) && isset($formData['ref_organ']) && !empty($formData['ref_organ']))
         {
@@ -717,6 +737,8 @@ class ServicesInscriptionGestion extends Main
             if ($mode == "insert")
             {
                 $resultsetInter = $this->setIntervenant("insert", $dataIntervenant);
+
+                
 
                 if (!$resultsetInter)
                 {
@@ -742,7 +764,7 @@ class ServicesInscriptionGestion extends Main
                 }
             }
         }
-        else 
+        else if (Config::ALLOW_REFERENT_INPUT == 1)
         {
             $this->registerError("form_empty", "Des données sont manquantes.");
         }

@@ -35,12 +35,12 @@ class Config
 
 
     // Gestion spécifique des intervenants lors de l'inscription
-    const ALLOW_REFERENT_INPUT = 1; // Activer (1) / désactiver (0) Affiche un champ de saisie pour le référent/formateur, sinon affiche la liste des intervenants présaisis.
+    const ALLOW_REFERENT_INPUT = 1; // Activer (1) / désactiver (0) - Affiche un champ de saisie pour le référent/formateur, sinon affiche la liste des intervenants présaisis.
 
     // Tableau des emails des référents/formateurs présaisis
     public static $emails_referent = array(
-        //"xxx.xxxx@educationetformation.fr",
-        "xxx.xxxx@afpa.fr"
+        "xxx.xxxx@organisme1.fr",
+        "xxx.xxxx@organisme2.fr"
     );
 
 

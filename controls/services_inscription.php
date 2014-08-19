@@ -47,6 +47,7 @@ class ServicesInscription extends Main
      */
     public function formulaire($requestParams = array(), $returnData = array())
     {
+        /*
         $this->initialize();
         
         if (!isset($requestParams) || empty($requestParams))
@@ -60,20 +61,7 @@ class ServicesInscription extends Main
             //$returnData['response']['errors'] = array();
             $this->returnData = $returnData;
         }
-        
-        
-       
-        /*
-        if (!empty($this->errors) && count($this->errors) > 0)
-        {
-            foreach($this->errors as $error)
-            {
-                $this->returnData['response']['errors'][] = $error;
-            }
-        }
-        */
-        
-        /*--- Aiguillage vers le formulaire organisme ou utilisateur ---*/
+
         
         if ($requestParams[0] == "organisme")
         {
@@ -129,7 +117,7 @@ class ServicesInscription extends Main
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }
-        
+        */
     }
     
     
@@ -144,12 +132,10 @@ class ServicesInscription extends Main
      */
     public function validation($requestParams = array())
     {
-        
+        /*
         $this->initialize();
         
        
-        /*** Dispatch de la validation selon le formulaire à valider  ***/
-        
         if (!isset($requestParams) || (empty($requestParams)))
         {
             $requestParams = array("organisme");
@@ -159,12 +145,6 @@ class ServicesInscription extends Main
         if ($requestParams[0] == "organisme")
         {
 
-            /*------------------------------------------------------------------*/
-            /*    Traitements des données reçues par le formulaire organisme    */
-            /*------------------------------------------------------------------*/
-
-            
-            /*** Initialisation des données qui vont être validées et renvoyées ***/
             
             $this->formData = array(
                 //'ref_code_organ' => null,
@@ -186,8 +166,6 @@ class ServicesInscription extends Main
             );
             
             
-            /*** Récupération des champs cachés ***/
-            
             // Récupération du champ "ref_organ" si il existe
             if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
             {
@@ -200,18 +178,8 @@ class ServicesInscription extends Main
                 $this->formData['ref_intervenant'] = $_POST['ref_intervenant'];
             }
             
-            // Récupération du champ "date_inscription" si il existe
-            /*
-            if (isset($_POST['date_inscription']) && !empty($_POST['date_inscription']))
-            {
-                $this->formData['date_inscription'] = $_POST['date_inscription'];
-            }
-            */
             
-            
-            /*-----   Validation de tous les champs de l'organisme   -----*/
-            
-            /*** Authentification du code organisme ***/
+
             
             // Récupération du code
             if (!isset($_POST['code_identification']) || empty($_POST['code_identification']))
@@ -236,40 +204,8 @@ class ServicesInscription extends Main
                     $this->registerError("form_valid", "Le code organisme n'est pas valide.");
                 }
                 
-                // Vérification du code organisme
-                /*
-                $codeOrganisme = $this->servicesInscriptGestion->authenticateOrganisme($this->formData['code_identification']);
-                
-                if (!empty($codeOrganisme) && $codeOrganisme['response']['auth'] && !empty($codeOrganisme['response']['ref_code_organisme']))
-                {
-                    $this->formData['ref_code_organ'] = $codeOrganisme['response']['ref_code_organisme'];
-                }
-                else 
-                {
-                    $this->registerError("form_valid", "Le code organisme n'est pas valide");
-                }
-                */
-
-                // Vérification du code organisme (version simple, voir fichier config.php)
-                /*
-                $codeOrganisme = Config::getCodeOrganisme($this->formData['code_identification'])
-
-                if ($codeOrganisme == $this->formData['code_identification'])
-                {
-
-                }
-                else 
-                {
-                    $this->registerError("form_valid", "Le code organisme n'est pas valide");
-                }
-                */
-
-                // On supprime le code organisme par sécurité (??)
-                //unset($$code);
             }
 
-            
-            /*** Traitement de la valeur de la liste(combo-box)  ***/
             
             $modeOrganisme = "none";
                     
@@ -296,8 +232,7 @@ class ServicesInscription extends Main
                 }
             }
         
-            
-            /*** Traitement des champs de l'organisme qui seront ensuite inséré dans la base ***/
+        
             
             $dataOrganisme = array();
                 
@@ -314,7 +249,7 @@ class ServicesInscription extends Main
                 $this->formData['tel_organ'] = $this->validatePostData($_POST['tel_organ'], "tel_organ", "integer", true, "Le numéro de téléphone est incorrect.", "Le numéro de téléphone n'a pas été saisi.");
 
 
-                /* Traitement particulier du nom de l'organisme pour l'insertion */
+               
                 
                 // Si le nom de l'organisme n'est pas vide, il a été saisi et il doit être comparé aux autres noms d'organisme
                 if (!empty($this->formData['nom_organ']) && empty($this->formData['ref_organ']))
@@ -347,19 +282,13 @@ class ServicesInscription extends Main
             
             
 
-            /*-----   Validation de tous les champs de l'intervenant et de la date d'inscription   -----*/
-
-            
-            /*** Traitement des champs de l'intervenant qui seront ensuite insérés dans la base ***/
             
             $dataIntervenant = array();
             
             $this->formData['email_intervenant'] = $this->validatePostData($_POST['email_intervenant'], "email_intervenant", "email", true, "L'email n'est pas valide.", "L'email n'a pas été saisi.");
             //$this->formData['date_inscription'] = $this->validatePostData($_POST['date_inscription'], "date_inscription", "date", true, "La date d'inscription n'est pas valide.", "La date d'inscription n'a pas été saisie.");
             $this->formData['date_inscription'] = date("Y-m-d");
-            
-
-            /*** Traitement de doublon de l'email de l'intervenant et définition du mode de la requête ***/
+        
             
             $modeIntervenant = "insert";
             
@@ -375,8 +304,6 @@ class ServicesInscription extends Main
                 $dataIntervenant['ref_intervenant'] = $this->formData['ref_intervenant'];
             }
             
-
-            /*** Valeurs finales des champs qui seront inserés dans la table intervenant ***/
             
             //$dataIntervenant['nom_intervenant'] = $this->formData['nom_intervenant'],
             //$dataIntervenant['tel_intervenant'] = $this->formData['tel_intervenant'],
@@ -394,8 +321,7 @@ class ServicesInscription extends Main
             }
             
             
-            
-            /*-----   Insertion ou mise à jour de l'organisme   -----*/
+
             
             
             // Il ne doit y avoir aucune erreur
@@ -425,9 +351,6 @@ class ServicesInscription extends Main
                 }
             }
             
-            
-            
-            /*-----   Insertion ou mise à jour de l'intervenant   -----*/
             
             
             // Il ne doit y avoir aucune erreur pour l'insertion de l'intervenant
@@ -465,14 +388,7 @@ class ServicesInscription extends Main
             
             // Authentification du visiteur necessaire (code organisme)
             ServicesAuth::checkAuthentication("user");
-            
-            
-            /*--------------------------------------------------------------------*/
-            /*    Traitements des données reçues par le formulaire utilisateur    */
-            /*--------------------------------------------------------------------*/
-            
-            
-            /*** Initialisation des données qui vont être validées et renvoyées ***/
+
             
             $this->formData = array(
                 'ref_user' => null,
@@ -490,8 +406,7 @@ class ServicesInscription extends Main
                 'email_user' => null,
             );
             
-            
-            /*** Récupération des champs cachés ***/
+        
             
             // Récupération du champ caché "référence utilisateur" si il existe
             if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
@@ -510,12 +425,7 @@ class ServicesInscription extends Main
             {
                 $this->formData['date_inscription'] = $_POST['date_inscription'];
             }
- 
-            
-            /*-----   Validation de tous les champs de l'utilisateur   -----*/
-            
-            
-            /*** Traitement de la valeur de la liste(combo-box) niveau d'études ***/
+
             
             // Récupération de l'id du niveau d'études s'il a été correctement sélectionné ou saisi
             if (!empty($_POST['ref_niveau_cbox']))
@@ -535,8 +445,6 @@ class ServicesInscription extends Main
             }
 
             
-            /*** Traitement des champs de l'utilisateur ***/
-            
             $dataUtilisateur = array();
             
             $this->formData['nom_user'] = $this->validatePostData($_POST['nom_user'], "nom_user", "string", true, "Le nom de l'utilisateur est incorrecte.", "Le nom de l'utilisateur n'a pas été saisi.");
@@ -549,7 +457,6 @@ class ServicesInscription extends Main
             //$this->formData['email_user'] = $this->validatePostData($_POST['email_user'], "email_user", "email", false, "L'email de l'utilisateur est incorrecte.", "L'email de l'utilisateur n'a pas été saisi.");
 
 
-            /*** Traitement de doublon de l'utilisateur et définition du mode de la requête ***/
             
             // Par défaut, l'utilisateur sera inséré dans la base
             $modeUtilisateur = "insert";
@@ -565,9 +472,7 @@ class ServicesInscription extends Main
                 $this->formData['ref_user'] = $user['response']['utilisateur']->getId();
                 $dataUtilisateur['ref_user'] = $this->formData['ref_user'];
             }
-            
-            
-            /*** Valeurs des champs qui seront inserés dans la table utilisateur ***/
+
  
             $dataUtilisateur['ref_niveau'] = $this->formData['ref_niveau'];
             $dataUtilisateur['nom_user'] = $this->formData['nom_user'];
@@ -580,11 +485,6 @@ class ServicesInscription extends Main
             //$dataUtilisateur['email_user'] = $this->formData['email_user'];
 
             
-            
-            /*-----   Validation de tous les champs de l'inscription   -----*/
-            
-            
-            /*** Traitement des champs de l'inscription qui seront ensuite insérés dans la base ***/
 
             // Par défaut, l'inscription sera inséré dans la base.
             $modeInscription = "insert";
@@ -606,8 +506,6 @@ class ServicesInscription extends Main
                 }
             }
             
-            
-            /*** Valeurs des champs qui seront inserés dans la table inscription ***/
             
             $dataInscription = array();
             
@@ -633,9 +531,7 @@ class ServicesInscription extends Main
                 echo "\$modeUtilisateur  = ".$modeUtilisateur.'<br />';
                 echo "\$modeInscription  = ".$modeInscription.'<br />';
             }
-            
-            
-            /*-----   Insertion ou mise à jour de l'utilisateur   -----*/
+
             
             // S'il n'y a aucune erreur
             if (empty($this->errors)) 
@@ -643,7 +539,6 @@ class ServicesInscription extends Main
                 // Tous les champs obligatoires de l'utilisateur doivent être remplis
                 if (!empty($dataUtilisateur['ref_niveau']) && !empty($dataUtilisateur['nom_user']) && !empty($dataUtilisateur['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']))
                 {
-                    /*--- Insertion de l'utilisateur dans la base ---*/
                     
                     $resultsetUtilisateur = $this->servicesInscriptGestion->setUtilisateur($dataUtilisateur, $modeUtilisateur);
                     
@@ -670,8 +565,6 @@ class ServicesInscription extends Main
                 $this->registerError("form_request", "Des données sont absentes du formulaire.");
             }
 
-            
-            /*-----   Insertion ou mise à jour de l'inscription   -----*/
 
             // S'il n'y a aucune erreur
             if (empty($this->errors)) 
@@ -679,7 +572,6 @@ class ServicesInscription extends Main
                 // Tous les champs obligatoires de l'utilisateur doivent être remplis
                 if (!empty($dataInscription['ref_user']) && !empty($dataInscription['ref_intervenant']) && !empty($dataInscription['date_inscription']))
                 {
-                    /*** Insertion de l'inscription dans la base ***/
                     
                     $resultsetInscription = $this->servicesInscriptGestion->setInscription($dataInscription, $modeInscription);
                     
@@ -725,7 +617,6 @@ class ServicesInscription extends Main
         }
         
         
-        /*--- Retour des données traitées du formulaire ---*/
 
         $this->returnData['response']['form_data'] = $this->formData;
         
@@ -743,10 +634,7 @@ class ServicesInscription extends Main
                 $this->returnData['response']['success'][] = $success;
             }
         }
-      
-        /*-----------------------------------------------------------*/
-        /*    Redirection selon le résultat du formulaire courant    */
-        /*-----------------------------------------------------------*/
+
 
 
         // S'il y a des erreurs on appelle de nouveau le formulaire (la page n'est pas rechargée)
@@ -784,6 +672,7 @@ class ServicesInscription extends Main
                 exit();
             }
         }
+        */
   
     }
 
@@ -829,6 +718,7 @@ class ServicesInscription extends Main
             'email_organ' => "text",
             'nbre_posi' => "text",
             'nbre_posi_max' => "text",
+            'ref_inter_cbox' => "select",
             'ref_intervenant' => "text",
             'nom_intervenant' => "text",
             'tel_intervenant' => "text",
@@ -865,6 +755,7 @@ class ServicesInscription extends Main
                 $this->registerError("form_empty", "Aucun code organisme n'a été saisi");
             }
 
+            
 
             /*** Récupération des données postées ***/
 
@@ -891,15 +782,17 @@ class ServicesInscription extends Main
             }
 
 
-            /*
-            var_dump($this->formData);
-            var_dump($dataOrganisme);
-            var_dump($dataIntervenant);
-            var_dump($this->servicesInscriptGestion->errors);
-            var_dump($this->errors);
-            exit();
-            */
+
+            
+            //var_dump($this->formData);
+            //var_dump($dataOrganisme);
+            //var_dump($dataIntervenant);
+            //var_dump($this->servicesInscriptGestion->errors);
+            //var_dump($this->errors);
+            //exit();
+            
         }
+
 
 
 
@@ -1047,12 +940,14 @@ class ServicesInscription extends Main
             /*
             if (!empty($this->formData['name_validation']) && $this->formData['name_validation'] == "true")
             {
-                var_dump($this->formData);
-                var_dump($dataUtilisateur);
-                var_dump($dataInscription);
-                var_dump($this->servicesInscriptGestion->errors);
-                var_dump($this->errors);
-                exit();
+                */
+                //var_dump($this->formData);
+                //var_dump($dataUtilisateur);
+                //var_dump($dataInscription);
+                //var_dump($this->servicesInscriptGestion->errors);
+                //var_dump($this->errors);
+                //exit();
+                /*
             }
             */
         }

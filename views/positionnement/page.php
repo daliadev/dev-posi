@@ -25,20 +25,24 @@
                 
                 if ($response['question']->getType() == "qcm")
                 {
+                    $j = 0;
+
                     foreach ($response['reponse'] as $reponse)
                     {
                         echo '<p>';
-                            echo '<input type="radio" class="radio_posi" name="radio_reponse" value="'.$reponse->getId().'"> <label> '.$reponse->getIntitule().'</label></br>';
+                            echo '<label for="radio_reponse_'.$j.'"><input type="radio" class="radio_posi" id="radio_reponse_'.$j.'" name="radio_reponse" value="'.$reponse->getId().'"> &nbsp;'.$reponse->getIntitule().'</label></br>';
                         echo '</p>';
                         if ($reponse->getEstCorrect())
                         {
                             echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'"">';
                         }
+
+                        $j++;
                     } 
                 }
                 else if ($response['question']->getType() == "champ_saisie")
                 {
-                    echo '<textarea class="reponse_champ" name="reponse_champ" placeholder="Ecrivez votre réponse ici."></textarea>';
+                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ" placeholder="Ecrivez votre réponse ici."></textarea>';
                 }
                 
                 ?>
@@ -102,14 +106,17 @@
             $("#image-content-appli img").fadeIn(500);
             
             $("#submit_suite").prop("disabled", true);
-            $(".reponse_champ").prop("readonly", true);
-            $(".reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+
+            $("#reponse_champ").prop("readonly", true);
+            $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
             
-            $(".radio_posi").click(function() {
+            var numChar = 0;
+
+
+            $(".radio_posi").on("click", function() {
 
                 if (getPlayerPosition() === 0)
                 {
-                    //$("#submit_suite").css("visibility", "visible");
                     $("#submit_suite").removeProp("disabled");
                 }
                 else
@@ -119,20 +126,31 @@
             });
             
 
-            $(".reponse_champ").click(function() {
+            $("#reponse_champ").on("click", function() {
 
                 if (getPlayerPosition() === 0)
                 {
                     $(this).removeProp("readonly");
-                    //$(this).blur();
                     $(this).attr("placeholder", "Vous pouvez écrire votre réponse.");
                     
-                    //$("#submit_suite").css("visibility", "visible");
-                    $("#submit_suite").removeProp("disabled");
+                    //$("#submit_suite").removeProp("disabled");
                 }
                 else
                 {
                     $(this).blur();
+                }
+            });
+            
+            $("#reponse_champ").on("keydown", function() {
+
+                if (getPlayerPosition() === 0)
+                {
+                    numChar++;
+
+                    if (numChar >= 2) {
+
+                        $("#submit_suite").removeProp("disabled");
+                    }
                 }
             });
             

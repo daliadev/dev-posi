@@ -624,18 +624,6 @@ form input[type="text"][disabled]
 }
 
 #titre-organ {
-	/*
-	width : 260px;
-	height : 30px;
-	padding-left: 40px;
-	padding-bottom: 10px;
-	margin-bottom: 20px;
-	color: #8d8d8d;
-	text-transform: uppercase;
-	font-size: 16px;
-	font-weight: bold;
-	line-height: 30px;
-	*/
 	background: url(../images/ico-organ.jpg) 0 0 no-repeat;
 }
 
@@ -680,18 +668,7 @@ form input[type="text"][disabled]
 }
 
 #titre-utili {
-	/*
-	width : 260px;
-	height : 30px;
-	padding-left: 40px;
-	padding-bottom: 10px;
-	margin-bottom: 20px;
-	color: #8d8d8d;
-	text-transform: uppercase;
-	font-size: 16px;
-	font-weight: bold;
-	line-height: 30px;
-	*/
+
 	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
 }
 
@@ -706,21 +683,11 @@ form input[type="text"][disabled]
 	float: right;
 }
 
-#titre-admin{
-
-	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
-	/*
-	background-repeat:no-repeat;
-	padding-left:40px;
-	padding-top:5px;
-	height:34px;
-	color:#8d8d8d;
-	text-transform:uppercase;
-	font-size:16px;
-	font-weight:bold;
-	margin-bottom:10px;
-	*/
+#titre-login {
+	background: url(../images/ico-key.png) 0 0 no-repeat;
 }
+
+
 
 
 
@@ -956,6 +923,12 @@ form input[type="text"][disabled]
 /*--------------------------------------Page intro-------------------------------------------------*/
 
 
+#titre-intro{
+	background: url(../images/ico-play.png) 0 0 no-repeat;
+}
+
+
+
 #txt-intro{
 	font-size:12px;
 	/*padding: 10px;*/
@@ -1025,6 +998,12 @@ form input[type="text"][disabled]
 /*-------------------------------------Page resultat--------------------------------------------*/
 
 
+#titre-result{
+
+	background: url(../images/ico-result.jpg) 0 0 no-repeat;
+}
+
+
 #R-CCSP {
 	border: 1px solid #ccc8c8;
 	border-radius: 5px 5px 5px 5px;
@@ -1044,18 +1023,7 @@ form input[type="text"][disabled]
 
 #titre-menu{
 
-	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
-	/*
-	background-repeat:no-repeat;
-	padding-left:40px;
-	padding-top:5px;
-	height:34px;
-	color:#8d8d8d;
-	text-transform:uppercase;
-	font-size:16px;
-	font-weight:bold;
-	margin-bottom:10px;
-	*/
+	background: url(../images/ico-gear.png) 0 0 no-repeat;
 }
 
 #menu-admin .button
@@ -1293,28 +1261,14 @@ select {
 /*--------------------------------------Page admin degré - categorie -------------------------------------------------*/
 
 #titre-cat {
-	/*
-	width : 260px;
-	height : 30px;
-	padding-left: 40px;
-	padding-bottom: 10px;
-	margin-bottom: 20px;
-	color: #8d8d8d;
-	text-transform: uppercase;
-	font-size: 16px;
-	font-weight: bold;
-	line-height: 30px;
-	*/
 
-	background: url(../images/ico-utili.jpg) 0 0 no-repeat;
+	background: url(../images/ico-tag.png) 0 0 no-repeat;
 }
 
-/*
-#buttons input[name='add'] { background: #f39c12; }
-#buttons input[name='save'] { background: #3498db; }
-#buttons input[name='edit'] { background: #1fbba6; }
-#buttons input[name='del'] { background: #f75556; }
-*/   
+#titre-degre {
+
+	background: url(../images/ico-degree.png) 0 0 no-repeat;
+}  
         
 
 /*--------------------------------------------------------POSI APPLI-----------------------------------------------------------------*/
@@ -2079,7 +2033,7 @@ body:after {
 
 
 
-/*----------------------------------   Boite de dialogue modal   --------------------------------*/
+/*----------------------------------   Boite de dialogue modale   --------------------------------*/
 
 
 .message-box

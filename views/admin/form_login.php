@@ -35,7 +35,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         <div id="administrateur-login">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-admin">Connexion administrateur</div>
+                <div class="titre-form" id="titre-login">Connexion administrateur</div>
 
                 <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_login_admin">
 

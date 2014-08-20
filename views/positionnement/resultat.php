@@ -104,7 +104,7 @@
         <div id="administrateur-login">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-utili">Résultats</div>
+                <div class="titre-form" id="titre-result">Résultats</div>
 
                 <?php
 

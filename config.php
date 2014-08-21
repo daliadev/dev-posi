@@ -43,7 +43,7 @@ class Config
         "xxx.xxxx@organisme2.fr"
     );
 
-    const ENVOI_EMAIL_REFERENT = 0; // Activer (1) / désactiver (0) - Permet l'envoi du résultat au référent/formateur
+    const ENVOI_EMAIL_REFERENT = 0; // Envoi (1) / pas d'envoi (0) - Permet l'envoi du résultat au référent/formateur
 
 
 

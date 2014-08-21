@@ -21,6 +21,12 @@
         $Destinataire .=  $email_admin.',';
     }
 
+
+    if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($response['email_infos']['email_intervenant']) && !empty($response['email_infos']['email_intervenant'])) 
+    {
+        $Destinataire .=  $response['email_infos']['email_intervenant'];
+    }
+
     $pourqui = "g.billard@educationetformation.fr";
     $Sujet = Config::POSI_NAME;
 

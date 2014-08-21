@@ -59,25 +59,25 @@ $form_url = WEBROOT."admin/compte/";
                     <div class="form-small">
 
                         <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>">
-                        <input type="hidden" name="ref_organ" value="<?php echo $formData['ref_organ']; ?>">
+                        <input type="hidden" name="ref_user_admin" value="<?php //echo $formData['ref_user_admin']; ?>">
 
                         
                         <div class="input">
-                            <label for="ref_organ_cbox">Liste des administrateurs :</label>
-                            <select name="ref_organ_cbox" id="ref_organ_cbox">
+                            <label for="ref_user_admin_cbox">Liste des administrateurs :</label>
+                            <select name="ref_user_admin_cbox" id="ref_user_admin_cbox">
                                 <option value="select_cbox">---</option>
 
                                 <?php
                                 
-                                foreach($response['organisme'] as $organisme)
+                                foreach($response['compte'] as $compte)
                                 {
                                     $selected = "";
-                                    if (!empty($formData['ref_organ']) && $formData['ref_organ'] == $organisme->getId())
+                                    if (!empty($formData['ref_organ']) && $formData['ref_organ'] == $compte->getId())
                                     {
                                         $selected = "selected";
                                     }
 
-                                    echo '<option value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
+                                    echo '<option value="'.$compte->getId().'" '.$selected.'>'.$compte->getNom().'</option>';
                                 }
                                 
                                 ?>
@@ -129,38 +129,46 @@ $form_url = WEBROOT."admin/compte/";
 
                                 
                         <div class="input">
-                            <label for="nom_organ">Nom <span class="asterix">*</span></label>
-                            <input type="text" name="nom_organ" id="nom_organ" value="<?php echo $formData['nom_organ']; ?>" <?php echo $formData['disabled']; ?>>
+                            <label for="nom_admin">Nom d'utilisateur <span class="asterix">*</span></label>
+                            <input type="text" name="nom_admin" id="nom_admin" value="<?php echo $formData['nom_admin']; ?>" <?php echo $formData['disabled']; ?>>
                         </div>
+                        <!-- 
+                        <div class="input">
+                            <label for="email">Adresse email <span class="asterix">*</span></label>
+                            <input type="text" name="email" id="email" value="<?php //echo $formData['email']; ?>" <?php  echo $formData['disabled']; ?>>
+                        </div>
+                         -->
+
+                        <?php if ($formData['disabled'] != "disabled") : ?>
+                            <div class="input">
+                            <label for="pass_admin">Mot de passe <span class="asterix">*</span></label>
+                            <input type="text" name="pass_admin" id="pass_admin" value="<?php //echo $formData['pass_admin']; ?>" <?php echo $formData['disabled']; ?>>
+                            </div>
+                        <?php endif; ?>
                         
-                        <div class="input">
-                            <label for="code_postal_organ">Code postal <span class="asterix">*</span></label>
-                            <input type="text" name="code_postal_organ" id="code_postal_organ" value="<?php echo $formData['code_postal_organ']; ?>" <?php echo $formData['disabled']; ?>>
-                        </div>
+                        <?php if ($formData['disabled'] != "disabled") : ?>
+                            <div class="input">
+                                <label for="pass_admin_verif">Confirmation du mot de passe <span class="asterix">*</span></label>
+                                <input type="text" name="pass_admin_verif" id="pass_admin_verif" value="<?php //echo $formData['mdp_verif']; ?>" <?php echo $formData['disabled']; ?>>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="input">
-                            <label for="tel_organ">Téléphone <span class="asterix">*</span></label>
-                            <input type="text" name="tel_organ" id="tel_organ" value="<?php echo $formData['tel_organ']; ?>" <?php echo $formData['disabled']; ?>>
+                            <label for="droits">Droits<span class="asterix">*</span></label>
+                            <input type="text" name="droits" id="droits" value="<?php echo $formData['droits']; ?>" <?php echo $formData['disabled']; ?>>
                         </div>
-
 
                         <hr>
 
-                        <!-- <p><strong>Stats :</strong></p> -->
-
-                        <!-- <p>Nombre de positionnements accomplies : <strong><?php echo $formData['nbre_sessions_accomplies']; ?></strong></p> -->
-
-
-                        <!-- <hr> -->
 
                         <!-- Boutons de gestion des utilisateurs -->
 
                         <div id="buttons">
                                 <input type="hidden" name="delete" value="false">
-                                <input type="submit" class="add" name="add" style="float:left;" value="Ajouter" <?php echo $formData['add_disabled']; ?>>
-                                <input type="submit" class="edit" name="edit" style="float:right;" value="Modifier" <?php echo $formData['edit_disabled']; ?>>
-                                <input type="submit" class="save" name="save" style="float:left;" value="Enregistrer" <?php echo $formData['save_disabled']; ?>>
-                                <input type="submit" class="del" name="del" style="float:right;" value="Supprimer" <?php echo $formData['delete_disabled']; ?>>      
+                                <input type="submit" class="add" name="add" style="float:left;" value="Ajouter" <?php //echo $formData['add_disabled']; ?>>
+                                <input type="submit" class="edit" name="edit" style="float:right;" value="Modifier" <?php //echo $formData['edit_disabled']; ?>>
+                                <input type="submit" class="save" name="save" style="float:left;" value="Enregistrer" <?php //echo $formData['save_disabled']; ?>>
+                                <input type="submit" class="del" name="del" style="float:right;" value="Supprimer" <?php //echo $formData['delete_disabled']; ?>>      
                         </div>
                         <div style="clear:both;"></div>
 
@@ -194,7 +202,7 @@ $form_url = WEBROOT."admin/compte/";
 
                 event.preventDefault();
 
-                if (confirm("Voulez êtes sur le point de supprimer un organisme. Cette suppression effacera également tous les intervenants qui en dépendent. Voulez-vous continuer ?"))
+                if (confirm("Voulez êtes sur le point de supprimer définitivement un compte administrateur. Voulez-vous continuer ?"))
                 {
                     $('input[name="delete"]').val("true");
                     $('#form-posi').submit();

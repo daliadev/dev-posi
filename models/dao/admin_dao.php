@@ -3,7 +3,7 @@
 
 
 /**
- * Description of OrganismeDAO
+ * Description of AdminDAO
  *
  * @author Nicolas Beurion
  */
@@ -11,7 +11,7 @@
 
 
 // Inclusion du fichier de la classe Organisme
-//require_once(ROOT.'models/admin.php');
+require_once(ROOT.'models/compte.php');
 
 
 
@@ -75,7 +75,52 @@ class AdminDAO extends ModelDAO
         
     }
     
+
+
+
+    /**
+     * selectAll - Retourne la liste de tous les comptes administrateur.
+     * 
+     * @return array Liste d'objets "Compte".
+     */
+    public function selectAll() 
+    {
+        $this->initialize();
+
+        $request = "SELECT id_admin, nom_admin, droits FROM administrateur ORDER BY id_admin ASC";
+        
+        $this->resultset['response'] = $this->executeRequest("select", $request, "compte", "Compte");
+
+        return $this->resultset;
+    }
     
+
+
+    /**
+     * selectById - Récupère le compte administrateur correspondant à l'identifiant.
+     * 
+     * @param int Identifiant du compte.
+     * @return array Compte correspondant à l'identifiant sinon erreurs.
+     */
+    public function selectById($idCompte) 
+    {
+        $this->initialize();
+        
+        if (!empty($idCompte))
+        {
+            $request = "SELECT * FROM administrateur WHERE id_admin = ".$idCompte;
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "compte", "Compte");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+        }
+        
+        return $this->resultset;
+    }
+
+
 }
 
 ?>

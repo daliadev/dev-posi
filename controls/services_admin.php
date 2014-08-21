@@ -16,6 +16,7 @@ require_once(ROOT.'controls/services_admin_degre.php');
 require_once(ROOT.'controls/services_admin_utilisateur.php');
 require_once(ROOT.'controls/services_admin_organisme.php');
 require_once(ROOT.'controls/services_admin_restitution.php');
+require_once(ROOT.'controls/services_admin_compte.php');
 require_once(ROOT.'models/dao/menu_admin_dao.php');
 
 
@@ -32,6 +33,7 @@ class ServicesAdmin extends Main
     private $servicesUtilisateur = null;
     private $servicesOrganisme = null;
     private $servicesRestitution = null;
+    private $servicesCompte = null;
     
     private $menuAdminDAO = null;
     
@@ -49,6 +51,7 @@ class ServicesAdmin extends Main
         $this->servicesUtilisateur = new ServicesAdminUtilisateur();
         $this->servicesOrganisme = new ServicesAdminOrganisme();
         $this->servicesRestitution = new ServicesAdminRestitution();
+        $this->servicesCompte = new ServicesAdminCompte();
         
         $this->menuAdminDAO = new MenuAdminDAO();
         
@@ -1621,6 +1624,7 @@ class ServicesAdmin extends Main
     public function compte($requestParams = array())
     {
 
+
         // Authentification
         ServicesAuth::checkAuthentication("admin");
 
@@ -1654,27 +1658,28 @@ class ServicesAdmin extends Main
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
 
 
-
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
-        /*
+        
         $initializedData = array(
-            "code_cat_cbox" => "select", 
-            "nom"           => "text", 
-            "descript_cat"  => "text", 
-            "actif"         => "text"
+            "ref_user_admin_cbox" => "select", 
+            "nom_admin"           => "text", 
+            //"email"             => "text", 
+            "pass_admin"          => "text",
+            "pass_admin_verif"    => "text",
+            "droits"              => "text"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
-        */
+        
     
         /*** Récupération du code de la catégorie par la méthode GET ***/
-        /*
+        
         if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
         {
-            $this->formData['code_cat_cbox'] = $requestParams[0];
+            $this->formData['ref_user_admin_cbox'] = $requestParams[0];
         }
         
-        $this->formData['code_cat'] = $this->formData['code_cat_cbox'];
-        */
+        $this->formData['ref_user_admin'] = $this->formData['ref_user_admin_cbox'];
+        
 
         /*** Initialisation des boutons ***/
 
@@ -1686,15 +1691,15 @@ class ServicesAdmin extends Main
         /*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
         
 
-        /*** Mode "visualisation" et "édition" ***/
-        /*
+        /*-----   Mode "visualisation" et "edition"   -----*/
+
+        
         if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
-        {
+        { 
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
-
-            // Avec la référence, on va chercher toutes les infos sur la question 
-            if (!empty($this->formData['code_cat']))
+            
+            if (!empty($this->formData['ref_user_admin']))
             {
                 if ($this->formData['mode'] == "view")
                 {
@@ -1703,69 +1708,77 @@ class ServicesAdmin extends Main
                     $this->formData['delete_disabled'] = "disabled";
                 }
                 
-                $catDetails = array();
-                $catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['code_cat']);
-                
-                $this->formData = array_merge($this->formData, $catDetails);
+                $accountDetails = array();
+                $accountDetails = $this->servicesCompte->getAccountDetails($this->formData['ref_user_admin']);
+
+                $this->formData = array_merge($this->formData, $accountDetails);
             }
             else if ($this->formData['mode'] == "edit")
             {
-                $this->registerError("form_empty", "Cette categorie n'existe pas.");
+                $this->registerError("form_empty", "Ce degré n'existe pas");
             }
         }
-        */
-
-        /*** Mode "nouvelle question" ***/
-        /*
+        
+        
+        /*-----   Mode "nouveau degré"   -----*/
+        
+        
         else if ($this->formData['mode'] == "new")
         {      
-            // Verrouillage des boutons.
+            // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "new");
 
-            $this->formData['code_cat'] = null;
-            $this->formData['nom_cat'] = null;
-            $this->formData['descript_cat'] = null;
-            $this->formData['type_lien_cat'] = null;
+            $this->formData['ref_user_admin'] = null;
+            $this->formData['nom_degre'] = null;
+            $this->formData['descript_degre'] = null;
         }
-        */
-
-        /*** Mode "enregistrement" ***/
+  
         
-        /*
+        
+        /*-----   Mode "enregistrement"   -----*/
+        
+        
         else if ($this->formData['mode'] == "save")
-        { 
-            // Verrouillage des boutons.
+        {
+            
+            // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "save");
 
-            // Récupèration de l'id de la question s'il y en a une.
-            if (!empty($this->formData['code']))
+
+            /*** Récupèration de l'id de la question ***/
+
+            if (!empty($this->formData['ref_user_admin']))
             {
                 if ($previousMode == "edit")
                 {
-                    $dataCategorie['code'] = $this->formData['code'];
+                    $dataDegre['ref_user_admin'] = $this->formData['ref_user_admin'];
                 }
             }
-
-            // Traitement des infos saisies.
-            $dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
-
-
-            // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
-            if (empty($this->servicesCategorie->errors) && empty($this->errors)) 
-            {
-                $this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
-            }
+            
+            
+            /*-----  Traitement des infos saisies   -----*/
+            
+            $dataDegre = $this->servicesCompte->filterDegreData($this->formData, $_POST);
 
             
-            // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
-            if (empty($this->servicesCategorie->errors) && empty($this->errors))
+            /*----- Sauvegarde ou mise à jour des données ***/
+            
+            // Aucune erreur ne doit être enregistrée
+            if (empty($this->servicesCompte->errors) && empty($this->errors)) 
             {
-                // On recharge la page en mode visualisation.
-                header("Location: ".$this->url.$this->formData['code_cat']);
+                $this->servicesCompte->setDegreProperties($previousMode, $dataDegre, $this->formData);
+            }
+            
+            /*** S'il n'y a pas d'erreur, on recharge la page avec l'identifiant récupéré ***/
+            
+            if (empty($this->servicesCompte->errors) && empty($this->errors))
+            {
+                // On recharge la page en mode view
+                header("Location: ".$this->url."/".$this->formData['ref_user_admin']);
+                exit();
             }
             else 
             {
-                // Sinon mode nouveau ou édition.
                 if ($previousMode == "new")
                 {
                     $this->formData['mode'] = "new";
@@ -1775,102 +1788,104 @@ class ServicesAdmin extends Main
                     $this->formData['mode'] = "edit";
                 }
             }
+
+            exit();
+            
         }
-        */
         
-        /*** Mode "suppression" ***/
-        /*
+        
+        
+        /*-----   Mode "suppression"   -----*/
+        
+        
         else if ($this->formData['mode'] == "delete")
         {
-            // Verrouillage des boutons.
+            // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "delete");
             
-            // Si le code de la catégorie active existe :
-            if (!empty($this->formData['code_cat']))
+            // On récupère le code du degré actif
+            if (!empty($this->formData['ref_user_admin']))
             {
-                // On supprime la catégorie dans la base.
-                $resultsetCat = $this->servicesCategorie->deleteCategorie($this->formData['code_cat']);
-                
-                // Si la suppression a fonctionnée :
-                if ($resultsetCat)
+                // Ensuite on supprime le degré dans la base
+                $resultsetDegre = $this->servicesCompte->deleteDegre($this->formData['ref_user_admin']);
+
+                if ($resultsetDegre)
                 {   
-                    $this->registerSuccess("La catégorie a été supprimée avec succès.");
+                    $this->registerSuccess("Le degré a été supprimé avec succès.");
                 }
                 else
                 {
-                    // Sinon on renvoi une erreur.
-                    $this->registerError("form_valid", "La catégorie n'a pas pu être supprimée.");
+                    $this->registerError("form_data", "Le degré n'a pas pu être supprimé.");
                 }
             }
             else 
             {
-                $this->registerError("form_valid", "La catégorie n'existe pas.");
+                $this->registerError("form_data", "Le degré n'existe pas.");
             }
             
-            // On recharge la page (sans aucune information).
+            // On recharge la page
             header("Location: ".$this->url);
             exit();
         }
-        */
 
-        /*** Erreur : aucun mode ***/
-        /*
+
         else  
         {
-            // Renvoi vers le template 404 (page inconnue).
+            // Sinon, renvoi vers la page inconnue (404)
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }   
-        */
         
-        // Debuggage
+       
         if (Config::DEBUG_MODE)
         {
-            // Liste des données traitées et renvoyées au formulaire.
             echo "\$this->formData = <br/>";
             var_dump($this->formData);
+            //exit();
         }
             
             
         
-        /*** Retour des données traitées du formulaire ***/
-        /*
+        
+        /*-----   Retour des données traitées du formulaire   -----*/
+
+
         $this->returnData['response']['form_data'] = array();
         $this->returnData['response']['form_data'] = $this->formData;
-        */
 
         
         /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
-        /*
-        if ((!empty($this->servicesCategorie->errors) && count($this->servicesCategorie->errors) > 0) || !empty($this->errors))
+        
+        if ((!empty($this->servicesCompte->errors) && count($this->servicesCompte->errors) > 0) || !empty($this->errors))
         {
-            $this->errors = array_merge($this->servicesCategorie->errors, $this->errors);
+            $this->errors = array_merge($this->servicesCompte->errors, $this->errors);
             foreach($this->errors as $error)
             {
                 $this->returnData['response']['errors'][] = $error;
             }
         }
-        else if ((!empty($this->servicesCategorie->success) && count($this->servicesCategorie->success) > 0) || !empty($this->success))
+        else if ((!empty($this->servicesCompte->success) && count($this->servicesCompte->success) > 0) || !empty($this->success))
         {
-            $this->success = array_merge($this->servicesCategorie->success, $this->success);
+            $this->success = array_merge($this->servicesCompte->success, $this->success);
             foreach($this->success as $success)
             {
                 $this->returnData['response']['success'][] = $success;
             }
         }
-        */
+        
         
         /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
         
-        // Requete pour obtenir la liste des catégories
-        //$listeCategories = $this->servicesCategorie->getCategories();
-        
-        // Assemblage de toutes les données de la réponse
-        //$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
-        
+        // Requete pour obtenir la liste des comptes
+        $listeComptes = $this->servicesCompte->getAccountsList();
+
+        $this->returnData['response'] = array_merge($listeComptes['response'], $this->returnData['response']);
+
+
+
         /*** Envoi des données et rendu de la vue ***/
         
-        //$this->setResponse($this->returnData);
+        $this->setResponse($this->returnData);
         $this->setTemplate("template_page");
         $this->render("gestion_compte");    
     }

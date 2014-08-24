@@ -37,7 +37,7 @@ class Config
     // Gestion spécifique des intervenants lors de l'inscription
     const ALLOW_REFERENT_INPUT = 0; // Activer (1) / désactiver (0) - Affiche un champ de saisie pour le référent/formateur, sinon affiche la liste des intervenants présaisis.
 
-    // Tableau des emails des référents/formateurs présaisis
+    // Tableau des emails des référents/formateurs présaisis lors de l'inscription
     public static $emails_referent = array(
         "xxx.xxxx@organisme1.fr",
         "xxx.xxxx@organisme2.fr"

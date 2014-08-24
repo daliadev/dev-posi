@@ -1661,12 +1661,11 @@ class ServicesAdmin extends Main
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         
         $initializedData = array(
-            "ref_user_admin_cbox" => "select", 
-            "nom_admin"           => "text", 
-            //"email"             => "text", 
+            "ref_account_cbox" => "select", 
+            "nom_admin"           => "text",  
             "pass_admin"          => "text",
             "pass_admin_verif"    => "text",
-            "droits"              => "text"
+            "droits_cbox"         => "select"
         );
         $this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
         
@@ -1675,10 +1674,10 @@ class ServicesAdmin extends Main
         
         if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
         {
-            $this->formData['ref_user_admin_cbox'] = $requestParams[0];
+            $this->formData['ref_account_cbox'] = $requestParams[0];
         }
         
-        $this->formData['ref_user_admin'] = $this->formData['ref_user_admin_cbox'];
+        $this->formData['ref_account'] = $this->formData['ref_account_cbox'];
         
 
         /*** Initialisation des boutons ***/
@@ -1699,7 +1698,7 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
             
-            if (!empty($this->formData['ref_user_admin']))
+            if (!empty($this->formData['ref_account']))
             {
                 if ($this->formData['mode'] == "view")
                 {
@@ -1709,18 +1708,18 @@ class ServicesAdmin extends Main
                 }
                 
                 $accountDetails = array();
-                $accountDetails = $this->servicesCompte->getAccountDetails($this->formData['ref_user_admin']);
+                $accountDetails = $this->servicesCompte->getAccountDetails($this->formData['ref_account']);
 
                 $this->formData = array_merge($this->formData, $accountDetails);
             }
             else if ($this->formData['mode'] == "edit")
             {
-                $this->registerError("form_empty", "Ce degré n'existe pas");
+                $this->registerError("form_empty", "Ce compte n'existe pas");
             }
         }
         
         
-        /*-----   Mode "nouveau degré"   -----*/
+        /*-----   Mode "nouveau compte"   -----*/
         
         
         else if ($this->formData['mode'] == "new")
@@ -1728,9 +1727,11 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "new");
 
-            $this->formData['ref_user_admin'] = null;
-            $this->formData['nom_degre'] = null;
-            $this->formData['descript_degre'] = null;
+            $this->formData['ref_account'] = null;
+            $this->formData['nom_admin'] = null;
+            $this->formData['pass_admin'] = null;
+            $this->formData['pass_admin_verif'] = null;
+            $this->formData['droits'] = null;
         }
   
         
@@ -1747,18 +1748,18 @@ class ServicesAdmin extends Main
 
             /*** Récupèration de l'id de la question ***/
 
-            if (!empty($this->formData['ref_user_admin']))
+            if (!empty($this->formData['ref_account']))
             {
                 if ($previousMode == "edit")
                 {
-                    $dataDegre['ref_user_admin'] = $this->formData['ref_user_admin'];
+                    $dataAccount['ref_account'] = $this->formData['ref_account'];
                 }
             }
             
             
             /*-----  Traitement des infos saisies   -----*/
             
-            $dataDegre = $this->servicesCompte->filterDegreData($this->formData, $_POST);
+            $dataAccount = $this->servicesCompte->filterAccountData($this->formData, $_POST);
 
             
             /*----- Sauvegarde ou mise à jour des données ***/
@@ -1766,7 +1767,7 @@ class ServicesAdmin extends Main
             // Aucune erreur ne doit être enregistrée
             if (empty($this->servicesCompte->errors) && empty($this->errors)) 
             {
-                $this->servicesCompte->setDegreProperties($previousMode, $dataDegre, $this->formData);
+                $this->servicesCompte->saveAccountData($previousMode, $dataAccount, $this->formData);
             }
             
             /*** S'il n'y a pas d'erreur, on recharge la page avec l'identifiant récupéré ***/
@@ -1774,7 +1775,7 @@ class ServicesAdmin extends Main
             if (empty($this->servicesCompte->errors) && empty($this->errors))
             {
                 // On recharge la page en mode view
-                header("Location: ".$this->url."/".$this->formData['ref_user_admin']);
+                header("Location: ".$this->url."/".$this->formData['ref_account']);
                 exit();
             }
             else 
@@ -1788,8 +1789,6 @@ class ServicesAdmin extends Main
                     $this->formData['mode'] = "edit";
                 }
             }
-
-            exit();
             
         }
         
@@ -1803,24 +1802,24 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "delete");
             
-            // On récupère le code du degré actif
-            if (!empty($this->formData['ref_user_admin']))
+            // On récupère le code du compte actif
+            if (!empty($this->formData['ref_account']))
             {
-                // Ensuite on supprime le degré dans la base
-                $resultsetDegre = $this->servicesCompte->deleteDegre($this->formData['ref_user_admin']);
+                // Ensuite on supprime le compte dans la base
+                $resultsetDegre = $this->servicesCompte->deleteAccount($this->formData['ref_account']);
 
                 if ($resultsetDegre)
                 {   
-                    $this->registerSuccess("Le degré a été supprimé avec succès.");
+                    $this->registerSuccess("Le compte a été supprimé avec succès.");
                 }
                 else
                 {
-                    $this->registerError("form_data", "Le degré n'a pas pu être supprimé.");
+                    $this->registerError("form_data", "Le compte n'a pas pu être supprimé.");
                 }
             }
             else 
             {
-                $this->registerError("form_data", "Le degré n'existe pas.");
+                $this->registerError("form_data", "Le compte n'existe pas.");
             }
             
             // On recharge la page

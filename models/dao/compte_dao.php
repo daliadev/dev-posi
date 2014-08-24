@@ -15,7 +15,7 @@ require_once(ROOT.'models/compte.php');
 
 
 
-class AdminDAO extends ModelDAO
+class CompteDAO extends ModelDAO
 {
    
     
@@ -121,6 +121,100 @@ class AdminDAO extends ModelDAO
     }
 
 
+
+    
+    
+    
+    /**
+     * insert - Insère un compte
+     * 
+     * @param array Valeurs du compte à inserer
+     * @return bool Vrai si l'insertion a fonctionné
+     */
+    public function insert($values) 
+    {
+
+        $this->initialize();
+        
+        if (!empty($values))
+        {       
+            $request = $this->createQueryString("insert", $values, "administrateur");
+            
+            $this->resultset['response'] = $this->executeRequest("insert", $request, "compte", "Compte");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "insert", 'message' => "Les données sont vides");
+        }
+        
+        return $this->resultset;
+    }
+    
+    
+    
+    
+    
+    /**
+     * update - Met à jour un compte
+     * 
+     * @param array Valeurs du compte à mettre à jour
+     * @return array Nbre de lignes mises à jour sinon erreurs
+     */
+    public function update($values) 
+    {
+        $this->initialize();
+        
+        if (!empty($values))
+        {
+            if (isset($values['ref_account']) && !empty($values['ref_account']))
+            {
+                $refAccount = $values['ref_account'];
+                unset($values['ref_account']);
+                
+                $request = $this->createQueryString("update", $values, "administrateur", "WHERE id_admin = ".$refAccount);
+                
+                $this->resultset['response'] = $this->executeRequest("update", $request, "compte", "Compte");
+            }
+            else
+            {
+                $this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour le compte à mettre à jour.");
+            }
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Les données sont vides");
+        }
+
+        return $this->resultset;
+    }
+    
+    
+    
+    
+    
+    /**
+     * delete - Efface un compte
+     * 
+     * @param int Identifiant du compte
+     * @return array Nbre de lignes effacées sinon erreurs
+     */
+    public function delete($refAccount) 
+    {
+        $this->initialize();
+        
+        if (!empty($refAccount))
+        {
+            $request = "DELETE FROM administrateur WHERE id_admin = ".$refAccount;
+
+            $this->resultset['response'] = $this->executeRequest("delete", $request, "compte", "Compte");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "delete", 'message' => "Il n'y a aucun identifiant pour la suppression du compte.");
+        }
+
+        return $this->resultset;
+    }
 }
 
 ?>

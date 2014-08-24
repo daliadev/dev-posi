@@ -8,7 +8,7 @@
 require_once(ROOT.'controls/authentication.php');
 
 
-require_once(ROOT.'models/dao/admin_dao.php');
+require_once(ROOT.'models/dao/compte_dao.php');
 
 
 /**
@@ -19,7 +19,7 @@ require_once(ROOT.'models/dao/admin_dao.php');
 class ServicesAdminGestion extends Main
 {
     
-    private $adminDAO = null;
+    private $compteDAO = null;
     
     
     public function initializeFormData(&$formData, $postData, $initializedData)
@@ -153,11 +153,11 @@ class ServicesAdminGestion extends Main
     
     public function authenticateAdmin($login, $pass)
     {
-        $this->adminDAO = new AdminDAO();
+        $this->compteDAO = new CompteDAO();
         
         $mdp = Config::hashPassword($pass);
         
-        $resultset = $this->adminDAO->authenticate($login, $mdp);
+        $resultset = $this->compteDAO->authenticate($login, $mdp);
         
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']) && $resultset['response']['auth'])

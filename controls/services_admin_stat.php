@@ -199,7 +199,7 @@ class ServicesAdminStat extends Main
 
                     $tabRefsUsers = array();
 
-                    //$organsInfos[$i]['total_users'] = count($usersList);
+
                     reset($sessionsList);
 
                     foreach ($sessionsList as $session)
@@ -248,7 +248,6 @@ class ServicesAdminStat extends Main
                     }
                     
 
-                    //reset($resultsetUsers);
                     if (count($resultsetUsers['response']['utilisateur']) > 0 && count($tabRefsUsers) > 0)
                     {
                         foreach($tabRefsUsers as $refUser)

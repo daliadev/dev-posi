@@ -239,8 +239,7 @@ class ServicesAdminRestitution extends Main
     {
         $posiStats = array();
         
-        //$posiStats['date'] = null;
-        //$posiStats['temps_total'] = null;
+
         $posiStats['percent_global'] = null;
         $posiStats['categories'] = array();
         
@@ -290,31 +289,6 @@ class ServicesAdminRestitution extends Main
                    }
                 }  
             }
-            
-            
-            /*** Calcul des pourcentage selon le type de la catégorie. ***/
-            /*
-            if ($tabStats[$j]['type_lien'] == "unique")
-            {
-                // Cette catégorie possède son propre pourcentage indépendament de ses enfants.
-                
-            }
-            else if ($tabStats[$j]['type_lien'] == "static") 
-            {
-                // Le pourcentage de cette categorie est la somme de celui de ses enfants.
-                
-            }
-            else if ($tabStats[$j]['type_lien'] == "dynamic") 
-            {
-                // Le pourcentage de cette categorie est la somme de celui de ses enfants, de plus il a son propre pourcentage.
-                
-            }
-            else
-            {
-                // Cette categorie n'a pas de pourcentage propre à elle.
-                
-            }
-            */
 
             
             // Calcul du poucentage de réussite dans cette catégorie
@@ -401,12 +375,6 @@ class ServicesAdminRestitution extends Main
             
             $k++;
         }
-        
-        
-        /*** Gestion du temps ***/
-        
-        //$stringTime = Tools::timeToString($totalTime);
-        //$posiStats['temps'] = $stringTime;
         
         
         /*** Stats globales ***/
@@ -557,7 +525,6 @@ class ServicesAdminRestitution extends Main
 
         // Fin de la récupération des infos de chaque question
 
-        
 
         // Etape 2 : Regroupement de toutes les infos sur l'utilisateur sélectionné
 
@@ -652,8 +619,6 @@ class ServicesAdminRestitution extends Main
             }
         }
 
-        // var_dump($questionsDetails);
-        // exit();
 
         return $questionsDetails;
     }

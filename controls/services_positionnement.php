@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Description of services_positionnement
- *
- * @author Nicolas Beurion
- */
 
 require_once(ROOT.'controls/authentication.php');
 
@@ -230,8 +225,6 @@ class ServicesPositionnement extends Main
             if (ServicesAuth::getSessionData("num_page") == $_POST['num_page'])
             {
                 $pageCourante++;
-                //$numeroOrdre = $pageCourante + 1;
-                //ServicesAuth::setSessionData("num_page", $numeroOrdre);
                 ServicesAuth::setSessionData("page_reset", false);
             }
             else 
@@ -342,15 +335,6 @@ class ServicesPositionnement extends Main
         
         // On va chercher dans la table "question", la question correspondant au numéro d'ordre (la page suivante)
         $resultsetQuestion = $this->questionDAO->selectByOrdre($numeroOrdre);
-
-        
-        if (Config::DEBUG_MODE)
-        {
-            var_dump($_POST);
-            //var_dump($resultsetQuestion['response']);
-            var_dump($_SESSION);
-            //var_dump($dataResultat);
-        }
         
                 
         // Traitement des erreurs de récupération de la question
@@ -598,12 +582,7 @@ class ServicesPositionnement extends Main
                     $tabCorrection[$i]['children'] = array();
 
                     for ($j = 0; $j < count($tabCorrection); $j++)
-                    {
-                        //if (strlen($tabCorrection[$j]['code_cat']) == 2 && $tabCorrection[$j]['code_cat'] == $parentCode)
-                        //{
-                            
-                        //}
-                        //else 
+                    { 
                         if (strlen($tabCorrection[$j]['code_cat']) > 2 && substr($tabCorrection[$j]['code_cat'], 0, 2) == $parentCode)
                         {
                             $tabCorrection[$i]['total'] += $tabCorrection[$j]['total'];

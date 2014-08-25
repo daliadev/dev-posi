@@ -1,13 +1,6 @@
 <?php
 
-/**
- * Description of main.php
- *
- * @author Nicolas Beurion
- */
 
-
-//require_once('utils/config.php');
 require_once('utils/tools.php');
 
 

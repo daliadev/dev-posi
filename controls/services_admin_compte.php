@@ -54,7 +54,6 @@ class ServicesAdminCompte extends Main
         if (!$this->filterDataErrors($resultsetCompte['response']))
         {
             $accountDetails['nom_admin'] = $resultsetCompte['response']['compte']->getNom();
-            //$accountDetails['pass_admin'] = $resultsetCompte['response']['compte']->getPass();
             $accountDetails['droits'] = $resultsetCompte['response']['compte']->getDroits();
         }
 
@@ -83,7 +82,6 @@ class ServicesAdminCompte extends Main
 
         /*** Récupèration des droits du compte ***/
 
-        //$formData['droits'] = $this->validatePostData($postData['droits'], "droits", "string", false, "Aucun type de droits n'a été sélectionné.", "Le type de droits est incorrect.");
         if (!empty($postData['droits_cbox']))
         {
             $formData['droits_cbox'] = $postData['droits_cbox'];
@@ -137,7 +135,6 @@ class ServicesAdminCompte extends Main
             if (isset($resultsetAccount['response']['compte']['last_insert_id']) && !empty($resultsetAccount['response']['compte']['last_insert_id']))
             {
                 $formData['ref_account'] = $resultsetAccount['response']['compte']['last_insert_id'];
-                //$dataAccount['ref_account'] = $formData['ref_account'];
             }
             else 
             {

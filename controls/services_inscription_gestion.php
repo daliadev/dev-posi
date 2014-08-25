@@ -1,12 +1,6 @@
 <?php
 
 
-/**
- * 
- *
- * @author Nicolas Beurion
- */
-
 require_once(ROOT.'controls/authentication.php');
 
 
@@ -166,8 +160,6 @@ class ServicesInscriptionGestion extends Main
             if (!empty($postData['nom_organ']))
             {
                 $duplicateNomOrgan = false;
-                //$similarNomOrgan = "";
-                //$formData['suggest_name'] = "";
 
                 // On enlève les espaces, les caractères spéciaux et on met le nom saisi tout en majuscules.
                 $cleanNom = Tools::stripSpecialCharsFromString($postData['nom_organ']);
@@ -193,13 +185,6 @@ class ServicesInscriptionGestion extends Main
                             $duplicateNomOrgan = true;
                             break;
                         }
-                        /*
-                        else if (strstr($securNomOrgan, $nomOrganisme) || strstr($securNomOrgan, $nomOrganisme))
-                        {
-                            $similarNomOrgan = $nomOrgan;
-                            break;
-                        }
-                        */
                     }
                 }
 
@@ -207,18 +192,6 @@ class ServicesInscriptionGestion extends Main
                 {
                     $this->registerError("form_valid", "Le nom de l'organisme existe déjà.");
                 }
-                /*
-                else if (!empty($similarNomOrgan))
-                {
-                    $formData['suggest_name'] = $similarNomOrgan;
-                }
-                */
-                /*
-                else
-                {
-                    $dataOrganisme['nom_organ'] = $formData['nom_organ'];
-                }
-                */
             }
 
             // Récupèration du nom de l'organisme
@@ -337,8 +310,6 @@ class ServicesInscriptionGestion extends Main
             }
         }
 
-        //var_dump($dataIntervenant);
-        //exit();
 
         return $dataIntervenant;
     }
@@ -498,15 +469,7 @@ class ServicesInscriptionGestion extends Main
                 $prenomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanPrenom));
                 $nomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanNom));
 
-                //echo "Noms bdd = ".$prenomUser." ".$nomUser."<br/>";
-                //echo "ref_niveau = ".$user->getRefNiveau()."<br/>";
 
-                //echo "Comp prenoms 1 = ".strpos($prenomUser, $prenomUserSaisi)."<br/>";
-                //echo "Comp prenoms 2 = ".strpos($prenomUserSaisi, $prenomUser)."<br/>";
-                //echo "Comp noms 1 = ".strpos($nomUser, $nomUserSaisi)."<br/>";
-                //echo "Comp noms 2 = ".strpos($nomUserSaisi, $nomUser)."<br/>";
-
-                //if ($prenomUser == $prenomUserSaisi && $nomUser == $nomUserSaisi)
                 if ((strpos($prenomUser, $prenomUserSaisi) !== false || strpos($prenomUserSaisi, $prenomUser) !== false) && (strpos($nomUser, $nomUserSaisi) !== false || strpos($nomUserSaisi, $nomUser) !== false))
                 {
                     $formData['ref_user'] = $user->getId();
@@ -542,16 +505,10 @@ class ServicesInscriptionGestion extends Main
 
 
         }
-        //else
-        //{
-        //    $formData['name_validation'] = "none";
-        //}
-        //else
-        //{
-            // Traitement du nom et prénom de l'utilisateur pour l'insertion en base de données
-            $dataUtilisateur['nom_user'] = $formData['nom_user'];
-            $dataUtilisateur['prenom_user'] = $formData['prenom_user'];
-        //}
+
+        // Traitement du nom et prénom de l'utilisateur pour l'insertion en base de données
+        $dataUtilisateur['nom_user'] = $formData['nom_user'];
+        $dataUtilisateur['prenom_user'] = $formData['prenom_user'];
 
 
         /*** Récupèration des autres champs de l'utilisateur ***/
@@ -590,8 +547,6 @@ class ServicesInscriptionGestion extends Main
 
         $formData['mode_inscript'] = "insert";
         $formData['ref_inscription'] = null;
-        //$formData['ref_user'] = null;
-        //$formData['ref_intervenant'] = null;
 
 
         /*** Récupération du champ caché "référence utilisateur" si il existe. ***/
@@ -613,32 +568,15 @@ class ServicesInscriptionGestion extends Main
 
 
         /*** Récupération de la référence de l'intervenant dans les variables de session. ***/
-        //if (isset(ServicesAuth::getSessionData('ref_intervenant')) && !empty(ServicesAuth::getSessionData('ref_intervenant')))
-        //{
-            $formData['ref_intervenant'] = ServicesAuth::getSessionData('ref_intervenant');
-            $dataInscription['ref_intervenant'] = $formData['ref_intervenant'];
-        //}
+
+        $formData['ref_intervenant'] = ServicesAuth::getSessionData('ref_intervenant');
+        $dataInscription['ref_intervenant'] = $formData['ref_intervenant'];
 
 
         /*** Création de la date d'inscription qui correspond à la date du jour. ***/
 
         $dataInscription['date_inscription'] = date("Y-m-d");
 
-        /*
-        if (isset($resultsetInter['response']['intervenant']) && !empty($resultsetInter['response']['intervenant']))
-        {
-            $refOrgan = $resultsetInter['response']['intervenant'][0]->getRefOrganisme();
-
-            if (isset($formData['ref_organ']) && !empty($formData['ref_organ']) && $refOrgan == $formData['ref_organ'])
-            {
-                $formData['mode_inter'] = "none";
-            }
-            else
-            {
-                $this->registerError("form_valid", "L'email a déjà été saisi pour un autre organisme.");
-            }
-        }
-        */
 
         // Si l'utilisateur a été enregistré
         if ($formData['ref_user'] && $formData['ref_intervenant'])
@@ -666,7 +604,6 @@ class ServicesInscriptionGestion extends Main
 
 
     /***   Insertions et mises à jour dans la base avec les données des formulaires et traitements des résultats   ***/
-
 
 
     public function setOrganismeProperties($dataOrganisme, &$formData)
@@ -781,7 +718,7 @@ class ServicesInscriptionGestion extends Main
         
         $mode = $formData['mode_user'];
 
-        //if (!empty($dataUtilisateur['nom_user']) && !empty($dataOrganisme['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']) && !empty($dataUtilisateur['ref_niveau']))
+        
         if ((empty($dataUtilisateur['ref_user']) && !empty($dataUtilisateur['nom_user']) && !empty($dataUtilisateur['prenom_user']) && !empty($dataUtilisateur['date_naiss_user']) && !empty($dataUtilisateur['ref_niveau'])) || !empty($dataUtilisateur['ref_user']))
         {
             /*** Insertion du nouvel utilisateur ***/
@@ -882,7 +819,6 @@ class ServicesInscriptionGestion extends Main
     /***   Insertions et mises à jour dans la base   ***/
 
 
-
     public function setOrganisme($mode, $dataOrganisme)
     {
         
@@ -958,8 +894,6 @@ class ServicesInscriptionGestion extends Main
             {
                 if (!empty($dataIntervenant['ref_intervenant']))
                 {
-                    //$dataIntervenant['ref_intervenant'] = $dataIntervenant['ref_intervenant'];
-                    //unset($dataIntervenant['ref_intervenant']);
 
                     $resultset = $this->intervenantDAO->update($dataIntervenant);
 
@@ -1134,32 +1068,6 @@ class ServicesInscriptionGestion extends Main
     }
 
     
-    
-    
-    /*
-    public function getIntervenants()
-    {
-        $resultset = $this->intervenantDAO->selectAll();
-
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
-            { 
-                $intervenant = $resultset['response']['intervenant'];
-                $resultset['response']['intervenant'] = array($intervenant);
-            }
-
-            return $resultset;
-        }
-        
-        return false;
-    }
-    */
-    
-
-
 
 
 
@@ -1196,69 +1104,6 @@ class ServicesInscriptionGestion extends Main
     }
     
 
-
-
-
-    /*
-    public function setIntervenant($modeRequête, $dataIntervenant)
-    {
-        if (!empty($dataIntervenant) && is_array($dataIntervenant))
-        {
-            if ($modeRequête == "insert")
-            {
-                $resultset = $this->intervenantDAO->insert($dataIntervenant);
-                
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['intervenant']['last_insert_id']) && !empty($resultset['response']['intervenant']['last_insert_id']))
-                {
-                    return $resultset;
-                }
-                else 
-                {
-                    $this->registerError("form_request", "L'intervenant n'a pu être inséré.");
-                }
-            }
-            else if ($modeRequête == "update")
-            {
-                $resultset = $this->intervenantDAO->update($dataIntervenant);
-
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['intervenant']['row_count']) && !empty($resultset['response']['intervenant']['row_count']))
-                {
-                    return $resultset;
-                } 
-                else 
-                {
-                    $this->registerError("form_request", "L'intervenant n'a pas été mis à jour.");
-                }
-            }
-            else 
-            {
-                return true;
-            }  
-        }
-        else 
-        {
-            $this->registerError("form_request", "Insertion de l'intervenant non autorisée");
-        }
-        
-        return false;
-    }
-    */
-    
-    
-    
-    /*
-    public function getUtilisateurs()
-    {
-        $resultset = $this->utilisateurDAO->selectAll();
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        return $resultset;
-    }
-    */
     
     
     private function getUtilisateur($fieldName, $fieldValue)
@@ -1312,57 +1157,6 @@ class ServicesInscriptionGestion extends Main
         return false;
     }
     
-    
-    /*
-    public function setUtilisateur($dataUtilisateur, $modeRequête)
-    {
-        if (!empty($dataUtilisateur) && is_array($dataUtilisateur))
-        {
-            if ($modeRequête == "insert")
-            {
-                $resultset = $this->utilisateurDAO->insert($dataUtilisateur);
-                
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['last_insert_id']) && !empty($resultset['response']['utilisateur']['last_insert_id']))
-                {
-                    return $resultset;
-                }
-                else 
-                {
-                    $this->registerError("form_request", "L'utilisateur n'a pu être inséré.");
-                }
-            }
-            else if ($modeRequête == "update")
-            {
-                $resultset = $this->utilisateurDAO->update($dataUtilisateur);
-
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['row_count']) && !empty($resultset['response']['utilisateur']['row_count']))
-                {
-                    return $resultset;
-                } 
-                else 
-                {
-                    $this->registerError("form_request", "L'utilisateur n'a pas été mis à jour.");
-                }
-            }
-            else 
-            {
-                return true;
-            } 
-        }
-        else 
-        {
-            $this->registerError("form_request", "Insertion de l'utilisateur non autorisée");
-        }
-            
-        return false;
-    }
-    */
-    
-
-
-
 
 
     private function getInscription($fieldName, $fieldValues)

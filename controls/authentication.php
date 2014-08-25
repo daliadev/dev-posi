@@ -1,14 +1,6 @@
 <?php
 
 
-/**
- * 
- *
- * @author Nicolas Beurion
- */
-
-
-
 class ServicesAuth
 {
 

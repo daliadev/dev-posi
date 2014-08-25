@@ -308,14 +308,12 @@ class ServicesAdminQuestion extends Main
         }
         else if (isset($postData['image_question']) && !empty($postData['image_question']))
         {
-
             $formData['image_upload'] = false;
             $formData['image_question'] = $postData['image_question'];
             $dataQuestion['image_question'] = $formData['image_question'];
         }
         else 
         {
-            //$this->registerError("form_empty", "Aucune image n'a été sélectionnée.");
             $formData['image_upload'] = false;
             $formData['image_question'] = "";
             $dataQuestion['image_question'] = null;
@@ -348,7 +346,6 @@ class ServicesAdminQuestion extends Main
         }
         else 
         {
-            //$this->registerError("form_empty", "Aucun son n'a été sélectionné.");
             $formData['audio_upload'] = false;
             $formData['audio_question'] = "";
             $dataQuestion['audio_question'] = null;
@@ -400,14 +397,12 @@ class ServicesAdminQuestion extends Main
                 // Insertion des médias
                 if ($formData['image_upload'])
                 {
-                    //$formData['image_question'] = $this->setMedia("image", $_FILES, "img_".$formData['num_ordre_question']."_".uniqid().".jpg");
                     $formData['image_question'] = $this->setMedia("image", $_FILES, $formData['num_ordre_question'], "jpg");
                     $dataQuestion['image_question'] = $formData['image_question'];
                 }
                 
                 if ($formData['audio_upload'])
                 {
-                    //$formData['audio_question'] = $this->setMedia("audio", $_FILES, "audio_".$formData['num_ordre_question']."_".uniqid().".mp3");
                     $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], "mp3");
                     $dataQuestion['audio_question'] = $formData['audio_question'];
                 }
@@ -454,19 +449,6 @@ class ServicesAdminQuestion extends Main
                     $this->registerError("form_valid", "L'enregistrement de la question a échouée.");
                 }
                 
-                /*
-                // En cas de probleme, on supprime les médias
-                if (!empty($this->errors)) 
-                {
-                    $imageFile = ROOT.IMG_PATH.$formData['image_question'];
-                    $thumbFile = ROOT.THUMBS_PATH."thumb_".$formData['image_question'];
-                    $soundFile = ROOT.AUDIO_PATH.$formData['audio_question'];
-                    
-                    if (file_exists($imageFile)) : unlink($imageFile); endif;
-                    if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-                    if (file_exists($soundFile)) : unlink($soundFile); endif;   
-                }
-                */
             }
         }
         else if ($previousMode == "edit"  || $previousMode == "save")
@@ -479,7 +461,6 @@ class ServicesAdminQuestion extends Main
                 // Insertion des médias
                 if ($formData['image_upload'])
                 {
-                    //$formData['image_question'] = $this->setMedia("image", $_FILES, "img_".$formData['num_ordre_question'].".jpg");
                     $formData['image_question'] = $this->setMedia("image", $_FILES, $formData['num_ordre_question'], "jpg");
                     $dataQuestion['image_question'] = $formData['image_question'];
                 }
@@ -623,15 +604,6 @@ class ServicesAdminQuestion extends Main
                 // On supprime les fichiers médias   
                 if ($question->getImage())
                 {
-                    /*
-                    $imageFile = ROOT.IMG_PATH.$question->getImage();
-                    $thumbFile = ROOT.THUMBS_PATH."thumb_".$question->getImage();
-                    $soundFile = ROOT.AUDIO_PATH.$question->getSon();
-                    
-                    if (file_exists($imageFile)) : unlink($imageFile); endif;
-                    if (file_exists($thumbFile)) : unlink($thumbFile); endif;
-                    if (file_exists($soundFile)) : unlink($soundFile); endif;
-                    */
                     $this->deleteMedia(ROOT.IMG_PATH, $question->getImage());
                     $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$question->getImage());
                 }
@@ -747,7 +719,6 @@ class ServicesAdminQuestion extends Main
 
                     if (!empty($dataReponse['intitule_reponse']) && strlen($dataReponse['intitule_reponse']) > 0 && !empty($dataReponse['num_ordre_reponse']) && (!empty($dataReponse['est_correct']) || $dataReponse['est_correct'] == 0))
                     {
-                        //var_dump($dataReponse['intitule_reponse']);
                         $countReponses++;
 
                         if (empty($dataReponse['ref_reponse']))
@@ -779,13 +750,7 @@ class ServicesAdminQuestion extends Main
                     }
                 }
             } 
-            
-            /*
-            var_dump($countReponses);
-            var_dump($successCount);
-            var_dump($dataReponses);
-            exit();
-            */
+
 
             if ($successCount == $countReponses)
             {
@@ -806,88 +771,9 @@ class ServicesAdminQuestion extends Main
         return false;
     }
     
-    
-    /*
-    public function setReponses($modeRequete, $dataReponses)
-    {     
-        
-        if (!empty($dataReponses) && is_array($dataReponses) && count($dataReponses) > 0)
-        {
-            if (count($dataReponses) > 2)
-            {
-                $successCount = 0;
 
-                foreach ($dataReponses as $dataReponse)
-                {   
-                    if (!empty($dataReponse['intitule_reponse']) && !empty($dataReponse['num_ordre_reponse']) && (!empty($dataReponse['est_correct']) || $dataReponse['est_correct'] == 0))
-                    {
-                        if ($modeRequete == "insert")
-                        {
-                            if (empty($dataReponse['ref_reponse']))
-                            {
-                                $resultset = $this->reponseDAO->insert($dataReponse);
 
-                                // Traitement des erreurs de la requête
-                                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['reponse']['last_insert_id']) && !empty($resultset['response']['reponse']['last_insert_id']))
-                                {
-                                    $successCount++;
-                                    //return $resultset;
-                                }
-                                else 
-                                {
-                                    $this->registerError("form_request", "La réponse n'a pu être insérée.");
-                                }
-                            }
-                        }
-                        else if ($modeRequete == "update")
-                        {
-                            if (!empty($dataReponse['ref_reponse']))
-                            {
-                                $resultset = $this->reponseDAO->update($dataReponse);
 
-                                // Traitement des erreurs de la requête
-                                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['reponse']['row_count']) && !empty($resultset['response']['reponse']['row_count']))
-                                {
-                                    $successCount++;
-                                    //return $resultset;
-                                } 
-                                else 
-                                {
-                                    $this->registerError("form_request", "La réponse n'a pu être mise à jour.");
-                                }
-                            }
-                            else 
-                            {
-                                $this->registerError("form_request", "L'identifiant de la réponse est manquant.");
-                            }
-                        }
-                        else 
-                        {
-                            return true;
-                        }
-                    }
-                    else 
-                    {
-                        $this->registerError("form_request", "Insertion de la réponse non autorisée.");
-                    }
-                }
-            }
-            else 
-            {
-                $this->registerError("form_data", "La question doit contenir au moins 2 réponses.");
-            }
-            
-            if ($successCount == count($dataReponses))
-            {
-                return true;
-            }
-            
-        }
-        
-        return false;
-
-    }
-    */
     
     public function deleteReponses($refQuestion)
     {
@@ -1039,6 +925,8 @@ class ServicesAdminQuestion extends Main
 
 
 
+
+
     public function deleteMedia($path, $mediaName)
     {
         if (file_exists($path.$mediaName))
@@ -1048,6 +936,8 @@ class ServicesAdminQuestion extends Main
     }
     
     
+
+
 
     public function getNumsOrdreList()
     {
@@ -1132,15 +1022,8 @@ class ServicesAdminQuestion extends Main
     {
         $lastNum = $this->getLastNumOrdre();
         
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$lastNum = ".$lastNum."<br/>";
-            echo "\$numOrdre = ".$numOrdre."<br/>";
-            echo "\$offset = ".$offset."<br/>";
-            exit();
-        }
-        
         $erreur = false;
+
 
         if ($offset > 0)
         {
@@ -1222,7 +1105,6 @@ class ServicesAdminQuestion extends Main
 
             if (in_array($ext, $allowFormat))
             {
-                //$name = uniqid();
 
                 // Déplacement du fichier de sa position temp vers sa destination finale
                 if (move_uploaded_file($file['tmp_name'], $path.$name))
@@ -1260,9 +1142,7 @@ class ServicesAdminQuestion extends Main
         return $media_question;
     }
     
-    
-    
-    
+  
     
 }
 

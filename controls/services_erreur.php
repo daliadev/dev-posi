@@ -1,14 +1,6 @@
 <?php
 
 
-/**
- * 
- *
- * @author Nicolas Beurion
- */
-
-//require_once('utils/config.php');
-
 
 class ServicesErreur extends Main
 {

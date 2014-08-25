@@ -37,17 +37,7 @@ class ServicesAdminDegre extends Main
         return $resultset;
     }
     
-    /*
-    public function getDegre($refDegre)
-    {
-        $resultset = $this->degreDAO->selectById($refDegre);
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        return $resultset;
-    }
-    */
+    
     
     public function getDegreDetails($refDegre)
     {

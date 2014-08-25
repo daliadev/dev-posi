@@ -49,8 +49,6 @@ class ServicesPublic extends Main
      */
     public function restitution($requestParams = array())
     {
-        //var_dump($requestParams);
-        //exit();
 
         $this->initialize();
 
@@ -107,16 +105,8 @@ class ServicesPublic extends Main
         $this->url = SERVER_URL."public/restitution/".$codeOrgan;
 
         
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$_POST = ";
-            var_dump($_POST);
-        }
-
-        
 
         /*** Requêtes ajax ***/
-
 
         if (Config::ALLOW_AJAX)
         {
@@ -182,27 +172,6 @@ class ServicesPublic extends Main
                         {
                             $response = array('error' => "Vous n'avez pas sélectionné d'utilisateur.");
                         }
-
-
-                        /*
-                        if (empty($_POST['ref']))
-                        {
-                            $response = array('error' => "Vous n'avez pas sélectionné de positionnement.");
-                        }
-                        else
-                        {
-                            $session = $this->servicesRestitution->getUserSessions($_POST['ref_user'], $_POST['ref_organ']);
-                            
-                            if ($session)
-                            {
-                                $response = array('error' => false, 'results' => $session);
-                            }
-                            else
-                            {
-                                $response = array('error' => "Il n'existe pas de positionnement qui correspond à l'utilisateur.");
-                            }
-                        }
-                        */
                     }
                     else
                     {
@@ -359,8 +328,6 @@ class ServicesPublic extends Main
                         $this->returnData['response']['details']['questions'] = array();
                         $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);         
 
-                        // var_dump($this->returnData['response']['details']['questions']);
-                        // exit();
                     }
                 }
 

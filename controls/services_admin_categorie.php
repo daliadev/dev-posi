@@ -17,7 +17,7 @@ class ServicesAdminCategorie extends Main
     
     public function __construct() 
     {
-        //$this->errors = array();
+
         $this->controllerName = "adminCategorie";
 
         $this->categorieDAO = new CategorieDAO();
@@ -95,15 +95,9 @@ class ServicesAdminCategorie extends Main
 
     public function filterCategorieData(&$formData, $postData)
     {
+
         $dataCategorie = array();
-        /*
-        // Récupèration du code catégorie original s'il y en a un
-        if (isset($postData['code']) && !empty($postData['code']))
-        {
-            $formData['code'] = $postData['code'];
-            $dataCategorie['code'] = $formData['code'];
-        }
-        */
+
         // Formatage du code catégorie
         $formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
         $dataCategorie['code_cat'] = $formData['code_cat'];
@@ -163,8 +157,6 @@ class ServicesAdminCategorie extends Main
             // Traitement des erreurs de la requête
             if ($resultsetCategorie['response'])
             {
-                //$formData['code_cat'] = $resultsetCategorie['response']['categorie']['code_cat'];
-                //$dataCategorie['code_cat'] = $formData['code_cat'];
                 $this->registerSuccess("La catégorie a été enregistrée.");
             }
             else 

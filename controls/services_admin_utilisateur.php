@@ -70,7 +70,6 @@ class ServicesAdminUtilisateur extends Main
     {
         $userDetails = array();
         
-        //$userDetails['ref_user'] = "";
         $userDetails['nom_user'] = "";
         $userDetails['prenom_user'] = "";
         $userDetails['date_naiss_user'] = "";
@@ -80,7 +79,6 @@ class ServicesAdminUtilisateur extends Main
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
-            //$userDetails['ref_user'] = $resultset['response']['utilisateur']->getId();
             $userDetails['nom_user'] = $resultset['response']['utilisateur']->getNom();
             $userDetails['prenom_user'] = $resultset['response']['utilisateur']->getPrenom();
             $userDetails['date_naiss_user'] = Tools::toggleDate($resultset['response']['utilisateur']->getDateNaiss(), 0, 10); //$resultset['response']['utilisateur']->getDateNaiss();

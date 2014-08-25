@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description of services_admin
- *
- * @author Nicolas Beurion
- */
-
-
 
 require_once(ROOT.'controls/services_admin_gestion.php');
 require_once(ROOT.'controls/services_admin_question.php');
@@ -95,10 +88,6 @@ class ServicesAdmin extends Main
                 $this->registerError("form_valid", "Identifiants non valides.");
             }
         }
-        //else
-        //{
-            //ServicesAuth::logout();
-        //}
         
              
         if (!empty($this->errors) && count($this->errors) > 0)
@@ -306,15 +295,11 @@ class ServicesAdmin extends Main
             $dataQuestion = $this->servicesQuestion->filterQuestionData($this->formData, $_POST);
             
             
-
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors)) 
             {
                 $this->servicesQuestion->setQuestionProperties($previousMode, $dataQuestion, $this->formData);
             }
-            
-            //var_dump($this->servicesQuestion->errors);
-            //exit();
 
 
             // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
@@ -351,22 +336,16 @@ class ServicesAdmin extends Main
                 // On récupère les données de la question.
                 //$resultsetQuestion = $this->servicesQuestion->getQuestion($this->formData['ref_question']);
 
-                // On récupère le numero d'ordre de la question à supprimer.
-                //$this->formData['num_ordre_question'] = $resultsetQuestion['response']['question']->getNumeroOrdre();
-
                 // Enfin, on supprime la question dans la base.
                 $resultsetQuestion = $this->servicesQuestion->deleteQuestion($this->formData['ref_question']);
                 
-                // Si la suppression a fonctionnée :
+                // Si la suppression a fonctionné
                 if ($resultsetQuestion)
                 {   
-                    // On décale l'ordre des questions avec n-1 pour toutes les questions supérieures à la question active. 
-                    //$shiftOrdre = $this->servicesQuestion->shiftNumsOrdre($this->formData['num_ordre_question'], -1);
                     $this->registerSuccess("La question a été supprimée avec succès.");
                 }
                 else
                 {
-                    // Sinon on renvoi une erreur.
                     $this->registerError("form_valid", "La question n'a pas pu être completement supprimée.");
                 }
             }
@@ -391,16 +370,7 @@ class ServicesAdmin extends Main
             exit();
         }   
         
-        
-        // Debuggage
-        if (Config::DEBUG_MODE)
-        {
-            // Liste des données traitées et renvoyées au formulaire.
-            echo "\$this->formData = <br/>";
-            var_dump($this->formData);
-        }
-            
-            
+           
         
         /*** Retour des données traitées du formulaire ***/
 
@@ -671,15 +641,6 @@ class ServicesAdmin extends Main
             // Renvoi vers le template 404 (page inconnue).
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
-        }   
-        
-        
-        // Debuggage
-        if (Config::DEBUG_MODE)
-        {
-            // Liste des données traitées et renvoyées au formulaire.
-            echo "\$this->formData = <br/>";
-            var_dump($this->formData);
         }
             
             
@@ -750,12 +711,6 @@ class ServicesAdmin extends Main
         /*** Initialisation des tableaux des données qui seront inseré ou mis à jour dans la base ***/
         $dataDegre = array();
 
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$_POST = ";
-            var_dump($_POST);
-        }
-
 
         /*** Définition du mode précédent du formulaire ***/
 
@@ -776,11 +731,6 @@ class ServicesAdmin extends Main
         /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
         
         $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
-        
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$this->formData['mode'] = ".$this->formData['mode']."<br/>";
-        }
 
         
         /*** On récupère la référence du degré et on initialise les données qui vont être validées et renvoyées au formulaire ***/
@@ -831,7 +781,6 @@ class ServicesAdmin extends Main
         
         /*-----   Mode "nouveau degré"   -----*/
         
-        
         else if ($this->formData['mode'] == "new")
         {      
             // Verrouillage des boutons
@@ -845,7 +794,6 @@ class ServicesAdmin extends Main
         
         
         /*-----   Mode "enregistrement"   -----*/
-        
         
         else if ($this->formData['mode'] == "save")
         {
@@ -942,18 +890,9 @@ class ServicesAdmin extends Main
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }   
+
         
-       
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$this->formData = <br/>";
-            var_dump($this->formData);
-            //exit();
-        }
-            
-            
-        
-        
+
         /*-----   Retour des données traitées du formulaire   -----*/
 
 
@@ -1008,20 +947,6 @@ class ServicesAdmin extends Main
         
         // Authentification
         ServicesAuth::checkAuthentication("custom");
-
-
-        if ($right == "admin")
-        {
-            ServicesAuth::checkAuthentication("admin");
-        }
-        else if ($right == "custom") 
-        {
-            ServicesAuth::checkAuthentication("custom");
-        }
-        else
-        {
-
-        }
 
         
         $this->initialize();
@@ -1218,16 +1143,7 @@ class ServicesAdmin extends Main
             exit();
         }   
         
-        
-        // Debuggage
-        if (Config::DEBUG_MODE)
-        {
-            // Liste des données traitées et renvoyées au formulaire.
-            echo "\$this->formData = <br/>";
-            var_dump($this->formData);
-        }
-            
-            
+
         
         /*** Retour des données traitées du formulaire ***/
 
@@ -1487,17 +1403,8 @@ class ServicesAdmin extends Main
             exit();
         }   
         
-        
-        // Debuggage
-        if (Config::DEBUG_MODE)
-        {
-            // Liste des données traitées et renvoyées au formulaire.
-            echo "\$this->formData = <br/>";
-            var_dump($this->formData);
-        }
-            
-            
-        
+
+
         /*** Retour des données traitées du formulaire ***/
 
         $this->returnData['response']['form_data'] = array();
@@ -1526,10 +1433,6 @@ class ServicesAdmin extends Main
         
         
         /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
-        
-        // Requete pour obtenir la liste des utilisateurs
-        //$listeUsers = $this->servicesUtilisateur->getUtilisateurs();
-
 
         $listeUsers['organ'] = array();
         
@@ -1617,7 +1520,6 @@ class ServicesAdmin extends Main
      */
     public function compte($requestParams = array())
     {
-
 
         // Authentification
         ServicesAuth::checkAuthentication("admin");
@@ -1828,16 +1730,7 @@ class ServicesAdmin extends Main
             header("Location: ".SERVER_URL."erreur/page404");
             exit();
         }   
-        
-       
-        if (Config::DEBUG_MODE)
-        {
-            echo "\$this->formData = <br/>";
-            var_dump($this->formData);
-            //exit();
-        }
-            
-            
+          
         
         
         /*-----   Retour des données traitées du formulaire   -----*/

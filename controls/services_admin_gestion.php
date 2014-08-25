@@ -1,21 +1,10 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 require_once(ROOT.'controls/authentication.php');
-
-
 require_once(ROOT.'models/dao/compte_dao.php');
 
 
-/**
- * Description of ServicesAdminGestion
- *
- * @author Nicolas Beurion
- */
 class ServicesAdminGestion extends Main
 {
     

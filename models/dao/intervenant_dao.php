@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description of IntervenantDAO
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe Intervenant
 require_once(ROOT.'models/intervenant.php');

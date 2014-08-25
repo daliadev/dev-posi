@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Description of intervenant
- *
- * @author Nicolas Beurion
- */
 
 class NiveauEtudes
 {
@@ -13,15 +8,8 @@ class NiveauEtudes
     public $id_niveau = NULL;
     public $nom_niveau = NULL;
     public $descript_niveau = NULL;
-    
-    /*
-    public function __construct($idNiveau, $nomNiveau, $descriptionNiveau = "") 
-    {
-        $this->id = $idNiveau;
-        $this->nom = $nomNiveau;
-        $this->description = $descriptionNiveau;
-    }
-    */
+ 
+
     
     public function getId()
     {

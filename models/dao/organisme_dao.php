@@ -2,14 +2,6 @@
 
 
 
-/**
- * Description of OrganismeDAO
- *
- * @author Nicolas Beurion
- */
-
-
-
 // Inclusion du fichier de la classe Organisme
 require_once(ROOT.'models/organisme.php');
 
@@ -190,62 +182,6 @@ class OrganismeDAO extends ModelDAO
     }
 
 
-    /**
-     * selectByCodeInterne - Récupère l'organisme grâce à son code interne
-     * 
-     * @param string Chaîne de caractères correcpondant au numéro interne
-     * @return array Organisme correspondant sinon erreurs
-     */
-    /*
-    public function selectByIntervenant($refIntervenant) 
-    {
-        $this->initialize();
-        
-        if(!empty($refIntervenant))
-        {
-            $request = "SELECT * FROM organisme WHERE numero_interne = ".$refIntervenant." ";
-
-            $this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
-        }
-        
-        return $this->resultset;
-    }
-    */
-
-
-    /**
-     * selectByUser - Récupère l'organisme à partir de la référence d'un utilisateur
-     * 
-     * @param int Reférence de l'utilisateur
-     * @return array Tableau d'objets Organisme correspondant à l'utilisateur sinon erreurs
-     */
-    /*
-    public function selectByUser($refUser) 
-    {
-        $this->initialize();
-        
-        if(!empty($refUser))
-        {
-           // $request = "SELECT * FROM organisme WHERE numero_interne = '".$numOrganisme."'";
-
-            $request = "SELECT * FROM organisme ";
-            $requset .= "WHERE numero_interne = '".$numOrganisme."'";
-
-
-            $this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
-        }
-        
-        return $this->resultset;
-    }
-    */
     
     
     

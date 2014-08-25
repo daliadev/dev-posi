@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description of NiveauEtudesDAO
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe NiveauEtudes
 require_once(ROOT.'models/niveau_etudes.php');

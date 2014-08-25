@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Représente une catégorie
- *
- * @author Nicolas Beurion
- */
 
 class Categorie
 {

@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Représente une competence
- *
- * @author Nicolas Beurion
- */
 
 class MenuAdmin
 {

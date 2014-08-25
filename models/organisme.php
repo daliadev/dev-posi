@@ -1,12 +1,6 @@
 <?php
 
 
-/**
- * Description de organisme
- *
- * @author Nicolas Beurion
- */
-
 
 class Organisme 
 {
@@ -24,21 +18,7 @@ class Organisme
     public $nbre_posi_total = NULL;
     public $nbre_posi_max = NULL;
 
-    /*
-    public function __construct($idOrgan, $refCodeOrgan, $numInterne = null, $nomOrgan = null, $adresseOrgan = null, $codePostalOrgan = null, $villeOrgan = null, $telOrgan = null, $faxOrgan = null, $emailOrgan = null) 
-    {
-        $this->id = $idOrgan;
-        $this->refCode = $refCodeOrgan;
-        $this->numeroInterne = $numInterne;
-        $this->nom = $nomOrgan;
-        $this->adresse = $adresseOrgan;
-        $this->codePostal = $codePostalOrgan;
-        $this->ville = $villeOrgan;
-        $this->telephone = $telOrgan;
-        $this->fax = $faxOrgan;
-        $this->email = $emailOrgan;
-    }
-    */
+  
 
     public function getId()
     {

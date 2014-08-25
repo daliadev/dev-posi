@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description de CategorieDAO
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe Categorie
 require_once(ROOT.'models/categorie.php');

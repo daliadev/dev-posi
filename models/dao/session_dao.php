@@ -2,14 +2,6 @@
 
 
 
-/**
- * Description of OrganismeDAO
- *
- * @author Nicolas Beurion
- */
-
-
-
 // Inclusion du fichier de la classe Organisme
 require_once(ROOT.'models/session.php');
 

@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Description of ReponseDAO
- *
- * @author Nicolas Beurion
- */
 
 // Inclusion du fichier de la classe Reponse
 require_once(ROOT.'models/resultat.php');
@@ -76,53 +71,6 @@ class ResultatDAO extends ModelDAO
         return $this->resultset;
     }
 
-    /*
-    public function selectByCategories($refCategorie) 
-    {
-        $this->initialize();
-        
-        if (!empty($refCategorie))
-        {
-            $request = "SELECT * FROM resultat WHERE ref_session = ".$refCategorie;
-
-            $this->resultset['response'] = $this->executeRequest("select", $request, "resultat", "Resultat");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun identifiant de catégorie.");
-        }
-        
-        return $this->resultset;
-    }
-    */
-
-
-    /*
-    public function selectByUser($refUser) 
-    {
-        $this->initialize();
-        
-        if (!empty($refUser))
-        {
-            $request = "SELECT id_result, ref_session, ref_question, ref_reponse_qcm, ref_reponse_qcm_correcte, reponse_champ, validation_reponse_champ, temps_reponse ";
-            $request .= "FROM resultat, session, utilisateur ";
-            $request .= "WHERE utilisateur.id_user = ".$refUser." ";
-            $request .= "AND session.ref_user = utilisateur.id_user ";
-            $request .= "AND session.session_accomplie = 1 ";
-            $request .= "AND resultat.ref_session = session.id_session ";
-            //$request .= "GROUP BY id_session ORDER BY date_session DESC";
-
-            $this->resultset['response'] = $this->executeRequest("select", $request, "resultat", "Resultat");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun identifiant d'utilisateur'.");
-        }
-        
-        return $this->resultset;
-    }
-    
-    */
 
     
     
@@ -224,33 +172,6 @@ class ResultatDAO extends ModelDAO
     }
     
     
-    
-    
-    /**
-     * delete - Efface toutes les réponses correspondant à unequestion.
-     * 
-     * @param int Identifiant de la question.
-     * @return array Nbre de lignes effacées sinon erreurs.
-     */
-    /*
-    public function deleteByQuestion($refQuestion) 
-    {
-        $this->initialize();
-        
-        if (!empty($refReponse))
-        {
-            $request = "DELETE FROM reponse WHERE ref_question = ".$refQuestion;
-
-            $this->resultset['response'] = $this->executeRequest("delete", $request, "reponse", "Reponse");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "delete", 'message' => "Il n'y a aucun identifiant pour la suppression de la question.");
-        }
-
-        return $this->resultset;
-    }
-    */
     
 }
 

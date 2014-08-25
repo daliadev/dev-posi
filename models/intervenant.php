@@ -1,12 +1,6 @@
 <?php
 
 
-/**
- * Description of intervenant
- *
- * @author Nicolas Beurion
- */
-
 
 class Intervenant
 {
@@ -16,17 +10,7 @@ class Intervenant
     public $nom_intervenant = NULL;
     public $tel_intervenant = NULL;
     public $email_intervenant = NULL;
-    
-    /*
-    public function __construct($idIntervenant, $refOrgan, $emailIntervenant, $nomIntervenant = "", $telIntervenant = "") 
-    {
-        $this->id = $idIntervenant;
-        $this->refOrganisme = $refOrgan;
-        $this->nom = $nomIntervenant;
-        $this->telephone = $telIntervenant;
-        $this->email = $emailIntervenant;
-    }
-    */
+
     
     public function getId()
     {

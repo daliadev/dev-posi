@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description de CompetenceDAO
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe Degre
 require_once(ROOT.'models/menu_admin.php');

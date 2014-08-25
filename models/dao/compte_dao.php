@@ -1,15 +1,6 @@
 <?php
 
 
-
-/**
- * Description of AdminDAO
- *
- * @author Nicolas Beurion
- */
-
-
-
 // Inclusion du fichier de la classe Organisme
 require_once(ROOT.'models/compte.php');
 
@@ -35,7 +26,6 @@ class CompteDAO extends ModelDAO
         
         if (!empty($login) && !empty($mdp))
         {           
-            //$this->resultset['response']['ref_code_organisme'] = array();
             
             try
             {

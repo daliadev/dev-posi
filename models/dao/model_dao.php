@@ -1,10 +1,6 @@
 <?php
 
-/**
- * Description of main_dao
- *
- * @author Nicolas Beurion
- */
+
 
 require_once('models/dao/pbo_connect_db.php');
 
@@ -88,37 +84,13 @@ class ModelDAO
     {
         $this->callStatement->execute();
     }
-    /*
-    public function execute()
-    {
-        $this->callStatement->execute();
-    }
-    */
-    /*
-    public function queryStatement($queryString)
-    {
-        $this->callStatement = $this->dbConnect->query($queryString);
-    }
-    */
-    
-    /*
-    public function query($queryString)
-    {
-        $this->callStatement = $this->dbConnect->query($queryString);
-    }
-    */
     
     
     public function getStatementFetch()
     {
         return $this->callStatement->fetch();
     }
-    /*
-    public function fetch()
-    {
-        return $this->callStatement->fetch();
-    }
-    */
+
     
     public function getLastInsertId()
     {
@@ -138,6 +110,7 @@ class ModelDAO
         $this->callStatement = null;
     }
 
+
     
     public function createQueryString($mode, $fieldsvalues, $table, $whereStmt = "")
     {
@@ -148,7 +121,6 @@ class ModelDAO
             if ($mode == "insert")
             {
                 $fields = "";
-                //$insertValues = "";
                 $insertString = "";
                 
                 $i = 0;
@@ -294,31 +266,15 @@ class ModelDAO
                     
                     // On récupère l'id généré par l'insertion.
                     $resultset[$tableName]['last_insert_id'] = $this->getLastInsertId();
-                    /*
-                    if (!$resultset[$tableName]['last_insert_id'])
-                    {
-                        // L'insertion a échouée.
-                        $resultset['errors'][] = array('type' => "form_request", 'message' => "L'insertion n'a pas fonctionnée.");
-                    }
-                    */
+                    
                     break;
                 
                 case "update":
                     
                     $resultset[$tableName] = array();
                     
-                    //if ($this->getRowCount() > 0)
-                    //{
-                        $resultset[$tableName]['row_count'] = $this->getRowCount();
-                    //}
-                    /*
-                    if (!$resultset[$tableName]['row_count'])
-                    {
-                        // La mise à jour a échouée.
-                        $resultset['errors'][] = array('type' => "form_request", 'message' => "La mise à jour n'a pas fonctionnée.");
-                    }
+                    $resultset[$tableName]['row_count'] = $this->getRowCount();
                     
-                     */
                     break;
                 
                 case "delete":
@@ -327,14 +283,6 @@ class ModelDAO
                     
                     $resultset[$tableName]['row_count'] = $this->getRowCount();
                     
-                    /*
-                    if (!$resultset[$tableName]['row_count'])
-                    {
-                        // La suppression a échouée.
-                        $resultset['errors'][] = array('type' => "form_request", 'message' => "La suppression n'a pas fonctionnée.");
-                    }
-                    
-                     */
                     break;
                 
                 default:
@@ -354,6 +302,10 @@ class ModelDAO
         return $resultset;
     }
     
+    
+
+
+
     
     private function constructObject($objectName, $data)
     {

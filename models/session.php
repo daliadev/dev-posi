@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Description
- *
- * @author Nicolas Beurion
- */
 
 class Session
 {

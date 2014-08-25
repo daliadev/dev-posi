@@ -1,14 +1,6 @@
 <?php
 
 
-/**
- * Description of IntervenantDAO
- *
- * @author Nicolas Beurion
- */
-
-
-
 // Inclusion du fichier de la classe Inscription
 require_once(ROOT.'models/inscription.php');
 
@@ -24,20 +16,6 @@ class InscriptionDAO extends ModelDAO
     {
          $this->initialize();
     }
-    
-    
-    
-    /**
-     * initialize - Initialise le tableau dans lequel se trouvent les résultats des requêtes et les erreurs
-     * 
-     */
-    /*
-    public function initialize()
-    {
-        $this->resultset['response'] = array();
-        $this->resultset['response']['errors'] = array();
-    }
-    */
     
     
     

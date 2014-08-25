@@ -1,18 +1,12 @@
 <?php
 
 
-/**
- * Ensemble des attributs d'une questions d'une question
- *
- * @author Nicolas Beurion
- */
 
 class Question
 {
     
     public $id_question = null;
     public $ref_degre = null;
-    //public $code_categorie = null;
     public $num_ordre_question = null;
     public $type_question = null;
     public $intitule_question = null;

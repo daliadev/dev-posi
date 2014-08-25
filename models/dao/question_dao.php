@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe Question
 require_once(ROOT.'models/question.php');
@@ -19,8 +12,6 @@ require_once(ROOT.'models/question.php');
 
 class QuestionDAO extends ModelDAO
 {
-
-    //private $resultset = array();
    
     
     public function __construct()
@@ -46,44 +37,8 @@ class QuestionDAO extends ModelDAO
         return $this->resultset;
     }
     
-    /*
-    public function selectAllAttributes() 
-    {
-        $this->initialize();
-
-        $request = "SELECT * FROM question, degre, reponse, question_cat, categorie ";
-        $request .= "WHERE reponse.ref_question = question.id_question ";
-        $request .= "AND question_cat.ref_question = question.id_question ";
-        $request .= "AND categorie.code_cat = question_cat.ref_cat ";
-        $request .= "AND degre.id_degre = question.ref_degre ";
-        $request .= "ORDER BY num_ordre_question ASC";
-        
-        // Connection à la base de données.
-        $this->connectDB();
-
-        // Création de l'appel à la requête préparée.
-        $this->prepareStatement($request);
-
-        // Execution de la requête préparée.
-        $this->executeStatement();
-        
-        // Pour chaque ligne trouvées, ajout d'un objet dans la liste.
-        while ($tabChamps = $this->getStatementFetch())
-        {
-            // On ne garde que les clés qui sont des noms.
-            foreach ($tabChamps as $key => $value) 
-            {
-                $this->resultset['response'][$key] = $value;
-            }
-        }
-            
-        $this->closeStatement();
-        $this->disconnectDB();
-        
-        return $this->resultset;
-    }
-    */
     
+
     
     
     /**

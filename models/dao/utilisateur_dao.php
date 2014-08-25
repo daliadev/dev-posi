@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description of IntervenantDAO
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe Utilisateur
 require_once(ROOT.'models/utilisateur.php');
@@ -115,6 +108,9 @@ class UtilisateurDAO extends ModelDAO
         
         return $this->resultset;
     }
+
+
+
 
     /**
      * selectByDateNaissance - Récupère l'utilisateur grâce à sa date de naissance

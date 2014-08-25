@@ -1,12 +1,6 @@
 <?php
 
 
-/**
- * Description of intervenant
- *
- * @author Nicolas Beurion
- */
-
 class Activite
 {
     
@@ -15,14 +9,6 @@ class Activite
     public $theme_activite = null;
     public $descript_activite = null;
     
-    /*
-    public function __construct($idActivite, $nomActivite, $descriptActivite = "") 
-    {
-        $this->id = $idActivite;
-        $this->nom = $nomActivite;
-        $this->description = $descriptActivite;
-    }
-    */
     
     public function getId()
     {

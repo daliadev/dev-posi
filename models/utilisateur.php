@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Description of utilisateur
- *
- * @author Nicolas Beurion
- * 
- */
+
 
 class Utilisateur 
 {
@@ -23,21 +18,7 @@ class Utilisateur
     public $nbre_sessions_totales = null;
     public $nbre_sessions_accomplies = null;
 
-    /*
-    public function __construct($idUser, $refNiveau, $nomUser, $prenomUser, $dateNaissUser, $adresseUser = NULL, $codePostalUser = NULL, $villeUser = NULL, $telUser = NULL, $emailUser = NULL) 
-    {
-        $this->id = $idUser;
-        $this->refNiveau = $refNiveau;
-        $this->nom = $nomUser;
-        $this->prenom = $prenomUser;
-        $this->dateNaissUser = $dateNaissUser;
-        $this->adresse = $adresseUser;
-        $this->codePostal = $codePostalUser;
-        $this->ville = $villeUser;
-        $this->telephone = $telUser;
-        $this->email = $emailUser;
-    }
-    */
+    
 
     public function getId()
     {

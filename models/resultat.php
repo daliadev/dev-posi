@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Description of intervenant
- *
- * @author Nicolas Beurion
- */
 
 class Resultat
 {

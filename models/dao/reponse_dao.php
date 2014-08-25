@@ -1,12 +1,6 @@
 <?php
 
 
-/**
- * Description of ReponseDAO
- *
- * @author Nicolas Beurion
- */
-
 // Inclusion du fichier de la classe Reponse
 require_once(ROOT.'models/reponse.php');
 

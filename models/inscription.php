@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Description of intervenant
- *
- * @author Nicolas Beurion
- */
 
 
 class Inscription
@@ -16,15 +11,6 @@ class Inscription
     public $ref_intervenant = null;
     public $date_inscription = NULL;
     
-    /*
-    public function __construct($idInscript, $refUser, $refInterv, $dateInscript) 
-    {
-        $this->id = $idInscript;
-        $this->refUtilisateur = $refUser;
-        $this->refIntervenant = $refInterv;
-        $this->dateInscription = $dateInscript;
-    }
-    */
     
     public function getId()
     {

@@ -1,13 +1,6 @@
 <?php
 
 
-/**
- * Description de CategorieDAO
- *
- * @author Nicolas Beurion
- */
-
-
 
 // Inclusion du fichier de la classe Categorie
 require_once(ROOT.'models/question_cat.php');
@@ -82,32 +75,6 @@ class QuestionCategorieDAO extends ModelDAO
         return $this->resultset;
     }
 
-
-
-
-    /*
-    public function selectBySession($refSession) 
-    {
-        $this->initialize();
-        
-        if (!empty($refSession))
-        {
-            $request = "SELECT question_cat.ref_question, question_cat.ref_cat ";
-            $request .= "FROM question_cat, resultat ";
-            $request .= "WHERE resultat.ref_session = ".$refSession." ";
-            $request .= "AND question_cat.ref_question = resultat.ref_question";
-
-            $this->resultset['response'] = $this->executeRequest("select", $request, "question_cat", "QuestionCategorie");
-        }
-        else
-        {
-            $this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour la catégorie recherchée.");
-        }
-        
-        return $this->resultset;
-    }
-    */
-    
     
     
     

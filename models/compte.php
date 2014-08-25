@@ -1,11 +1,7 @@
 <?php
 
 
-/**
- * Description
- *
- * @author Nicolas Beurion
- */
+
 
 class Compte
 {
@@ -27,13 +23,6 @@ class Compte
     {
         return $this->nom_admin;
     }
-
-    /*
-    public function getEmail()
-    {
-        return $this->email_admin;
-    }
-    */
 
     public function getPass()
     {

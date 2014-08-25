@@ -1,11 +1,6 @@
 <?php
 
 
-/**
- * Ensemble des attributs d'une réponse
- *
- * @author Nicolas Beurion
- */
 
 class Reponse
 {
@@ -16,16 +11,7 @@ class Reponse
     public $intitule_reponse = null;
     public $est_correct = null;
     
-    /*
-    public function __construct($idReponse, $refQuestion, $numOrdreReponse, $intituleReponse, $reponseCorrect) 
-    {
-        $this->id = $idReponse;
-        $this->refQuestion = $refQuestion;
-        $this->numOrdre = $numOrdreReponse;
-        $this->intitule = $intituleReponse;
-        $this->estCorrect = $reponseCorrect;
-    }
-    */
+    
     
     public function getId()
     {

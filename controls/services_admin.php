@@ -375,16 +375,10 @@ class ServicesAdmin extends Main
                 $this->registerError("form_valid", "La question n'existe pas.");
             }
             
+
             // On recharge la page (sans aucune information).
-            //if (isset($this->formData['ref_question']) && !empty($this->formData['ref_question']))
-            //{
-                //header("Location: ".$this->url.$this->formData['ref_question']);
-            //}
-            //else
-            //{
-                header("Location: ".$this->url); 
-            //}
-            exit();
+            //header("Location: ".$this->url);
+            //exit();
         }
         
 
@@ -665,8 +659,8 @@ class ServicesAdmin extends Main
             }
             
             // On recharge la page (sans aucune information).
-            header("Location: ".$this->url);
-            exit();
+            //header("Location: ".$this->url);
+            //exit();
         }
 
 
@@ -750,7 +744,7 @@ class ServicesAdmin extends Main
         
         $this->initialize();
         
-        $this->url = SERVER_URL."admin/degre";
+        $this->url = SERVER_URL."admin/degre/";
 
         
         /*** Initialisation des tableaux des données qui seront inseré ou mis à jour dans la base ***/
@@ -889,7 +883,7 @@ class ServicesAdmin extends Main
             if (empty($this->servicesDegre->errors) && empty($this->errors))
             {
                 // On recharge la page en mode view
-                header("Location: ".$this->url."/".$this->formData['ref_degre']);
+                header("Location: ".$this->url.$this->formData['ref_degre']);
                 exit();
             }
             else 
@@ -903,8 +897,6 @@ class ServicesAdmin extends Main
                     $this->formData['mode'] = "edit";
                 }
             }
-
-            exit();
             
         }
         
@@ -938,9 +930,9 @@ class ServicesAdmin extends Main
                 $this->registerError("form_data", "Le degré n'existe pas.");
             }
             
-            // On recharge la page
-            header("Location: ".$this->url);
-            exit();
+            // On recharge la page (sans aucune information).
+            //header("Location: ".$this->url);
+            //exit();
         }
 
 
@@ -1210,6 +1202,7 @@ class ServicesAdmin extends Main
                 $this->registerError("form_valid", "L'organisme n'existe pas.");
             }
             
+            
             // On recharge la page (sans aucune information).
             //header("Location: ".$this->url);
             //exit();
@@ -1477,6 +1470,7 @@ class ServicesAdmin extends Main
             {
                 $this->registerError("form_valid", "L'utilisateur n'existe pas.");
             }
+            
             
             // On recharge la page (sans aucune information).
             //header("Location: ".$this->url);
@@ -1775,7 +1769,7 @@ class ServicesAdmin extends Main
             if (empty($this->servicesCompte->errors) && empty($this->errors))
             {
                 // On recharge la page en mode view
-                header("Location: ".$this->url."/".$this->formData['ref_account']);
+                header("Location: ".$this->url.$this->formData['ref_account']);
                 exit();
             }
             else 
@@ -1823,8 +1817,8 @@ class ServicesAdmin extends Main
             }
             
             // On recharge la page
-            header("Location: ".$this->url);
-            exit();
+            //header("Location: ".$this->url);
+            //exit();
         }
 
 

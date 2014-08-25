@@ -54,7 +54,7 @@ $form_url = WEBROOT."admin/organisme/";
         <div id="utilisateur">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-utili">Gestion des organismes</div>
+                <div class="titre-form" id="titre-organ">Gestion des organismes</div>
 
                 <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_user">
 

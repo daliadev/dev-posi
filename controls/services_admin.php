@@ -1806,9 +1806,9 @@ class ServicesAdmin extends Main
             if (!empty($this->formData['ref_account']))
             {
                 // Ensuite on supprime le compte dans la base
-                $resultsetDegre = $this->servicesCompte->deleteAccount($this->formData['ref_account']);
+                $resultsetCompte = $this->servicesCompte->deleteAccount($this->formData['ref_account']);
 
-                if ($resultsetDegre)
+                if ($resultsetCompte)
                 {   
                     $this->registerSuccess("Le compte a été supprimé avec succès.");
                 }

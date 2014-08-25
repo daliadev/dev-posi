@@ -146,12 +146,12 @@ $form_url = WEBROOT."admin/compte/";
 
                             <div class="input">
                                 <label for="pass_admin"><?php echo $title; ?> <span class="asterix">*</span></label>
-                                <input type="text" name="pass_admin" id="pass_admin" value="<?php echo $formData['pass_admin']; ?>" <?php echo $formData['disabled']; ?>>
+                                <input type="password" name="pass_admin" id="pass_admin" value="<?php echo $formData['pass_admin']; ?>" <?php echo $formData['disabled']; ?>>
                             </div>
 
                             <div class="input">
                                 <label for="pass_admin_verif">Confirmation du mot de passe <span class="asterix">*</span></label>
-                                <input type="text" name="pass_admin_verif" id="pass_admin_verif" value="<?php echo $formData['pass_admin_verif']; ?>" <?php echo $formData['disabled']; ?>>
+                                <input type="password" name="pass_admin_verif" id="pass_admin_verif" value="<?php echo $formData['pass_admin_verif']; ?>" <?php echo $formData['disabled']; ?>>
                             </div>
 
                         <?php endif; ?>

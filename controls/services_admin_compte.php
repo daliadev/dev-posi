@@ -223,6 +223,37 @@ class ServicesAdminCompte extends Main
         return false;
     }
 
+
+
+
+
+    public function deleteAccount($refAccount)
+    {
+        // On commence par sélectionner le compte
+        $resultsetSelect = $this->compteDAO->selectById($refAccount);
+        
+        if (!$this->filterDataErrors($resultsetSelect['response']))
+        {
+            // S'il existe on le supprime
+            $resultsetDelete = $this->compteDAO->delete($refAccount);
+        
+            if (!$this->filterDataErrors($resultsetDelete['response']))
+            {
+                return true;
+            }
+            else 
+            {
+                $this->registerError("form_request", "Le compte n'a pas pu être supprimée.");
+            }
+        }
+        else
+        {
+           $this->registerError("form_request", "Ce compte n'existe pas."); 
+        }
+
+        return false;
+    }
+
 }
 
 

@@ -12,8 +12,6 @@ $formData['ville_organ'] = "";
 $formData['tel_organ'] = "";
 $formData['fax_organ'] = "";
 $formData['email_organ'] = "";
-//$formData['nbre_posi_total'] = 0;
-//$formData['nbre_posi_max'] = 0;
 $formData['ref_intervenant'] = "";
 $formData['nom_intervenant'] = "";
 $formData['tel_intervenant'] = "";
@@ -177,44 +175,34 @@ $form_url = $response['url'];
                             
                             <div class="input">
                                 
-                                <?php if (Config::ALLOW_REFERENT_INPUT == 1) : ?>
+                                <?php if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
                                     
                                     <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
                                     <input type="email" value="<?php echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
 
                                 <?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
-                                    
-                                    <?php //if (count(Config::$emails_referent) == 1) : ?>
                                         
-                                        <!-- <input type="email" value="<?php echo Config::$emails_referent[0]; ?>" name="email_intervenant" id="email_intervenant" disabled> -->
+                                    <label for="ref_inter_cbox">EMail formateur <span class="asterix">*</span></label><br/>
+                                    <select name="ref_inter_cbox" id="ref_inter_cbox">
+                                        <option value="select_cbox">---</option>
 
-                                    <?php //elseif (count(Config::$emails_referent) > 0) : ?>
-                                        
-                                        <label for="ref_inter_cbox">EMail formateur <span class="asterix">*</span></label><br/>
-                                        <select name="ref_inter_cbox" id="ref_inter_cbox">
-                                            <option value="select_cbox">---</option>
-
-                                            <?php
-            
-                                            foreach(Config::$emails_referent as $referent)
-                                            {  
-                                                $selected = "";
-                                                /*
-                                                if (!empty($formData['ref_inter_cbox']) && $formData['ref_inter_cbox'] != "select_cbox" && $formData['ref_inter_cbox'] == "")
-                                                {
-                                                    $selected = "selected";
-                                                }
-                                                */
-                                                echo '<option value="'.$referent.'" '.$selected.'>'.$referent.'</option>';
+                                        <?php
+        
+                                        foreach(Config::$emails_referent as $referent)
+                                        {  
+                                            $selected = "";
+                                            
+                                            if (!empty($formData['ref_inter_cbox']) && $formData['ref_inter_cbox'] != "select_cbox" && $formData['ref_inter_cbox'] == $referent)
+                                            {
+                                                $selected = "selected";
                                             }
                                             
-                                            ?>
+                                            echo '<option value="'.$referent.'" '.$selected.'>'.$referent.'</option>';
+                                        }
+                                        
+                                        ?>
 
-                                        </select>
-
-                                    <?php //endif; ?>
-
-                                <?php //else : ?>
+                                    </select>
 
                                 <?php endif; ?>
 

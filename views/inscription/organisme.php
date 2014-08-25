@@ -44,7 +44,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 // url vers laquel doit pointer le formulaire
 $form_url = $response['url'];
 
-//var_dump($formData);
 
 
 ?>
@@ -176,16 +175,8 @@ $form_url = $response['url'];
 
                         <div id="fourth-part">
                             
-                            <!--
-                            <div class="input">
-                                <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
-                                <input type="email" value="<?php //echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
-                            </div>
-                            -->
-                            
                             <div class="input">
                                 
-
                                 <?php if (Config::ALLOW_REFERENT_INPUT == 1) : ?>
                                     
                                     <label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
@@ -224,9 +215,6 @@ $form_url = $response['url'];
                                     <?php //endif; ?>
 
                                 <?php //else : ?>
-                                    
-                                    <!-- <label for="email_intervenant">EMail formateur</label><br/>  
-                                    <input type="email" value="" name="email_intervenant" id="email_intervenant" disabled> -->
 
                                 <?php endif; ?>
 
@@ -236,7 +224,7 @@ $form_url = $response['url'];
 
                 
                         <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_organ" onclick="verifOrgan();">
+                            <input type="submit" value="Envoyer" name="valid_form_organ">
                         </div>
 
                     </div>
@@ -263,55 +251,7 @@ $form_url = $response['url'];
     
     <!--   Script spécifiques à la page   -->
     
-    <!-- <script src="<?php //echo SERVER_URL; ?>media/js/modernizr-2.6.2.min.js"></script> -->
-    
     <script language="javascript" type="text/javascript">
-
-        function verifOrgan()
-        {
-            /*
-            if (window.navigator.appName == 'Microsoft Internet Explorer')
-            {
-                if (document.formulaire.code_identification.value == "")
-                {
-                    alert ('Veuillez entrer votre code organisme');
-                    document.formulaire.code_identification.focus();
-                    return false;
-                }
-
-                if(document.formulaire.email_intervenant.value.indexOf('@') == -1) 
-                { 
-                    alert("Il y a une erreur à votre adresse électronique! format Email requis(exemple@xxx.yy)"); 
-                    document.formulaire.email_intervenant.focus(); 
-                    return false; 
-                }
-
-                if (document.formulaire.ref_organ_cbox.value == "new" || document.formulaire.organismes.value == "")
-                {
-
-                    if (document.formulaire.nom_organ.value == "")
-                    {
-                        alert ('Veuillez entrer votre organisme');
-                        document.formulaire.nom_organ.focus();
-                        return false;
-                    }
-                    if(document.formulaire.code_postal_organ.value.length != 5)
-                    { 
-                        alert ('Le code postal doit comporter 5 chiffres'); 
-                        document.formulaire.code_postal_organ.focus();
-                        return false; 
-                    }
-                    if(document.formulaire.tel_organ.value.length != 10)
-                    { 
-                        alert ('Le n° de téléphone doit comporter 10 chiffres'); 
-                        document.formulaire.tel_organ.focus();
-                        return false; 
-                    }
-                }
-            }
-            */
-        }
-
 
         // jQuery object
         $(function() {

@@ -46,7 +46,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 // url vers laquel doit pointer le formulaire
 $form_url = $response['url'];
 
-//$duplicate_name = "";
 
 ?>
 
@@ -122,8 +121,6 @@ $form_url = $response['url'];
                     <div class="form-small">
 
                         <input type="hidden" value="<?php echo $formData['ref_user']; ?>" name="ref_user">
-                        <!-- <input type="hidden" value="<?php //echo $formData['date_inscription']; ?>" name="date_inscription"> -->
-                        <!-- <input type="hidden" value="<?php //echo $duplicate_name; ?>" id="error_duplicate"> -->
                         <input type="hidden" value="<?php echo $formData['name_validation']; ?>" name="name_validation" id="name-validation">
 
                         <div class="input">
@@ -160,8 +157,6 @@ $form_url = $response['url'];
                                 ?>
                             </select>
 
-                            <!-- <label for="jour_naiss_user">Jour <span class="asterix">*</span></label> -->
-                            <!-- <input type="text" name="jour_naiss_user" id="jour_naiss_user" style="width:40px;" title="Veuillez entrer le jour de votre date de naissance" value="" required /> -->
                         </div>
 
                         <div class="input" style="float:left; width:110px;">
@@ -188,8 +183,6 @@ $form_url = $response['url'];
                                 ?>
                             </select>
 
-                            <!-- <label for="mois_naiss_user">Mois <span class="asterix">*</span></label> -->
-                            <!-- <input type="text" name="mois_naiss_user" id="mois_naiss_user" style="width:40px;" title="Veuillez entrer le mois de votre date de naissance" value="" required /> -->
                         </div>
 
                         <div class="input" style="float:left; width:100px;">
@@ -216,8 +209,6 @@ $form_url = $response['url'];
                                 ?>
                             </select>
 
-                            <!-- <label for="annee_naiss_user">Année <span class="asterix">*</span></label> -->
-                            <!-- <input type="text" name="annee_naiss_user" id="annee_naiss_user" style="width:80px;" title="Veuillez entrer l'année de votre date de naissance" value="" required /> -->
                         </div>
 
                         <div style="clear:both;"></div>
@@ -243,7 +234,7 @@ $form_url = $response['url'];
 
 
                         <div id="submit">
-                            <input type="submit" value="Envoyer" name="valid_form_utili" onclick="verifUtil();">
+                            <input type="submit" value="Envoyer" name="valid_form_utili">
                         </div>
 
 
@@ -270,16 +261,8 @@ $form_url = $response['url'];
     
     <!--   Script spécifiques à la page   -->
     
-    <!--<script src="<?php //echo SERVER_URL; ?>media/js/modernizr-2.6.2.min.js"></script>-->
     <script src="<?php echo SERVER_URL; ?>media/js/message-box.js"></script>
     <script language="javascript" type="text/javascript">
-
-        function verifUtil()
-        {
-
-            
-        }
-
 
         // jQuery object
         jQuery(function($){

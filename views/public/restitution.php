@@ -33,16 +33,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 $form_url = $response['url'];
 
 
-
-if (Config::DEBUG_MODE)
-{
-    echo "\$response = ";
-    var_dump($response);
-}
-
-//var_dump($response);
-
-
 ?>
 
 
@@ -115,69 +105,60 @@ if (Config::DEBUG_MODE)
                             </div>
 
                             &nbsp;
+                            
+                            <div class="filter-item" id="combo-user">
+                                <label for="ref_user_cbox">Utilisateur :</label>
+                                <select name="ref_user_cbox" id="ref_user_cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session">
+                                    <option value="select_cbox">---</option>
 
-                            <?php
-                            //if (isset($response['utilisateurs']) && !empty($response['utilisateurs'])) :
-                            ?>
-                                <div class="filter-item" id="combo-user">
-                                    <label for="ref_user_cbox">Utilisateur :</label>
-                                    <select name="ref_user_cbox" id="ref_user_cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session">
-                                        <option value="select_cbox">---</option>
-
-                                        <?php
-                                        
-                                        foreach ($response['utilisateurs'] as $utilisateur)
+                                    <?php
+                                    
+                                    foreach ($response['utilisateurs'] as $utilisateur)
+                                    {
+                                        $selected = "";
+                                        if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
                                         {
-                                            $selected = "";
-                                            if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
-                                            {
-                                                $selected = "selected";
-                                            }
-                                            echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
+                                            $selected = "selected";
                                         }
-                                        
-                                        ?>
+                                        echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
+                                    }
+                                    
+                                    ?>
 
-                                    </select>
-                                </div>
-                            <?php
-                            //endif;
-                            ?>
+                                </select>
+                            </div>
+                            
 
                             &nbsp;
                             
-                            <?php
-                            //if (isset($response['sessions']) && !empty($response['sessions'])) :
-                            ?>
-                                <div class="filter-item" id="combo-posi">
-                                    <label for="ref_session_cbox">Positionnement :</label>
-                                    <select name="ref_session_cbox" id="ref_session_cbox" class="ajax-list">
-                                        <option value="select_cbox">---</option>
+                        
+                            <div class="filter-item" id="combo-posi">
+                                <label for="ref_session_cbox">Positionnement :</label>
+                                <select name="ref_session_cbox" id="ref_session_cbox" class="ajax-list">
+                                    <option value="select_cbox">---</option>
 
-                                        <?php
-                                        
-                                        foreach ($response['sessions'] as $session)
+                                    <?php
+                                    
+                                    foreach ($response['sessions'] as $session)
+                                    {
+                                        $selected = "";
+                                        if (!empty($formData['ref_session']) && $formData['ref_session'] == $session->getId())
                                         {
-                                            $selected = "";
-                                            if (!empty($formData['ref_session']) && $formData['ref_session'] == $session->getId())
-                                            {
-                                                $selected = "selected";
-                                            }
-
-                                            $date = Tools::toggleDate(substr($session->getDate(), 0, 10));
-                                            $timeToSeconds = Tools::timeToSeconds(substr($session->getDate(), 11, 8), $inputFormat = "h:m:s");
-                                            $time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
-                                            echo '<option value="'.$session->getId().'" '.$selected.'>'.$date.' '.$time.'</option>';
+                                            $selected = "selected";
                                         }
-                                        
-                                        ?>
 
-                                    </select>
-                                </div>
-                            <?php
-                            //endif;
-                            ?>
+                                        $date = Tools::toggleDate(substr($session->getDate(), 0, 10));
+                                        $timeToSeconds = Tools::timeToSeconds(substr($session->getDate(), 11, 8), $inputFormat = "h:m:s");
+                                        $time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
+                                        echo '<option value="'.$session->getId().'" '.$selected.'>'.$date.' '.$time.'</option>';
+                                    }
+                                    
+                                    ?>
+
+                                </select>
+                            </div>
                             
+
                             &nbsp;
 
                             <div class="filter-item">
@@ -207,7 +188,6 @@ if (Config::DEBUG_MODE)
 
                             <div id="infos" class="zone-liste-restitution">
 
-                                <!-- <div id="titre-question-h3">2 - Informations utilisateur</div></br> -->
                                 <div class="tab-block">
 
                                 <?php if (!empty($response['infos_user'])) : $infos_user = $response['infos_user'] ?>
@@ -254,35 +234,34 @@ if (Config::DEBUG_MODE)
                                         <?php endif; ?>
                                             
                                         <br/>
-                                        <!-- <div class="info">Taux de réussite par catégories/compétences : </div> -->
                                         
                                         <div class="stats gradiant_pic">
                                             <ul>
-                                                <!--
+
+                                            <?php foreach ($stats['categories'] as $statCategorie) : ?>
+
+                                                <?php if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
+
                                                 <li>
-                                                    <div class="info">Taux de réussite par catégories/compétences : </div>
+
+                                                    <p><?php echo $statCategorie['nom_categorie']; ?> :
+                                                        <strong><?php echo $statCategorie['percent']; ?>%</strong> (<strong><?php echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
+                                                        <?php $width = $statCategorie['percent']; ?>
+                                                        <span class="percent" style="width:<?php echo $width; ?>%" title="<?php echo $statCategorie['descript_categorie']; ?>"></span>
+                                                    </p>
+
                                                 </li>
-                                                -->
-                                                <?php foreach ($stats['categories'] as $statCategorie) : ?>
 
-                                                    <?php if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
 
-                                                    <li>
-
-                                                        <p><?php echo $statCategorie['nom_categorie']; ?> :
-                                                            <strong><?php echo $statCategorie['percent']; ?>%</strong> (<strong><?php echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
-                                                            <?php $width = $statCategorie['percent']; ?>
-                                                            <span class="percent" style="width:<?php echo $width; ?>%" title="<?php echo $statCategorie['descript_categorie']; ?>"></span>
-                                                        </p>
-
-                                                    </li>
-
-                                                    <?php endif; ?>
-                                                <?php endforeach; ?>
                                             </ul>
+
                                         </div>
                                     <?php else : ?>
+
                                         <div class="info">Aucun positionnement n'est sélectionné.</div>
+
                                     <?php endif; ?>
 
                                 </div>
@@ -290,8 +269,6 @@ if (Config::DEBUG_MODE)
                             </div>
 
                             <div id="details" class="zone-liste-restitution">
-
-                                <!-- <div id="titre-question-h3">4 - Détails des résultats</div></br> -->
 
                                 <div id="resultats" class="tab-block">
                                     
@@ -396,14 +373,10 @@ if (Config::DEBUG_MODE)
                                 <div class="export-files" class="tab-block">
 
                                     <?php if (!empty($response['details']['questions'])) : ?>
-                                    
-                                        <!-- <form action="<?php //echo $form_url; ?>" method="post">  -->
-                                            
-                                            <input type="submit" value="Générer un PDF" name="export_pdf" class="bt-admin-menu-ajout2" />
-                                            <input type="submit" value="Générer un Excel" name="export_xls" class="bt-admin-menu-ajout2" />
-                                            
-                                        <!-- </form> -->
-                                    
+
+                                        <input type="submit" value="Générer un PDF" name="export_pdf" class="bt-admin-menu-ajout2" />
+                                        <input type="submit" value="Générer un Excel" name="export_xls" class="bt-admin-menu-ajout2" />
+  
                                     <?php else : ?>
                                         <div class="info">Aucun export n'est disponible.</div>
                                     <?php endif; ?>
@@ -449,23 +422,12 @@ if (Config::DEBUG_MODE)
 
             <?php if (Config::ALLOW_AJAX) : ?>
 
-                // $('#submit-posi').prop('disabled', true);
-
 
                 /* Listes dynamiques en ajax */
                
                 $('.ajax-list').change(function(event) {
 
 
-                    if ($(this).attr('id') == 'ref_session_cbox')
-                    {
-                        // $('#submit-posi').removeProp('disabled');
-                    }
-                    else{
-
-                        // $('#submit-posi').prop('disabled', true);
-                    }
-                    
                     var select = $(this);
                     var target = '#' + select.data('target');
                     var url = select.data('url');
@@ -477,13 +439,10 @@ if (Config::DEBUG_MODE)
                     if (sortOf === "user") {
 
                         $("#ref_session_cbox").parents('.filter-item').hide();
-                        //$('#submit-posi').prop('disabled', true);
 
                         refOrgan = $("#ref_organ_cbox").val();
                     }
                     else if (sortOf === "session") {
-
-                        // $('#submit-posi').removeProp('disabled');
 
                         $('.organ-option').each(function() {
                             var option = $(this)[0];
@@ -495,11 +454,6 @@ if (Config::DEBUG_MODE)
                         });
 
                         refUser = $('#ref_user_cbox').val();
-                    }
-                    else
-                    {
-                        //$("#ref_user_cbox").parents('.filter-item').hide();
-                        //$("#ref_session_cbox").parents('.filter-item').hide();
                     }
 
 
@@ -538,8 +492,6 @@ if (Config::DEBUG_MODE)
 
                                     i++;
                                 }
-
-                                //$('#submit-posi').removeProp('disabled');
                             }
                             
                             

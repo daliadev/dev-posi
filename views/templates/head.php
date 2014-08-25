@@ -17,7 +17,6 @@
     <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.10.2.min.js"></script>
     <script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js"></script>
     <script src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js"></script>
-    <!-- <script src="<?php //echo SERVER_URL; ?>media/js/message-box.js"></script> -->
     <script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js"></script>
     
     <noscript><div id="no-js">Pour un fonctionnement correct du positionnement, activez JavaScript en modifiant les options de votre navigateur</div></noscript>

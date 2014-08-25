@@ -158,36 +158,18 @@ $form_url = WEBROOT."admin/categorie/";
                         <div class="input">
                             <label for="type_lien_cat">Type de categorie *</label><br/>
 
-                            <!--
-                            <ul>
-                            -->
-                                <?php
-                                /*
-                                $typeLiens = array(
-                                    array("type_lien" => "static", "label" => "Statique"),
-                                    array("type_lien" => "dynamic", "label" => "Dynamique"));
-                                
-                                foreach($typeLiens as $typeLien) :
-                                    $checked = "";
-                                    if ($formData['type_lien_cat'] == $typeLien['type_lien']) :
-                                        $checked = "checked";
-                                    endif;*/
-                                $checked = "";
-                                if (isset($formData['type_lien_cat']) && !empty($formData['type_lien_cat']) && $formData['type_lien_cat'] == "dynamic")
-                                {
-                                    $checked = "checked";
-                                }
-                                ?>
+                            <?php
+                            
+                            $checked = "";
+                            if (isset($formData['type_lien_cat']) && !empty($formData['type_lien_cat']) && $formData['type_lien_cat'] == "dynamic")
+                            {
+                                $checked = "checked";
+                            }
+                            ?>
 
-                                <input type="checkbox" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
-                                <p class="descript">Si la case est cochée, cette categorie héritera des scores de ses sous-catégories et ne pourra pas posséder de score propre.</p>
-                                    
-                                <?php
-                                //endforeach;
-                                ?>
-                            <!--
-                            </ul>
-                            -->
+                            <input type="checkbox" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
+                            <p class="descript">Si la case est cochée, cette categorie héritera des scores de ses sous-catégories et ne pourra pas posséder de score propre.</p>   
+                            
                         </div>
 
 

@@ -33,8 +33,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 $form_url = WEBROOT."admin/utilisateur/";
 
 
-//var_dump($response['organ']);
-
 ?>
     
     
@@ -195,7 +193,6 @@ $form_url = WEBROOT."admin/utilisateur/";
 
                         <hr>
 
-                        <!-- <p><strong>Stats :</strong></p> -->
 
                         <p>Taux de réussite globale : <strong><?php echo $formData['taux_reussite_globale']; ?></strong></p>
 

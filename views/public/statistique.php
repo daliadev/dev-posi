@@ -60,17 +60,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 $form_url = $response['url'];
 
 
-
-if (Config::DEBUG_MODE)
-{
-    echo "\$response = ";
-    var_dump($response);
-}
-
-
-//var_dump($response['stats']);
-
-
 ?>
 
 
@@ -92,8 +81,6 @@ if (Config::DEBUG_MODE)
             <form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
   
                 <div class="zone-formu2">
-
-                    <!-- <div id="titre-question-h3"><strong>Statistique total du positionnement:</strong></div> -->
 
                     <div id="bloc-stat-filtre" class="form-full">
 
@@ -146,8 +133,6 @@ if (Config::DEBUG_MODE)
                     <div id="bloc-stat-global" class="form-full">
 
                         <fieldset>
-                                
-                            <!-- <legend>Résultats</legend> -->
                             
                             <legend>
 
@@ -163,25 +148,6 @@ if (Config::DEBUG_MODE)
                             ?>
 
                             </legend>
-
-
-                            <!-- <div class="stats-global">
-
-                                <div class="stat-posi">123</div>
-
-                                <div class="stat-user">58</div>
-
-                                <div class="stat-pourcent">63<small>%</small></div>
-
-                                <div class="stat-temps">18 min 25 s</div>
-
-                                <div class="stat-total-temps">25 h 35 min</div>
-
-                                <div class="stat-age">26 ans</div>
-
-                            </div> -->
-
-                            <!-- <hr> -->
 
                             <div class="stats-detail">
 

@@ -16,7 +16,7 @@
                 <div id="menu-admin">
 
 				<?php
-
+				
 					$authType = ServicesAuth::getAuthenticationRight();
 
 					foreach (Config::$admin_menu as $menu)

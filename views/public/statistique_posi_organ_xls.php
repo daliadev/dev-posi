@@ -1,7 +1,6 @@
 <?php
-/*$dateSession = Tools::toggleDate(substr($response['stats']['sessions'][0]->getDate(), 0, 10));
-$timeToSeconds = Tools::timeToSeconds(substr($response['stats']['sessions'][0]->getDate(), 11, 8), $inputFormat = "h:m:s"); 
-$time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m")); */
+
+
 $date_debut = $response['form_data']['date_debut'];
 $date_fin = $response['form_data']['date_fin'];
 
@@ -63,7 +62,7 @@ else if (empty($date_debut) && !empty($date_fin) )
 header('Content-Type: text/csv;');
 header('Content-Disposition: attachment; filename="'.$file.'"');
 
-//print_r($response);
+
 ?>"Organisme";"Nbr de positionnement";"Nombre d'utilisateurs positionnes";"Score moyen global";"Temps de passation moyen";"Temps total";"Age moyen des utilisateurs"<?php	
 
 	$content = "";

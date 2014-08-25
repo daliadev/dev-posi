@@ -7,7 +7,7 @@ $file = $this->returnData['response']['infos_user']['nom']."_".$this->returnData
 header('Content-Type: text/csv;');
 header('Content-Disposition: attachment; filename="'.$file.'"');
 
-//print_r($response);
+
 ?>"Question";"Catégorie/Compétence";"Degré";"Réponse utilisateur";"Réponse correcte";"Réussite"<?php
 
 	$content = "";

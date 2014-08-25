@@ -133,12 +133,7 @@ $form_url = WEBROOT."admin/compte/";
                             <label for="nom_admin">Nom d'utilisateur <span class="asterix">*</span></label>
                             <input type="text" name="nom_admin" id="nom_admin" value="<?php echo $formData['nom_admin']; ?>" <?php echo $formData['disabled']; ?>>
                         </div>
-                        <!-- 
-                        <div class="input">
-                            <label for="email">Adresse email <span class="asterix">*</span></label>
-                            <input type="text" name="email" id="email" value="<?php //echo $formData['email']; ?>" <?php //echo $formData['disabled']; ?>>
-                        </div>
-                         -->
+
 
                         <?php if ($formData['mode'] == "new" || $formData['mode'] == "edit") : ?>
 
@@ -156,10 +151,6 @@ $form_url = WEBROOT."admin/compte/";
 
                         <?php endif; ?>
 
-                        <!-- <div class="input">
-                            <label for="droits">Droits<span class="asterix">*</span></label>
-                            <input type="text" name="droits" id="droits" value="<?php //echo $formData['droits']; ?>" <?php //echo $formData['disabled']; ?>>
-                        </div> -->
 
                         <div class="input">
                             <label for="droits_cbox">Droits<span class="asterix">*</span></label>

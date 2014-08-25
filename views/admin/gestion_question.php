@@ -478,8 +478,6 @@ $form_url = WEBROOT."admin/question/";
                                     <p>
                                         <input type="radio" name="ref_degre" class="radio_degre" value="aucun" title="" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> <span class="checkbox-<?php echo $formData['disabled']; ?>">Aucun</span>
                                     </p>
-
-                                    <!-- <p><input type="button" class="bt-admin-simple-button" name="remove-degrees" <?php //echo $formData['disabled']; ?> value="Tout déselectionner" /></p> -->
                                     
                                 </fieldset>
 
@@ -497,7 +495,7 @@ $form_url = WEBROOT."admin/question/";
                     <?php
                     if (Config::ALLOW_ACTIVITES):
                     ?>
-                        <div class="formdiv" id="activites">
+                        <!-- <div class="formdiv" id="activites">
                             <fieldset>
                                 <div id="titre-question-h3">Activités</div>
                                 <div id="ref_activites" class="datalist">
@@ -519,7 +517,7 @@ $form_url = WEBROOT."admin/question/";
 
                                 </div>
                             </fieldset>
-                        </div>
+                        </div> -->
                     }
                     <?php
                     endif;
@@ -571,37 +569,8 @@ $form_url = WEBROOT."admin/question/";
         
 
         $(function() { 
-   
-
-            /*** Ajout de réponse automatique ***/
-            /*
-            var responseItem = $('#responses-items').first().html();
-
-            $(responseItem + ' input[type=text]').each(function() {
-
-                $(this).val("");
-            });
-            
-
-            $("#add_response").click(function() {
-                    
-                $("#responses-items").append(responseItem);
-            });
-
-            $("#delete_response").click(function() {
-
-                if ($(".response-item").length > 1)
-                {
-                    $(".response-item:last").remove();
-                }
-                else
-                {
-                    $(".response-item > input[type=text]").val("");
-                }
-            });
-            */
-
-
+  
+  
             /*** Tableau des éléments du cache des réponses ***/
 
             var cacheInputs = new Array();

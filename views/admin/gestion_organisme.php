@@ -150,7 +150,6 @@ $form_url = WEBROOT."admin/organisme/";
 
                         <div class="input">
                             Nombre de positionnements effectué : <?php echo $formData['nbre_posi_total']; ?>
-                            <!-- <input type="text" name="nbre_posi_total" id="nbre_posi_total" value="<?php //echo $formData['nbre_posi_total']; ?>" disabled> -->
                         </div>
 
                         <div class="input">
@@ -161,12 +160,6 @@ $form_url = WEBROOT."admin/organisme/";
 
                         <hr>
 
-                        <!-- <p><strong>Stats :</strong></p> -->
-
-                        <!-- <p>Nombre de positionnements accomplies : <strong><?php echo $formData['nbre_sessions_accomplies']; ?></strong></p> -->
-
-
-                        <!-- <hr> -->
 
                         <!-- Boutons de gestion des utilisateurs -->
 

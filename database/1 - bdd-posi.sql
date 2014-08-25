@@ -1,9 +1,6 @@
 
 /*--- Création de la base de données---*/
 
-/*DROP DATABASE IF EXISTS nom_de_la_bdd;*/
-/*CREATE DATABASE IF NOT EXISTS nom_de_la_bdd;*/
-
 
 /* Nom de la base de données à utiliser pour le script */
 
@@ -73,7 +70,6 @@ DROP TABLE IF EXISTS organisme;
 CREATE TABLE organisme 
 (
 	id_organ INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	/* ref_code_organ INT(2) UNSIGNED NULL, */
 	numero_interne VARCHAR(50) NULL,
 	nom_organ VARCHAR(100) NOT NULL UNIQUE DEFAULT "",
 	adresse_organ TINYTEXT NULL,

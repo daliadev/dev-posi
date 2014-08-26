@@ -444,7 +444,10 @@ $form_url = $response['url'];
                     }
                     else if (sortOf === "session") {
 
+                        //$('#ref_session_cbox').show();
+
                         $('.organ-option').each(function() {
+
                             var option = $(this)[0];
                             
                             if ($(option).prop('selected')) {
@@ -454,6 +457,15 @@ $form_url = $response['url'];
                         });
 
                         refUser = $('#ref_user_cbox').val();
+
+
+                        var cbox = $('#ref_session_cbox').get(0);
+
+                        if (cbox.options.length > 1) {
+    
+                            cbox.options.length = 1;
+                            
+                        }
                     }
 
 

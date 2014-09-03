@@ -51,14 +51,13 @@
 
 
             <div id="lecteur">
-                 
-                <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                <param name="wmode" value="transparent" />
-                <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />
+                <!--  
+                <object type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
+                <param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
+                <param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>uploads/audio/<?php //echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />
                 <param name="wmode" value="transparent" />
                 </object>
-                
+                 -->
             </div>
             
             <p id="position"></p>
@@ -94,28 +93,62 @@
     <script language="javascript" type="text/javascript">
 
 
-        var duration = 0;
-        var timeElapsed = 0;
+        function createPlayer() {
 
-        var player;
+            var player;
+
+            if (FlashDetect.installed) {
+
+                player = '<object id="dewplayer" type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" name="dewplayer">'; 
+                player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
+                player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+                player += '<param name="wmode" value="transparent" />';
+                player += '</object>';
+            }
+            else {
+
+                player = '<audio id="audioplayer" name="audioplayer" preload="auto" ontimeupdate="" src="<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>" autoplay controls></audio>';
+            }
+
+            document.getElementById("lecteur").innerHTML = player;
+        }
+
 
 
         function getPlayerPosition() {
-            var dewp = document.getElementById("dewplayer");
-            if (dewp != null) {
-                 return dewp.dewgetpos();
+
+            var player;
+
+            if (FlashDetect.installed) {
+
+                player = document.getElementById("dewplayer");
+                if (player != null) {
+                    return player.dewgetpos();
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+
+                player = document.getElementById("audioplayer");
+                if (player != null) {
+                    return player.duration - player.currentTime;
+                }
+                else {
+                    return false;
+                }
             }
         }
 
 
-        player = document.getElementById('lecteur')
+
+        /*
+        player = document.getElementById('lecteur');
         player.addEventListener('mousemove', function(e) {
             document.getElementById('position').innerHTML = getPlayerPosition();
         });
-
-
-
-
+        */
 
         /*
         function getPlayerType() {
@@ -124,27 +157,11 @@
 
                 var dewp = document.getElementById("dewplayer");
                 if (dewp != null) {
-                     return dewp.dewgetpos();
+                     return dewp;
                 }
             }
             else {
                 return
-            }
-        }
-
-
-        function createPlayer() {
-
-        }
-
-        function getPlayerPosition() {
-
-        }
-
-        function getFlashPlayerPosition() {
-            var dewp = document.getElementById("dewplayer");
-            if (dewp != null) {
-                 return dewp.dewgetpos();
             }
         }
 
@@ -160,6 +177,8 @@
 
         $(function() {
             
+            createPlayer();
+
             $("#image-content-appli img").hide();
             $("#image-content-appli img").fadeIn(500);
             

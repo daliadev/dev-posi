@@ -1,7 +1,7 @@
 <?php
 
     $form_url = $response['url'];
-
+    //var_dump($response);
 ?>
 
 
@@ -48,19 +48,17 @@
                 ?>
                 
             </div>
+			
+			
 
-
-            <div id="lecteur">
-                 
-                <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                <param name="wmode" value="transparent" />
-                <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />
-                <param name="wmode" value="transparent" />
-                </object>
-                
-            </div>
-            
+		<div id="lecteur"></div>
+		
+		<div id="fraction"></div>
+			
+			
+			
+		
+			
             <p id="position"></p>
             
             <?php
@@ -86,78 +84,43 @@
         ?>
 
     </div>
+	
+<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
+	<script type="text/javascript"> 
+	
+	
+			if (FlashDetect.installed){
+					var lecteurfla;
+					 lecteurfla = '<object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer">';
+					 lecteurfla += '<param name="wmode" value="transparent" />';
+					 lecteurfla += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />';
+					 lecteurfla += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+					 lecteurfla += '<param name="wmode" value="transparent" />';
+					 lecteurfla += '</object>';
+					 
+					 var div= document.getElementById("lecteur").innerHTML = lecteurfla;
+																						
+			}else{
+					var lecteurhtml;
+					 lecteurhtml = '<audio preload="auto" ontimeupdate="update(this)" src="<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>" autoplay controls >></audio>';
+					var div= document.getElementById("lecteur").innerHTML = lecteurhtml;
+			}
+			
+			function getPlayerPosition() {
+            var dewp = document.getElementById("dewplayer");
+            if (dewp != null) {
+                 return dewp.dewgetpos();
+            }
+        } 
+			</script>	
+	
 
-
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
+    
     
     <script language="javascript" type="text/javascript">
 
-
-        var duration = 0;
-        var timeElapsed = 0;
-
-        var player;
-
-
-        function getPlayerPosition() {
-            var dewp = document.getElementById("dewplayer");
-            if (dewp != null) {
-                 return dewp.dewgetpos();
-            }
-        }
-
-
-        player = document.getElementById('lecteur')
-        player.addEventListener('mousemove', function(e) {
-            document.getElementById('position').innerHTML = getPlayerPosition();
-        });
-
-
-
-
-
-        /*
-        function getPlayerType() {
-
-            if (FlashDetect.installed) {
-
-                var dewp = document.getElementById("dewplayer");
-                if (dewp != null) {
-                     return dewp.dewgetpos();
-                }
-            }
-            else {
-                return
-            }
-        }
-
-
-        function createPlayer() {
-
-        }
-
-        function getPlayerPosition() {
-
-        }
-
-        function getFlashPlayerPosition() {
-            var dewp = document.getElementById("dewplayer");
-            if (dewp != null) {
-                 return dewp.dewgetpos();
-            }
-        }
-
-        function updateHTMLPlayer(player) {
-
-           duration = player.duration;    // Durée totale 
-           time = player.currentTime; // Temps écoulé 
-           //fraction = time / duration;
-           //document.getElementById("fraction").innerHTML = fraction;
-        }
-        */
-
-
+       
+     
         $(function() {
             
             $("#image-content-appli img").hide();
@@ -211,7 +174,40 @@
                     }
                 }
             });
+			
+			
             
         });
+		
+	</script>
+	 
+    <script language="javascript" type="text/javascript">		
+	 var duration    // Durée totale 
+    var time      // Temps écoulé 
+	var fraction 
+	
+	function update(player) {
+	   duration = player.duration;    // Durée totale 
+	   time     = player.currentTime; // Temps écoulé 
+	   fraction = time / duration;
+	   document.getElementById("fraction").innerHTML = fraction;
+	   
+	
+	
+	 $(function() {
+	 
+		if (fraction === 1)
+		{
+			$("#submit_suite").removeProp("disabled");
+			
+		}
+		 else
+        {
+             $("#submit_suite").prop("disabled", true);
+        }
+        		
+	});
+}
+		
 
     </script>

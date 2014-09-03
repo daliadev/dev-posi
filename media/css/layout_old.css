@@ -1296,17 +1296,8 @@ select {
 }
 
 #lecteur{
-	
-	
-	padding:10px;
-	background-color:#ffffff;
-	margin-top: 10px;
-	border-radius: 5px;
-	float:left;
-	border:1px #ccc8c8 solid;
-}
-
-#lecteur-html{
+	width:160px;
+	height: 20px;
 	padding:10px;
 	background-color:#ffffff;
 	margin-top: 10px;

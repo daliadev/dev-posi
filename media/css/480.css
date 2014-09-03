@@ -1,0 +1,45 @@
+﻿/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+
+#posi_content {width: 440px;}
+
+#image-content-appli {
+width: 420px;
+height: auto;
+padding: 10px;
+text-align: center;
+background-color: #ffffff;
+border: 1px #ccc8c8 solid;
+border-radius: 10px;
+}
+
+#image-content-appli img{width:420px;}
+
+
+#txt-content-appli {
+margin-top: 10px;
+width: 410px;
+background-color: #16A085;
+padding: 15px;
+color: #ffffff;
+border-radius: 5px;
+text-align: justify;
+}
+
+
+#reponse-content-appli {
+margin-top: 10px;
+width: 410px;
+background-color: #ffffff;
+padding: 15px;
+border-radius: 5px;
+border: 1px #ccc8c8 solid;
+}
+
+}
+
+
+
+
+
+

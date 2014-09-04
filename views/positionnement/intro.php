@@ -35,12 +35,13 @@
                             <p>Bon courage !!</p>
 
                         </div>
-
-                        <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
+                        
+                        <div id="lecteur-intro"></div>
+                        <!-- <object type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
                             <param name="wmode" value="transparent" />
-                            <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                            <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>media/mp3/intro.mp3&amp;autostart=1&amp;nopointer=1" />
-                        </object>
+                            <param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
+                            <param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>media/mp3/intro.mp3&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />
+                        </object> -->
 
                         <div id="submit">
                             <input type="submit" value="Commencer" />
@@ -63,3 +64,28 @@
         ?>
 
     </div>
+
+
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
+    
+    <script language="javascript" type="text/javascript">
+
+        var player;
+
+        if (FlashDetect.installed) {
+
+            player = '<object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="300" height="20" id="dewplayer" name="dewplayer">'; 
+            player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
+            player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>media/mp3/intro.mp3&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+            player += '<param name="wmode" value="transparent" />';
+            player += '</object>';
+        }
+        else {
+
+            player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>media/mp3/intro.mp3" preload="auto" autoplay controls></audio>';
+        }
+
+        document.getElementById("lecteur-intro").innerHTML = player;
+
+    </script>

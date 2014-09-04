@@ -312,16 +312,18 @@ $form_url = WEBROOT."admin/question/";
                                                     <a id="del_audio" class="del-audio" name="del_audio" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
                                                 <?php endif; ?>
 
-                                            <?php if (Config::ALLOW_AUDIO) : ?>
-                                                <div id="audio-player">
-                                                    <object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                                                    <param name="wmode" value="transparent" />
-                                                    <param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                                                    <param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />
-                                                    <param name="wmode" value="transparent" />
-                                                    </object>
-                                                </div>
-                                            <?php endif; ?>
+                                                <?php //if (Config::ALLOW_AUDIO) : ?>
+                                                    <div id="audio-player">
+                                                        <!--
+                                                        <object type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
+                                                        <param name="wmode" value="transparent" />
+                                                        <param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
+                                                        <param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>uploads/audio/<?php //echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />
+                                                        <param name="wmode" value="transparent" />
+                                                        </object>
+                                                        -->
+                                                    </div>
+                                                <?php //endif; ?>
 
                                             <input type="file" id="audio_file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_audio" class="reset-button" name="reset_audio" value="" <?php echo $formData['disabled']; ?>>
@@ -562,11 +564,38 @@ $form_url = WEBROOT."admin/question/";
     </div>
     
     
-
+    
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
 
 
     <script type="text/javascript">
         
+
+        var player;
+
+        if (FlashDetect.installed) {
+
+            player = '<object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer">'; 
+            player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
+            player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
+            player += '<param name="wmode" value="transparent" />';
+            player += '</object>';
+        }
+        else {
+
+            player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>media/mp3/intro.mp3" preload="auto" autoplay controls></audio>';
+        }
+
+        var playerTag = document.getElementById("audio-player");
+
+        if (playerTag != null) {
+            playerTag.innerHTML = player;
+        }
+
+
+
+
 
         $(function() { 
   

@@ -50,17 +50,8 @@
             </div>
 
 
-            <div id="lecteur">
-                <!--  
-                <object type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                <param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                <param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>uploads/audio/<?php //echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />
-                <param name="wmode" value="transparent" />
-                </object>
-                 -->
-            </div>
+            <div id="lecteur"></div>
             
-            <p id="position"></p>
             
             <?php
                 $startTimer = microtime(true);
@@ -107,7 +98,7 @@
             }
             else {
 
-                player = '<audio id="audioplayer" name="audioplayer" preload="auto" ontimeupdate="" src="<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>" autoplay controls></audio>';
+                player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>" preload="auto" autoplay controls></audio>';
             }
 
             document.getElementById("lecteur").innerHTML = player;

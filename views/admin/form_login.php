@@ -98,6 +98,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
         
         function verifAdmin()
         {
+            /*
             if (window.navigator.appName == 'Microsoft Internet Explorer')
             {
                 var login = document.formulaire.login;
@@ -116,11 +117,9 @@ if (isset($response['form_data']) && !empty($response['form_data']))
                     return false;
                 }
             }
+            */
         }
-        
-        $(function() { 
-            
-        });   
+           
 
     </script>
 

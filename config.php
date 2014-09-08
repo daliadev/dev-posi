@@ -105,7 +105,7 @@ class Config
                 'display' => false,
                 'droits' => "admin"
             ),
-    		 array(
+    		array(
                 'code_menu' => "50",
                 'label_menu' => "Utilisateur",
                 'url_menu' => "utilisateur",
@@ -118,7 +118,7 @@ class Config
                 'url_menu' => "organisme",
                 'display' => true,
                 'droits' => "custom,admin"
-           ),
+            ),
             array(
                 'code_menu' => "70",
                 'label_menu' => "Comptes administrateur",
@@ -127,7 +127,7 @@ class Config
                 'display' => true,
                 'droits' => "admin"
             
-           )
+            )
         ),
         
         // Partie Gestion des résultats du menu

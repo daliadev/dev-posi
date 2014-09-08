@@ -102,7 +102,7 @@ class ServicesPublic extends Main
         
         $this->servicesRestitution->initialize();
         
-        $this->url = SERVER_URL."public/restitution/".$codeOrgan;
+        $this->url = SERVER_URL."public/restitution/";
 
         
 

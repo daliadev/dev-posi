@@ -136,6 +136,11 @@ $form_url = WEBROOT."admin/organisme/";
                         </div>
                         
                         <div class="input">
+                            <label for="numero_interne">Code organisme</label>
+                            <input type="text" name="numero_interne" id="numero_interne" value="<?php echo $formData['numero_interne']; ?>" disabled>
+                        </div>
+
+                        <div class="input">
                             <label for="code_postal_organ">Code postal <span class="asterix">*</span></label>
                             <input type="text" name="code_postal_organ" id="code_postal_organ" value="<?php echo $formData['code_postal_organ']; ?>" <?php echo $formData['disabled']; ?>>
                         </div>

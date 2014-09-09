@@ -75,6 +75,7 @@ class ServicesAdminOrganisme extends Main
         $organDetails = array();
         
         $organDetails['nom_organ'] = "";
+        $organDetails['numero_interne'] = "";
         $organDetails['code_postal_organ'] = "";
         $organDetails['tel_organ'] = "";
         $organDetails['nbre_posi_total'] = "";
@@ -86,6 +87,7 @@ class ServicesAdminOrganisme extends Main
         if (!$this->filterDataErrors($resultset['response']))
         {
             $organDetails['nom_organ'] = $resultset['response']['organisme']->getNom();
+            $organDetails['numero_interne'] = $resultset['response']['organisme']->getNumeroInterne();
             $organDetails['code_postal_organ'] = $resultset['response']['organisme']->getCodePostal();
             $organDetails['tel_organ'] = $resultset['response']['organisme']->getTelephone();
             $organDetails['nbre_posi_total'] = $resultset['response']['organisme']->getNbrePosiTotal();

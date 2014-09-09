@@ -982,7 +982,8 @@ class ServicesAdmin extends Main
         
         $initializedData = array(
             "ref_organ_cbox"    => "select", 
-            "nom_organ"         => "text", 
+            "nom_organ"         => "text",
+            "numero_interne"    => "text", 
             "code_postal_organ" => "text", 
             "tel_organ"         => "text",
             "nbre_posi_max"     => "text"
@@ -1045,6 +1046,7 @@ class ServicesAdmin extends Main
 
             $this->formData['ref_organ'] = null;
             $this->formData['nom_organ'] = null;
+            $this->formData['numero_interne'] = null;
             $this->formData['code_postal_organ'] = null;
             $this->formData['tel_organ'] = null;
             $this->formData['nbre_posi_max'] = null;

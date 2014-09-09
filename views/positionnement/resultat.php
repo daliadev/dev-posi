@@ -50,6 +50,12 @@
     $message .= 'Score globale : <strong>'.$response['percent_global'].' %</strong><br/>';
     $message .= '<br/>';
     $message .= 'Score détaillé : <br/>'.$content;
+    $message .= '<br/>';
+    $message .= '<br/>';
+    $message .= 'Votre accès à la page des résultats : '.$response['email_infos']['url_restitution'];
+    $message .= '<br/>';
+    $message .= 'Votre accès à la page des statistiques : '.$response['email_infos']['url_stats'];
+
     $message .= '</body>';
     $message .= '</html>';
                          

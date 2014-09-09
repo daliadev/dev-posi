@@ -668,6 +668,9 @@ class ServicesPositionnement extends Main
         $emailInfos = array();
 
         $emailInfos['nom_organ'] = "";
+        $codeOrgan = "";
+        $emailInfos['url_restitution'] = "";
+        $emailInfos['url_stats'] = "";
         $emailInfos['code_postal_organ'] = "";
         $emailInfos['tel_organ'] = "";
 
@@ -695,6 +698,11 @@ class ServicesPositionnement extends Main
             }
 
             $emailInfos['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
+
+            $codeOrgan = $resultsetOrgan['response']['organisme'][0]->getNumeroInterne();
+            $emailInfos['url_restitution'] = SERVER_URL."public/restitution/".$codeOrgan;
+            $emailInfos['url_stats'] = SERVER_URL."public/statistique/".$codeOrgan;
+
             $emailInfos['code_postal_organ'] = $resultsetOrgan['response']['organisme'][0]->getCodePostal();
             $emailInfos['tel_organ'] = $resultsetOrgan['response']['organisme'][0]->getTelephone();
         }

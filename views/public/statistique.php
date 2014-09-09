@@ -78,7 +78,7 @@ $form_url = $response['url'];
 
         <div id="main-form">
 
-            <form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
+            <form id="form-posi" action="<?php echo $form_url; ?>" method="post">
   
                 <div class="zone-formu2">
 
@@ -100,8 +100,14 @@ $form_url = $response['url'];
 
                         <div class="filter-item">
                             <label for="ref_organ_cbox">Organisme : </label>
-                            <select name="ref_organ_cbox" id="ref_organ_cbox">
+
+                            <?php $disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+                            <select name="ref_organ_cbox" id="ref_organ_cbox" <?php echo $disabled; ?>>
+                            
+                                <?php if ($disabled == "") : ?>
                                 <option class="organ-option" value="select_cbox">Tous</option>
+                                <?php endif; ?>
+
                                 <?php
                                 
                                 if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
@@ -137,13 +143,13 @@ $form_url = $response['url'];
                             <legend>
 
                             <?php 
-                                if(count($response['stats']['global']['organismes'])>1)
+                                if(count($response['stats']['global']['organismes']) > 1)
                                 {
-                                echo 'Résultats'; 
+                                    echo 'Résultats'; 
                                 }
                                 else
                                 {
-                                echo 'Résultats pour '.$response['stats']['global']['organismes'][0]['nom_organ'];  
+                                    echo 'Résultats pour '.$response['stats']['global']['organismes'][0]['nom_organ'];  
                                 }     
                             ?>
 

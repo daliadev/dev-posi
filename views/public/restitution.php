@@ -71,7 +71,7 @@ $form_url = $response['url'];
 
         <div id="main-form">
 
-            <form id="form-posi" action="<?php echo $form_url; ?>" method="post" name="formu_admin_com_act" enctype="multipart/form-data">
+            <form id="form-posi" action="<?php echo $form_url; ?>" method="post" name="formu_admin_com_act">
 
                 <div class="zone-formu2">
 
@@ -83,8 +83,13 @@ $form_url = $response['url'];
 
                             <div class="filter-item" id="combo-organ">
                                 <label for="ref_organ_cbox">Organisme :</label>
-                                <select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user">
+
+                                <?php $disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+                                <select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" <?php echo $disabled; ?>>
+                                    
+                                    <?php if ($disabled == "") : ?>
                                     <option class="organ-option" value="select_cbox">---</option>
+                                    <?php endif; ?>
                                     <?php
                                     
                                     if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)

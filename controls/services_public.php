@@ -102,7 +102,7 @@ class ServicesPublic extends Main
         
         $this->servicesRestitution->initialize();
         
-        $this->url = SERVER_URL."public/restitution/";
+        $this->url = SERVER_URL."public/restitution/".$codeOrgan;
 
         
 
@@ -393,21 +393,59 @@ class ServicesPublic extends Main
     public function statistique($requestParams = array())
     {
 
-        // Sinon, authentification necessaire
-        ServicesAuth::checkAuthentication("custom");
-        
         $this->initialize();
-        
-        $this->url = SERVER_URL."public/statistique/";
+        $this->servicesRestitution->initialize();
+
+        $codeOrgan = "";
+        $loggedAsViewer = false;
+        $loggedAsAdmin = false;
+        $preSelectOrganisme = null;
 
         
-        if (Config::DEBUG_MODE)
+        // on vérifie s'il y a un code dans les parametres url
+        if (isset($requestParams[0]) && !empty($requestParams[0]))
+        {   
+            if (preg_match("`^[a-zA-Z0-9]*$`", $requestParams[0]))
+            {
+                // On récupère le code
+                $codeOrgan = $requestParams[0];
+                
+                // On va chercher le code organisme correspondant
+                $preSelectOrganisme = $this->organismeDAO->selectByCodeInterne($codeOrgan);
+                
+                if (!$this->filterDataErrors($preSelectOrganisme['response']))
+                {
+                    if (!empty($preSelectOrganisme['response']['organisme']) && count($preSelectOrganisme['response']['organisme']) == 1)
+                    { 
+                        $organ = $preSelectOrganisme['response']['organisme'];
+                        $preSelectOrganisme['response']['organisme'] = array($organ);
+                    }
+                    $loggedAsViewer = true;
+                }
+                else 
+                {
+                    // Redirection vers une page d'erreur interne
+                    header("Location: ".SERVER_URL."erreur/page500");
+                    exit();
+                }
+            }
+            else 
+            {
+                // Redirection vers une page d'erreur non autorisé
+                header("Location: ".SERVER_URL."erreur/page503");
+                exit();
+            }
+        }
+        else 
         {
-            echo "\$_POST = ";
-            var_dump($_POST);
+            // Sinon, authentification necessaire
+            ServicesAuth::checkAuthentication("custom");
+            $loggedAsAdmin = true;
         }
 
-        
+        $this->url = SERVER_URL."public/statistique/".$codeOrgan;
+
+
         /*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
         $this->formData['ref_organ'] = null;
 
@@ -430,7 +468,16 @@ class ServicesPublic extends Main
         {
             $this->formData['date_fin'] = $_POST['date_fin'];
         }
+
+        // Sauf si l'organisme est déjà connu
+        if ($loggedAsViewer)
+        {
+            $this->formData['ref_organ'] = $preSelectOrganisme['response']['organisme'][0]->getId();
+        }
         
+
+        
+
 
 
         $filters = array();
@@ -481,9 +528,34 @@ class ServicesPublic extends Main
             }
         }
 
+
         // Liste des organismes pour le combo-box
-        $organismesList = $this->servicesRestitution->getOrganismesList(); 
+        if ($loggedAsViewer)
+        {
+            $organismesList = $preSelectOrganisme;
+        }
+        else if ($loggedAsAdmin)
+        {
+            $organismesList = $this->servicesRestitution->getOrganismesList(); 
+        }
         $this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
+        
+        /*
+        $nomOrgan = null;
+        $codeOrgan = null;
+        foreach ($organismesList['response']['organisme'] as $organisme)
+        {
+            if ($organisme->getId() == $this->formData['ref_organ'])
+            {
+                $nomOrgan = $organisme->getNom();
+                $codeOrgan = $organisme->getNumeroInterne();
+            }
+        }
+        */
+
+        // Liste des organismes pour le combo-box
+        //$organismesList = $this->servicesRestitution->getOrganismesList(); 
+        //$this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
 
         // On envoie les infos de la page à la vue
         $this->setResponse($this->returnData);

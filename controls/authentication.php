@@ -66,10 +66,12 @@ class ServicesAuth
     
     static function getAuthenticationRight()
     {
-        if (!isset($_SESSION) || empty($_SESSION))
+        /*
+        if (!isset($_SESSION))
         {
             session_start();
         }
+        */
         
         if (isset($_SESSION['authenticate']) && !empty($_SESSION['authenticate']))
         {
@@ -125,9 +127,9 @@ class ServicesAuth
         }
         
         if (isset($_SESSION['session']) && $_SESSION['session'])
-	{
+        {
             return true;
-	}
+        }
         
         return false;
     }

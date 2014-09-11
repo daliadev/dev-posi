@@ -115,6 +115,8 @@ class ServicesAdminOrganisme extends Main
         $formData['nom_organ'] = $this->validatePostData($_POST['nom_organ'], "nom_organ", "string", true, "Aucun nom n'a été saisi", "Le nom n'est pas correctement saisi.");
         $dataOrgan['nom_organ'] = $formData['nom_organ'];
         
+        
+
         // Formatage du code postal de l'organisme
         $formData['code_postal_organ'] = $this->validatePostData($_POST['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'est saisi", "Le code postal n'est pas correctement saisi.");
         $dataOrgan['code_postal_organ'] = $formData['code_postal_organ'];
@@ -140,6 +142,12 @@ class ServicesAdminOrganisme extends Main
 
         if ($previousMode == "new")
         {
+            // Génération d'un numero interne de l'organisme qui sert à vérifier l'organisme lors de la restitution par les intervenants
+            // on ne garde que les 8 premiers caractères
+            $code = substr(dechex(round(microtime(true) * 10000)), 0, 8);
+            $formData['numero_interne'] = $code;
+            $dataOrgan['numero_interne'] = $formData['numero_interne'];
+
             // Insertion de l'organisme dans la bdd
             $resultsetOrgan = $this->setOrganisme("insert", $dataOrgan);
 

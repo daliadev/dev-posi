@@ -112,21 +112,40 @@ class ServicesAdminOrganisme extends Main
         }
         
         // Formatage du nom de l'organisme
-        $formData['nom_organ'] = $this->validatePostData($_POST['nom_organ'], "nom_organ", "string", true, "Aucun nom n'a été saisi", "Le nom n'est pas correctement saisi.");
+        $formData['nom_organ'] = $this->validatePostData($_POST['nom_organ'], "nom_organ", "string", true, "Aucun nom n'a été saisi.", "Le nom n'est pas correctement saisi.");
         $dataOrgan['nom_organ'] = $formData['nom_organ'];
         
-        
+        // Formatage du code organisme
+        if (empty($_POST['numero_interne'])) 
+        {
+            // Génération d'un numero interne de l'organisme qui sert à vérifier l'organisme lors de la restitution par les intervenants
+            // on ne garde que les 8 premiers caractères
+            $code = substr(dechex(round(microtime(true) * 10000)), 0, 8);
+            $formData['numero_interne'] = $code;
+        }
+        else
+        {
+            $formData['numero_interne'] = $_POST['numero_interne'];
+        }
+        $dataOrgan['numero_interne'] = $formData['numero_interne'];
 
         // Formatage du code postal de l'organisme
-        $formData['code_postal_organ'] = $this->validatePostData($_POST['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'est saisi", "Le code postal n'est pas correctement saisi.");
+        $formData['code_postal_organ'] = $this->validatePostData($_POST['code_postal_organ'], "code_postal_organ", "integer", true, "Aucun code postal n'est saisi.", "Le code postal n'est pas correctement saisi.");
         $dataOrgan['code_postal_organ'] = $formData['code_postal_organ'];
         
         // Formatage du téléphone de l'organisme
-        $formData['tel_organ'] = $this->validatePostData($_POST['tel_organ'], "tel_organ", "integer", true, "Aucun numéro de téléphone n'a été saisi", "Le numéro de téléphone n'est pas correctement saisi.");
+        $formData['tel_organ'] = $this->validatePostData($_POST['tel_organ'], "tel_organ", "integer", true, "Aucun numéro de téléphone n'a été saisi.", "Le numéro de téléphone n'est pas correctement saisi.");
         $dataOrgan['tel_organ'] = $formData['tel_organ'];
 
         // Formatage du nombre de positionnements maximum
-        $formData['nbre_posi_max'] = $this->validatePostData($_POST['nbre_posi_max'], "nbre_posi_max", "integer", false, "Aucun nombre de positionnements n'a été saisi", "Le nombre de positionnements n'est pas correctement saisi.");
+        if (empty($_POST['nbre_posi_max'])) 
+        {
+            $formData['nbre_posi_max'] = 0;
+        }
+        else
+        {
+            $formData['nbre_posi_max'] = $this->validatePostData($_POST['nbre_posi_max'], "nbre_posi_max", "integer", true, "Aucun nombre de positionnements n'a été saisi.", "Le nombre de positionnements n'est pas correctement saisi.");
+        }
         $dataOrgan['nbre_posi_max'] = $formData['nbre_posi_max'];
 
 

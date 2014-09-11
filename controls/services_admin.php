@@ -1069,11 +1069,9 @@ class ServicesAdmin extends Main
                 }
             }
 
-            
 
             // Traitement des infos saisies.
             $dataOrgan = $this->servicesOrganisme->filterOrganData($this->formData, $_POST);
-
 
             // Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesOrganisme->errors) && empty($this->errors)) 

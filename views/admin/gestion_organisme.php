@@ -136,8 +136,9 @@ $form_url = WEBROOT."admin/organisme/";
                         </div>
                         
                         <div class="input">
-                            <label for="numero_interne">Code organisme</label>
-                            <input type="text" name="numero_interne" id="numero_interne" value="<?php echo $formData['numero_interne']; ?>" disabled>
+                            <label>Code organisme</label>
+                            <input type="text" name="show_numero_interne" id="show_numero_interne" value="<?php echo $formData['numero_interne']; ?>" disabled>
+                            <input type="hidden" name="numero_interne" id="numero_interne" value="<?php echo $formData['numero_interne']; ?>">
                         </div>
 
                         <div class="input">

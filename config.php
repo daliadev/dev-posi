@@ -50,6 +50,7 @@ class Config
 
     // Tableau des emails des administrateurs (pour les positionnements effectués)
     public static $emails_admin = array(
+        "f.rampion@educationetformation.fr",
         "g.billard@educationetformation.fr", 
         "n.beurion@educationetformation.fr"
     );

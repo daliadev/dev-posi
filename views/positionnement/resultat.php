@@ -27,11 +27,11 @@
         $Destinataire .=  $response['email_infos']['email_intervenant'];
     }
 
-    $pourqui = "g.billard@educationetformation.fr";
+    $pourqui = "f.rampion@educationetformation.fr";
     $Sujet = Config::POSI_NAME;
 
-    $From  = "From:" ;
-    $From .= $pourqui ;
+    $From  = "From:";
+    $From .= $pourqui;
     $From .= "\n";
     $From .= "MIME-version: 1.0\n";
     $From .= 'Content-Type: text/html; charset=utf-8'."\n"; 

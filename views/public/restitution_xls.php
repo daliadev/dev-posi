@@ -8,24 +8,27 @@ header('Content-Type: text/csv;');
 header('Content-Disposition: attachment; filename="'.$file.'"');
 
 
-?>"Question";"Catégorie/Compétence";"Degré";"Réponse utilisateur";"Réponse correcte";"Réussite"<?php
+?>"numero";"Question";"Catégorie/Compétence";"Degré";"Réponse utilisateur";"Réponse correcte";"Réussite"<?php
 
 	$content = "";
 
 	foreach($response['details']['questions'] as $detail)
     {
-		$detail['categories'][0]['nom_cat'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat'] );
-		$detail['categories'][0]['nom_cat_parent'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat_parent'] );
+    	$detail['intitule'] = preg_replace("`&#39;`","'", $detail['intitule']);
+
+		$detail['categories'][0]['nom_cat'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat']);
+		$detail['categories'][0]['nom_cat_parent'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat_parent']);
 
 		$content .= "\n";
 		$content .= '"';
 		$content .= $detail['num_ordre'].'";"';
+		$content .= utf8_decode($detail['intitule']).'";"';
 		if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
 		{
 			$content .= utf8_decode($detail['categories'][0]['nom_cat_parent']).' // ';
 		}
 		$content .= utf8_decode($detail['categories'][0]['nom_cat']).'";"';
-		$content .= $detail['nom_degre'].'";"';
+		$content .= utf8_decode($detail['nom_degre']).'";"';
 
 		if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
 		{

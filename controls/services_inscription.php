@@ -24,7 +24,6 @@ class ServicesInscription extends Main
         
         $this->servicesGestion = new ServicesAdminGestion();
         $this->servicesInscriptGestion = new ServicesInscriptionGestion();
-
     }
     
   
@@ -85,8 +84,29 @@ class ServicesInscription extends Main
             // Récupération du code
             if (isset($_POST['code_identification']) && !empty($_POST['code_identification'])) 
             {
-                $code = ServicesAuth::hashPassword($_POST['code_identification']);
+                $mdpUser = ServicesAuth::hashPassword($_POST['code_identification']);
+                $codes = Config::getCodeOrganisme();
 
+                $isAuth = false;
+
+                foreach ($codes as $code)
+                {
+                    if ($mdpUser === $code)
+                    {
+                        $isAuth = true;
+                    }
+                }
+
+                if ($isAuth)
+                {
+                    // authentifié
+                    ServicesAuth::login("user");
+                }
+                else
+                {
+                    $this->registerError("form_valid", "Le code organisme n'est pas valide");
+                }
+                /*
                 if ($code == Config::getCodeOrganisme())
                 {
                     // authentifié
@@ -96,6 +116,7 @@ class ServicesInscription extends Main
                 {
                     $this->registerError("form_valid", "Le code organisme n'est pas valide");
                 }
+                */
             }
             else
             {

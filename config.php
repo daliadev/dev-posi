@@ -158,7 +158,9 @@ class Config
     /* CodeOrganisme : dalia2013 (à remplacer si besoin) */
     public static function getCodeOrganisme()
     {
-        $pass = Config::hashPassword("dalia2013");
+        $pass = array();
+        $pass[0] = Config::hashPassword("dalia2013");
+        $pass[1] = Config::hashPassword("nico");
         return $pass;
     }
 

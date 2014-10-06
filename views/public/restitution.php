@@ -84,7 +84,8 @@ $form_url = $response['url'];
                             <div class="filter-item" id="combo-organ">
                                 <label for="ref_organ_cbox">Organisme :</label>
 
-                                <?php $disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+                                <?php //$disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+                                <?php $disabled = ""; ?>
                                 <select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" <?php echo $disabled; ?>>
                                     
                                     <?php if ($disabled == "") : ?>

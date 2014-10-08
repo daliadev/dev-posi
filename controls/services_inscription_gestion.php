@@ -304,7 +304,7 @@ class ServicesInscriptionGestion extends Main
                 $formData['mode_inter'] = "none";
                 $formData['ref_intervenant'] = $resultsetInter['response']['intervenant'][0]->getId();
             }
-            else
+            else if (Config::ALLOW_REFERENT_FOR_MULTI_ORGAN == 0)
             {
                 $this->registerError("form_valid", "L'email a déjà été saisi pour un autre organisme.");
             }

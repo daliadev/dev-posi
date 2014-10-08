@@ -1,54 +1,78 @@
 <?php
 
 /**
- * Description of Config
+ * Configuration du positionnement
  *
  * @author Nicolas Beurion / Dalia Team
  */
 
+
+
 class Config 
 {
 
-    const POSI_NAME = "Positionnement XXX"; // Nom du positionnement.
+    /* Nom et titre du positionnement */
+
+    // Nom du positionnement.
+    const POSI_NAME = "Positionnement XXX";
     
-    const POSI_TITLE = "Test de positionnement"; // Titre/accroche du positionnement.
+    // Titre/accroche du positionnement.
+    const POSI_TITLE = "Test de positionnement"; 
 
-    const ADMIN_TITLE = "Gestion du positionnement XXX"; // Titre de la partie admin.
+    // Titre de la partie admin.
+    const ADMIN_TITLE = "Gestion du positionnement XXX"; 
 
-    const POSI_MAX_COUNT = 0; // Nombre de positionnements maximum que peut effectuer l'organisme client (0: illimité) (non implémenté).
+
+    /* Gestion du nombre de positionnement */
+
+    // Nombre de positionnements maximum que peut effectuer l'organisme client.
+    const POSI_MAX_COUNT = 0; // 0: illimité (non implémenté).
+    
+
+    // Affichage du débuguage (développement).
+    const DEBUG_MODE = 0; // Activer (1) / désactiver (0) - 
+    
+    // Active la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
+    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0)
+    
+    // Autorise le lecteur audio au format flash (non implémenté).
+    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) - 
+
+    // Permet d'obtenir des requêtes instantanées (listes déroulantes lièes...) dans la restitution des résultats.
+    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) - 
     
 
 
-    const DEBUG_MODE = 0; // Activer (1) / désactiver (0) - L'affichage du débuguage.
-    
-    const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0) - La gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
-    
-    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) - Le lecteur audio flash (non implémenté).
+    /* Gestion spécifique des organismes lors de l'inscription */
 
-    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) - Est utilisé pour obtenir des requêtes instantanées (listes déroulantes lièes...).
-    
-
-    // Gestion spécifique des organismes lors de l'inscription
-    const ALLOW_OTHER_ORGAN = 1; // Activer (1) / désactiver (0) Permet la saisie d'un organisme par un utilisateur lors de l'inscription.
+    // Active la saisie d'un organisme par un utilisateur lors de l'inscription.
+    const ALLOW_OTHER_ORGAN = 1; // Activer (1) / désactiver (0) (Champ Autre) 
 
 
 
 
-    // Gestion spécifique des intervenants lors de l'inscription
-    const ALLOW_REFERENT_INPUT = 1; // Activer (1) / désactiver (0) - Affiche un champ de saisie pour le référent/formateur, sinon affiche la liste des intervenants présaisis.
+    /* Gestion spécifique des intervenants lors de l'inscription */
 
-    // Tableau des emails des référents/formateurs présaisis lors de l'inscription
+    // Active l'affichage un champ de saisie pour le référent/formateur, sinon affiche la liste des intervenants présaisis.
+    const ALLOW_REFERENT_INPUT = 1; // Activer (1) / désactiver (0)
+
+    // Tableau des emails des référents/formateurs présaisis lors de l'inscription.
     public static $emails_referent = array(
-        "xxx.xxxx@organisme1.fr",
-        "xxx.xxxx@organisme2.fr"
+        "xxx.xxxx@organisme1.fr"
     );
 
-    const ENVOI_EMAIL_REFERENT = 0; // Envoi (1) / pas d'envoi (0) - Permet l'envoi du résultat au référent/formateur
+    // Permet la saisie ou la présélection d'un même intervenant pour plusieurs organismes differents.
+    const ALLOW_REFERENT_FOR_MULTI_ORGAN = 0; // Permission (1) / interdiction (0)
 
 
 
 
-    // Tableau des emails des administrateurs (pour les positionnements effectués)
+    /* Gestion des envois d'email de résultats des positionnements */
+
+    // Permet l'envoi du mail de résultats au référent/formateur
+    const ENVOI_EMAIL_REFERENT = 0; // Envoi (1) / pas d'envoi (0)
+
+    // Tableau des adresse emails des administrateurs pour la réception des positionnements effectués.
     public static $emails_admin = array(
         "f.rampion@educationetformation.fr",
         "g.billard@educationetformation.fr", 
@@ -57,8 +81,8 @@ class Config
 
 
 
+    /* Infos de connexion de la base de données*/
 
-    // Coordonnées de la base de données
     public static $database = array(
         'driver'    =>  "mysql",
         'host'      =>  "127.0.0.1",
@@ -69,8 +93,8 @@ class Config
 
 
 
+    /* Menu admin */
 
-    // Tableau du menu admin
     public static $admin_menu = array(
 
         // Partie Gestion du positionnement du menu
@@ -131,7 +155,7 @@ class Config
             )
         ),
         
-        // Partie Gestion des résultats du menu
+        // Partie Gestion des résultats du menu.
         array(
 
             'title' =>"Résultats",
@@ -155,7 +179,9 @@ class Config
     
 
 
-    /* CodeOrganisme : dalia2013 (à remplacer si besoin) */
+    /* Gestion du code organisme */
+
+    // code : dalia2013 (à remplacer si besoin).
     public static function getCodeOrganisme()
     {
         $pass = array();
@@ -165,7 +191,8 @@ class Config
     }
 
 
-    const SALT = "#zE'rGr[kj+KtCH£>FjF|fm-76s}T'Yjk<]JDs[{hj,[fbS*"; // Sert au hashage du mot de passe
+    // Hashage (encodage) du mot de passe
+    const SALT = "#zE'rGr[kj+KtCH£>FjF|fm-76s}T'Yjk<]JDs[{hj,[fbS*"; 
 
     public static function hashPassword($pass)
     {

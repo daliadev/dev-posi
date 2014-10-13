@@ -288,7 +288,7 @@ class ServicesPublic extends Main
 
                 if (empty($resultsetSessions['response']))
                 {
-                    $this->registerError("form_empty", "Cette utilisateur n'a effectué aucun positionnement");
+                    $this->registerError("form_empty", "Aucun positionnement n'a été effectué par cet utilisateur.");
                 }
                 else 
                 {

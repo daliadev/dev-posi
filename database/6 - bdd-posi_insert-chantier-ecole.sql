@@ -232,8 +232,9 @@ VALUES 	(1, 1, 'Index des rues', 0),
 		
 		(27, 1, 'Lundi', 0),
 		(27, 2, 'Mardi', 0),
-		(27, 3, 'Jeudi', 0),
-		(27, 4, 'Vendredi', 1),
+		(27, 3, 'Mercredi', 0),
+		(27, 4, 'Jeudi', 0),
+		(27, 5, 'Vendredi', 1),
 		
 		(28, 1, '30h00', 0),
 		(28, 2, '32h00', 0),

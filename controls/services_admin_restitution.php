@@ -92,7 +92,8 @@ class ServicesAdminRestitution extends Main
             
             for ($i = 0; $i < count($resultset['response']['utilisateur']); $i++)
             {
-                if (intval($resultset['response']['utilisateur'][$i]->getSessionsAccomplies()) == 0)
+                $sessionsAccomplies = $resultset['response']['utilisateur'][$i]->getSessionsAccomplies();
+                if (intval($sessionsAccomplies) === 0)
                 {
                     unset($resultset['response']['utilisateur'][$i]);
                 }
@@ -122,7 +123,8 @@ class ServicesAdminRestitution extends Main
             
             for ($i = 0; $i < count($resultset['response']['session']); $i++)
             {
-                if (intval($resultset['response']['session'][$i]->getSessionAccomplie()) == 0)
+                $sessionsAccomplie = $resultset['response']['session'][$i]->getSessionAccomplie();
+                if (intval($sessionsAccomplie) === 0)
                 {
                     unset($resultset['response']['session'][$i]);
                 }

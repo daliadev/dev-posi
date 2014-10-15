@@ -1455,7 +1455,7 @@ class ServicesAdmin extends Main
 
                 /*** On va chercher tous les utilisateurs qui correspondent à l'organisme ***/
                 
-                $resultsetUsers = $this->servicesRestitution->getUsersFromOrganisme($organisme->getId());
+                $resultsetUsers = $this->servicesUtilisateur->getUsersFromOrganisme($organisme->getId());
 
                 if (!$this->filterDataErrors($resultsetUsers['response']))
                 {

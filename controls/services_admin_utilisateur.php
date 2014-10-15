@@ -66,6 +66,37 @@ class ServicesAdminUtilisateur extends Main
 
 
 
+    public function getUsersFromOrganisme($refOrganisme)
+    {
+        $resultset = $this->utilisateurDAO->selectByOrganisme($refOrganisme);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+            { 
+                $utilisateur = $resultset['response']['utilisateur'];
+                $resultset['response']['utilisateur'] = array($utilisateur);
+            }
+            /*
+            for ($i = 0; $i < count($resultset['response']['utilisateur']); $i++)
+            {
+                if (intval($resultset['response']['utilisateur'][$i]->getSessionsAccomplies()) == 0)
+                {
+                    unset($resultset['response']['utilisateur'][$i]);
+                }
+            }
+            */
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
+
+
     public function getUserDetails($refUser)
     {
         $userDetails = array();

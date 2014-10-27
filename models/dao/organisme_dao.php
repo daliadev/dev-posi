@@ -89,7 +89,7 @@ class OrganismeDAO extends ModelDAO
     {
         $this->initialize();
 
-        $request = "SELECT * FROM organisme";
+        $request = "SELECT * FROM organisme ORDER BY nom_organ ASC";
         
         $this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
 

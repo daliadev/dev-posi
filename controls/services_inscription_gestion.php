@@ -42,6 +42,7 @@ class ServicesInscriptionGestion extends Main
     {
         $resultset = $this->organismeDAO->selectAll();
         
+
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {
@@ -50,6 +51,12 @@ class ServicesInscriptionGestion extends Main
             { 
                 $organisme = $resultset['response']['organisme'];
                 $resultset['response']['organisme'] = array($organisme);
+            }
+
+            for ($i = 0; $i < count($resultset['response']['organisme']); $i++)
+            {
+                $organToUpper = mb_strtoupper($resultset['response']['organisme'][$i]->nom_organ, 'UTF-8');
+                $resultset['response']['organisme'][$i]->nom_organ = $organToUpper;
             }
 
             return $resultset;

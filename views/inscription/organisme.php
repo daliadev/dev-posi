@@ -142,7 +142,7 @@ $form_url = $response['url'];
 
                                     if (Config::ALLOW_OTHER_ORGAN)
                                     {
-                                        echo '<option value="new" '.$selected.'>Autre</option>';
+                                        echo '<option value="new" '.$selected.' style="font-weight:bold;">Autre</option>';
                                     }
 
                                     ?>

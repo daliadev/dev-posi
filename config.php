@@ -30,16 +30,19 @@ class Config
     
 
     // Affichage du débuguage (développement).
-    const DEBUG_MODE = 0; // Activer (1) / désactiver (0) - 
+    const DEBUG_MODE = 0; // Activer (1) / désactiver (0)
     
     // Active la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
     const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0)
     
     // Autorise le lecteur audio au format flash (non implémenté).
-    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0) - 
+    const ALLOW_AUDIO = 1; // Activer (1) / désactiver (0)
+
+    // Autorise le lecteur audio au format flash (non implémenté).
+    const ALLOW_VIDEO = 1; // Activer (1) / désactiver (0)
 
     // Permet d'obtenir des requêtes instantanées (listes déroulantes lièes...) dans la restitution des résultats.
-    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) - 
+    const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) 
     
 
 

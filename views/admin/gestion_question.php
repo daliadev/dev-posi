@@ -288,7 +288,7 @@ $form_url = WEBROOT."admin/question/";
                                             
                                         <?php else : ?>
 
-                                            <label for="image_file">Sélectionner un fichier image (format "jpeg")</label><br/>
+                                            <label for="image_file">Sélectionner un fichier image (format "jpeg", sert aussi pour la vidéo)</label><br/>
 
                                             <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
@@ -336,6 +336,43 @@ $form_url = WEBROOT."admin/question/";
 
                                             <input type="file" id="audio_file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_audio" class="reset-button" name="reset_audio" value="" <?php echo $formData['disabled']; ?>>
+                                            <div style="clear:both;"></div>
+
+                                        <?php endif; ?>
+                                        </p>
+                                        
+                                    </div>
+
+
+                                    <hr/>
+
+                                    <div id="video-question">
+                                        <strong>Video :</strong>
+                                        <p>
+
+                                        <?php if ($formData['video_question']) : $videoName = $formData['video_question']; ?>
+                                            <strong>Fichier vidéo : </strong>
+                                                <label id="video_label" for="video_file"><?php echo $videoName; ?></label> &nbsp;
+                                                
+                                                <?php if($formData['mode'] == "edit") : ?>
+                                                    <a id="del_video" class="del-video" name="del_video" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
+                                                <?php endif; ?>
+
+                                                <?php //if (Config::ALLOW_VIDEO) : ?>
+                                                    <!-- <div id="video-player"></div> -->
+                                                <?php //endif; ?>
+
+                                            <input type="file" id="video_file" name="video_file" accept="video/*" <?php echo $formData['disabled']; ?>>
+                                            <input type="button" id="reset_video" class="reset-button" name="reset_video" value="" <?php echo $formData['disabled']; ?>>
+                                            <input type="hidden" id="video_cache" name="video_question" value="<?php echo $videoName; ?>">
+                                            <div style="clear:both;"></div>
+                                            
+                                        <?php else : ?>
+
+                                            <label for="video_file">Sélectionner un fichier video (format "mp4")</label><br/>
+
+                                            <input type="file" id="video_file" name="video_file" accept="video/*" <?php echo $formData['disabled']; ?>>
+                                            <input type="button" id="reset_video" class="reset-button" name="reset_video" value="" <?php echo $formData['disabled']; ?>>
                                             <div style="clear:both;"></div>
 
                                         <?php endif; ?>
@@ -502,19 +539,19 @@ $form_url = WEBROOT."admin/question/";
                                 <div id="titre-question-h3">Activités</div>
                                 <div id="ref_activites" class="datalist">
                                     <p>
-                                        <input type="checkbox" name="ref_activite" value="1" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Prendre un billet</span>
+                                        <input type="checkbox" name="ref_activite" value="1" disabled /><span class="checkbox-<?php //echo $formData['disabled']; ?>"> Aéroport - Prendre un billet</span>
                                     </p>
                                     <p>
-                                        <input type="checkbox" name="ref_activite" value="2" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Embarquer</span>
+                                        <input type="checkbox" name="ref_activite" value="2" disabled /><span class="checkbox-<?php //echo $formData['disabled']; ?>"> Aéroport - Embarquer</span>
                                     </p>
                                     <p>
-                                        <input type="checkbox" name="ref_activite" value="3" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Aéroport - Repérage et fiches de douane</span>
+                                        <input type="checkbox" name="ref_activite" value="3" disabled /><span class="checkbox-<?php //echo $formData['disabled']; ?>"> Aéroport - Repérage et fiches de douane</span>
                                     </p>
                                     <p>
-                                        <input type="checkbox" name="ref_activite" value="4" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Se déplacer en bus</span>
+                                        <input type="checkbox" name="ref_activite" value="4" disabled /><span class="checkbox-<?php //echo $formData['disabled']; ?>"> Se déplacer en bus</span>
                                     </p>
                                     <p>
-                                        <input type="checkbox" name="ref_activite" value="5" disabled /><span class="checkbox-<?php echo $formData['disabled']; ?>"> Préparer son trajet Rouen-Lyon</span>
+                                        <input type="checkbox" name="ref_activite" value="5" disabled /><span class="checkbox-<?php //echo $formData['disabled']; ?>"> Préparer son trajet Rouen-Lyon</span>
                                     </p>
 
                                 </div>
@@ -761,7 +798,7 @@ $form_url = WEBROOT."admin/question/";
 
             // Suppression de l'audio
             var audioCacheValue = $("#image_cache").val();
-            var audioName = $("#image_label").text();
+            var audioName = $("#audio_label").text();
 
             $("#del_audio").click(function(event) {
 
@@ -785,6 +822,41 @@ $form_url = WEBROOT."admin/question/";
                 }
             });
 
+
+            // Actualisation du téléchargement de la vidéo
+            var inputVideoFile = $("#video_file").clone(true);
+
+            $('#reset_video').click(function(event) {
+                $("#video_file").replaceWith(inputVideoFile);
+                inputVideoFile = $("#video_file").clone(true);
+            });
+
+
+            // Suppression de l'audio
+            var videoCacheValue = $("#video_cache").val();
+            var videoName = $("#video_label").text();
+
+            $("#del_video").click(function(event) {
+
+                if ($(this).text() == "Supprimer") {
+
+                    $("#video_cache").val("");
+                    $("#video_label").text("");
+                    //$("#video-player").hide();
+                    $("#video_file").prop("disabled", true);
+                    $('#reset_video').prop("disabled", true);
+                    $(this).text("Annuler la suppression");
+                }
+                else {
+
+                    $("#video_cache").val(videoCacheValue);
+                    $("#video_label").text(videoName);
+                    //$("#video-player").show();
+                    $("#video_file").prop("disabled", false);
+                    $('#reset_video').prop("disabled", false);
+                    $(this).text("Supprimer");
+                }
+            });
 
 
 

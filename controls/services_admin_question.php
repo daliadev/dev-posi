@@ -82,6 +82,7 @@ class ServicesAdminQuestion extends Main
         $questionDetails['type_question'] = "";
         $questionDetails['image_question'] = "";
         $questionDetails['audio_question'] = "";
+        $questionDetails['video_question'] = "";
         $questionDetails['ref_degre'] = "";
         
         $resultsetQuestion = $this->questionDAO->selectById($idQuestion);
@@ -94,6 +95,7 @@ class ServicesAdminQuestion extends Main
             $questionDetails['type_question'] = $resultsetQuestion['response']['question']->getType();
             $questionDetails['image_question'] = $resultsetQuestion['response']['question']->getImage();
             $questionDetails['audio_question'] = $resultsetQuestion['response']['question']->getSon();
+            $questionDetails['video_question'] = $resultsetQuestion['response']['question']->getVideo();
             $questionDetails['ref_degre'] = $resultsetQuestion['response']['question']->getRefDegre();
 
             $categories = $this->getQuestionCategories($idQuestion);
@@ -288,8 +290,8 @@ class ServicesAdminQuestion extends Main
         }
 
 
+
         /*** Traitement de l'image ***/
-        
 
         if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
         {
@@ -350,6 +352,39 @@ class ServicesAdminQuestion extends Main
             $formData['audio_question'] = "";
             $dataQuestion['audio_question'] = null;
         }
+
+
+
+        /*** Traitement de la vidéo ***/
+
+        if (isset($_FILES['video_file']['name']) && !empty($_FILES['video_file']['name']))
+        {
+            $mimeType = str_replace("video/", "", $_FILES['video_file']['type']);
+
+            if ($mimeType == "mp4")
+            {
+                $formData['video_upload'] = true;
+                $formData['video_question'] = "";
+                $dataQuestion['video_question'] = null;
+            }
+            else
+            {
+                $this->registerError("form_empty", 'Le format de la vidéo est incorrect (format ".mp4" uniquement).');
+            }
+        }
+        else if (isset($postData['video_question']) && !empty($postData['video_question']))
+        {
+            $formData['video_upload'] = false;
+            $formData['video_question'] = $postData['video_question'];
+            $dataQuestion['video_question'] = $formData['video_question'];
+        }
+        else 
+        {
+            $formData['video_upload'] = false;
+            $formData['video_question'] = "";
+            $dataQuestion['video_question'] = null;
+        }
+
         
         return $dataQuestion;
 
@@ -405,6 +440,12 @@ class ServicesAdminQuestion extends Main
                 {
                     $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], "mp3");
                     $dataQuestion['audio_question'] = $formData['audio_question'];
+                }
+
+                if ($formData['video_upload'])
+                {
+                    $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], "mp4");
+                    $dataQuestion['video_question'] = $formData['video_question'];
                 }
 
 
@@ -469,6 +510,12 @@ class ServicesAdminQuestion extends Main
                 {
                     $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], "mp3");
                     $dataQuestion['audio_question'] = $formData['audio_question'];
+                }
+
+                if ($formData['video_upload'])
+                {
+                    $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], "mp4");
+                    $dataQuestion['video_question'] = $formData['video_question'];
                 }
 
                 
@@ -611,6 +658,11 @@ class ServicesAdminQuestion extends Main
                 if ($question->getSon())
                 {
                     $this->deleteMedia(ROOT.AUDIO_PATH, $question->getSon());
+                }
+
+                if ($question->getVideo())
+                {
+                    $this->deleteMedia(ROOT.VIDEO_PATH, $question->getVideo());
                 }
 
                 // On décale toutes les questions qui suivent d'un cran
@@ -860,6 +912,10 @@ class ServicesAdminQuestion extends Main
             {
                 return $resultsetQuestion['response']['question'][0]->getSon();
             }
+            else if ($type == "video")
+            {
+                return $resultsetQuestion['response']['question'][0]->getVideo();
+            }
         }
 
         return false;
@@ -915,6 +971,27 @@ class ServicesAdminQuestion extends Main
             {
                 $this->registerError("form_valid", "Le son n'a pas pu être enregistré.");
                 $this->deleteMedia(ROOT.AUDIO_PATH, $mediaName);
+            }
+
+            return $mediaName;
+        }
+        else if ($type == "video" && isset($files['video_file']['name']) && !empty($files['video_file']['name']))
+        {
+            if ($oldMediaName)
+            {
+                $this->deleteMedia(ROOT.VIDEO_PATH, $oldMediaName);
+            }
+
+            $mediaName = "video_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
+
+            $videoFile = ROOT.VIDEO_PATH.$mediaName;
+
+            $this->uploadMedia($_FILES['video_file'], "video", array($mediaExt), ROOT.VIDEO_PATH, $mediaName);
+
+            if (!empty($this->errors)) 
+            {
+                $this->registerError("form_valid", "La vidéo n'a pas pu être enregistré.");
+                $this->deleteMedia(ROOT.VIDEO_PATH, $mediaName);
             }
 
             return $mediaName;
@@ -1034,16 +1111,19 @@ class ServicesAdminQuestion extends Main
                 $oldImageName = $this->getMedia("image", $i);
                 $oldThumbName = "thumb_".$oldImageName;
                 $oldAudioName = $this->getMedia("audio", $i);
+                $oldVideoName = $this->getMedia("video", $i);
 
                 $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
                 $newThumbName = "thumb_".$newImageName;
                 $newAudioName = "audio_".$newNumOrdre."_".uniqid().".mp3";
+                $newVideoName = "video_".$newNumOrdre."_".uniqid().".mp4";
 
                 rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
                 rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
                 rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
+                rename(ROOT.VIDEO_PATH.$oldVideoName, ROOT.VIDEO_PATH.$newVideoName);
 
-                $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName);
+                $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName, $newVideoName);
                 
                 if ($this->filterDataErrors($resultset['response']) || empty($resultset['response']['question']['row_count']))
                 {
@@ -1061,16 +1141,19 @@ class ServicesAdminQuestion extends Main
                 $oldImageName = $this->getMedia("image", $i);
                 $oldThumbName = "thumb_".$oldImageName;
                 $oldAudioName = $this->getMedia("audio", $i);
+                $oldVideoName = $this->getMedia("video", $i);
 
                 $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
                 $newThumbName = "thumb_".$newImageName;
                 $newAudioName = "audio_".$newNumOrdre."_".uniqid().".mp3";
+                $newVideoName = "video_".$newNumOrdre."_".uniqid().".mp4";
 
                 rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
                 rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
                 rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
+                rename(ROOT.VIDEO_PATH.$oldVideoName, ROOT.VIDEO_PATH.$newVideoName);
 
-                $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName);
+                $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName, $newVideoName);
 
                 if ($this->filterDataErrors($resultset['response']) || empty($resultset['response']['question']['row_count']))
                 {

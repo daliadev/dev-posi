@@ -17,6 +17,7 @@ define('SERVER_URL', 'http://'.$_SERVER['HTTP_HOST'].WEBROOT);
 define('IMG_PATH', "uploads/img/");
 define('THUMBS_PATH', "uploads/img/thumbs/");
 define('AUDIO_PATH', "uploads/audio/");
+define('VIDEO_PATH', "uploads/video/");
 
 
 // Inclusion da la classe Config

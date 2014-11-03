@@ -157,6 +157,7 @@ CREATE TABLE question
 	intitule_question TINYTEXT NOT NULL,
 	image_question VARCHAR(255) NULL,
 	audio_question VARCHAR(255) NULL,
+	video_question VARCHAR(255) NULL,
 	KEY type_question (type_question)
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;

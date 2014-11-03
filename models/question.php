@@ -12,6 +12,7 @@ class Question
     public $intitule_question = null;
     public $image_question = null;
     public $audio_question = null;
+    public $video_question = null;
     
 
     
@@ -48,6 +49,11 @@ class Question
     public function getSon()
     {
         return $this->audio_question;
+    }
+
+    public function getVideo()
+    {
+        return $this->video_question;
     }
     
 }

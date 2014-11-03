@@ -196,6 +196,7 @@ class ServicesAdmin extends Main
             "reponse_champ"      => "text",
             "image_question"     => "text",
             "audio_question"     => "text",
+            "video_question"     => "text",
             "code_cat_cbox"      => "select",
             "ref_activites"      => "multi",
             "ref_degre"          => "multi"
@@ -409,7 +410,6 @@ class ServicesAdmin extends Main
         if (!empty($this->formData['ref_question']) && !empty($this->formData['type_question']) && $this->formData['type_question'] == "qcm")
         {
             $listeReponses['reponses'] = $this->servicesQuestion->getReponses($this->formData['ref_question']);
-            //$this->returnData['response'] = array_merge($listeReponses, $this->returnData['response']);
         }
         
         // Requete pour obtenir la liste des degres.

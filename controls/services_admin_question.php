@@ -293,19 +293,33 @@ class ServicesAdminQuestion extends Main
 
         /*** Traitement de l'image ***/
 
+        $maxSize = $postData['MAX_FILE_SIZE'];
+
         if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name']))
         {
             $mimeType = str_replace("image/", "", $_FILES['image_file']['type']);
 
-            if ($mimeType == "jpeg" || $mimeType == "jpg") 
+            if ($_FILES['image_file']['error'] > 0)
             {
-                $formData['image_upload'] = true;
-                $formData['image_question'] = "";
-                $dataQuestion['image_question'] = null;
+                $this->registerError("form_valid", 'Une erreur s\'est produite lors du transfert du fichier image.');
             }
-            else
+            else if ($_FILES['image_file']['size'] > $maxSize)
             {
-                $this->registerError("form_valid", 'Le format de l\'image est incorrect (format ".jpg" uniquement).');
+                $this->registerError("form_valid", 'La taille du fichier image dépasse la limite autorisée (20 Mo).');
+            }
+            else 
+            {
+                if ($mimeType == "jpeg" || $mimeType == "jpg" || $mimeType == "png") 
+                {
+                    $formData['image_type'] = $mimeType;
+                    $formData['image_upload'] = true;
+                    $formData['image_question'] = "";
+                    $dataQuestion['image_question'] = null;
+                }
+                else
+                {
+                    $this->registerError("form_valid", 'Le format de l\'image est incorrect (format ".jpg" ou ".png" uniquement).');
+                }
             }
         }
         else if (isset($postData['image_question']) && !empty($postData['image_question']))
@@ -331,6 +345,7 @@ class ServicesAdminQuestion extends Main
 
             if ($mimeType == "mp3" || $mimeType == "mpeg" || $mimeType == "mpeg3")
             {
+                $formData['audio_type'] = $mimeType;
                 $formData['audio_upload'] = true;
                 $formData['audio_question'] = "";
                 $dataQuestion['audio_question'] = null;
@@ -361,8 +376,9 @@ class ServicesAdminQuestion extends Main
         {
             $mimeType = str_replace("video/", "", $_FILES['video_file']['type']);
 
-            if ($mimeType == "mp4")
+            if ($mimeType == "mp4"  || $mimeType == "mpeg4" || $mimeType == "mpeg")
             {
+                $formData['video_type'] = $mimeType;
                 $formData['video_upload'] = true;
                 $formData['video_question'] = "";
                 $dataQuestion['video_question'] = null;
@@ -432,19 +448,19 @@ class ServicesAdminQuestion extends Main
                 // Insertion des médias
                 if ($formData['image_upload'])
                 {
-                    $formData['image_question'] = $this->setMedia("image", $_FILES, $formData['num_ordre_question'], "jpg");
+                    $formData['image_question'] = $this->setMedia("image", $_FILES, $formData['num_ordre_question'], $formData['image_type'], array("jpg", "jpeg", "png"));
                     $dataQuestion['image_question'] = $formData['image_question'];
                 }
                 
                 if ($formData['audio_upload'])
                 {
-                    $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], "mp3");
+                    $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], $formData['audio_type'], array("mp3", "mpeg", "mpeg3"));
                     $dataQuestion['audio_question'] = $formData['audio_question'];
                 }
 
                 if ($formData['video_upload'])
                 {
-                    $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], "mp4");
+                    $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], $formData['video_type'], array("mp4", "mpeg4"));
                     $dataQuestion['video_question'] = $formData['video_question'];
                 }
 
@@ -502,19 +518,19 @@ class ServicesAdminQuestion extends Main
                 // Insertion des médias
                 if ($formData['image_upload'])
                 {
-                    $formData['image_question'] = $this->setMedia("image", $_FILES, $formData['num_ordre_question'], "jpg");
+                    $formData['image_question'] = $this->setMedia("image", $_FILES, $formData['num_ordre_question'], $formData['image_type'], array("jpg", "jpeg", "png"));
                     $dataQuestion['image_question'] = $formData['image_question'];
                 }
                 
                 if ($formData['audio_upload'])
                 {
-                    $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], "mp3");
+                    $formData['audio_question'] = $this->setMedia("audio", $_FILES, $formData['num_ordre_question'], $formData['audio_type'], array("mp3", "mpeg", "mpeg3"));
                     $dataQuestion['audio_question'] = $formData['audio_question'];
                 }
 
                 if ($formData['video_upload'])
                 {
-                    $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], "mp4");
+                    $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], $formData['video_type'], array("mp4", "mpeg4"));
                     $dataQuestion['video_question'] = $formData['video_question'];
                 }
 
@@ -925,79 +941,99 @@ class ServicesAdminQuestion extends Main
 
 
 
-    public function setMedia($type, &$files, $numOrdreQuestion, $mediaExt)
+    public function setMedia($type, &$files, $numOrdreQuestion, $mediaExt, $authorizedFormats)
     {
         $oldMediaName = $this->getMedia($type, $numOrdreQuestion);
 
-        if ($type == "image" && isset($files['image_file']['name']) && !empty($files['image_file']['name']))
-        {
 
+        if ($type == "image" && $files['image_file']['error'] == 0 && isset($files['image_file']['name']) && !empty($files['image_file']['name']))
+        {
             if ($oldMediaName)
             {
                 $this->deleteMedia(ROOT.IMG_PATH, $oldMediaName);
                 $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$oldMediaName);
             }
 
-            $mediaName = "img_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
+            if ($mediaExt == "jpeg") 
+            {
+                $mediaExt = "jpg";
+            }
 
-            $imageFile = ROOT.IMG_PATH.$mediaName;
-            $thumbFile = ROOT.THUMBS_PATH."thumb_".$mediaName;
+            $mediaName = "img_".$numOrdreQuestion."_".uniqid(); //.".".$mediaExt;
+
+            $imageFile = ROOT.IMG_PATH.$mediaName.".".$mediaExt;
+            $thumbFile = ROOT.THUMBS_PATH."thumb_".$mediaName.".".$mediaExt;
             
-            $this->uploadMedia($files['image_file'], "image", array($mediaExt), ROOT.IMG_PATH, $mediaName);
+            $this->uploadMedia($files['image_file'], "image", $authorizedFormats, ROOT.IMG_PATH, $mediaName, $mediaExt);
 
             if (!empty($this->errors))
             {
                 $this->registerError("form_valid", "L'image n'a pas pu être enregistrée.");
-                $this->deleteMedia(ROOT.IMG_PATH, $mediaName);
-                $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$mediaName);
+                $this->deleteMedia(ROOT.IMG_PATH, $mediaName.".".$mediaExt);
+                $this->deleteMedia(ROOT.THUMBS_PATH, "thumb_".$mediaName.".".$mediaExt);
             }
 
-            return $mediaName;
+            return $mediaName.".".$mediaExt;
         }
-        else if ($type == "audio" && isset($files['audio_file']['name']) && !empty($files['audio_file']['name']))
+        else if ($type == "audio" && $files['audio_file']['error'] == 0 && isset($files['audio_file']['name']) && !empty($files['audio_file']['name']))
         {
             if ($oldMediaName)
             {
                 $this->deleteMedia(ROOT.AUDIO_PATH, $oldMediaName);
             }
 
-            $mediaName = "audio_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
+            if ($mediaExt == "mpeg" || $mediaExt == "mpeg3") 
+            {
+                $mediaExt = "mp3";
+            }
 
-            $soundFile = ROOT.AUDIO_PATH.$mediaName;
+            $mediaName = "audio_".$numOrdreQuestion."_".uniqid(); //.".".$mediaExt;
 
-            $this->uploadMedia($_FILES['audio_file'], "son", array($mediaExt), ROOT.AUDIO_PATH, $mediaName);
+            $soundFile = ROOT.AUDIO_PATH.$mediaName.".".$mediaExt;
+
+            $this->uploadMedia($_FILES['audio_file'], "son", $authorizedFormats, ROOT.AUDIO_PATH, $mediaName, $mediaExt);
 
             if (!empty($this->errors)) 
             {
                 $this->registerError("form_valid", "Le son n'a pas pu être enregistré.");
-                $this->deleteMedia(ROOT.AUDIO_PATH, $mediaName);
+                $this->deleteMedia(ROOT.AUDIO_PATH, $mediaName.".".$mediaExt);
             }
 
-            return $mediaName;
+            return $mediaName.".".$mediaExt;
         }
-        else if ($type == "video" && isset($files['video_file']['name']) && !empty($files['video_file']['name']))
+        else if ($type == "video" && $files['video_file']['error'] == 0 && isset($files['video_file']['name']) && !empty($files['video_file']['name']))
         {
             if ($oldMediaName)
             {
                 $this->deleteMedia(ROOT.VIDEO_PATH, $oldMediaName);
             }
 
-            $mediaName = "video_".$numOrdreQuestion."_".uniqid().".".$mediaExt;
+            if ($mediaExt == "mpeg4" || $mediaExt == "mpeg") 
+            {
+                $mediaExt = "mp4";
+            }
 
-            $videoFile = ROOT.VIDEO_PATH.$mediaName;
+            $mediaName = "video_".$numOrdreQuestion."_".uniqid(); //.".".$mediaExt;
 
-            $this->uploadMedia($_FILES['video_file'], "video", array($mediaExt), ROOT.VIDEO_PATH, $mediaName);
+            $videoFile = ROOT.VIDEO_PATH.$mediaName.".".$mediaExt;
+
+            $this->uploadMedia($_FILES['video_file'], "video", $authorizedFormats, ROOT.VIDEO_PATH, $mediaName, $mediaExt);
 
             if (!empty($this->errors)) 
             {
                 $this->registerError("form_valid", "La vidéo n'a pas pu être enregistré.");
-                $this->deleteMedia(ROOT.VIDEO_PATH, $mediaName);
+                $this->deleteMedia(ROOT.VIDEO_PATH, $mediaName.".".$mediaExt);
             }
 
-            return $mediaName;
+            return $mediaName.".".$mediaExt;
+        }
+        else 
+        {
+            $this->registerError("form_valid", "Une erreur s'est produite, le média n'a pas pu être enregistré.");
+            return false;
         }
 
-        return false;
+        
     }
 
 
@@ -1113,15 +1149,29 @@ class ServicesAdminQuestion extends Main
                 $oldAudioName = $this->getMedia("audio", $i);
                 $oldVideoName = $this->getMedia("video", $i);
 
-                $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
-                $newThumbName = "thumb_".$newImageName;
-                $newAudioName = "audio_".$newNumOrdre."_".uniqid().".mp3";
-                $newVideoName = "video_".$newNumOrdre."_".uniqid().".mp4";
+                $newImageName = null;
+                $newAudioName = null;
+                $newVideoName = null;
 
-                rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
-                rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
-                rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
-                rename(ROOT.VIDEO_PATH.$oldVideoName, ROOT.VIDEO_PATH.$newVideoName);
+                if (!empty($oldImageName) && $oldImageName != false) 
+                {
+                    $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
+                    $newThumbName = "thumb_".$newImageName;
+                    rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
+                    rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
+                }
+                
+                if (!empty($oldAudioName) && $oldAudioName != false) 
+                {
+                    $newAudioName = "audio_".$newNumOrdre."_".uniqid().".mp3";
+                    rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
+                }
+
+                if (!empty($oldVideoName) && $oldVideoName != false) 
+                {
+                    $newVideoName = "video_".$newNumOrdre."_".uniqid().".mp4";
+                    rename(ROOT.VIDEO_PATH.$oldVideoName, ROOT.VIDEO_PATH.$newVideoName);
+                }
 
                 $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName, $newVideoName);
                 
@@ -1143,16 +1193,37 @@ class ServicesAdminQuestion extends Main
                 $oldAudioName = $this->getMedia("audio", $i);
                 $oldVideoName = $this->getMedia("video", $i);
 
-                $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
-                $newThumbName = "thumb_".$newImageName;
-                $newAudioName = "audio_".$newNumOrdre."_".uniqid().".mp3";
-                $newVideoName = "video_".$newNumOrdre."_".uniqid().".mp4";
+                $newImageName = null;
+                $newAudioName = null;
+                $newVideoName = null;
 
+                if (!empty($oldImageName) && $oldImageName != false) 
+                {
+                    $newImageName = "img_".$newNumOrdre."_".uniqid().".jpg";
+                    $newThumbName = "thumb_".$newImageName;
+                    rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
+                    rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
+                }
+                
+                if (!empty($oldAudioName) && $oldAudioName != false) 
+                {
+                    $newAudioName = "audio_".$newNumOrdre."_".uniqid().".mp3";
+                    rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
+                }
+
+                if (!empty($oldVideoName) && $oldVideoName != false) 
+                {
+                    $newVideoName = "video_".$newNumOrdre."_".uniqid().".mp4";
+                    rename(ROOT.VIDEO_PATH.$oldVideoName, ROOT.VIDEO_PATH.$newVideoName);
+                }
+
+                /*
                 rename(ROOT.IMG_PATH.$oldImageName, ROOT.IMG_PATH.$newImageName);
                 rename(ROOT.THUMBS_PATH.$oldThumbName, ROOT.THUMBS_PATH.$newThumbName);
                 rename(ROOT.AUDIO_PATH.$oldAudioName, ROOT.AUDIO_PATH.$newAudioName);
                 rename(ROOT.VIDEO_PATH.$oldVideoName, ROOT.VIDEO_PATH.$newVideoName);
-
+                */
+                
                 $resultset = $this->questionDAO->shiftOrder($i, $offset, $newImageName, $newAudioName, $newVideoName);
 
                 if ($this->filterDataErrors($resultset['response']) || empty($resultset['response']['question']['row_count']))
@@ -1177,33 +1248,34 @@ class ServicesAdminQuestion extends Main
 
     
     
-    public function uploadMedia($file, $mediaType, $allowFormat, $path, $name)
+    public function uploadMedia($file, $mediaType, $allowFormat, $path, $name, $ext)
     {
         $media_question = null;
                 
         if ($file['error'] == 0)
         {
             // Récupération du suffix du fichier
-            $ext = strtolower(substr($file['name'], -3));
+            //$ext = strtolower(substr($file['name'], -3));
 
             if (in_array($ext, $allowFormat))
             {
+                $completeName = $name.".".$ext;
 
                 // Déplacement du fichier de sa position temp vers sa destination finale
-                if (move_uploaded_file($file['tmp_name'], $path.$name))
+                if (move_uploaded_file($file['tmp_name'], $path.$completeName))
                 {
                     if ($mediaType == "image")
                     {
                         require_once(ROOT."utils/image_uploader.php");
                         
                         // On recréé l'image au bon format
-                        ImageUploader::create($path.$name, $path, $name, $ext, true, 750, 420);
+                        ImageUploader::create($path.$completeName, $path, $name, $ext, true, 750, 420);
 
                         // On créé la vignette de l'image
-                        ImageUploader::create($path.$name, ROOT.THUMBS_PATH, "thumb_".$name, $ext, false, 112, 70);
+                        ImageUploader::create($path.$completeName, ROOT.THUMBS_PATH, "thumb_".$name, $ext, false, 112, 70);
                     }
 
-                    $media_question = $name;
+                    $media_question = $completeName;
 
                 }
                 else 

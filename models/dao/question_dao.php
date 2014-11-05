@@ -197,19 +197,34 @@ class QuestionDAO extends ModelDAO
     
     
     
-    public function shiftOrder($numOrdre, $offset, $imageName, $audioName, $videoName) 
+    public function shiftOrder($numOrdre, $offset, $imageName = null, $audioName = null, $videoName = null) 
     {
         
         $this->resultset['response']['question'] = array();
         
         $offsetOrdre = $numOrdre + $offset;
-        
+        /*
+        $mediasQueryVars = "";
+
+        if (!empty($imageName)) 
+        {
+            $mediasQueryVars .= ", image_question = '".$imageName."'";
+        }
+        if (!empty($audioName)) 
+        {
+            $mediasQueryVars .= ", audio_question = '".$audioName."'";
+        }
+        if (!empty($videoName)) 
+        {
+            $mediasQueryVars .= ", video_question = '".$videoName."'";
+        }
+        */
         try
         {
             // Connection à la base de données
             $this->connectDB();
 
-            $request = "UPDATE question SET num_ordre_question = ".$offsetOrdre.", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE num_ordre_question = ".$numOrdre;
+            $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE num_ordre_question = ".$numOrdre;
 
             // Création de l'appel à la requête préparée
             $this->prepareStatement($request);

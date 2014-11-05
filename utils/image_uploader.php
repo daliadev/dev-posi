@@ -6,7 +6,10 @@ class ImageUploader
     static function create($image, $path, $name, $ext, $delete = false, $width = 100, $height = 100)
     {
         // On supprime l'extension du nom
-        $name = substr($name, 0, -4);
+        //$name = substr($name, 0, -4);
+        //var_dump($name);
+        //var_dump($ext);
+        //exit();
 
         // On créé une image à partir du fichier récup et selon le format choisi
         if ($ext == "jpg")
@@ -71,7 +74,19 @@ class ImageUploader
         imagecopyresampled($imageFinale, $imageCreated, $offsetX, $offsetY, 0, 0, $finalWidth, $finalHeight, $imageWidth, $imageHeight);
 
         // On sauvegarde l'image finale
-        imagejpeg($imageFinale, $path.$name.".".$ext, 100);
+        //imagejpeg($imageFinale, $path.$name.".".$ext, 100);
+        if ($ext == "jpg")
+        {
+            imagejpeg($imageFinale, $path.$name.".".$ext, 100);
+        }
+        else if ($ext == "png")
+        {
+            imagepng($imageFinale, $path.$name.".".$ext, 0);
+        }
+        else if ($ext == "gif")
+        {
+            imagegif($imageFinale, $path.$name.".".$ext);
+        }
 
         // On libère la mémoire
         imagedestroy($imageFinale);

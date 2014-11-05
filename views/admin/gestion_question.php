@@ -259,7 +259,9 @@ $form_url = WEBROOT."admin/question/";
                             <div id="medias">
 
                                 <fieldset>
-                                
+                                    
+                                    <input type="hidden" name="MAX_FILE_SIZE" value="20971520">
+
                                     <legend>Medias</legend>
 
                                     <div id="image-question">
@@ -268,7 +270,7 @@ $form_url = WEBROOT."admin/question/";
 
                                         <?php if ($formData['image_question']) : $imageName = $formData['image_question']; ?>
 
-                                            <strong>Fichier image : </strong>
+                                            <strong>Fichier image actuel : </strong>
                                                 <label id="image_label" for="image_file"><?php echo $imageName; ?></label> &nbsp; 
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
@@ -280,7 +282,8 @@ $form_url = WEBROOT."admin/question/";
                                                     <img src="<?php echo WEBROOT.THUMBS_PATH; ?>thumb_<?php echo $imageName; ?>">
                                                 </a>
                                             </div>
-
+                                            
+                                            <div style="margin-top:5px;">Télécharger un nouveau fichier image : </div>
                                             <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
                                             <input type="hidden" id="image_cache" name="image_question" value="<?php echo $imageName; ?>">
@@ -288,7 +291,7 @@ $form_url = WEBROOT."admin/question/";
                                             
                                         <?php else : ?>
 
-                                            <label for="image_file">Sélectionner un fichier image (format "jpeg", sert aussi pour la vidéo)</label><br/>
+                                            <label for="image_file">Sélectionner une image (format "jpg" ou "png", sert aussi pour la vidéo)</label><br/>
 
                                             <input type="file" id="image_file" name="image_file" accept="image/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_image" class="reset-button" name="reset_image" value="" <?php echo $formData['disabled']; ?>>
@@ -305,7 +308,7 @@ $form_url = WEBROOT."admin/question/";
                                         <p>
 
                                         <?php if ($formData['audio_question']) : $audioName = $formData['audio_question']; ?>
-                                            <strong>Fichier audio : </strong>
+                                            <strong>Fichier audio actuel : </strong>
                                                 <label id="audio_label" for="audio_file"><?php echo $audioName; ?></label> &nbsp;
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
@@ -324,7 +327,7 @@ $form_url = WEBROOT."admin/question/";
                                                         -->
                                                     </div>
                                                 <?php //endif; ?>
-
+                                            <div style="margin-top:5px;">Télécharger un nouveau fichier audio : </div>
                                             <input type="file" id="audio_file" name="audio_file" accept="audio/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_audio" class="reset-button" name="reset_audio" value="" <?php echo $formData['disabled']; ?>>
                                             <input type="hidden" id="audio_cache" name="audio_question" value="<?php echo $audioName; ?>">
@@ -351,7 +354,7 @@ $form_url = WEBROOT."admin/question/";
                                         <p>
 
                                         <?php if ($formData['video_question']) : $videoName = $formData['video_question']; ?>
-                                            <strong>Fichier vidéo : </strong>
+                                            <strong>Fichier vidéo actuel : </strong>
                                                 <label id="video_label" for="video_file"><?php echo $videoName; ?></label> &nbsp;
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
@@ -359,9 +362,10 @@ $form_url = WEBROOT."admin/question/";
                                                 <?php endif; ?>
 
                                                 <?php //if (Config::ALLOW_VIDEO) : ?>
-                                                    <!-- <div id="video-player"></div> -->
+                                                    <div id="video-player"></div>
                                                 <?php //endif; ?>
-
+                                                
+                                            <div style="margin-top:5px;">Télécharger un nouveau fichier vidéo : </div>
                                             <input type="file" id="video_file" name="video_file" accept="video/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_video" class="reset-button" name="reset_video" value="" <?php echo $formData['disabled']; ?>>
                                             <input type="hidden" id="video_cache" name="video_question" value="<?php echo $videoName; ?>">
@@ -369,7 +373,7 @@ $form_url = WEBROOT."admin/question/";
                                             
                                         <?php else : ?>
 
-                                            <label for="video_file">Sélectionner un fichier video (format "mp4")</label><br/>
+                                            <label for="video_file">Sélectionner un fichier video (format "mp4", taille maximum : 20M)</label><br/>
 
                                             <input type="file" id="video_file" name="video_file" accept="video/*" <?php echo $formData['disabled']; ?>>
                                             <input type="button" id="reset_video" class="reset-button" name="reset_video" value="" <?php echo $formData['disabled']; ?>>
@@ -832,7 +836,7 @@ $form_url = WEBROOT."admin/question/";
             });
 
 
-            // Suppression de l'audio
+            // Suppression de la vidéo
             var videoCacheValue = $("#video_cache").val();
             var videoName = $("#video_label").text();
 

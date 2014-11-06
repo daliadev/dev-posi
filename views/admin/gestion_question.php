@@ -309,6 +309,7 @@ $form_url = WEBROOT."admin/question/";
 
                                         <?php if ($formData['audio_question']) : $audioName = $formData['audio_question']; ?>
                                             <strong>Fichier audio actuel : </strong>
+                                                <input id="audio-filename" type="hidden" value="<?php echo $audioName; ?>">
                                                 <label id="audio_label" for="audio_file"><?php echo $audioName; ?></label> &nbsp;
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
@@ -579,12 +580,12 @@ $form_url = WEBROOT."admin/question/";
 
                         <input type="hidden" name="delete" value="false" />
                         <div class="buttons-block">
-                            <input type="submit" name="add" class="bt-admin-menu-ajout" style="width:160px;" value="Ajouter une question" <?php echo $formData['add_disabled']; ?> />
-                            <input type="submit" name="edit" class="bt-admin-menu-modif" style="margin-left:108px;" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
+                            <input type="submit" id="add" name="add" class="bt-admin-menu-ajout" style="width:160px;" value="Ajouter une question" <?php echo $formData['add_disabled']; ?> />
+                            <input type="submit" id="edit" name="edit" class="bt-admin-menu-modif" style="margin-left:108px;" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
                         </div>
                         <div class="buttons-block">
-                            <input type="submit" name="save" class="bt-admin-menu-enreg" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
-                            <input type="submit" name="del" class="bt-admin-menu-sup" style="margin-left:118px;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
+                            <input type="submit" id="save" name="save" class="bt-admin-menu-enreg" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
+                            <input type="submit" id="del" name="del" class="bt-admin-menu-sup" style="margin-left:118px;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
                         </div>
 
                     </div>
@@ -608,39 +609,42 @@ $form_url = WEBROOT."admin/question/";
     
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
-
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/loader.js"></script>
 
     <script type="text/javascript">
         
 
-        var player;
-
-        if (FlashDetect.installed) {
-
-            player = '<object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer">'; 
-            player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
-            player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $audioName; ?>&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
-            player += '<param name="wmode" value="transparent" />';
-            player += '</object>';
-        }
-        else {
-
-            player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>media/mp3/intro.mp3" preload="auto" autoplay controls></audio>';
-        }
-
-        var playerTag = document.getElementById("audio-player");
-
-        if (playerTag != null) {
-            playerTag.innerHTML = player;
-        }
-
-
-
-
-
         $(function() { 
   
-  
+            /* Inclusion du lecteur audio */
+            var player = '';
+
+            var $audioFilename = $('#audio-filename').val();
+            var playerUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+            var audioUrl = '<?php echo SERVER_URL; ?>uploads/audio/' + $audioFilename;
+            
+            if (FlashDetect.installed) {
+                
+                player += '<object data="' + playerUrl + '" width="160" height="20" id="dewplayer" name="dewplayer" type="application/x-shockwave-flash">'; 
+                player += '<param name="movie" value="' + playerUrl + '" />'; 
+                player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
+                player += '<param name="wmode" value="transparent" />';
+                player += '</object>';
+            }
+            else {
+                
+                player += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
+                
+            }
+            
+            var playerTag = document.getElementById("audio-player");
+
+            if (playerTag != null) {
+                playerTag.innerHTML = player;
+            }
+
+
+
             /*** Tableau des éléments du cache des réponses ***/
 
             var cacheInputs = new Array();
@@ -790,7 +794,7 @@ $form_url = WEBROOT."admin/question/";
 
             });
 
-
+            
             // Actualisation du téléchargement de l'audio
             var inputAudioFile = $("#audio_file").clone(true);
 
@@ -825,8 +829,7 @@ $form_url = WEBROOT."admin/question/";
                     $(this).text("Supprimer");
                 }
             });
-
-
+            
             // Actualisation du téléchargement de la vidéo
             var inputVideoFile = $("#video_file").clone(true);
 
@@ -861,13 +864,13 @@ $form_url = WEBROOT."admin/question/";
                     $(this).text("Supprimer");
                 }
             });
-
-
+            
+    
 
 
             /*** Gestion de la demande de suppression ***/
 
-            $('.bt-admin-menu-sup').click(function(event) {
+            $('#del').click(function(event) {
 
                 event.preventDefault();
 
@@ -878,6 +881,20 @@ $form_url = WEBROOT."admin/question/";
                 }
             });
             
+
+            /* Envoi du formulaire avec affichage d'un loader le temps de l'envoi */
+
+            $('#save').click(function(event) {
+
+                event.preventDefault();
+                
+                //alert('loading');
+                $.loader();
+
+                $('#form-posi').submit();
+                
+                
+            });
         });
 
     </script>

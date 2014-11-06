@@ -2144,3 +2144,31 @@ body:after {
 			border: 1px solid #aaa;
 		}
 			
+
+
+
+/*----------------------------------   Loader   --------------------------------*/
+
+
+#loader-bg
+{
+	position: fixed;
+	background: #000000;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9998;
+}
+
+#loader-icon
+{
+	position: fixed;
+	background: url('../images/ajax-loader.gif') center center no-repeat;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	z-index: 9998;
+}
+

@@ -274,6 +274,7 @@ $form_url = WEBROOT."admin/question/";
                                                 <label id="image_label" for="image_file"><?php echo $imageName; ?></label> &nbsp; 
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
+                                                    <input id="delete-image" type="hidden" value="false">
                                                     <a id="del_image" class="del-media" name="del_image" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
                                                 <?php endif; ?>
                                             
@@ -775,6 +776,7 @@ $form_url = WEBROOT."admin/question/";
 
                 if ($(this).text() == "Supprimer") {
 
+                    //$("#delete-image").val("true");
                     $("#image_cache").val("");
                     $("#image_label").text("");
                     $("#image-thumb").hide();
@@ -784,6 +786,7 @@ $form_url = WEBROOT."admin/question/";
                 }
                 else {
 
+                    //$("#delete-image").val("false");
                     $("#image_cache").val(imageCacheValue);
                     $("#image_label").text(imageName);
                     $("#image-thumb").show();
@@ -882,19 +885,18 @@ $form_url = WEBROOT."admin/question/";
             });
             
 
-            /* Envoi du formulaire avec affichage d'un loader le temps de l'envoi */
-
+            /* Envoi du formulaire avec affichage d'un loader le temps de la sauvegarde */
+            
             $('#save').click(function(event) {
 
-                event.preventDefault();
+                //event.preventDefault();
                 
                 //alert('loading');
                 $.loader();
 
-                $('#form-posi').submit();
-                
-                
+                //$('#form-posi').submit();
             });
+            
         });
 
     </script>

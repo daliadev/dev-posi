@@ -2161,10 +2161,11 @@ body:after {
 	z-index: 9998;
 }
 
+
 #loader-icon
 {
 	position: fixed;
-	background: url('../images/ajax-loader.gif') center center no-repeat;
+	background: url('../images/loader.gif') center center no-repeat;
 	top: 0px;
 	left: 0px;
 	width: 100%;

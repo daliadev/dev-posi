@@ -26,6 +26,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/question/";
 
+var_dump($formData);
+
 ?>
 
 
@@ -90,7 +92,7 @@ $form_url = WEBROOT."admin/question/";
                     if (isset($response['errors']) && !empty($response['errors']))
                     {
                         echo '<div id="zone-erreur">';
-                        echo '<p><strong>Une erreur s\'est produite :</strong></p>';
+                        echo '<p><strong>Le formulaire n\'est pas correctement rempli :</strong></p>';
                         echo '<ul>';
                         foreach($response['errors'] as $error)
                         {
@@ -274,7 +276,6 @@ $form_url = WEBROOT."admin/question/";
                                                 <label id="image_label" for="image_file"><?php echo $imageName; ?></label> &nbsp; 
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
-                                                    <input id="delete-image" type="hidden" value="false">
                                                     <a id="del_image" class="del-media" name="del_image" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
                                                 <?php endif; ?>
                                             
@@ -646,6 +647,8 @@ $form_url = WEBROOT."admin/question/";
 
 
 
+
+
             /*** Tableau des éléments du cache des réponses ***/
 
             var cacheInputs = new Array();
@@ -654,7 +657,7 @@ $form_url = WEBROOT."admin/question/";
             /*** Verrouillage initiale des questions du "qcm" ***/
             $mode = $("#mode").val();
 
-            if ($mode !== 'edit')
+            if ($mode !== 'edit' && $mode !== 'new')
             {
                 $('#responses-items').find('input').each(function() {
                     $(this).prop('disabled', true);
@@ -776,7 +779,6 @@ $form_url = WEBROOT."admin/question/";
 
                 if ($(this).text() == "Supprimer") {
 
-                    //$("#delete-image").val("true");
                     $("#image_cache").val("");
                     $("#image_label").text("");
                     $("#image-thumb").hide();
@@ -786,7 +788,6 @@ $form_url = WEBROOT."admin/question/";
                 }
                 else {
 
-                    //$("#delete-image").val("false");
                     $("#image_cache").val(imageCacheValue);
                     $("#image_label").text(imageName);
                     $("#image-thumb").show();
@@ -891,7 +892,6 @@ $form_url = WEBROOT."admin/question/";
 
                 //event.preventDefault();
                 
-                //alert('loading');
                 $.loader();
 
                 //$('#form-posi').submit();

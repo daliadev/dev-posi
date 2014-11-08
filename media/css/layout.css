@@ -567,8 +567,7 @@ form input[type="text"][disabled]
 #zone-erreur{
 	background: #fce3e0;
 	margin: 20px 0 10px 0;
-    /*padding: 0 0 0 20px;*/
-	/*margin: 20px;*/
+    padding: 0 0 0 20px;
 	border: 1px solid #ff786a;
 	border-radius: 5px 5px 5px 5px;
 	color:#c0392b;
@@ -577,8 +576,9 @@ form input[type="text"][disabled]
 
 #zone-erreur li {
 	margin-left: -30px;
-	/*list-style: disc outside none;*/
-	list-style: none;
+	margin-bottom: 5px; 
+	list-style: disc outside none;
+	/*list-style: none;*/
 }
 
     
@@ -602,12 +602,12 @@ form input[type="text"][disabled]
 
 	#content-large #zone-erreur {
 
-		margin: 20px 30px 10px 30px;
+		margin: 20px 10px 10px 10px;
 	}
 
 	#content-large #zone-success {
 
-		margin: 20px 30px 10px 30px;
+		margin: 20px 10px 10px 10px;
 	}
 
 

@@ -303,11 +303,27 @@ class ServicesAdmin extends Main
             }
 
 
-            // Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
+            // Affichage de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
             if (empty($this->servicesQuestion->errors) && empty($this->errors))
             {
-                // On recharge la page en mode visualisation.
-                header("Location: ".$this->url.$this->formData['ref_question']);
+                //header("Location: ".$this->url.$this->formData['ref_question']);
+
+                $this->registerSuccess("La question a été enregistrée avec succès.");
+                
+
+                if (!empty($this->formData['ref_question']))
+                {
+                    $questionDetails = array();
+                    $questionDetails = $this->servicesQuestion->getQuestionDetails($this->formData['ref_question']);
+                    
+                    $this->formData = array_merge($this->formData, $questionDetails);
+                }
+
+                $this->formData['mode'] = "view";
+
+                // Verrouillage des boutons
+                $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
+                $this->formData['edit_disabled'] = "";
             }
             else 
             {

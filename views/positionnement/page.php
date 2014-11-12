@@ -17,7 +17,10 @@
             
             <input type="hidden" name="num_page" value="<?php echo $response['question']->getNumeroOrdre(); ?>" />
             <input type="hidden" name="ref_question" value="<?php echo $response['question']->getId(); ?>" />
-            
+
+            <input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $response['question']->getSon(); ?>" />
+
+
             
             <div id="reponse-content-appli">
 
@@ -50,7 +53,7 @@
             </div>
 
 
-            <div id="lecteur"></div>
+            <div id="lecteur-audio"></div>
             
             
             <?php
@@ -84,29 +87,56 @@
     <script language="javascript" type="text/javascript">
 
 
-        function createPlayer() {
-
+        function createAudioPlayer() {
+            /*
             var player;
 
             if (FlashDetect.installed) {
 
-                player = '<object id="dewplayer" type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" name="dewplayer">'; 
-                player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
-                player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+                player = '<object id="dewplayer" type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" name="dewplayer">'; 
+                player += '<param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
+                player += '<param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>uploads/audio/<?php echo //$response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
                 player += '<param name="wmode" value="transparent" />';
                 player += '</object>';
             }
             else {
 
-                player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>uploads/audio/<?php echo $response['question']->getSon(); ?>" preload="auto" autoplay controls></audio>';
+                player = '<audio id="audioplayer" name="audioplayer" src="<?php //echo SERVER_URL; ?>uploads/audio/<?php //echo $response['question']->getSon(); ?>" preload="auto" autoplay controls></audio>';
             }
 
-            document.getElementById("lecteur").innerHTML = player;
+            document.getElementById("lecteur-audio").innerHTML = player;
+            */
+
+            var player = '';
+
+            var $audioFilename = $('#audio-filename').val();
+            var playerUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+            var audioUrl = '<?php echo SERVER_URL; ?>uploads/audio/' + $audioFilename;
+            
+            if (FlashDetect.installed) {
+                
+                player += '<object data="' + playerUrl + '" width="160" height="20" id="dewplayer" name="dewplayer" type="application/x-shockwave-flash">'; 
+                player += '<param name="movie" value="' + playerUrl + '" />'; 
+                player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
+                player += '<param name="wmode" value="transparent" />';
+                player += '</object>';
+            }
+            else {
+                
+                player += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
+                
+            }
+            
+            var playerTag = document.getElementById("audio-player");
+
+            if (playerTag != null) {
+                playerTag.innerHTML = player;
+            }
         }
 
 
 
-        function getPlayerPosition() {
+        function getAudioPlayerPosition() {
 
             var player;
 
@@ -134,41 +164,9 @@
 
 
 
-        /*
-        player = document.getElementById('lecteur');
-        player.addEventListener('mousemove', function(e) {
-            document.getElementById('position').innerHTML = getPlayerPosition();
-        });
-        */
-
-        /*
-        function getPlayerType() {
-
-            if (FlashDetect.installed) {
-
-                var dewp = document.getElementById("dewplayer");
-                if (dewp != null) {
-                     return dewp;
-                }
-            }
-            else {
-                return
-            }
-        }
-
-        function updateHTMLPlayer(player) {
-
-           duration = player.duration;    // Durée totale 
-           time = player.currentTime; // Temps écoulé 
-           //fraction = time / duration;
-           //document.getElementById("fraction").innerHTML = fraction;
-        }
-        */
-
-
         $(function() {
             
-            createPlayer();
+            createAudioPlayer();
 
             $("#image-content-appli img").hide();
             $("#image-content-appli img").fadeIn(500);
@@ -183,7 +181,7 @@
 
             $(".radio_posi").on("click", function() {
 
-                if (getPlayerPosition() === 0)
+                if (getAudioPlayerPosition() === 0)
                 {
                     $("#submit_suite").removeProp("disabled");
                 }
@@ -196,7 +194,7 @@
 
             $("#reponse_champ").on("click", function() {
 
-                if (getPlayerPosition() === 0)
+                if (getAudioPlayerPosition() === 0)
                 {
                     $(this).removeProp("readonly");
                     $(this).attr("placeholder", "Vous pouvez écrire votre réponse.");
@@ -211,7 +209,7 @@
             
             $("#reponse_champ").on("keydown", function() {
 
-                if (getPlayerPosition() === 0)
+                if (getAudioPlayerPosition() === 0)
                 {
                     numChar++;
 

@@ -1301,13 +1301,26 @@ select {
 	border-radius: 10px;
 }
 
-#lecteur {
+#lecteur-audio {
 	padding: 10px;
 	background-color: #ffffff;
 	margin-top: 10px;
 	border-radius: 5px;
 	float: left;
 	border: 1px #ccc8c8 solid;
+	min-width: 160px;
+	min-height: 20px;
+}
+
+
+#lecteur-video {
+	width: 750px;
+	height: 420px;
+	padding: 15px;
+	text-align: center;
+	background-color: #ffffff;
+	border: 1px #ccc8c8 solid;
+	border-radius: 10px;
 }
 
 

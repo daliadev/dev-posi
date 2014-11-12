@@ -4,10 +4,12 @@
     <title>Positionnement DALIA</title>
     <meta content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" name="viewport" />
     
-    <link rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/hot-sneaks/jquery-ui-1.10.3.custom.css" />
-    <link rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
+    <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/hot-sneaks/jquery-ui-1.10.3.custom.css" />
+    <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/layout.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/480.css" />
+
+    <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/projekktor/themes/maccaco/projekktor.style.css" media="screen" />
     
     <!-- <link rel="stylesheet" href="css/style-ico.css"> -->
     

@@ -2,23 +2,41 @@
 
     $form_url = $response['url'];
 
+    $imageFile = $response['question']->getImage();
+    $audioFile = $response['question']->getSon();
+    $videoFile = $response['question']->getVideo();
 ?>
 
 
     <div id="posi_content">
+        
+        <?php if (!empty($videoFile)) : ?>
 
-        <div id="image-content-appli">
-            <img src="<?php echo SERVER_URL; ?>uploads/img/<?php echo $response['question']->getImage(); ?>" />
-        </div>
+            <div id="lecteur-video" class="projekktor"></div>
+
+        <?php elseif (!empty($imageFile)) : ?>
+
+            <div id="image-content-appli">
+                <img src="<?php echo SERVER_URL.IMG_PATH.$response['question']->getImage(); ?>" />
+            </div>
+
+        <?php else : ?>
+            
+            <div id="image-content-appli"></div>
+
+        <?php endif; ?>
+
 
         <div id="txt-content-appli"><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
 
-        <form action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">  
+        <form action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
             
             <input type="hidden" name="num_page" value="<?php echo $response['question']->getNumeroOrdre(); ?>" />
             <input type="hidden" name="ref_question" value="<?php echo $response['question']->getId(); ?>" />
-
-            <input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $response['question']->getSon(); ?>" />
+            
+            <input type="hidden" id="image-filename" name="image-filename" value="<?php echo $imageFile; ?>" />
+            <input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $audioFile; ?>" />
+            <input type="hidden" id="video-filename" name="video-filename" value="<?php echo $videoFile; ?>" />
 
 
             
@@ -37,7 +55,7 @@
                         echo '</p>';
                         if ($reponse->getEstCorrect())
                         {
-                            echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'"">';
+                            echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'">';
                         }
 
                         $j++;
@@ -83,58 +101,50 @@
 
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
     
     <script language="javascript" type="text/javascript">
 
 
+        var imageFilename = document.getElementById('image-filename').value;
+        var audioFilename = document.getElementById('audio-filename').value;
+        var videoFilename = document.getElementById('video-filename').value;
+
+        var audioActive = null;
+        var videoActive = null;
+
+
         function createAudioPlayer() {
-            /*
-            var player;
-
-            if (FlashDetect.installed) {
-
-                player = '<object id="dewplayer" type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" name="dewplayer">'; 
-                player += '<param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
-                player += '<param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>uploads/audio/<?php echo //$response['question']->getSon(); ?>&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-                player += '<param name="wmode" value="transparent" />';
-                player += '</object>';
-            }
-            else {
-
-                player = '<audio id="audioplayer" name="audioplayer" src="<?php //echo SERVER_URL; ?>uploads/audio/<?php //echo $response['question']->getSon(); ?>" preload="auto" autoplay controls></audio>';
-            }
-
-            document.getElementById("lecteur-audio").innerHTML = player;
-            */
 
             var player = '';
 
-            var $audioFilename = $('#audio-filename').val();
-            var playerUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
-            var audioUrl = '<?php echo SERVER_URL; ?>uploads/audio/' + $audioFilename;
-            
-            if (FlashDetect.installed) {
-                
-                player += '<object data="' + playerUrl + '" width="160" height="20" id="dewplayer" name="dewplayer" type="application/x-shockwave-flash">'; 
-                player += '<param name="movie" value="' + playerUrl + '" />'; 
-                player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
-                player += '<param name="wmode" value="transparent" />';
-                player += '</object>';
-            }
-            else {
-                
-                player += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
-                
-            }
-            
-            var playerTag = document.getElementById("audio-player");
+            //var audioFilename = document.getElementById('audio-filename').value;
 
-            if (playerTag != null) {
-                playerTag.innerHTML = player;
+            if (audioFilename) {
+
+                var playerUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+                var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+
+                if (FlashDetect.installed) {
+                    
+                    player += '<object id="dewplayer" name="dewplayer" data="' + playerUrl + '" width="160" height="20" type="application/x-shockwave-flash">'; 
+                    player += '<param name="movie" value="' + playerUrl + '" />'; 
+                    player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+                    player += '<param name="wmode" value="transparent" />';
+                    player += '</object>';
+                }
+                else {
+                    
+                    player += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
+                }
+                
+                var playerTag = document.getElementById("lecteur-audio");
+
+                if (playerTag != null) {
+                    playerTag.innerHTML = player;
+                }
             }
         }
-
-
 
         function getAudioPlayerPosition() {
 
@@ -164,12 +174,77 @@
 
 
 
+
+        function createVideoPlayer() {
+
+            var videoPlayer = '';
+
+            if (videoFilename) {
+
+                var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
+
+                var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/swf/Jarisplayer/jarisplayer.swf';
+                var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
+
+                projekktor('#lecteur-video', {
+
+                        platforms: ['native', 'flash'],
+                        poster: imageUrl,
+                        title: 'Lecteur vidéo',
+                        playerFlashMP4: videoPlayerUrl,
+                        playerFlashMP3: videoPlayerUrl,
+                        width: 750,
+                        height: 420,
+                        controls: false,
+                        enableFullscreen: false,
+                        autoplay: true,
+                        playlist: [{
+                                0: {src: videoUrl, type: "video/mp4"}
+                            }
+                        ]
+                    }, 
+                    function(player) {
+
+                        var stateListener = function(state) {
+
+                            $('#playerstate').html(state);
+
+                            switch(state) {
+
+                                case 'PLAYING':
+                                    break;
+
+                                case 'PAUSED':
+
+                                case 'STOPPED':
+
+                                    if (player.getPosition() === player.getDuration()) {
+                                        $("#submit_suite").removeProp("disabled");
+                                    }
+                                    break;
+                            }
+                        };
+
+                        // on player ready
+                        player.addListener('state', stateListener);
+                    }
+                );
+            }
+        }
+
+
+
+
+
+
         $(function() {
             
             createAudioPlayer();
 
-            $("#image-content-appli img").hide();
-            $("#image-content-appli img").fadeIn(500);
+            createVideoPlayer();
+
+            //$("#image-content-appli img").hide();
+            //$("#image-content-appli img").fadeIn(500);
             
             $("#submit_suite").prop("disabled", true);
 

@@ -70,13 +70,17 @@
                 
             </div>
 
+            <?php if (empty($videoFile) && !empty($audioFile)) : ?>
 
-            <div id="lecteur-audio"></div>
-            
+                <div id="lecteur-audio"></div>
+
+            <?php endif; ?>
             
             <?php
+
                 $startTimer = microtime(true);
             ?>
+
             <input type="hidden" name="start_timer" value="<?php echo $startTimer; ?>" />
             
             <div id="submit">
@@ -105,7 +109,7 @@
     
     <script language="javascript" type="text/javascript">
 
-
+        /*
         var imageFilename = document.getElementById('image-filename').value;
         var audioFilename = document.getElementById('audio-filename').value;
         var videoFilename = document.getElementById('video-filename').value;
@@ -231,29 +235,149 @@
                 );
             }
         }
+        */
 
 
 
 
 
-
-        $(function() {
+        (function($) {
             
-            createAudioPlayer();
 
-            createVideoPlayer();
-
+            // On fait apparaitre l'image quand elle est chargée.
             //$("#image-content-appli img").hide();
             //$("#image-content-appli img").fadeIn(500);
             
+
+            // Le bouton suite est desactiver par défaut.
             $("#submit_suite").prop("disabled", true);
 
+            // S'il y a une champ de réponse, on le désactive.
             $("#reponse_champ").prop("readonly", true);
             $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+
+
+            // Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
+            var imageFilename = $('#image-filename').val();
+            var audioFilename = $('#audio-filename').val();
+            var videoFilename = $('#video-filename').val();
+
+            // Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
+            var audioActive = audioFilename != '' ? true : false;
+            var videoActive = videoFilename != '' ? true : false;
+
+            // Les tags des lecteurs vidéo et audio qui ne sont pas encore créés sont vides par défaut .
+            var $audioPlayer = null;
+            var $videoPlayer = null;
+
+
+
+
+            /* Création et instanciation des lecteurs médias */
+
+            // S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé
+            // L'image sert alors de "poster" pour la vidéo
+            if (videoActive) {
+
+                projekktor('#player_a', {
+
+                        poster: 'media/intro.png',
+                        title: 'this is projekktor',
+                        playerFlashMP4: 'swf/StrobeMediaPlayback/StrobeMediaPlayback.swf',
+                        playerFlashMP3: 'swf/StrobeMediaPlayback/StrobeMediaPlayback.swf',
+                        width: 750,
+                        height: 420,
+                        controls: false,
+                        enableFullscreen: false,
+                        autoplay: false,
+                        playlist: [{
+                                0: {src: "media/video_faftt_finale.mp4", type: "video/mp4"},
+                            }
+                        ],
+                        plugins: ['display', 'controlbar']  
+
+                    }, function(player) {
+
+                        // on player ready
+                        
+                        var stateListener = function(state) {
+
+                            switch(state) {
+
+                                case 'PLAYING':
+                                    //$('#playerstate').html('PLAYING');
+                                    break;
+
+                                case 'PAUSED':
+                                    $('.ppstart').removeClass('inactive');
+                                    $('.ppstart').addClass('active');
+                                    //$('#playerstate').html('PAUSED');
+                                    break;
+
+                                case 'STOPPED':
+                                    
+                                    //$('#playerstate').html('STOPPED');
+                                    //break;
+                                    
+                                case 'IDLE':
+                                    
+                                    //$('#playerstate').html('IDLE');
+                                    //break;
+                                    
+                                case 'COMPLETED':
+
+                                    $("#submit_suite").removeProp("disabled");
+
+                                    //$('#playerstate').html('COMPLETED');
+                                    break;
+                            }
+                        };
+
+                        player.addListener('state', stateListener);
+                        
+                    }
+                );
+
+                $videoPlayer = $('#lecteur-video');
+            }
+
+
+            // Sinon, on créé le lecteur audio
+            else if (audioActive) {
+
+                var audioHtml = '';
+
+                var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+                var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+
+                if (FlashDetect.installed) {
+                    
+                    audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash">'; 
+                    audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
+                    audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+                    audioHtml += '<param name="wmode" value="transparent" />';
+                    audioHtml += '</object>';
+                }
+                else {
+                    
+                    audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
+                }
+                
+                $audioPlayer = $("#lecteur-audio");
+
+                if ($audioPlayer != null) {
+
+                    $audioPlayer.html(audioPlayer);
+                }
+            }
             
-            var numChar = 0;
 
+            
+            
+            
+            /* Evenements */
 
+            // Sur click d'un des boutons radio
             $(".radio_posi").on("click", function() {
 
                 if (getAudioPlayerPosition() === 0)
@@ -267,6 +391,7 @@
             });
             
 
+            // Sur click dans le champ de réponse s'il existe.
             $("#reponse_champ").on("click", function() {
 
                 if (getAudioPlayerPosition() === 0)
@@ -282,8 +407,14 @@
                 }
             });
             
+
+            // Lorsque l'utilisateur éffectue une saisie dans le champ de réponse.
+            var numChar = 0;
+
             $("#reponse_champ").on("keydown", function() {
 
+                // On s'assure que la vidéo ou le son sont terminés
+                // et que l'utilisateur a saisi au moins 2 caractères.
                 if (getAudioPlayerPosition() === 0)
                 {
                     numChar++;
@@ -295,6 +426,6 @@
                 }
             });
             
-        });
+        })(jQuery);
 
     </script>

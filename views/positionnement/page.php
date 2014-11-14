@@ -12,7 +12,7 @@
         
         <?php if (!empty($videoFile)) : ?>
 
-            <div id="lecteur-video" class="projekktor"></div>
+            <div id="lecteurvideo" class="projekktor"></div>
 
         <?php elseif (!empty($imageFile)) : ?>
 
@@ -72,7 +72,7 @@
 
             <?php if (empty($videoFile) && !empty($audioFile)) : ?>
 
-                <div id="lecteur-audio"></div>
+                <div id="lecteuraudio"></div>
 
             <?php endif; ?>
             
@@ -105,143 +105,11 @@
 
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
     
-    <script language="javascript" type="text/javascript">
-
-        /*
-        var imageFilename = document.getElementById('image-filename').value;
-        var audioFilename = document.getElementById('audio-filename').value;
-        var videoFilename = document.getElementById('video-filename').value;
-
-        var audioActive = null;
-        var videoActive = null;
+    <script type="text/javascript">
 
 
-        function createAudioPlayer() {
-
-            var player = '';
-
-            //var audioFilename = document.getElementById('audio-filename').value;
-
-            if (audioFilename) {
-
-                var playerUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
-                var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
-
-                if (FlashDetect.installed) {
-                    
-                    player += '<object id="dewplayer" name="dewplayer" data="' + playerUrl + '" width="160" height="20" type="application/x-shockwave-flash">'; 
-                    player += '<param name="movie" value="' + playerUrl + '" />'; 
-                    player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-                    player += '<param name="wmode" value="transparent" />';
-                    player += '</object>';
-                }
-                else {
-                    
-                    player += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
-                }
-                
-                var playerTag = document.getElementById("lecteur-audio");
-
-                if (playerTag != null) {
-                    playerTag.innerHTML = player;
-                }
-            }
-        }
-
-        function getAudioPlayerPosition() {
-
-            var player;
-
-            if (FlashDetect.installed) {
-
-                player = document.getElementById("dewplayer");
-                if (player != null) {
-                    return player.dewgetpos();
-                }
-                else {
-                    return false;
-                }
-            }
-            else {
-
-                player = document.getElementById("audioplayer");
-                if (player != null) {
-                    return player.duration - player.currentTime;
-                }
-                else {
-                    return false;
-                }
-            }
-        }
-
-
-
-
-        function createVideoPlayer() {
-
-            var videoPlayer = '';
-
-            if (videoFilename) {
-
-                var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
-
-                var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/swf/Jarisplayer/jarisplayer.swf';
-                var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
-
-                projekktor('#lecteur-video', {
-
-                        platforms: ['native', 'flash'],
-                        poster: imageUrl,
-                        title: 'Lecteur vidéo',
-                        playerFlashMP4: videoPlayerUrl,
-                        playerFlashMP3: videoPlayerUrl,
-                        width: 750,
-                        height: 420,
-                        controls: false,
-                        enableFullscreen: false,
-                        autoplay: true,
-                        playlist: [{
-                                0: {src: videoUrl, type: "video/mp4"}
-                            }
-                        ]
-                    }, 
-                    function(player) {
-
-                        var stateListener = function(state) {
-
-                            $('#playerstate').html(state);
-
-                            switch(state) {
-
-                                case 'PLAYING':
-                                    break;
-
-                                case 'PAUSED':
-
-                                case 'STOPPED':
-
-                                    if (player.getPosition() === player.getDuration()) {
-                                        $("#submit_suite").removeProp("disabled");
-                                    }
-                                    break;
-                            }
-                        };
-
-                        // on player ready
-                        player.addListener('state', stateListener);
-                    }
-                );
-            }
-        }
-        */
-
-
-
-
-
-        (function($) {
+        $(function() {
             
 
             // On fait apparaitre l'image quand elle est chargée.
@@ -266,32 +134,43 @@
             var audioActive = audioFilename != '' ? true : false;
             var videoActive = videoFilename != '' ? true : false;
 
-            // Les tags des lecteurs vidéo et audio qui ne sont pas encore créés sont vides par défaut .
-            var $audioPlayer = null;
-            var $videoPlayer = null;
+            // Les tags des lecteurs vidéo et audio qui ne sont pas encore créés sont vides par défaut.
+            //var $audioPlayer = null;
+            //var $videoPlayer = null;
 
+            // Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
+            var isVideoComplete = false;
 
 
 
             /* Création et instanciation des lecteurs médias */
 
-            // S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé
-            // L'image sert alors de "poster" pour la vidéo
+            // S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
             if (videoActive) {
 
-                projekktor('#player_a', {
+                // L'image, si elle existe, sert alors de "poster" pour la vidéo.
+                var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
 
-                        poster: 'media/intro.png',
-                        title: 'this is projekktor',
-                        playerFlashMP4: 'swf/StrobeMediaPlayback/StrobeMediaPlayback.swf',
-                        playerFlashMP3: 'swf/StrobeMediaPlayback/StrobeMediaPlayback.swf',
+                // On récupère l'adresse absolue du lecteur vidéo flash (pour les navigateurs qui ne supportent pas le HTML5).
+                var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
+
+                // Puis l'adresse absolue de la vidéo.
+                var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
+
+                // On génére le lecteur vidéo et on le configure.
+                projekktor('#lecteurvideo', {
+
+                        poster: imageUrl,
+                        title: 'Lecteur vidéo',
+                        playerFlashMP4: videoPlayerUrl,
+                        playerFlashMP3: videoPlayerUrl,
                         width: 750,
                         height: 420,
                         controls: false,
                         enableFullscreen: false,
                         autoplay: false,
                         playlist: [{
-                                0: {src: "media/video_faftt_finale.mp4", type: "video/mp4"},
+                                0: {src: videoUrl, type: "video/mp4"},
                             }
                         ],
                         plugins: ['display', 'controlbar']  
@@ -305,30 +184,19 @@
                             switch(state) {
 
                                 case 'PLAYING':
-                                    //$('#playerstate').html('PLAYING');
                                     break;
 
                                 case 'PAUSED':
+
                                     $('.ppstart').removeClass('inactive');
                                     $('.ppstart').addClass('active');
-                                    //$('#playerstate').html('PAUSED');
                                     break;
 
                                 case 'STOPPED':
-                                    
-                                    //$('#playerstate').html('STOPPED');
-                                    //break;
-                                    
                                 case 'IDLE':
-                                    
-                                    //$('#playerstate').html('IDLE');
-                                    //break;
-                                    
                                 case 'COMPLETED':
 
-                                    $("#submit_suite").removeProp("disabled");
-
-                                    //$('#playerstate').html('COMPLETED');
+                                    isVideoComplete = true;
                                     break;
                             }
                         };
@@ -337,8 +205,6 @@
                         
                     }
                 );
-
-                $videoPlayer = $('#lecteur-video');
             }
 
 
@@ -363,46 +229,91 @@
                     audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
                 }
                 
-                $audioPlayer = $("#lecteur-audio");
+                var $audioPlayer = $("#lecteuraudio");
 
                 if ($audioPlayer != null) {
 
-                    $audioPlayer.html(audioPlayer);
+                    $audioPlayer.html(audioHtml);
                 }
             }
             
 
+
+
+            /* Fonctions */
+
+            function getPlayerComplete() {
+
+                var mediaPlayer = null;
+
+                if (videoActive) {
+
+                    if (isVideoComplete) {
+
+                        return true;
+                    }
+
+                }
+                else if (audioActive) {
+
+                    if (FlashDetect.installed) {
+
+                        mediaPlayer = document.getElementById('dewplayer');
+
+                        if (mediaPlayer != null) {
+                            
+                            if (mediaPlayer.dewgetpos() == 0)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    else {
+
+                        mediaPlayer = document.getElementById('audioplayer');
+
+                        if (mediaPlayer != null) {
+
+                            if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0) {
+
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                return false;  
+            }
             
             
             
             /* Evenements */
 
             // Sur click d'un des boutons radio
-            $(".radio_posi").on("click", function() {
+            $(".radio_posi").on("click", function(e) {
 
-                if (getAudioPlayerPosition() === 0)
-                {
+                if (getPlayerComplete()) {
+
                     $("#submit_suite").removeProp("disabled");
                 }
-                else
-                {
+                else {
+
                     $(this).attr("checked", false);
                 }
             });
             
 
             // Sur click dans le champ de réponse s'il existe.
-            $("#reponse_champ").on("click", function() {
+            $("#reponse_champ").on("click", function(e) {
 
-                if (getAudioPlayerPosition() === 0)
-                {
+                if (getPlayerComplete()) {
+
                     $(this).removeProp("readonly");
                     $(this).attr("placeholder", "Vous pouvez écrire votre réponse.");
-                    
                     //$("#submit_suite").removeProp("disabled");
                 }
-                else
-                {
+                else {
+
                     $(this).blur();
                 }
             });
@@ -411,12 +322,12 @@
             // Lorsque l'utilisateur éffectue une saisie dans le champ de réponse.
             var numChar = 0;
 
-            $("#reponse_champ").on("keydown", function() {
+            $("#reponse_champ").on("keydown", function(e) {
 
                 // On s'assure que la vidéo ou le son sont terminés
                 // et que l'utilisateur a saisi au moins 2 caractères.
-                if (getAudioPlayerPosition() === 0)
-                {
+                if (getPlayerComplete()) {
+
                     numChar++;
 
                     if (numChar >= 2) {
@@ -426,6 +337,6 @@
                 }
             });
             
-        })(jQuery);
+        });
 
     </script>

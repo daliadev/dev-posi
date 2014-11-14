@@ -3,13 +3,18 @@
 
 
 #no-js{
+	position: fixed;
     background: #fce3e0;
-    margin: 20px;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+   /* margin: 20px;*/
     margin-bottom:0px;
     padding: 10px;
     border: 1px solid #ff786a;
     color:#c0392b;
     font-weight:bold;
+    z-index: 9995;
 }
 
 
@@ -1301,7 +1306,7 @@ select {
 	border-radius: 10px;
 }
 
-#lecteur-audio {
+#lecteuraudio {
 	padding: 10px;
 	background-color: #ffffff;
 	margin-top: 10px;
@@ -1313,7 +1318,7 @@ select {
 }
 
 
-#lecteur-video {
+#lecteurvideo {
 	width: 750px;
 	height: 420px;
 	padding: 15px;

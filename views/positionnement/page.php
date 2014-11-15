@@ -153,11 +153,16 @@
             // Etat du chargement de l'image
             var isImageLoaded = false;
 
+            // Etat du chargement du lecteur audio
+            var isAudioLoaded = false;
+
             // Timer du chargement de l'image
             var timerImage = null;
 
             // Contenu du lecteur audio
             var audioHtml = '';
+
+             
 
 
 
@@ -183,7 +188,7 @@
 
                         if (mediaPlayer != null) {
                             
-                            if (mediaPlayer.dewgetpos() == 0)
+                            if (mediaPlayer.dewgetpos() == 0 && isAudioLoaded)
                             {
                                 return true;
                             }
@@ -195,7 +200,7 @@
 
                         if (mediaPlayer != null) {
 
-                            if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0) {
+                            if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0 && isAudioLoaded) {
 
                                 return true;
                             }
@@ -232,6 +237,29 @@
 
                     $audioPlayer.html(audioHtml);
                 }
+
+                setTimeout(onAudioPlayerLoaded, 1000); 
+            }
+
+
+            function onAudioPlayerLoaded() {
+
+                var dewp = document.getElementById('dewplayer');
+                var $playerHtml = $('#audioplayer');
+                
+                if (dewp != null) {
+
+                    dewp.dewplay();
+                }
+                else if ($playerHtml != null) {
+                    
+                    $('#audioplayer').prop('autoplay', true);
+                }
+                else {
+                    alert('player not found');
+                }
+
+                isAudioLoaded = true;
             }
 
 
@@ -240,7 +268,7 @@
                 if (isImageLoaded) {
 
                     clearInterval(timerImage);
-                    displayAudioPlayer()
+                    displayAudioPlayer();
                 } 
             }
 
@@ -334,13 +362,14 @@
                     
                     audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash">'; 
                     audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-                    audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+                    //audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+                    audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;nopointer=1&amp;javascript=on" />';
                     audioHtml += '<param name="wmode" value="transparent" />';
                     audioHtml += '</object>';
                 }
                 else {
                     
-                    audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
+                    audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
                 }
                 
 

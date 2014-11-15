@@ -52,11 +52,11 @@
                     foreach ($response['reponse'] as $reponse)
                     {
                         echo '<p>';
-                            echo '<label for="radio_reponse_'.$j.'"><input type="radio" class="radio_posi" id="radio_reponse_'.$j.'" name="radio_reponse" value="'.$reponse->getId().'"> &nbsp;'.$reponse->getIntitule().'</label></br>';
+                            echo '<label for="radio_reponse_'.$j.'"><input type="radio" class="radio_posi" id="radio_reponse_'.$j.'" name="radio_reponse" value="'.$reponse->getId().'"> &nbsp;'.$reponse->getIntitule().'</label><br />';
                         echo '</p>';
                         if ($reponse->getEstCorrect())
                         {
-                            echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'">';
+                            echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'" />';
                         }
 
                         $j++;
@@ -64,7 +64,7 @@
                 }
                 else if ($response['question']->getType() == "champ_saisie")
                 {
-                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ" placeholder="Ecrivez votre réponse ici."></textarea>';
+                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
                 }
                 
                 ?>
@@ -86,7 +86,7 @@
             
             <div id="submit">
   
-                <input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" disabled>
+                <input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" disabled />
                 
             </div>
 
@@ -114,17 +114,12 @@
         $(function() {
             
 
-            // On fait apparaitre l'image quand elle est chargée.
-            //$("#image-content-appli img").hide();
-            //$("#image-content-appli img").fadeIn(500);
-            
-
             // Le bouton suite est desactiver par défaut.
             $("#submit_suite").prop("disabled", true);
 
             // S'il y a une champ de réponse, on le désactive.
             $("#reponse_champ").prop("readonly", true);
-            $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+            $("#reponse_champ").prop("placeholder", "Veuillez attendre que le son se termine...");
 
 
             // Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
@@ -138,14 +133,6 @@
             var audioActive = audioFilename != '' ? true : false;
 
 
-            // On créé un objet image pour le chargement de l'image s'il n'y a pas de vidéo
-            //var imageBox = new Image();
-
-            // Etat du chargement de l'image
-            //var imageLoaded = false;
-
-            // Timer du chargement de l'image
-            //var timerImage = null;
 
             // Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
             var isVideoComplete = false;
@@ -156,8 +143,13 @@
             // Etat du chargement du lecteur audio
             var isAudioLoaded = false;
 
+
             // Timer du chargement de l'image
             var timerImage = null;
+
+            // Timer de selection automatique du champ de saisie
+            //var timerReponse = null;
+
 
             // Contenu du lecteur audio
             var audioHtml = '';
@@ -211,6 +203,17 @@
                 return false;  
             }
 
+            /*
+            function checkFieldReady() {
+
+                if (getPlayerComplete()) {
+
+                    $('#reponse_champ').focus();
+                }
+            }
+            */
+
+
 
             function displayImage(link) {
 
@@ -256,26 +259,37 @@
                     $('#audioplayer').prop('autoplay', true);
                 }
                 else {
-                    alert('player not found');
+                    //alert('player not found');
                 }
 
                 isAudioLoaded = true;
             }
 
 
-            function onImageLoaded() {
+            function checkImageLoaded() {
 
                 if (isImageLoaded) {
 
                     clearInterval(timerImage);
                     displayAudioPlayer();
+                    /*
+                    if ($('#reponse_champ').html() != null) {
+
+                        timerReponse = setInterval(checkFieldReady, 100);
+                    }
+                    */
                 } 
             }
 
 
 
 
-            /* Chargement de l'image (si il n'y a pas de vidéo) */
+
+
+            /* Création et instanciation des médias */
+
+
+            // Chargement de l'image (si il n'y a pas de vidéo) */
 
             if (!videoActive && imageActive) {
 
@@ -285,15 +299,13 @@
             }
 
 
-            /* Création et instanciation des lecteurs médias */
-
             // S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
             if (videoActive) {
 
                 // L'image, si elle existe, sert alors de "poster" pour la vidéo.
                 var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
 
-                // On récupère l'adresse absolue du lecteur vidéo flash (pour les navigateurs qui ne supportent pas le HTML5).
+                // On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
                 var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
 
                 // Puis l'adresse absolue de la vidéo.
@@ -373,7 +385,7 @@
                 }
                 
 
-                timerImage = setInterval(onImageLoaded, 500);
+                timerImage = setInterval(checkImageLoaded, 500);
 
                 /*
                 var $audioPlayer = $("#lecteuraudio");
@@ -407,11 +419,15 @@
             // Sur click dans le champ de réponse s'il existe.
             $("#reponse_champ").on("click", function(e) {
 
+                //e.preventDefault();
+
                 if (getPlayerComplete()) {
 
                     $(this).removeProp("readonly");
-                    $(this).attr("placeholder", "Vous pouvez écrire votre réponse.");
+                    $(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
                     //$("#submit_suite").removeProp("disabled");
+                    //$(this).focus();
+                    //$(this).html('');
                 }
                 else {
 
@@ -420,14 +436,18 @@
             });
             
 
-            // Lorsque l'utilisateur éffectue une saisie dans le champ de réponse.
+            // Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
             var numChar = 0;
 
             $("#reponse_champ").on("keydown", function(e) {
 
+                //$(this).focus();
                 // On s'assure que la vidéo ou le son sont terminés
                 // et que l'utilisateur a saisi au moins 2 caractères.
                 if (getPlayerComplete()) {
+
+                    $(this).removeProp("placeholder");
+                    //$(this).attr("placeholder", "");
 
                     numChar++;
 

@@ -1315,7 +1315,7 @@ select {
 .image-loader {
 	display: none;
 	position: absolute;
-	background: url('../images/loader.gif') center center no-repeat;
+	background: url('../images/loader_bl.gif') center center no-repeat;
 	top: 0px;
 	left: 0px;
 	width: 100%;
@@ -2202,7 +2202,7 @@ body:after {
 #loader-icon
 {
 	position: fixed;
-	background: url('../images/loader.gif') center center no-repeat;
+	background: url('../images/loader_bk.gif') center center no-repeat;
 	top: 0px;
 	left: 0px;
 	width: 100%;

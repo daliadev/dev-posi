@@ -2,7 +2,8 @@
     
     <meta charset="UTF-8">
     <title>Positionnement DALIA</title>
-    <meta content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" name="viewport" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/hot-sneaks/jquery-ui-1.10.3.custom.css" />
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />

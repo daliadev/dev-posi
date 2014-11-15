@@ -23,7 +23,5 @@
     <script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js" type="text/javascript"></script>
     <script src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js" type="text/javascript"></script>
     
-    <!--<noscript><div id="no-js">Pour un fonctionnement correct du positionnement, activez JavaScript en modifiant les options de votre navigateur</div></noscript>-->
-    
 </head>
   

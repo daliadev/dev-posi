@@ -17,7 +17,8 @@
         <?php elseif (!empty($imageFile)) : ?>
 
             <div id="image-content-appli">
-                <img src="<?php echo SERVER_URL.IMG_PATH.$response['question']->getImage(); ?>" />
+                <!-- <img src="<?php //echo SERVER_URL.IMG_PATH.$response['question']->getImage(); ?>" /> -->
+                <div class="image-loader"></div>
             </div>
 
         <?php else : ?>
@@ -106,6 +107,7 @@
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
     
+
     <script type="text/javascript">
 
 
@@ -131,16 +133,128 @@
             var videoFilename = $('#video-filename').val();
 
             // Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
-            var audioActive = audioFilename != '' ? true : false;
+            var imageActive = imageFilename != '' ? true : false;
             var videoActive = videoFilename != '' ? true : false;
+            var audioActive = audioFilename != '' ? true : false;
 
-            // Les tags des lecteurs vidéo et audio qui ne sont pas encore créés sont vides par défaut.
-            //var $audioPlayer = null;
-            //var $videoPlayer = null;
+
+            // On créé un objet image pour le chargement de l'image s'il n'y a pas de vidéo
+            //var imageBox = new Image();
+
+            // Etat du chargement de l'image
+            //var imageLoaded = false;
+
+            // Timer du chargement de l'image
+            //var timerImage = null;
 
             // Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
             var isVideoComplete = false;
 
+            // Etat du chargement de l'image
+            var isImageLoaded = false;
+
+            // Timer du chargement de l'image
+            var timerImage = null;
+
+            // Contenu du lecteur audio
+            var audioHtml = '';
+
+
+
+            /* Fonctions */
+
+            function getPlayerComplete() {
+
+                var mediaPlayer = null;
+
+                if (videoActive) {
+
+                    if (isVideoComplete) {
+
+                        return true;
+                    }
+
+                }
+                else if (audioActive) {
+
+                    if (FlashDetect.installed) {
+
+                        mediaPlayer = document.getElementById('dewplayer');
+
+                        if (mediaPlayer != null) {
+                            
+                            if (mediaPlayer.dewgetpos() == 0)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    else {
+
+                        mediaPlayer = document.getElementById('audioplayer');
+
+                        if (mediaPlayer != null) {
+
+                            if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0) {
+
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                return false;  
+            }
+
+
+            function displayImage(link) {
+
+                var imageBox = new Image();
+
+                imageBox.onload = function() {
+
+                    $('.image-loader').fadeOut(250);
+                    $('#image-content-appli').prepend(imageBox);
+                    $("#image-content-appli img").hide().fadeIn(1000);
+                    isImageLoaded = true;
+                };
+
+                imageBox.src = link;
+                $('.image-loader').fadeIn(250);
+            }
+
+
+            function displayAudioPlayer() {
+
+                var $audioPlayer = $("#lecteuraudio");
+
+                if ($audioPlayer != null && audioHtml != '') {
+
+                    $audioPlayer.html(audioHtml);
+                }
+            }
+
+
+            function onImageLoaded() {
+
+                if (isImageLoaded) {
+
+                    clearInterval(timerImage);
+                    displayAudioPlayer()
+                } 
+            }
+
+
+
+
+            /* Chargement de l'image (si il n'y a pas de vidéo) */
+
+            if (!videoActive && imageActive) {
+
+                var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+                
+                displayImage(imageUrl);
+            }
 
 
             /* Création et instanciation des lecteurs médias */
@@ -229,64 +343,22 @@
                     audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" autoplay controls></audio>';
                 }
                 
+
+                timerImage = setInterval(onImageLoaded, 500);
+
+                /*
                 var $audioPlayer = $("#lecteuraudio");
 
                 if ($audioPlayer != null) {
 
-                    $audioPlayer.html(audioHtml);
+                    //$audioPlayer.html(audioHtml);
                 }
+                */
             }
             
 
 
 
-            /* Fonctions */
-
-            function getPlayerComplete() {
-
-                var mediaPlayer = null;
-
-                if (videoActive) {
-
-                    if (isVideoComplete) {
-
-                        return true;
-                    }
-
-                }
-                else if (audioActive) {
-
-                    if (FlashDetect.installed) {
-
-                        mediaPlayer = document.getElementById('dewplayer');
-
-                        if (mediaPlayer != null) {
-                            
-                            if (mediaPlayer.dewgetpos() == 0)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    else {
-
-                        mediaPlayer = document.getElementById('audioplayer');
-
-                        if (mediaPlayer != null) {
-
-                            if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0) {
-
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                return false;  
-            }
-            
-            
-            
             /* Evenements */
 
             // Sur click d'un des boutons radio

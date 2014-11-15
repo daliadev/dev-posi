@@ -29,6 +29,7 @@
 
     </script>
 	
+    
     <noscript><div id="no-js">Pour un fonctionnement correct du positionnement, activez JavaScript en modifiant les options de votre navigateur</div></noscript>
 	
 

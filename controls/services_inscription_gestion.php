@@ -476,8 +476,25 @@ class ServicesInscriptionGestion extends Main
                 $prenomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanPrenom));
                 $nomUser = preg_replace("#[^A-Z]#", "", strtoupper($cleanNom));
 
+                $duplicatePrenom = (strpos($prenomUser, $prenomUserSaisi) !== false) ? true : false;
+                $duplicatePrenomInv = (strpos($prenomUserSaisi, $prenomUser) !== false) ? true : false;
 
-                if ((strpos($prenomUser, $prenomUserSaisi) !== false || strpos($prenomUserSaisi, $prenomUser) !== false) && (strpos($nomUser, $nomUserSaisi) !== false || strpos($nomUserSaisi, $nomUser) !== false))
+                $duplicateNom = (strpos($nomUser, $nomUserSaisi) !== false) ? true : false;
+                $duplicateNomInv = (strpos($nomUserSaisi, $nomUser) !== false) ? true : false;
+
+                /*
+                echo ('prenomUser = ' . $prenomUser.' - prenomUserSaisi = ' . $prenomUserSaisi . '<br>');
+                echo ('strpos prenomUser = ' . $duplicatePrenom . '<br>');
+                echo ('strpos prenomUser inverse = ' . $duplicatePrenomInv . '<br>');
+
+                echo ('nomUser = ' . $nomUser.' - nomUserSaisi = ' . $nomUserSaisi . '<br>');
+                echo ('strpos nomUser = ' . $duplicateNom . '<br>');
+                echo ('strpos nomUser inverse = ' . $duplicateNomInv . '<br>');
+
+                exit();
+                */
+
+                if (($duplicatePrenom || $duplicatePrenomInv) && ($duplicateNom || $duplicateNomInv))
                 {
                     $formData['ref_user'] = $user->getId();
 

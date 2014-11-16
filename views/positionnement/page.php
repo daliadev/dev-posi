@@ -10,6 +10,7 @@
 
     <div id="posi_content">
         
+
         <?php if (!empty($videoFile)) : ?>
 
             <div id="lecteurvideo" class="projekktor"></div>
@@ -64,7 +65,7 @@
                 }
                 else if ($response['question']->getType() == "champ_saisie")
                 {
-                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
+                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ" disabled></textarea>';
                 }
                 
                 ?>
@@ -117,8 +118,9 @@
             // Le bouton suite est desactiver par défaut.
             $("#submit_suite").prop("disabled", true);
 
-            // S'il y a une champ de réponse, on le désactive.
-            $("#reponse_champ").prop("readonly", true);
+            // S'il y a une champ de réponse, on le désactive et on met un placeholder.
+            //$("#reponse_champ").prop("readonly", true);
+
             $("#reponse_champ").prop("placeholder", "Veuillez attendre que le son se termine...");
 
 
@@ -148,7 +150,7 @@
             var timerImage = null;
 
             // Timer de selection automatique du champ de saisie
-            //var timerReponse = null;
+            var timerPlayerComplete = null;
 
 
             // Contenu du lecteur audio
@@ -203,15 +205,20 @@
                 return false;  
             }
 
-            /*
-            function checkFieldReady() {
+            
+            function checkPlayerComplete() {
 
                 if (getPlayerComplete()) {
 
-                    $('#reponse_champ').focus();
+                    if ($('#reponse_champ') != null) {
+
+                        $('#reponse_champ').removeProp('disabled');
+                        $('#reponse_champ').prop("placeholder", "Vous pouvez écrire votre réponse.");
+                        $('#reponse_champ').focus();
+                    }
                 }
             }
-            */
+            
 
 
 
@@ -263,6 +270,8 @@
                 }
 
                 isAudioLoaded = true;
+
+                timerPlayerComplete = setInterval(checkPlayerComplete, 500);
             }
 
 
@@ -272,12 +281,6 @@
 
                     clearInterval(timerImage);
                     displayAudioPlayer();
-                    /*
-                    if ($('#reponse_champ').html() != null) {
-
-                        timerReponse = setInterval(checkFieldReady, 100);
-                    }
-                    */
                 } 
             }
 
@@ -419,15 +422,11 @@
             // Sur click dans le champ de réponse s'il existe.
             $("#reponse_champ").on("click", function(e) {
 
-                //e.preventDefault();
-
                 if (getPlayerComplete()) {
 
-                    $(this).removeProp("readonly");
-                    $(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
-                    //$("#submit_suite").removeProp("disabled");
-                    //$(this).focus();
-                    //$(this).html('');
+                    //$(this).removeProp("readonly");
+                    //$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
+
                 }
                 else {
 
@@ -441,13 +440,11 @@
 
             $("#reponse_champ").on("keydown", function(e) {
 
-                //$(this).focus();
                 // On s'assure que la vidéo ou le son sont terminés
                 // et que l'utilisateur a saisi au moins 2 caractères.
                 if (getPlayerComplete()) {
 
                     $(this).removeProp("placeholder");
-                    //$(this).attr("placeholder", "");
 
                     numChar++;
 

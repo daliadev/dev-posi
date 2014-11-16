@@ -9,7 +9,7 @@
 
 
     <div id="posi_content">
-        
+
 
         <?php if (!empty($videoFile)) : ?>
 
@@ -248,26 +248,43 @@
                     $audioPlayer.html(audioHtml);
                 }
 
-                setTimeout(onAudioPlayerLoaded, 1000); 
-            }
-
-
-            function onAudioPlayerLoaded() {
-
                 var dewp = document.getElementById('dewplayer');
                 var $playerHtml = $('#audioplayer');
                 
                 if (dewp != null) {
 
-                    dewp.dewplay();
+                    dewp.style.display = 'none';
+                    //dewp.dewplay();
                 }
                 else if ($playerHtml != null) {
                     
+                    $('#audioplayer').css('display', 'none');
                     $('#audioplayer').prop('autoplay', true);
+                }
+
+                setTimeout(onAudioPlayerLoaded, 1000); 
+            }
+
+
+            function onAudioPlayerLoaded() {
+                
+                var dewp = document.getElementById('dewplayer');
+                var $playerHtml = $('#audioplayer');
+                
+                if (dewp != null) {
+
+                    dewp.style.display = 'block';
+                    //dewp.dewplay();
+                }
+                else if ($playerHtml != null) {
+                    
+                    $('#audioplayer').css('display', 'block');
+                    //$('#audioplayer').prop('autoplay', true);
                 }
                 else {
                     //alert('player not found');
                 }
+                
 
                 isAudioLoaded = true;
 
@@ -375,10 +392,10 @@
 
                 if (FlashDetect.installed) {
                     
-                    audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash">'; 
+                    audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
                     audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
                     //audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-                    audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;nopointer=1&amp;javascript=on" />';
+                    audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
                     audioHtml += '<param name="wmode" value="transparent" />';
                     audioHtml += '</object>';
                 }

@@ -13,8 +13,10 @@
 
         <?php if (!empty($videoFile)) : ?>
 
-            <div id="lecteurvideo" class="projekktor"></div>
-
+            <div id="image-content-appli">
+                <div id="lecteurvideo" class="projekktor"></div>
+            </div>
+            
         <?php elseif (!empty($imageFile)) : ?>
 
             <div id="image-content-appli">
@@ -340,9 +342,9 @@
                         playerFlashMP3: videoPlayerUrl,
                         width: 750,
                         height: 420,
-                        controls: false,
+                        controls: true,
                         enableFullscreen: false,
-                        autoplay: false,
+                        autoplay: true,
                         playlist: [{
                                 0: {src: videoUrl, type: "video/mp4"},
                             }

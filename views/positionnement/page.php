@@ -123,7 +123,7 @@
             // S'il y a une champ de réponse, on le désactive et on met un placeholder.
             //$("#reponse_champ").prop("readonly", true);
 
-            $("#reponse_champ").prop("placeholder", "Veuillez attendre que le son se termine...");
+            $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
 
 
             // Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
@@ -215,7 +215,7 @@
                     if ($('#reponse_champ') != null) {
 
                         $('#reponse_champ').removeProp('disabled');
-                        $('#reponse_champ').prop("placeholder", "Vous pouvez écrire votre réponse.");
+                        $('#reponse_champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
                         $('#reponse_champ').focus();
                     }
                 }
@@ -313,11 +313,14 @@
 
             // Chargement de l'image (si il n'y a pas de vidéo) */
 
-            if (!videoActive && imageActive) {
+            if (imageActive) {
 
                 var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
                 
-                displayImage(imageUrl);
+                if (!videoActive) {
+
+                    displayImage(imageUrl);
+                }                
             }
 
 
@@ -349,7 +352,28 @@
                                 0: {src: videoUrl, type: "video/mp4"},
                             }
                         ],
-                        plugins: ['display', 'controlbar']  
+                        plugins: ['display', 'controlbar'],
+                        messages: {
+                            // general
+                            0: 'Une erreur s\'est produite.',
+                            1: 'Vous avez interrompu la lecture de la vidéo.',
+                            2: 'La vidéo n\'a pas pu être chargée.',
+                            3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
+                            4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
+                            5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
+                            6: 'Your client is in lack of the Flash Plugin V%{flashver} or higher.',
+                            7: 'Aucun média n\'a été trouvé.',
+                            8: '! Invalid media model configured !',
+                            9: 'Le fichier (%{file}) n\'a pas été trouvé.',
+                            10: 'Invalid or missing quality settings for %{title}.',
+                            11: 'Invalid streamType and/or streamServer settings for %{title}.',
+                            12: 'Invalid or inconsistent quality setup for %{title}.',
+                            80: 'The requested file does not exist or delivered with an invalid content-type.',
+                            97: 'No media scheduled.',
+                            98: 'Invalid or malformed playlist data!',
+                            99: 'Click display to proceed. ',
+                            100: 'PLACEHOLDER',
+                        } 
 
                     }, function(player) {
 
@@ -358,6 +382,20 @@
                         var stateListener = function(state) {
 
                             switch(state) {
+
+                                case 'ERROR':
+
+                                    alert('vidéo erreur.');
+
+                                    $('#lecteurvideo').html('');
+
+                                    if (imageActive) {
+
+                                        displayImage(imageUrl);
+                                    }
+
+                                    $("#submit_suite").removeProp("disabled");
+                                    break;
 
                                 case 'PLAYING':
                                     break;
@@ -378,7 +416,13 @@
                         };
 
                         player.addListener('state', stateListener);
-                        
+
+                        /*
+                        var playerErrorHandlingFunction =  function(data) {                 
+                            console.log(data);                    
+                        };
+                        myPlayer.addListener('error', playerErrorHandlingFunction);
+                        */
                     }
                 );
             }
@@ -445,7 +489,6 @@
 
                     //$(this).removeProp("readonly");
                     //$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
-
                 }
                 else {
 
@@ -455,7 +498,7 @@
             
 
             // Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
-            var numChar = 0;
+            //var numChar = 0;
 
             $("#reponse_champ").on("keydown", function(e) {
 
@@ -463,13 +506,18 @@
                 // et que l'utilisateur a saisi au moins 2 caractères.
                 if (getPlayerComplete()) {
 
-                    $(this).removeProp("placeholder");
+                    $(this).attr("placeholder", "");
+                    //$(this).removeProp("placeholder");
 
-                    numChar++;
+                    //numChar++;
 
-                    if (numChar >= 2) {
+                    if ($(this).val().length > 1) {
 
                         $("#submit_suite").removeProp("disabled");
+                    }
+                    else if ($(this).val().length <= 1) {
+
+                        $("#submit_suite").prop("disabled", true);
                     }
                 }
             });

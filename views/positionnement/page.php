@@ -107,9 +107,11 @@
     </div>
 
 
+
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
-    
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
+
 
     <script type="text/javascript">
 
@@ -349,9 +351,8 @@
                         enableFullscreen: false,
                         autoplay: true,
                         playlist: [{
-                                0: {src: videoUrl, type: "video/mp4"},
-                            }
-                        ],
+                            0: {src: videoUrl, type: "video/mp4"},
+                        }],
                         plugins: ['display', 'controlbar'],
                         messages: {
                             0: 'Une erreur s\'est produite.',
@@ -381,21 +382,7 @@
                         var stateListener = function(state) {
 
                             switch(state) {
-
-                                case 'ERROR':
-
-                                    alert('vidéo erreur.');
-
-                                    $('#lecteurvideo').html('');
-
-                                    if (imageActive) {
-
-                                        displayImage(imageUrl);
-                                    }
-
-                                    $("#submit_suite").removeProp("disabled");
-                                    break;
-
+                                    
                                 case 'PLAYING':
                                     break;
 
@@ -417,11 +404,19 @@
                         player.addListener('state', stateListener);
 
                         
-                        var playerErrorHandlingFunction =  function(data) {                 
-                            console.log('error : ' + data);
-                            isVideoComplete = true;                   
+                        var playerError =  function(data) { 
+
+                            //console.log('error : ' + data);
+                            isVideoComplete = true; 
+
+                            $('#lecteurvideo').html('');
+
+                            if (imageActive) {
+
+                                displayImage(imageUrl);
+                            }                 
                         };
-                        player.addListener('error', playerErrorHandlingFunction);
+                        player.addListener('error', playerError);
                         
                     }
                 );

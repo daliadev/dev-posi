@@ -608,6 +608,7 @@ $form_url = WEBROOT."admin/question/";
     
     
     
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/loader.js"></script>

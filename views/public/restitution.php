@@ -412,9 +412,11 @@ $form_url = $response['url'];
     </div>
     
 
+    <script src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js" type="text/javascript"></script>
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js" type="text/javascript"></script>
 
 
-    <script language="javascript" type="text/javascript">
+    <script type="text/javascript">
        
         $(function() { 
             

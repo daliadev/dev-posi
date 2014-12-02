@@ -205,6 +205,8 @@ $form_url = WEBROOT."admin/categorie/";
     </div>
 
 
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js"></script>
+
     <script type="text/javascript">
 
         

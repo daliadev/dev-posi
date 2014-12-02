@@ -5,6 +5,8 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
+    <link type="image/x-icon" rel="shortcut icon" href="<?php echo SERVER_URL; ?>favicon.ico" />
+
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/hot-sneaks/jquery-ui-1.10.3.custom.css" />
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/layout.css" />

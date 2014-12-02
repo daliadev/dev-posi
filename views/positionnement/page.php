@@ -354,25 +354,24 @@
                         ],
                         plugins: ['display', 'controlbar'],
                         messages: {
-                            // general
                             0: 'Une erreur s\'est produite.',
                             1: 'Vous avez interrompu la lecture de la vidéo.',
                             2: 'La vidéo n\'a pas pu être chargée.',
                             3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
                             4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
                             5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
-                            6: 'Your client is in lack of the Flash Plugin V%{flashver} or higher.',
+                            6: 'Vous devez disposer de la version %{flashver} ou plus du lecteur Flash.',
                             7: 'Aucun média n\'a été trouvé.',
-                            8: '! Invalid media model configured !',
+                            8: 'La configuration du média est incompatible !',
                             9: 'Le fichier (%{file}) n\'a pas été trouvé.',
-                            10: 'Invalid or missing quality settings for %{title}.',
-                            11: 'Invalid streamType and/or streamServer settings for %{title}.',
-                            12: 'Invalid or inconsistent quality setup for %{title}.',
-                            80: 'The requested file does not exist or delivered with an invalid content-type.',
-                            97: 'No media scheduled.',
-                            98: 'Invalid or malformed playlist data!',
-                            99: 'Click display to proceed. ',
-                            100: 'PLACEHOLDER',
+                            10: 'Les paramètres de qualité sont invalide pour %{title}.',
+                            11: 'Les paramètres de streaming sont invalides ou incompatible avec %{title}.',
+                            12: 'Le paramètrage de la qualité est incompatible pour %{title}.',
+                            80: 'Le média requis n\'existe pas ou son contenu est invalide.',
+                            97: 'Aucun média n\'a été prévu.',
+                            98: 'Les données de la playlist sont invalides !',
+                            99: 'Cliquez sur le média pour continuer. ',
+                            100: 'Espace réservé.',
                         } 
 
                     }, function(player) {
@@ -417,12 +416,13 @@
 
                         player.addListener('state', stateListener);
 
-                        /*
+                        
                         var playerErrorHandlingFunction =  function(data) {                 
-                            console.log(data);                    
+                            console.log('error : ' + data);
+                            isVideoComplete = true;                   
                         };
-                        myPlayer.addListener('error', playerErrorHandlingFunction);
-                        */
+                        player.addListener('error', playerErrorHandlingFunction);
+                        
                     }
                 );
             }

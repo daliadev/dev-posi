@@ -67,7 +67,7 @@
                 }
                 else if ($response['question']->getType() == "champ_saisie")
                 {
-                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ" disabled></textarea>';
+                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
                 }
                 
                 ?>
@@ -122,10 +122,24 @@
             // Le bouton suite est desactiver par défaut.
             $("#submit_suite").prop("disabled", true);
 
-            // S'il y a une champ de réponse, on le désactive et on met un placeholder.
-            //$("#reponse_champ").prop("readonly", true);
+            //$(".radio_posi").prop("disabled", true);
 
-            $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+            // S'il y a une champ de réponse, on le désactive et on met un placeholder.
+            //$("#reponse_champ").prop("disabled", true);
+            //$("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+
+            if ($('.radio_posi') != null) {
+
+                // S'il y a des boutons radio, on les désactive.
+                $(".radio_posi").prop("disabled", true);
+            }
+
+            if ($('#reponse_champ') != null) {
+
+                // S'il y a une champ de réponse, on le désactive et on met un placeholder.
+                $("#reponse_champ").prop("disabled", true);
+                $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+            }
 
 
             // Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
@@ -160,7 +174,6 @@
             // Contenu du lecteur audio
             var audioHtml = '';
 
-             
 
 
 
@@ -206,13 +219,18 @@
                     }
                 }
 
-                return false;  
+                return false;
             }
 
             
             function checkPlayerComplete() {
 
                 if (getPlayerComplete()) {
+
+                    if ($('.radio_posi') != null) {
+
+                        $(".radio_posi").prop("disabled", false);
+                    }
 
                     if ($('#reponse_champ') != null) {
 
@@ -234,7 +252,7 @@
 
                     $('.image-loader').fadeOut(250);
                     $('#image-content-appli').prepend(imageBox);
-                    $("#image-content-appli img").hide().fadeIn(1000);
+                    $('#image-content-appli img').hide().fadeIn(1000);
                     isImageLoaded = true;
                 };
 
@@ -244,6 +262,8 @@
 
 
             function displayAudioPlayer() {
+
+                //$(".radio_posi").prop("disabled", true);
 
                 var $audioPlayer = $("#lecteuraudio");
 
@@ -283,7 +303,6 @@
                 else if ($playerHtml != null) {
                     
                     $('#audioplayer').css('display', 'block');
-                    //$('#audioplayer').prop('autoplay', true);
                 }
                 else {
                     //alert('player not found');
@@ -301,7 +320,15 @@
                 if (isImageLoaded) {
 
                     clearInterval(timerImage);
-                    displayAudioPlayer();
+
+                    if (audioActive) {
+
+                        displayAudioPlayer();
+                    }
+                    else {
+
+                        $(".radio_posi").prop("disabled", false);
+                    }
                 } 
             }
 
@@ -396,6 +423,8 @@
                                 case 'IDLE':
                                 case 'COMPLETED':
 
+                                    $(".radio_posi").prop("disabled", false);
+                                    
                                     isVideoComplete = true;
                                     break;
                             }

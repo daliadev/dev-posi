@@ -416,6 +416,7 @@ $form_url = $response['url'];
     <script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js" type="text/javascript"></script>
 
 
+
     <script type="text/javascript">
        
         $(function() { 
@@ -430,7 +431,7 @@ $form_url = $response['url'];
 
             <?php if (Config::ALLOW_AJAX) : ?>
 
-
+                //alert('Ajax allowed');
                 /* Listes dynamiques en ajax */
                
                 $('.ajax-list').change(function(event) {
@@ -533,6 +534,6 @@ $form_url = $response['url'];
 
             <?php endif; ?>
             
-        })(jQuery);
+        });
 
     </script>

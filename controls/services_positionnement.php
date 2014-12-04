@@ -196,7 +196,7 @@ class ServicesPositionnement extends Main
         
         /*** Test d'authentification de l'intervenant/utilisateur ***/ 
         ServicesAuth::checkAuthentication("user");
-        
+        //echo 'auth ok';
         
         /*** Gestion du temps de réponse de l'utilisateur ***/
         

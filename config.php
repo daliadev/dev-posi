@@ -10,6 +10,7 @@
 
 class Config 
 {
+
     /* Version */
     const POSI_VERSION = "0.17.03";
 
@@ -20,11 +21,11 @@ class Config
     
     // Titre/accroche du positionnement.
     const POSI_TITLE = "Test de positionnement"; 
-
+    
     // Titre de la partie admin.
     const ADMIN_TITLE = "Gestion du positionnement XXX"; 
-
-
+    
+    
     /* Gestion du nombre de positionnement */
 
     // Nombre de positionnements maximum que peut effectuer l'organisme client.
@@ -153,10 +154,8 @@ class Config
                 'code_menu' => "70",
                 'label_menu' => "Comptes administrateur",
                 'url_menu' => "compte",
-                //'display' => false,
                 'display' => true,
                 'droits' => "admin"
-            
             )
         ),
         

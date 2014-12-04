@@ -286,7 +286,7 @@
                     $('#audioplayer').prop('autoplay', true);
                 }
 
-                setTimeout(onAudioPlayerLoaded, 1000); 
+                setTimeout(onAudioPlayerLoaded, 500); 
             }
 
 

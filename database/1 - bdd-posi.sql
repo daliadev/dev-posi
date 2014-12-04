@@ -22,7 +22,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS niveau_etudes;
-CREATE TABLE IF NOT EXISTS niveau_etudes 
+CREATE TABLE niveau_etudes 
 (
 	id_niveau INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_niveau VARCHAR(100) NOT NULL UNIQUE,
@@ -63,6 +63,17 @@ CREATE TABLE activite
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+DROP TABLE IF EXISTS valid_acquis;
+CREATE TABLE valid_acquis 
+(
+	id_acquis INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nom_acquis VARCHAR(100) NOT NULL UNIQUE,
+	descript_acquis TINYTEXT NULL
+) 
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 
 /*--- Création des tables relationnelles ---*/
 
@@ -85,7 +96,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS intervenant;
-CREATE TABLE IF NOT EXISTS intervenant 
+CREATE TABLE intervenant 
 (
 	id_intervenant INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_organ INT(5) UNSIGNED NULL,
@@ -98,7 +109,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS utilisateur;
-CREATE TABLE IF NOT EXISTS utilisateur 
+CREATE TABLE utilisateur 
 (
 	id_user INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_niveau INT(2) UNSIGNED NULL,
@@ -120,7 +131,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS inscription;
-CREATE TABLE IF NOT EXISTS inscription 
+CREATE TABLE inscription 
 (
 	id_inscription INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_user INT(5) UNSIGNED NOT NULL,
@@ -137,10 +148,10 @@ CREATE TABLE session
 	id_session INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_user INT(5) UNSIGNED NOT NULL,
 	ref_intervenant INT(5) UNSIGNED NULL,
+	ref_valid_acquis INT(2) UNSIGNED NULL,
 	date_session DATETIME NOT NULL DEFAULT "0000-00-00 00:00:00",
 	session_accomplie TINYINT(1) NOT NULL DEFAULT 0,
 	temps_total DOUBLE NOT NULL,
-	validation TINYINT(1) NOT NULL DEFAULT 0,
 	score_pourcent INT(3) UNSIGNED NOT NULL DEFAULT 0,
 	KEY date_session (date_session)
 ) 
@@ -256,6 +267,8 @@ ALTER TABLE session
 	ADD CONSTRAINT FK_session_user FOREIGN KEY (ref_user) REFERENCES utilisateur (id_user) ON DELETE CASCADE ON UPDATE RESTRICT;
 ALTER TABLE session 
 	ADD CONSTRAINT FK_session_intervenant FOREIGN KEY (ref_intervenant) REFERENCES intervenant (id_intervenant) ON DELETE SET NULL ON UPDATE RESTRICT;
+ALTER TABLE session 
+	ADD CONSTRAINT FK_session_acquis FOREIGN KEY (ref_valid_acquis) REFERENCES valid_acquis (id_acquis) ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE resultat 
 	ADD CONSTRAINT FK_result_session FOREIGN KEY (ref_session) REFERENCES session (id_session) ON DELETE CASCADE ON UPDATE CASCADE;

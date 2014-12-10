@@ -214,6 +214,22 @@ $form_url = $response['url'];
                                     <br/>
                                     <div class="info">Nombre de positionnements terminés : <strong><?php echo $infos_user['nbre_positionnements']; ?></strong></div>
                                     <div class="info">Date du dernier positionnement : <strong><?php echo $infos_user['date_last_posi']; ?></strong></div>
+                                    
+                                    <hr>
+                                    <div class="info">
+                                        <label for="ref_valid_cbox" style="line-height:40px;">Validation des acquis : </label>
+                                         &nbsp; 
+                                        <select name="ref_valid_cbox" id="ref_valid_cbox">
+                                            
+                                            <option value="select_cbox">Non validé</option>
+                                            <option value="1">Degré 1</option>
+                                            <option value="2">Degré 2</option>
+                                            <option value="3">Degré 3</option>
+
+                                        </select>
+                                         &nbsp; 
+                                        <input type="submit" value="Modifier" name="submit-acquis" style="margin: 0 0 0 0;" />
+                                    </div>
 
                                 <?php else : ?>
                                     <div class="info">Aucun utilisateur n'a été sélectionné.</div>

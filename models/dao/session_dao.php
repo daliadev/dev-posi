@@ -87,7 +87,7 @@ class SessionDAO extends ModelDAO
 
         $this->initialize();
 
-        $request = "SELECT id_session, ref_user, ref_intervenant, intervenant.ref_organ, date_session, session_accomplie, temps_total, validation, score_pourcent ";
+        $request = "SELECT id_session, ref_user, ref_intervenant, intervenant.ref_organ, ref_valid_acquis, date_session, session_accomplie, temps_total, validation, score_pourcent ";
         $request .= "FROM session, intervenant ";
         $request .= "WHERE session_accomplie = 1 ";
 
@@ -139,7 +139,7 @@ class SessionDAO extends ModelDAO
         
         if(!empty($refUser) && !empty($refOrganisme))
         {
-            $request = "SELECT id_session, ref_user, ref_intervenant, date_session, session_accomplie, temps_total, validation, score_pourcent FROM session, intervenant ";
+            $request = "SELECT id_session, ref_user, ref_intervenant, ref_valid_acquis, date_session, session_accomplie, temps_total, validation, score_pourcent FROM session, intervenant ";
             $request .= "WHERE session.ref_user = ".$refUser." ";
             $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
             $request .= "AND intervenant.ref_organ = ".$refOrganisme." ";

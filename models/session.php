@@ -9,6 +9,7 @@ class Session
     public $ref_user = null;
     public $ref_intervenant = null;
     public $ref_organ = null;
+    public $ref_valid_acquis = null;
     public $date_session = null;
     public $session_accomplie = null;
     public $temps_total = null;
@@ -34,6 +35,11 @@ class Session
     public function getRefOrgan()
     {
         return $this->ref_organ;
+    }
+
+    public function getRefValidAcquis()
+    {
+        return $this->ref_valid_acquis;
     }
 
     public function getDate()

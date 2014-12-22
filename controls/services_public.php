@@ -66,7 +66,7 @@ class ServicesPublic extends Main
                 // On récupère le code
                 $codeOrgan = $requestParams[0];
                 
-                // On va chercher le code organisme correspondant
+                // On va chercher l'organisme correspondant
                 $preSelectOrganisme = $this->organismeDAO->selectByCodeInterne($codeOrgan);
                 
                 if (!$this->filterDataErrors($preSelectOrganisme['response']))
@@ -324,15 +324,31 @@ class ServicesPublic extends Main
                         $this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
                         
                         
-                        /*** Tout d'abord, on recherche toutes les questions ***/
+                        /*** On recherche toutes les questions ***/
                         $this->returnData['response']['details']['questions'] = array();
-                        $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);         
+                        $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession); 
 
                     }
                 }
 
             }
         }
+
+
+        /*------ Validation des acquis -------*/
+
+        /*** On commence par chercher les infos pour créer la liste de validation des acquis ***/
+        $valid_acquis = array();
+        $valid_acquis = $this->servicesRestitution->getValidAcquis();
+        $this->returnData['response'] = array_merge($valid_acquis['response'], $this->returnData['response']);
+        //var_dump($this->returnData['response']['valid_acquis']);
+        //exit();
+
+        if (isset($_POST['submit-acquis']) && !empty($_POST['submit-acquis'])) {
+
+        }
+
+        
 
         
         /*-----   Retour des données traitées du formulaire   -----*/

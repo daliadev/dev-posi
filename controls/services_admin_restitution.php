@@ -12,6 +12,7 @@ require_once(ROOT.'models/dao/degre_dao.php');
 require_once(ROOT.'models/dao/reponse_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_dao.php');
+require_once(ROOT.'models/dao/valid_acquis_dao.php');
 
 
 
@@ -29,6 +30,7 @@ class ServicesAdminRestitution extends Main
     private $reponseDAO = null;
     private $questionCatDAO = null;
     private $categorieDAO = null;
+    private $validAcquisDAO = null;
     
     
     
@@ -48,6 +50,7 @@ class ServicesAdminRestitution extends Main
         $this->resultatDAO = new ResultatDAO();
         $this->questionCatDAO = new QuestionCategorieDAO();
         $this->categorieDAO = new CategorieDAO();
+        $this->validAcquisDAO = new ValidAcquisDAO();
     }
 
     
@@ -234,6 +237,30 @@ class ServicesAdminRestitution extends Main
     }
     
     
+
+
+
+    public function getValidAcquis()
+    {
+        $resultset = $this->validAcquisDAO->selectAll();
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response']['valid_acquis']) && count($resultset['response']['valid_acquis']) == 1)
+            { 
+                $question = $resultset['response']['valid_acquis'];
+                $resultset['response']['valid_acquis'] = array($question);
+            }
+
+            return $resultset;
+        }
+
+        return false;
+    }
+
+
+
     
     
     
@@ -932,7 +959,7 @@ class ServicesAdminRestitution extends Main
         return $tabResultats;
         
     }
-     
+    
 
 }
 

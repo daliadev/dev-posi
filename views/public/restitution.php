@@ -217,8 +217,28 @@ $form_url = $response['url'];
                                     
                                     <hr>
                                     <div class="info">
-                                        <label for="ref_valid_cbox" style="line-height:40px;">Validation des acquis : </label>
+                                        <label for="ref_valid_cbox" style="line-height:40px;"><strong>Validation des acquis :</strong> </label>
                                          &nbsp; 
+                                        <select name="ref_valid_cbox" id="ref_valid_cbox">
+                                            <option value="select_cbox">Non validé</option>
+
+                                            <?php
+                                            
+                                            foreach ($response['valid_acquis'] as $valid_acquis)
+                                            {
+                                                $selected = "";
+                                                if (!empty($formData['session']['ref_valid_acquis']) && $formData['session']['ref_valid_acquis'] == $valid_acquis->getId())
+                                                {
+                                                    $selected = "selected";
+                                                }
+                                                
+                                                echo '<option value="'.$valid_acquis->getId().'" '.$selected.'>'.$valid_acquis->getNom().'</option>';
+                                            }
+                                            
+                                            ?>
+
+                                        </select>
+                                        <!--
                                         <select name="ref_valid_cbox" id="ref_valid_cbox">
                                             
                                             <option value="select_cbox">Non validé</option>
@@ -227,8 +247,9 @@ $form_url = $response['url'];
                                             <option value="3">Degré 3</option>
 
                                         </select>
+                                        -->
                                          &nbsp; 
-                                        <input type="submit" value="Modifier" name="submit-acquis" style="margin: 0 0 0 0;" />
+                                        <input type="submit" value="Modifier" id="submit-acquis" name="submit-acquis" style="margin: 0 0 0 0;" />
                                     </div>
 
                                 <?php else : ?>
@@ -547,6 +568,13 @@ $form_url = $response['url'];
                     }
                     
                 });
+
+
+                /*
+                $('#submit-acquis').change(function(event) {
+
+                }
+                */
 
             <?php endif; ?>
             

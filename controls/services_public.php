@@ -257,6 +257,7 @@ class ServicesPublic extends Main
             $this->returnData['response']['infos_user']['descript_niveau'] = "";
             $this->returnData['response']['infos_user']['nbre_positionnements'] = "";
             $this->returnData['response']['infos_user']['date_last_posi'] = "";
+            $this->returnData['response']['infos_user']['ref_selected_session'] = "";
             
             
             /*** On va chercher tous les utilisateurs qui correspondent à l'organisme ***/
@@ -319,6 +320,7 @@ class ServicesPublic extends Main
 
 
                         $refSession = $resultsetSession['response']['session'][0]->getId();
+                        $this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
                                 
                         $this->returnData['response']['stats'] = array();
                         $this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
@@ -326,13 +328,14 @@ class ServicesPublic extends Main
                         
                         /*** On recherche toutes les questions ***/
                         $this->returnData['response']['details']['questions'] = array();
-                        $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession); 
+                        $this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);
 
                     }
                 }
 
             }
         }
+
 
 
         /*------ Validation des acquis -------*/
@@ -344,8 +347,21 @@ class ServicesPublic extends Main
         //var_dump($this->returnData['response']['valid_acquis']);
         //exit();
 
-        if (isset($_POST['submit-acquis']) && !empty($_POST['submit-acquis'])) {
+        if (isset($_POST['submit_acquis']) && !empty($_POST['submit_acquis'])) {
 
+            if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) {
+
+                $refValidAcquis = $_POST['ref_valid_cbox'];
+
+                if ($refValidAcquis == 'select_cbox') {
+                    $refValidAcquis = 'NULL';
+                }
+
+                $validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
+
+                var_dump($validRequest);
+                exit();
+            }
         }
 
         

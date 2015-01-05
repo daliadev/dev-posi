@@ -482,7 +482,7 @@ form input[type="text"][disabled]
 
 	#form-posi #submit input[disabled]
 	{
-	    background-color: #bdc3c7;
+	    background-color: #bdc3c7 !important;
 	    cursor: default;  	
 	}
 
@@ -509,7 +509,7 @@ form input[type="text"][disabled]
 
 	form input[type="submit"][disabled]
 	{
-	    background-color: #bdc3c7;
+	    background-color: #bdc3c7 !important;
 	    cursor: default;  	
 	}
 	

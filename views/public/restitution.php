@@ -215,43 +215,38 @@ $form_url = $response['url'];
                                     <div class="info">Nombre de positionnements terminés : <strong><?php echo $infos_user['nbre_positionnements']; ?></strong></div>
                                     <div class="info">Date du dernier positionnement : <strong><?php echo $infos_user['date_last_posi']; ?></strong></div>
                                     
-                                    <hr>
-                                    <div class="info">
-                                        <label for="ref_valid_cbox" style="line-height:40px;"><strong>Validation des acquis :</strong> </label>
-                                         &nbsp; 
-                                        <select name="ref_valid_cbox" id="ref_valid_cbox">
-                                            <option value="select_cbox">Non validé</option>
+                                    <?php if (!empty($response['infos_user']['ref_selected_session'])) : ?>
 
-                                            <?php
-                                            
-                                            foreach ($response['valid_acquis'] as $valid_acquis)
-                                            {
-                                                $selected = "";
-                                                if (!empty($formData['session']['ref_valid_acquis']) && $formData['session']['ref_valid_acquis'] == $valid_acquis->getId())
+                                        <hr>
+                                        <div class="info">
+                                            <label for="ref_valid_cbox" style="line-height:40px;"><strong>Validation des acquis :</strong> </label>
+                                             &nbsp; 
+                                            <select name="ref_valid_cbox" id="ref_valid_cbox" style="width:200px;">
+                                                <option value="select_cbox">Non validé</option>
+
+                                                <?php
+                                                
+                                                foreach ($response['valid_acquis'] as $valid_acquis)
                                                 {
-                                                    $selected = "selected";
+                                                    $selected = "";
+                                                    if (!empty($formData['session']['ref_valid_acquis']) && $formData['session']['ref_valid_acquis'] == $valid_acquis->getId())
+                                                    {
+                                                        $selected = "selected";
+                                                    }
+                                                    
+                                                    echo '<option value="'.$valid_acquis->getId().'" '.$selected.'>'.$valid_acquis->getNom().'</option>';
                                                 }
                                                 
-                                                echo '<option value="'.$valid_acquis->getId().'" '.$selected.'>'.$valid_acquis->getNom().'</option>';
-                                            }
-                                            
-                                            ?>
+                                                ?>
 
-                                        </select>
-                                        <!--
-                                        <select name="ref_valid_cbox" id="ref_valid_cbox">
-                                            
-                                            <option value="select_cbox">Non validé</option>
-                                            <option value="1">Degré 1</option>
-                                            <option value="2">Degré 2</option>
-                                            <option value="3">Degré 3</option>
-
-                                        </select>
-                                        -->
-                                         &nbsp; 
-                                        <input type="submit" value="Modifier" id="submit-acquis" name="submit-acquis" style="margin: 0 0 0 0;" />
-                                    </div>
-
+                                            </select>
+                                             &nbsp; 
+                                            <input type="submit" value="Modifier" id="modif-acquis" name="modif_acquis" style="width:100px; margin: 0 0 0 0;" />
+                                            <input type="submit" value="Enregistrer" id="submit-acquis" name="submit_acquis" style="width:100px; margin: 0 0 0 0;" />
+                                            <input type="submit" value="Annuler" id="clear-acquis" name="clear_acquis" style="width:100px; margin: 0 0 0 0;" />
+                                        </div>
+                                    <?php endif; ?>
+                        
                                 <?php else : ?>
                                     <div class="info">Aucun utilisateur n'a été sélectionné.</div>
                                 <?php endif; ?>
@@ -463,12 +458,50 @@ $form_url = $response['url'];
             $("#infos-posi").tooltip();
 
             $("#table-resultats").tablesorter();
-            
+
+
+            // Validation des acquis : le select et le bouton "Enregistrer sont désactivés par défaut
+            var selectedAcquis = $("#ref_valid_cbox").val();
+            console.log(selectedAcquis);
+            $("#ref_valid_cbox").attr("disabled", true);
+            $("#submit-acquis").attr("disabled", true);
+            $("#clear-acquis").attr("disabled", true);
+            $("#submit-acquis").hide();
+            $("#clear-acquis").hide();
+
+            // Gestion de la validation des acquis
+            $('#modif-acquis').click(function(event) {
+                $(this).hide();
+                $('#submit-acquis').show();
+                $('#clear-acquis').show();
+                $("#submit-acquis").attr("disabled", false);
+                $("#clear-acquis").attr("disabled", false);
+                $("#ref_valid_cbox").attr("disabled", false);
+                return false;
+            });
+
+            $('#submit-acquis').click(function(event) {
+                $(this).hide();
+                $("#clear-acquis").hide();
+                $('#modif-acquis').show();
+                $('#form-posi').submit();
+                return false;
+            });
+
+            $('#clear-acquis').click(function(event) {
+                $(this).hide();
+                $('#submit-acquis').hide();
+                $('#modif-acquis').show();
+                $("#ref_valid_cbox").attr("disabled", true);
+                $("#ref_valid_cbox").val(selectedAcquis);
+                return false;
+            });
+
 
 
             <?php if (Config::ALLOW_AJAX) : ?>
 
-                //alert('Ajax allowed');
+                //console.log('Ajax allowed');
                 /* Listes dynamiques en ajax */
                
                 $('.ajax-list').change(function(event) {
@@ -570,14 +603,9 @@ $form_url = $response['url'];
                 });
 
 
-                /*
-                $('#submit-acquis').change(function(event) {
-
-                }
-                */
-
             <?php endif; ?>
-            
+
+
         });
 
     </script>

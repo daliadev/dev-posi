@@ -213,6 +213,43 @@ class SessionDAO extends ModelDAO
         return $this->resultset;
     }
 
+
+    /**
+     * update - Met à jour la référence à la table "validation des acquis" d'une session
+     * 
+     * @param number Référence de la table "validation des acquis" à mettre à jour
+     * @param number Référence de la session à mettre à jour
+     * @return array Nbre de lignes mises à jour sinon erreurs
+     */
+    public function updateValidAcquis($refValidAcquis, $idSession) 
+    {
+        $this->initialize();
+        
+        if (!empty($refValidAcquis) && !empty($idSession))
+        {
+            var_dump($validRequest);
+            var_dump($idSession);
+            exit();
+
+            if ($refValidAcquis == "NULL")
+            {
+                $request = "UPDATE session SET ref_valid_acquis = NULL WHERE id_session = ".$idSession;
+            }
+            else
+            {
+                $request = "UPDATE session SET ref_valid_acquis = ".$refValidAcquis." WHERE id_session = ".$idSession;
+            }
+
+            $this->resultset['response'] = $this->executeRequest("update", $request, "session", "Session");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+        }
+
+        return $this->resultset;
+    }
+
     
     
     

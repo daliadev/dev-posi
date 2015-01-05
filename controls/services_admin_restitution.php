@@ -260,6 +260,24 @@ class ServicesAdminRestitution extends Main
     }
 
 
+    public function setValidAcquis($refValidAcquis, $idSession)
+    {
+        $resultset = $this->sessionDAO->updateValidAcquis($refValidAcquis, $idSession);
+
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['session']['row_count']) && !empty($resultset['response']['session']['row_count']))
+        {
+            return true;
+        } 
+        else 
+        {
+            //$this->registerError("form_request", "Le degré n'a pu être mis à jour.");
+
+        }
+
+        return false;
+    }
+
 
     
     

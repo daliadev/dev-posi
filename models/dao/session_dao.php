@@ -227,9 +227,6 @@ class SessionDAO extends ModelDAO
         
         if (!empty($refValidAcquis) && !empty($idSession))
         {
-            var_dump($validRequest);
-            var_dump($idSession);
-            exit();
 
             if ($refValidAcquis == "NULL")
             {

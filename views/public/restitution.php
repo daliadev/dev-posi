@@ -197,7 +197,7 @@ $form_url = $response['url'];
                                 <div class="tab-block">
 
                                 <?php if (!empty($response['infos_user'])) : $infos_user = $response['infos_user'] ?>
-
+                                    
                                     <div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
 
                                     <?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
@@ -216,35 +216,40 @@ $form_url = $response['url'];
                                     <div class="info">Date du dernier positionnement : <strong><?php echo $infos_user['date_last_posi']; ?></strong></div>
                                     
                                     <?php if (!empty($response['infos_user']['ref_selected_session'])) : ?>
+                                        
+                                    <hr>
+                                    <div class="info">
+                                        <label for="ref_valid_cbox" style="line-height:40px;"><strong>Validation des acquis :</strong> </label>
+                                         &nbsp; 
+                                        <select name="ref_valid_cbox" id="ref_valid_cbox" style="width:200px;">
+                                            <option value="select_cbox">Non validé</option>
 
-                                        <hr>
-                                        <div class="info">
-                                            <label for="ref_valid_cbox" style="line-height:40px;"><strong>Validation des acquis :</strong> </label>
-                                             &nbsp; 
-                                            <select name="ref_valid_cbox" id="ref_valid_cbox" style="width:200px;">
-                                                <option value="select_cbox">Non validé</option>
-
-                                                <?php
-                                                
-                                                foreach ($response['valid_acquis'] as $valid_acquis)
+                                            <?php
+                                            
+                                            foreach ($response['valid_acquis'] as $valid_acquis)
+                                            {
+                                                $selected = "";
+                                                if (!empty($infos_user['ref_valid_acquis']) && $infos_user['ref_valid_acquis'] == $valid_acquis->getId())
                                                 {
-                                                    $selected = "";
-                                                    if (!empty($formData['session']['ref_valid_acquis']) && $formData['session']['ref_valid_acquis'] == $valid_acquis->getId())
-                                                    {
-                                                        $selected = "selected";
-                                                    }
-                                                    
-                                                    echo '<option value="'.$valid_acquis->getId().'" '.$selected.'>'.$valid_acquis->getNom().'</option>';
+                                                    $selected = "selected";
                                                 }
                                                 
-                                                ?>
+                                                echo '<option value="'.$valid_acquis->getId().'" '.$selected.'>'.$valid_acquis->getNom().'</option>';
+                                            }
+                                            
+                                            ?>
 
-                                            </select>
-                                             &nbsp; 
-                                            <input type="submit" value="Modifier" id="modif-acquis" name="modif_acquis" style="width:100px; margin: 0 0 0 0;" />
-                                            <input type="submit" value="Enregistrer" id="submit-acquis" name="submit_acquis" style="width:100px; margin: 0 0 0 0;" />
-                                            <input type="submit" value="Annuler" id="clear-acquis" name="clear_acquis" style="width:100px; margin: 0 0 0 0;" />
+                                        </select>
+                                         &nbsp;
+
+                                        <div id="buttons" style="display: inline;">
+                                            <input type="button" value="Modifier" id="modif-acquis" name="modif_acquis" class="add" style="width:100px; margin: 0 0 0 0;" />
+                                            <input type="submit" value="Enregistrer" id="submit-acquis" name="submit_acquis" class="save" style="width:100px; margin: 0 0 0 0;" />
+                                            <input type="button" value="Annuler" id="clear-acquis" name="clear_acquis" class="del" style="width:100px; margin: 0 0 0 0;" />
                                         </div>
+
+                                    </div>
+
                                     <?php endif; ?>
                         
                                 <?php else : ?>

@@ -491,7 +491,7 @@ form input[type="text"][disabled]
 		background-color: #f3a842;
 	}
 	
-#form-posi input[type=submit] 
+#form-posi input[type=submit], #form-posi input[type=button] 
 {
 	cursor: pointer;
 	width: 140px;
@@ -507,7 +507,7 @@ form input[type="text"][disabled]
     /*line-height: 1px;*/
 }
 
-	form input[type="submit"][disabled]
+	form input[type="submit"][disabled], #form-posi input[type=button][disabled]
 	{
 	    background-color: #bdc3c7 !important;
 	    cursor: default;  	
@@ -1256,10 +1256,10 @@ select {
 	margin: 0 7px 0 10px;
 }
 
-#buttons input[name='add'] { background: #f39c12; }
-#buttons input[name='edit'] { background: #1fbba6; }
-#buttons input[name='save'] { background: #3498db; }
-#buttons input[name='del'] { background: #f75556; }
+#buttons input[name='add'], #buttons input.add { background: #f39c12; }
+#buttons input[name='edit'], #buttons input.edit { background: #1fbba6; }
+#buttons input[name='save'], #buttons input.save { background: #3498db; }
+#buttons input[name='del'], #buttons input.del { background: #f75556; }
 #buttons input[type="submit"][disabled] {
 	background-color: #bdc3c7;
 	cursor: default;

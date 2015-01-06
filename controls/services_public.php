@@ -318,9 +318,9 @@ class ServicesPublic extends Main
                         $this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
                         $this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
 
-
                         $refSession = $resultsetSession['response']['session'][0]->getId();
                         $this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
+                        $this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
                                 
                         $this->returnData['response']['stats'] = array();
                         $this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
@@ -340,28 +340,22 @@ class ServicesPublic extends Main
 
         /*------ Validation des acquis -------*/
 
+
         /*** On commence par chercher les infos pour créer la liste de validation des acquis ***/
         $valid_acquis = array();
         $valid_acquis = $this->servicesRestitution->getValidAcquis();
         $this->returnData['response'] = array_merge($valid_acquis['response'], $this->returnData['response']);
-        //var_dump($this->returnData['response']['valid_acquis']);
-        //exit();
 
-        if (isset($_POST['submit_acquis']) && !empty($_POST['submit_acquis'])) {
+        // Sauvegarde du niveau des acquis sélectionné par l'utilisateur
+        if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) {
 
-            if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) {
+            $refValidAcquis = $_POST['ref_valid_cbox'];
 
-                $refValidAcquis = $_POST['ref_valid_cbox'];
-
-                if ($refValidAcquis == 'select_cbox') {
-                    $refValidAcquis = 'NULL';
-                }
-
-                $validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
-
-                var_dump($validRequest);
-                exit();
+            if ($refValidAcquis == 'select_cbox') {
+                $refValidAcquis = 'NULL';
             }
+
+            $validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
         }
 
         

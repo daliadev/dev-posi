@@ -6,6 +6,7 @@ require_once(ROOT.'controls/services_admin_gestion.php');
 require_once(ROOT.'controls/services_admin_question.php');
 require_once(ROOT.'controls/services_admin_categorie.php');
 require_once(ROOT.'controls/services_admin_degre.php');
+require_once(ROOT.'controls/services_admin_valid_acquis.php');
 require_once(ROOT.'controls/services_admin_utilisateur.php');
 require_once(ROOT.'controls/services_admin_organisme.php');
 require_once(ROOT.'controls/services_admin_restitution.php');
@@ -23,6 +24,7 @@ class ServicesAdmin extends Main
     private $servicesQuestion = null;
     private $servicesCategorie = null;
     private $servicesDegre = null;
+    private $servicesValidation = null;
     private $servicesUtilisateur = null;
     private $servicesOrganisme = null;
     private $servicesRestitution = null;
@@ -41,6 +43,7 @@ class ServicesAdmin extends Main
         $this->servicesQuestion = new ServicesAdminQuestion();
         $this->servicesCategorie = new ServicesAdminCategorie();
         $this->servicesDegre = new ServicesAdminDegre();
+        $this->servicesValidation = new ServicesAdminValidAcquis();
         $this->servicesUtilisateur = new ServicesAdminUtilisateur();
         $this->servicesOrganisme = new ServicesAdminOrganisme();
         $this->servicesRestitution = new ServicesAdminRestitution();
@@ -949,8 +952,260 @@ class ServicesAdmin extends Main
         $this->render("gestion_degre");
         
     }
-    
 
+
+
+
+
+
+
+
+    /**
+     * validation - Gére la validation des acquis avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
+     *
+     * @param array Tableau de paramètres passés par url (comme la référence de la validation des acquis)
+     */
+    public function validation($requestParams = array())
+    {        
+                
+        // Authentification
+        ServicesAuth::checkAuthentication("admin");
+
+        
+        $this->initialize();
+        
+        $this->url = SERVER_URL."admin/validation/";
+
+        
+        /*** Initialisation des tableaux des données qui seront inseré ou mis à jour dans la base ***/
+        $dataValidAcquis = array();
+
+
+        /*** Définition du mode précédent du formulaire ***/
+
+        if (isset($_POST['mode']) && !empty($_POST['mode']))
+        {
+            $previousMode = $_POST['mode'];
+        }
+        else if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
+        {
+            $previousMode = "view";
+        }
+        else 
+        {
+            $previousMode = "new";
+        }
+        
+        
+        /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
+        
+        $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
+
+        
+        /*** On récupère la référence de la validation des acquis et on initialise les données qui vont être validées et renvoyées au formulaire ***/
+
+        $this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_valid_acquis_cbox" => "select", "nom_valid_acquis" => "text", "descript_valid_acquis" => "text"));
+        
+        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_valid_acquis_cbox'] != null)
+        {
+            $this->formData['ref_valid_acquis_cbox'] = $requestParams[0];
+        }
+        
+        $this->formData['ref_valid_acquis'] = $this->formData['ref_valid_acquis_cbox'];
+        
+        
+        /*** Initialisation des données qui vont être validées et renvoyées au formulaire ***/
+
+        $this->servicesGestion->switchFormButtons($this->formData, "init");
+  
+        
+        
+        /*-----   Mode "visualisation" et "edition"   -----*/
+
+        
+        if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
+        { 
+            // Verrouillage des boutons
+            $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
+            
+            if (!empty($this->formData['ref_valid_acquis']))
+            {
+                if ($this->formData['mode'] == "view")
+                {
+                    // Déverrouillage des boutons "modifier" et "supprimer"
+                    $this->formData['edit_disabled'] = "";
+                    $this->formData['delete_disabled'] = "disabled";
+                }
+                
+                $validDetails = array();
+                $validDetails = $this->servicesValidation->getValidDetails($this->formData['ref_valid_acquis']);
+                $this->formData = array_merge($this->formData, $validDetails);
+            }
+            else if ($this->formData['mode'] == "edit")
+            {
+                $this->registerError("form_empty", "Ce niveau de validation n'existe pas");
+            }
+        }
+        
+        
+        /*-----   Mode "nouveau niveau de validation"   -----*/
+        
+        else if ($this->formData['mode'] == "new")
+        {      
+            // Verrouillage des boutons
+            $this->servicesGestion->switchFormButtons($this->formData, "new");
+
+            $this->formData['ref_valid_acquis'] = null;
+            $this->formData['nom_valid_acquis'] = null;
+            $this->formData['descript_valid_acquis'] = null;
+        }
+  
+        
+        
+        /*-----   Mode "enregistrement"   -----*/
+        
+        else if ($this->formData['mode'] == "save")
+        {
+            
+            // Verrouillage des boutons
+            $this->servicesGestion->switchFormButtons($this->formData, "save");
+
+
+            /*** Récupèration de l'id de la question ***/
+
+            if (!empty($this->formData['ref_valid_acquis']))
+            {
+                if ($previousMode == "edit")
+                {
+                    $dataValidAcquis['ref_valid_acquis'] = $this->formData['ref_valid_acquis'];
+                }
+            }
+            
+            
+            /*-----  Traitement des infos saisies   -----*/
+            
+            $dataValidAcquis = $this->servicesValidation->filterValidData($this->formData, $_POST);
+
+            
+            /*----- Sauvegarde ou mise à jour des données ***/
+            
+            // Aucune erreur ne doit être enregistrée
+            if (empty($this->servicesValidation->errors) && empty($this->errors)) 
+            {
+                $this->servicesValidation->setValidProperties($previousMode, $dataValidAcquis, $this->formData);
+            }
+            
+            /*** S'il n'y a pas d'erreur, on recharge la page avec l'identifiant récupéré ***/
+            
+            if (empty($this->servicesValidation->errors) && empty($this->errors))
+            {
+                // On recharge la page en mode view
+                header("Location: ".$this->url.$this->formData['ref_valid_acquis']);
+                exit();
+            }
+            else 
+            {
+                if ($previousMode == "new")
+                {
+                    $this->formData['mode'] = "new";
+                }
+                else
+                {
+                    $this->formData['mode'] = "edit";
+                }
+            }
+            
+        }
+        
+        
+        
+        /*-----   Mode "suppression"   -----*/
+        
+        
+        else if ($this->formData['mode'] == "delete")
+        {
+            // Verrouillage des boutons
+            $this->servicesGestion->switchFormButtons($this->formData, "delete");
+            
+            // On récupère le code de la validation des acquis actif
+            if (!empty($this->formData['ref_valid_acquis']))
+            {
+                // Ensuite on supprime le degré dans la base
+                $resultsetDegre = $this->servicesValidation->deleteValid($this->formData['ref_valid_acquis']);
+
+                if ($resultsetDegre)
+                {   
+                    $this->registerSuccess("Le degré a été supprimé avec succès.");
+                }
+                else
+                {
+                    $this->registerError("form_data", "Le degré n'a pas pu être supprimé.");
+                }
+            }
+            else 
+            {
+                $this->registerError("form_data", "Le degré n'existe pas.");
+            }
+            
+            // On recharge la page (sans aucune information).
+            //header("Location: ".$this->url);
+            //exit();
+        }
+
+
+        else  
+        {
+            // Sinon, renvoi vers la page inconnue (404)
+            header("Location: ".SERVER_URL."erreur/page404");
+            exit();
+        }   
+
+        
+
+        /*-----   Retour des données traitées du formulaire   -----*/
+
+
+        $this->returnData['response']['form_data'] = array();
+        $this->returnData['response']['form_data'] = $this->formData;
+
+        
+        /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
+        
+        if ((!empty($this->servicesValidation->errors) && count($this->servicesValidation->errors) > 0) || !empty($this->errors))
+        {
+            $this->errors = array_merge($this->servicesValidation->errors, $this->errors);
+            foreach($this->errors as $error)
+            {
+                $this->returnData['response']['errors'][] = $error;
+            }
+        }
+        else if ((!empty($this->servicesValidation->success) && count($this->servicesValidation->success) > 0) || !empty($this->success))
+        {
+            $this->success = array_merge($this->servicesValidation->success, $this->success);
+            foreach($this->success as $success)
+            {
+                $this->returnData['response']['success'][] = $success;
+            }
+        }
+        
+        
+        /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
+        
+        // Requete pour obtenir la liste des degrés
+        $listeDegres = $this->servicesValidation->getValidList();
+        $this->returnData['response'] = array_merge($listeDegres['response'], $this->returnData['response']);
+
+        /*** Envoi des données et rendu de la vue ***/
+        
+        $this->setResponse($this->returnData);
+        $this->setTemplate("template_page");
+        $this->render("gestion_valid_acquis");
+        
+    }
+
+
+
+    
 
 
     /**
@@ -1509,252 +1764,6 @@ class ServicesAdmin extends Main
 
 
 
-    /**
-     * validAcquis - Gére la validation du formulaire de gestion de la validation des acquis avec insertion et mises à jour des données du formulaire et renvoie les données vers la vue.
-     *
-     * @param array Tableau de paramètres passés par url (comme la référence de la validation des acquis)
-     */
-    public function validationAcquis($requestParams = array())
-    {        
-                
-        // Authentification
-        ServicesAuth::checkAuthentication("admin");
-
-        
-        $this->initialize();
-        
-        $this->url = SERVER_URL."admin/degre/";
-
-        
-        /*** Initialisation des tableaux des données qui seront inseré ou mis à jour dans la base ***/
-        $dataDegre = array();
-
-
-        /*** Définition du mode précédent du formulaire ***/
-
-        if (isset($_POST['mode']) && !empty($_POST['mode']))
-        {
-            $previousMode = $_POST['mode'];
-        }
-        else if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
-        {
-            $previousMode = "view";
-        }
-        else 
-        {
-            $previousMode = "new";
-        }
-        
-        
-        /*** On détermine le mode du formulaire selon le bouton qui a été cliqué dans le formulaire ou bien on le récupère dans le champ caché. ***/
-        
-        $this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
-
-        
-        /*** On récupère la référence du degré et on initialise les données qui vont être validées et renvoyées au formulaire ***/
-
-        $this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_degre_cbox" => "select", "nom_degre" => "text", "descript_degre" => "text"));
-        
-        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_degre_cbox'] != null)
-        {
-            $this->formData['ref_degre_cbox'] = $requestParams[0];
-        }
-        
-        $this->formData['ref_degre'] = $this->formData['ref_degre_cbox'];
-        
-        
-        /*** Initialisation des données qui vont être validées et renvoyées au formulaire ***/
-
-        $this->servicesGestion->switchFormButtons($this->formData, "init");
-  
-        
-        
-        /*-----   Mode "visualisation" et "edition"   -----*/
-
-        
-        if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
-        { 
-            // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
-            
-            if (!empty($this->formData['ref_degre']))
-            {
-                if ($this->formData['mode'] == "view")
-                {
-                    // Déverrouillage des boutons "modifier" et "supprimer"
-                    $this->formData['edit_disabled'] = "";
-                    $this->formData['delete_disabled'] = "disabled";
-                }
-                
-                $degreDetails = array();
-                $degreDetails = $this->servicesDegre->getDegreDetails($this->formData['ref_degre']);
-                $this->formData = array_merge($this->formData, $degreDetails);
-            }
-            else if ($this->formData['mode'] == "edit")
-            {
-                $this->registerError("form_empty", "Ce degré n'existe pas");
-            }
-        }
-        
-        
-        /*-----   Mode "nouveau degré"   -----*/
-        
-        else if ($this->formData['mode'] == "new")
-        {      
-            // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "new");
-
-            $this->formData['ref_degre'] = null;
-            $this->formData['nom_degre'] = null;
-            $this->formData['descript_degre'] = null;
-        }
-  
-        
-        
-        /*-----   Mode "enregistrement"   -----*/
-        
-        else if ($this->formData['mode'] == "save")
-        {
-            
-            // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "save");
-
-
-            /*** Récupèration de l'id de la question ***/
-
-            if (!empty($this->formData['ref_degre']))
-            {
-                if ($previousMode == "edit")
-                {
-                    $dataDegre['ref_degre'] = $this->formData['ref_degre'];
-                }
-            }
-            
-            
-            /*-----  Traitement des infos saisies   -----*/
-            
-            $dataDegre = $this->servicesDegre->filterDegreData($this->formData, $_POST);
-
-            
-            /*----- Sauvegarde ou mise à jour des données ***/
-            
-            // Aucune erreur ne doit être enregistrée
-            if (empty($this->servicesDegre->errors) && empty($this->errors)) 
-            {
-                $this->servicesDegre->setDegreProperties($previousMode, $dataDegre, $this->formData);
-            }
-            
-            /*** S'il n'y a pas d'erreur, on recharge la page avec l'identifiant récupéré ***/
-            
-            if (empty($this->servicesDegre->errors) && empty($this->errors))
-            {
-                // On recharge la page en mode view
-                header("Location: ".$this->url.$this->formData['ref_degre']);
-                exit();
-            }
-            else 
-            {
-                if ($previousMode == "new")
-                {
-                    $this->formData['mode'] = "new";
-                }
-                else
-                {
-                    $this->formData['mode'] = "edit";
-                }
-            }
-            
-        }
-        
-        
-        
-        /*-----   Mode "suppression"   -----*/
-        
-        
-        else if ($this->formData['mode'] == "delete")
-        {
-            // Verrouillage des boutons
-            $this->servicesGestion->switchFormButtons($this->formData, "delete");
-            
-            // On récupère le code du degré actif
-            if (!empty($this->formData['ref_degre']))
-            {
-                // Ensuite on supprime le degré dans la base
-                $resultsetDegre = $this->servicesDegre->deleteDegre($this->formData['ref_degre']);
-
-                if ($resultsetDegre)
-                {   
-                    $this->registerSuccess("Le degré a été supprimé avec succès.");
-                }
-                else
-                {
-                    $this->registerError("form_data", "Le degré n'a pas pu être supprimé.");
-                }
-            }
-            else 
-            {
-                $this->registerError("form_data", "Le degré n'existe pas.");
-            }
-            
-            // On recharge la page (sans aucune information).
-            //header("Location: ".$this->url);
-            //exit();
-        }
-
-
-        else  
-        {
-            // Sinon, renvoi vers la page inconnue (404)
-            header("Location: ".SERVER_URL."erreur/page404");
-            exit();
-        }   
-
-        
-
-        /*-----   Retour des données traitées du formulaire   -----*/
-
-
-        $this->returnData['response']['form_data'] = array();
-        $this->returnData['response']['form_data'] = $this->formData;
-
-        
-        /*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
-        
-        if ((!empty($this->servicesDegre->errors) && count($this->servicesDegre->errors) > 0) || !empty($this->errors))
-        {
-            $this->errors = array_merge($this->servicesDegre->errors, $this->errors);
-            foreach($this->errors as $error)
-            {
-                $this->returnData['response']['errors'][] = $error;
-            }
-        }
-        else if ((!empty($this->servicesDegre->success) && count($this->servicesDegre->success) > 0) || !empty($this->success))
-        {
-            $this->success = array_merge($this->servicesDegre->success, $this->success);
-            foreach($this->success as $success)
-            {
-                $this->returnData['response']['success'][] = $success;
-            }
-        }
-        
-        
-        /*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
-        
-        // Requete pour obtenir la liste des degrés
-        $listeDegres = $this->servicesDegre->getDegresList();
-        $this->returnData['response'] = array_merge($listeDegres['response'], $this->returnData['response']);
-
-        /*** Envoi des données et rendu de la vue ***/
-        
-        $this->setResponse($this->returnData);
-        $this->setTemplate("template_page");
-        $this->render("gestion_degre");
-        
-    }
-
-
-
-    
 
 
 

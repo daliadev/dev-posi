@@ -590,7 +590,6 @@ $form_url = $response['url'];
                                 }
                             }
                             
-                            
                         }
 
                     }, 'json');

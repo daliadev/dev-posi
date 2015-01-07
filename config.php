@@ -103,7 +103,7 @@ class Config
 
     public static $admin_menu = array(
 
-        // Partie Gestion du positionnement du menu
+        // Partie "Gestion du positionnement" du menu
         array(
 
             'title' =>"Gestion",
@@ -130,6 +130,13 @@ class Config
                 'droits' => "admin"
             ),
             array(
+                'code_menu' => "35",
+                'label_menu' => "Niveaux de validation des acquis",
+                'url_menu' => "validation",
+                'display' => true,
+                'droits' => "admin"
+            ),
+            array(
                 'code_menu' => "40",
                 'label_menu' => "Activités",
                 'url_menu' => "activite",
@@ -138,14 +145,14 @@ class Config
             ),
     		array(
                 'code_menu' => "50",
-                'label_menu' => "Utilisateur",
+                'label_menu' => "Utilisateurs",
                 'url_menu' => "utilisateur",
                 'display' => true,
                 'droits' => "custom,admin"
             ),
     		array(
                 'code_menu' => "60",
-                'label_menu' => "Organisme",
+                'label_menu' => "Organismes",
                 'url_menu' => "organisme",
                 'display' => true,
                 'droits' => "custom,admin"
@@ -159,7 +166,7 @@ class Config
             )
         ),
         
-        // Partie Gestion des résultats du menu.
+        // Partie "Gestion des résultats" du menu.
         array(
 
             'title' =>"Résultats",
@@ -173,7 +180,7 @@ class Config
             ),
     		 array(
                 'code_menu' => "20",
-                'label_menu' => "Statistique",
+                'label_menu' => "Statistiques",
                 'url_menu' => "statistique",
                 'display' => true,
                 'droits' => "custom,admin"

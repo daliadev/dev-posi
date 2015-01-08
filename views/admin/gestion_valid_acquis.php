@@ -3,10 +3,10 @@
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
 
-$formData['ref_valid_acquis'] = "";
+$formData['ref_valid'] = "";
 
-$formData['nom_valid_acquis'] = "";
-$formData['descript_valid_acquis'] = "";
+$formData['nom_acquis'] = "";
+$formData['descript_acquis'] = "";
 
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -53,7 +53,7 @@ $form_url = WEBROOT."admin/validation/";
         <div id="valid-acquis">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-valid-acquis">Gestion des Niveaux de validation des acquis</div>
+                <div class="titre-form" id="titre-valid-acquis">Gestion des niveaux de validation des acquis</div>
 
                 <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_valid_acquis">
 
@@ -62,15 +62,15 @@ $form_url = WEBROOT."admin/validation/";
                         <input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
 
                         <div class="input">
-                            <label for="ref_valid_acquis_cbox">Liste des niveaux :</label>
-                            <select name="ref_valid_acquis_cbox" id="ref_valid_acquis_cbox">
+                            <label for="ref_valid_cbox">Liste des niveaux :</label>
+                            <select name="ref_valid_cbox" id="ref_valid_cbox">
                                 <option value="select_cbox">---</option>
 
                                 <?php 
                                 foreach($response['valid_acquis'] as $validAcquis)
                                 {
                                     $selected = "";
-                                    if (!empty($formData['ref_valid_acquis']) && $formData['ref_valid_acquis'] == $validAcquis->getId())
+                                    if (!empty($formData['ref_valid']) && $formData['ref_valid'] == $validAcquis->getId())
                                     {
                                         $selected = "selected";
                                     }
@@ -126,12 +126,12 @@ $form_url = WEBROOT."admin/validation/";
                         
 
                         <div class="input">
-                            <label for="nom_valid_acquis">Nom *</label>
-                            <input type="text" name="nom_valid_acquis" id="nom_valid_acquis" value="<?php echo $formData['nom_valid_acquis']; ?>" <?php echo $formData['disabled']; ?> />
+                            <label for="nom_acquis">Nom *</label>
+                            <input type="text" name="nom_acquis" id="nom_acquis" value="<?php echo $formData['nom_acquis']; ?>" <?php echo $formData['disabled']; ?> />
                         </div>
                         <div class="input">
-                            <label for="descript_valid_acquis">Description</label>
-                            <textarea name="descript_valid_acquis" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_valid_acquis']; ?></textarea>
+                            <label for="descript_acquis">Description</label>
+                            <textarea name="descript_acquis" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_acquis']; ?></textarea>
                         </div>
                         
 

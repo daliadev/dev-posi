@@ -1004,14 +1004,14 @@ class ServicesAdmin extends Main
         
         /*** On récupère la référence de la validation des acquis et on initialise les données qui vont être validées et renvoyées au formulaire ***/
 
-        $this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_valid_acquis_cbox" => "select", "nom_valid_acquis" => "text", "descript_valid_acquis" => "text"));
+        $this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_valid_cbox" => "select", "nom_acquis" => "text", "descript_acquis" => "text"));
         
-        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_valid_acquis_cbox'] != null)
+        if (isset($requestParams[0]) && !empty($requestParams[0]) && $this->formData['ref_valid_cbox'] != null)
         {
-            $this->formData['ref_valid_acquis_cbox'] = $requestParams[0];
+            $this->formData['ref_valid_cbox'] = $requestParams[0];
         }
         
-        $this->formData['ref_valid_acquis'] = $this->formData['ref_valid_acquis_cbox'];
+        $this->formData['ref_valid'] = $this->formData['ref_valid_cbox'];
         
         
         /*** Initialisation des données qui vont être validées et renvoyées au formulaire ***/
@@ -1028,7 +1028,7 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
             
-            if (!empty($this->formData['ref_valid_acquis']))
+            if (!empty($this->formData['ref_valid']))
             {
                 if ($this->formData['mode'] == "view")
                 {
@@ -1038,7 +1038,7 @@ class ServicesAdmin extends Main
                 }
                 
                 $validDetails = array();
-                $validDetails = $this->servicesValidation->getValidDetails($this->formData['ref_valid_acquis']);
+                $validDetails = $this->servicesValidation->getValidDetails($this->formData['ref_valid']);
                 $this->formData = array_merge($this->formData, $validDetails);
             }
             else if ($this->formData['mode'] == "edit")
@@ -1055,9 +1055,9 @@ class ServicesAdmin extends Main
             // Verrouillage des boutons
             $this->servicesGestion->switchFormButtons($this->formData, "new");
 
-            $this->formData['ref_valid_acquis'] = null;
-            $this->formData['nom_valid_acquis'] = null;
-            $this->formData['descript_valid_acquis'] = null;
+            $this->formData['ref_valid'] = null;
+            $this->formData['nom_acquis'] = null;
+            $this->formData['descript_acquis'] = null;
         }
   
         
@@ -1073,11 +1073,11 @@ class ServicesAdmin extends Main
 
             /*** Récupèration de l'id de la question ***/
 
-            if (!empty($this->formData['ref_valid_acquis']))
+            if (!empty($this->formData['ref_valid']))
             {
                 if ($previousMode == "edit")
                 {
-                    $dataValidAcquis['ref_valid_acquis'] = $this->formData['ref_valid_acquis'];
+                    $dataValidAcquis['ref_valid'] = $this->formData['ref_valid'];
                 }
             }
             
@@ -1100,7 +1100,7 @@ class ServicesAdmin extends Main
             if (empty($this->servicesValidation->errors) && empty($this->errors))
             {
                 // On recharge la page en mode view
-                header("Location: ".$this->url.$this->formData['ref_valid_acquis']);
+                header("Location: ".$this->url.$this->formData['ref_valid']);
                 exit();
             }
             else 
@@ -1128,10 +1128,10 @@ class ServicesAdmin extends Main
             $this->servicesGestion->switchFormButtons($this->formData, "delete");
             
             // On récupère le code de la validation des acquis actif
-            if (!empty($this->formData['ref_valid_acquis']))
+            if (!empty($this->formData['ref_valid']))
             {
                 // Ensuite on supprime le degré dans la base
-                $resultsetDegre = $this->servicesValidation->deleteValid($this->formData['ref_valid_acquis']);
+                $resultsetDegre = $this->servicesValidation->deleteValid($this->formData['ref_valid']);
 
                 if ($resultsetDegre)
                 {   

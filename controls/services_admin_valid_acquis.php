@@ -43,16 +43,16 @@ class ServicesAdminValidAcquis extends Main
     {
         $validDetails = array();
         
-        $validDetails['nom_degre'] = "";
-        $validDetails['descript_degre'] = "";
+        $validDetails['nom_acquis'] = "";
+        $validDetails['descript_acquis'] = "";
         
         $resultsetValidAcquis = $this->validAcquisDAO->selectById($refValidAcquis);
         
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultsetValidAcquis['response']))
         {
-            $validDetails['nom_valid_acquis'] = $resultsetValidAcquis['response']['valid_acquis']->getNom();
-            $validDetails['descript_valid_acquis'] = $resultsetValidAcquis['response']['valid_acquis']->getDescription();
+            $validDetails['nom_acquis'] = $resultsetValidAcquis['response']['valid_acquis']->getNom();
+            $validDetails['descript_acquis'] = $resultsetValidAcquis['response']['valid_acquis']->getDescription();
         }
 
         return $validDetails;
@@ -67,21 +67,21 @@ class ServicesAdminValidAcquis extends Main
         
         /*** Récupération de la référence du degre ***/
         
-        if (isset($formData['ref_valid_acquis']) && !empty($formData['ref_valid_acquis']))
+        if (isset($formData['ref_valid']) && !empty($formData['ref_valid']))
         {
-            $dataValidAcquis['ref_valid_acquis'] = $formData['ref_valid_acquis'];
+            $dataValidAcquis['ref_valid'] = $formData['ref_valid'];
         }
 
         /*** Récupèration du nom du degre ***/
 
-        $formData['nom_valid_acquis'] = $this->validatePostData($postData['nom_valid_acquis'], "nom_valid_acquis", "string", true, "Aucun nom n'a été saisi.", "Le nom n'est pas correctement saisi.");
-        $dataValidAcquis['nom_valid_acquis'] = $formData['nom_valid_acquis'];
+        $formData['nom_acquis'] = $this->validatePostData($postData['nom_acquis'], "nom_acquis", "string", true, "Aucun nom n'a été saisi.", "Le nom n'est pas correctement saisi.");
+        $dataValidAcquis['nom_acquis'] = $formData['nom_acquis'];
 
 
-        /*** Récupèration de la description du degre ***/
+        /*** Récupèration de la description du niveau ***/
 
-        $formData['descript_valid_acquis'] = $this->validatePostData($postData['descript_valid_acquis'], "descript_valid_acquis", "string", false, "Aucun description n'a été saisi.", "La description est incorrecte.");
-        $dataValidAcquis['descript_valid_acquis'] = $formData['descript_valid_acquis'];
+        $formData['descript_acquis'] = $this->validatePostData($postData['descript_acquis'], "descript_acquis", "string", false, "Aucun description n'a été saisi.", "La description est incorrecte.");
+        $dataValidAcquis['descript_acquis'] = $formData['descript_acquis'];
 
         
         return $dataValidAcquis;
@@ -95,13 +95,13 @@ class ServicesAdminValidAcquis extends Main
 
         if ($previousMode == "new")
         {
-            // Insertion du degre dans la bdd
+            // Insertion du niveau dans la bdd
             $resultsetValidAcquis = $this->setValid("insert", $dataValidAcquis);
 
             if (isset($resultsetValidAcquis['response']['valid_acquis']['last_insert_id']) && !empty($resultsetValidAcquis['response']['valid_acquis']['last_insert_id']))
             {
-                $formData['ref_valid_acquis'] = $resultsetValidAcquis['response']['valid_acquis']['last_insert_id'];
-                $dataValidAcquis['ref_valid_acquis'] = $formData['ref_valid_acquis'];
+                $formData['ref_valid'] = $resultsetValidAcquis['response']['valid_acquis']['last_insert_id'];
+                $dataValidAcquis['ref_valid'] = $formData['ref_valid'];
             }
             else 
             {
@@ -111,11 +111,13 @@ class ServicesAdminValidAcquis extends Main
         }
         else if ($previousMode == "edit"  || $previousMode == "save")
         {
-            if (isset($dataValidAcquis['ref_valid_acquis']) && !empty($dataValidAcquis['ref_valid_acquis']))
-            {
-                $formData['ref_valid_acquis'] = $dataValidAcquis['ref_valid_acquis'];
+            
 
-                // Mise à jour du degré
+            if (isset($dataValidAcquis['ref_valid']) && !empty($dataValidAcquis['ref_valid']))
+            {
+                $formData['ref_valid'] = $dataValidAcquis['ref_valid'];
+
+                // Mise à jour du niveau
                 $resultsetValidAcquis = $this->setValid("update", $dataValidAcquis);
 
                 if (!$resultsetValidAcquis)
@@ -143,7 +145,7 @@ class ServicesAdminValidAcquis extends Main
 
         if (!empty($dataValidAcquis) && is_array($dataValidAcquis))
         {
-            if (!empty($dataValidAcquis['nom_degre']))
+            if (!empty($dataValidAcquis['nom_acquis']))
             {
                 if ($modeValidAcquis == "insert")
                 {

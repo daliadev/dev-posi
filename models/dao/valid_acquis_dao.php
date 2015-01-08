@@ -120,14 +120,17 @@ class ValidAcquisDAO extends ModelDAO
      */
     public function update($values) 
     {
+        // var_dump($values);
+        // exit();
+
         $this->initialize();
         
         if (!empty($values))
         {
-            if (isset($values['id_acquis']) && !empty($values['id_acquis']))
+            if (isset($values['ref_valid']) && !empty($values['ref_valid']))
             {
-                $refValidAcquis = $values['id_acquis'];
-                unset($values['id_acquis']);
+                $refValidAcquis = $values['ref_valid'];
+                unset($values['ref_valid']);
                 
                 $request = $this->createQueryString("update", $values, "valid_acquis", "WHERE id_acquis = ".$refValidAcquis);
                 

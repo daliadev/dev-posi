@@ -239,6 +239,16 @@ class ServicesPublic extends Main
             }
         }
         
+
+
+        
+
+
+
+
+
+
+
         // Pour chaque combo-box sélectionné, on effectue les requetes correspondantes
         
         /*------   Un organisme a été sélectionnée   -------*/
@@ -337,14 +347,7 @@ class ServicesPublic extends Main
         }
 
 
-
         /*------ Validation des acquis -------*/
-
-
-        /*** On commence par chercher les infos pour créer la liste de validation des acquis ***/
-        $valid_acquis = array();
-        $valid_acquis = $this->servicesRestitution->getValidAcquis();
-        $this->returnData['response'] = array_merge($valid_acquis['response'], $this->returnData['response']);
 
         // Sauvegarde du niveau des acquis sélectionné par l'utilisateur
         if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) {
@@ -358,6 +361,13 @@ class ServicesPublic extends Main
             $validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
         }
 
+        /*** On va chercher les infos pour créer la liste de validation des acquis ***/
+        $valid_acquis = array();
+        $valid_acquis = $this->servicesRestitution->getValidAcquis();
+        $this->returnData['response'] = array_merge($valid_acquis['response'], $this->returnData['response']);
+
+        var_dump($this->returnData['response']['infos_user']['ref_valid_acquis']);
+        exit();
         
 
         

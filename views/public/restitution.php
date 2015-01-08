@@ -219,7 +219,8 @@ $form_url = $response['url'];
                                         
                                     <hr>
                                     <div class="info">
-                                        <label for="ref_valid_cbox" style="line-height:40px;"><strong>Validation des acquis :</strong> </label>
+                                        <?php echo $infos_user['ref_valid_acquis']; ?>
+                                        <label for="ref_valid_cbox" style="line-height:40px;"><strong>Interprétation du positionnement :</strong> </label>
                                          &nbsp; 
                                         <select name="ref_valid_cbox" id="ref_valid_cbox" style="width:200px;">
                                             <option value="select_cbox">Non validé</option>

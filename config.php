@@ -131,7 +131,7 @@ class Config
             ),
             array(
                 'code_menu' => "35",
-                'label_menu' => "Niveaux de validation des acquis",
+                'label_menu' => "Degrés d'interprétation des acquis",
                 'url_menu' => "validation",
                 'display' => true,
                 'droits' => "admin"

@@ -241,11 +241,6 @@ class ServicesPublic extends Main
         
 
 
-        
-
-
-
-
 
 
 
@@ -335,6 +330,37 @@ class ServicesPublic extends Main
                         $this->returnData['response']['stats'] = array();
                         $this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
                         
+
+                        /*------ Validation des acquis -------*/
+
+                        $refValidAcquis = '';
+                        if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) 
+                        {
+                            $refValidAcquis = $_POST['ref_valid_cbox'];
+                        }
+
+                        if ($refValidAcquis == 'select_cbox') 
+                        {
+                            $refValidAcquis = 'NULL';
+                        }
+                        
+                        if (!empty($refValidAcquis) && $refValidAcquis != $this->returnData['response']['infos_user']['ref_valid_acquis'])
+                        {
+                             // Sauvegarde du niveau des acquis sélectionné par l'utilisateur
+                            $validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
+
+                            if ($validRequest) 
+                            {
+                                if ($refValidAcquis != 'NULL') {
+                                    $this->returnData['response']['infos_user']['ref_valid_acquis'] = $refValidAcquis;
+                                }
+                                else
+                                {
+                                    $this->returnData['response']['infos_user']['ref_valid_acquis'] = '';   
+                                }  
+                            }
+                        }
+                        
                         
                         /*** On recherche toutes les questions ***/
                         $this->returnData['response']['details']['questions'] = array();
@@ -346,28 +372,17 @@ class ServicesPublic extends Main
             }
         }
 
+        //echo $this->returnData['response']['infos_user']['ref_valid_acquis'];
+        //exit();
 
-        /*------ Validation des acquis -------*/
-
-        // Sauvegarde du niveau des acquis sélectionné par l'utilisateur
-        if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) {
-
-            $refValidAcquis = $_POST['ref_valid_cbox'];
-
-            if ($refValidAcquis == 'select_cbox') {
-                $refValidAcquis = 'NULL';
-            }
-
-            $validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
-        }
 
         /*** On va chercher les infos pour créer la liste de validation des acquis ***/
         $valid_acquis = array();
         $valid_acquis = $this->servicesRestitution->getValidAcquis();
         $this->returnData['response'] = array_merge($valid_acquis['response'], $this->returnData['response']);
 
-        var_dump($this->returnData['response']['infos_user']['ref_valid_acquis']);
-        exit();
+        //var_dump($this->returnData['response']['infos_user']['ref_valid_acquis']);
+        //exit();
         
 
         

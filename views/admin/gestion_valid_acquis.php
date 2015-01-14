@@ -53,7 +53,7 @@ $form_url = WEBROOT."admin/validation/";
         <div id="valid-acquis">
             <div class="zone-formu">
 
-                <div class="titre-form" id="titre-valid-acquis">Gestion des niveaux de validation des acquis</div>
+                <div class="titre-form" id="titre-valid-acquis">Gestion de l'interprétation des acquis</div>
 
                 <form id="form-posi" action="<?php echo $form_url; ?>" method="POST" name="form_admin_valid_acquis">
 

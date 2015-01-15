@@ -51,8 +51,6 @@ class ServicesAuth
         {
             session_start();
         }
-
-        //var_dump($_SESSION);
         
         if (isset($_SESSION['token']) && ServicesAuth::hashPassword($_SESSION['token_uncrypted']) == $_SESSION['token'] && isset($_SESSION['droit']) && ($_SESSION['droit'] == $right || $_SESSION['droit'] == "admin"))
         {
@@ -60,7 +58,8 @@ class ServicesAuth
         }
         else
         {
-            header("Location: ".SERVER_URL."erreur/page503");
+            echo 'Session destroyed';
+            //header("Location: ".SERVER_URL."erreur/page503");
             exit();
         }
     }

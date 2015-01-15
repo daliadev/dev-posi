@@ -20,7 +20,7 @@
         <?php elseif (!empty($imageFile)) : ?>
 
             <div id="image-content-appli">
-                <!-- <img src="<?php //echo SERVER_URL.IMG_PATH.$response['question']->getImage(); ?>" /> -->
+                
                 <div class="image-loader"></div>
             </div>
 
@@ -225,7 +225,12 @@
             
             function checkPlayerComplete() {
 
+                
+                //alert ('player complete');
+
                 if (getPlayerComplete()) {
+
+                    clearInterval(timerPlayerComplete);
 
                     if ($('.radio_posi') != null) {
 
@@ -426,6 +431,8 @@
                                     $(".radio_posi").prop("disabled", false);
                                     
                                     isVideoComplete = true;
+
+                                    checkPlayerComplete();
                                     break;
                             }
                         };

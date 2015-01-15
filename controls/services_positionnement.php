@@ -196,7 +196,7 @@ class ServicesPositionnement extends Main
         
         /*** Test d'authentification de l'intervenant/utilisateur ***/ 
         ServicesAuth::checkAuthentication("user");
-        //echo 'auth ok';
+        
         
         /*** Gestion du temps de réponse de l'utilisateur ***/
         
@@ -241,11 +241,7 @@ class ServicesPositionnement extends Main
         $numeroOrdre = $pageCourante;
         
         ServicesAuth::setSessionData("num_page", $numeroOrdre);
-        
-        //var_dump(ServicesAuth::getSessionData("page_reset"));
-        
-        
-        
+
         
         
         /*** On récupère le nombre de questions totales ***/
@@ -366,7 +362,7 @@ class ServicesPositionnement extends Main
             // On passe à la page suivante
             if ($dataPage['response']['question']->getNumeroOrdre() <= $nbreQuestions)
             {
-                $dataPage['response']['url'] = WEBROOT."positionnement/page";
+                $dataPage['response']['url'] = SERVER_URL."positionnement/page";
             }
             else
             {

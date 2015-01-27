@@ -467,7 +467,7 @@ $form_url = $response['url'];
 
             // Validation des acquis : le select et le bouton "Enregistrer sont désactivés par défaut
             var selectedAcquis = $("#ref_valid_cbox").val();
-            console.log(selectedAcquis);
+            //console.log(selectedAcquis);
             $("#ref_valid_cbox").attr("disabled", true);
             $("#submit-acquis").attr("disabled", true);
             $("#clear-acquis").attr("disabled", true);

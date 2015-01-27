@@ -433,16 +433,18 @@ label
 	width: 333px;
 }
 
-	#form-posi input.reset-button {
+	#form-posi .reset-button {
 		width: 42px !important;
-		height: 42px;
-		margin-left: 10px;
+		height: 42px !important;
+		margin: 5px 0 0 10px !important;
 		background: url(../images/icon-reset.png) 50% 50% no-repeat;
+		background-color: #fff !important;
+		border: 1px solid #ccc8c8 !important;
 	}
 
-	#form-posi input.reset-button[disabled] {
-		background-color: #f0f0f0;
-		cursor: default;
+	#form-posi .reset-button[disabled] {
+		background-color: #f0f0f0 !important;
+		cursor: default !important;
 	}
 
 #form-posi input[type=text] {

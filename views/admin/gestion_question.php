@@ -361,6 +361,7 @@ $form_url = WEBROOT."admin/question/";
                                                 
                                                 <?php if($formData['mode'] == "edit") : ?>
                                                     <a id="del_video" class="del-video" name="del_video" href="#medias" <?php echo $formData['disabled']; ?>>Supprimer</a> <br/>
+                                                    <input type="hidden" id="video_suppr" name="video_suppr" value="">
                                                 <?php endif; ?>
 
                                                 <?php //if (Config::ALLOW_VIDEO) : ?>
@@ -852,18 +853,20 @@ $form_url = WEBROOT."admin/question/";
                 if ($(this).text() == "Supprimer") {
 
                     $("#video_cache").val("");
+                    $("#video_suppr").val(videoCacheValue);
                     $("#video_label").text("");
                     //$("#video-player").hide();
-                    $("#video_file").prop("disabled", true);
+                    // $("#video_file").prop("disabled", true);
                     $('#reset_video').prop("disabled", true);
                     $(this).text("Annuler la suppression");
                 }
                 else {
 
                     $("#video_cache").val(videoCacheValue);
+                    $("#video_suppr").val("");
                     $("#video_label").text(videoName);
                     //$("#video-player").show();
-                    $("#video_file").prop("disabled", false);
+                    // $("#video_file").prop("disabled", false);
                     $('#reset_video').prop("disabled", false);
                     $(this).text("Supprimer");
                 }

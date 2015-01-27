@@ -363,6 +363,10 @@ class ServicesAdminQuestion extends Main
         }
         else 
         {
+            if (isset($postData['video_suppr']) && !empty($postData['video_suppr'])) 
+            {
+                $this->deleteMedia(ROOT.VIDEO_PATH, $postData['video_suppr']);
+            }
             $formData['audio_upload'] = false;
             $formData['audio_question'] = "";
             $dataQuestion['audio_question'] = null;
@@ -533,7 +537,12 @@ class ServicesAdminQuestion extends Main
                     $formData['video_question'] = $this->setMedia("video", $_FILES, $formData['num_ordre_question'], $formData['video_type'], array("mp4", "mpeg4"));
                     $dataQuestion['video_question'] = $formData['video_question'];
                 }
-
+                /*
+                else if ($formData['video_suppr'] == "true") 
+                {
+                    $this->getMedia($type, $numOrdreQuestion);
+                }
+                */
                 
 
                 // Mise à jour de la question

@@ -12,7 +12,7 @@ class Config
 {
 
     /* Version */
-    const POSI_VERSION = "0.17.03";
+    const POSI_VERSION = "0.18.03";
 
     /* Nom et titre du positionnement */
 

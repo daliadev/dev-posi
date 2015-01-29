@@ -362,7 +362,7 @@ class ServicesPositionnement extends Main
             // On passe à la page suivante
             if ($dataPage['response']['question']->getNumeroOrdre() <= $nbreQuestions)
             {
-                $dataPage['response']['url'] = SERVER_URL."positionnement/page";
+                $dataPage['response']['url'] = WEBROOT."positionnement/page";
             }
             else
             {
@@ -374,7 +374,8 @@ class ServicesPositionnement extends Main
         else
         {
             // Redirection vers la page d'erreur interne
-            header("Location: ".SERVER_URL."erreur/page500");
+
+            //header("Location: ".SERVER_URL."erreur/page500");
             exit();
         }
       

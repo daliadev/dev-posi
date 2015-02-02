@@ -18,7 +18,7 @@
     <script src="<?php echo SERVER_URL; ?>media/js/dist/html5shiv.js"></script>
     <![endif]-->
     
-    <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
     <script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
     <!--<script src="<?php //echo SERVER_URL; ?>media/js/lightbox-2.6.min.js" type="text/javascript"></script>
     <script src="<?php //echo SERVER_URL; ?>media/js/jquery.tablesorter.js" type="text/javascript"></script>-->

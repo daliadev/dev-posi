@@ -383,7 +383,7 @@
                         enableFullscreen: false,
                         autoplay: true,
                         playlist: [{
-                            0: {src: videoUrl, type: "video/mp4"},
+                            0: {src: videoUrl, type: "video/mp4"}
                         }],
                         plugins: ['display', 'controlbar'],
                         messages: {
@@ -404,7 +404,7 @@
                             97: 'Aucun média n\'a été prévu.',
                             98: 'Les données de la playlist sont invalides !',
                             99: 'Cliquez sur le média pour continuer. ',
-                            100: 'Espace réservé.',
+                            100: 'Espace réservé.'
                         } 
 
                     }, function(player) {

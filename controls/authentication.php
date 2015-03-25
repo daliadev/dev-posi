@@ -44,9 +44,9 @@ class ServicesAuth
             session_start();
         }
         */
-        
+        ServicesAuth::startSession();
 
-        echo "Session logout.";
+        //echo "Session logout.";
         //exit();
 
         if (ini_get("session.use_cookies")) {
@@ -60,14 +60,14 @@ class ServicesAuth
             );
         }
 
-        echo "Session cookie outdated.";
+        //echo "Session cookie outdated.";
         
         //ServicesAuth::startSession();
 
         $_SESSION = array();
         session_destroy();
 
-        echo "Session destroyed.";
+        //echo "Session destroyed.";
     }
     
     
@@ -87,10 +87,10 @@ class ServicesAuth
         }
         else
         {
-            echo 'No session';
-            echo session_id();
-            //header("Location: ".SERVER_URL."erreur/page503");
-            //exit();
+            //echo 'No session';
+            //echo session_id();
+            header("Location: ".SERVER_URL."erreur/page503");
+            exit();
         }
     }
     

@@ -1,0 +1,79 @@
+Développement du positionnement / fév 2015
+
+/*****   Changements de la version 0.19.03 depuis la version 0.17.01   *****/
+
+
+Implantation de la vidéo
+
+- Ajout d'un champ "video_question" dans la table "question". Comme pour les autres médias, seul le nom est sauvegardé, pas le média en lui-même. Ce nom est constitué d'une chaîne de caractéres unique préfixée par le type du média puis du numéro de la question correspondante (ex: img_6_545ded31cc5a4.jpg).
+- Ajout d'un dossier "vidéo" dans le dossier "uploads" pour le stockage des fichiers vidéos.
+Dans le formulaire de gestion des questions de l'administration :
+- Ajout d'un champ spécifique  à la vidéo, qui se présente comme les autres systèmes de téléchargement de médias.
+- Si une vidéo a été sélectionnée (son nom apparaît dans le champ correspondant), une image peut quand même être enregistrée avec la vidéo. Elle sert alors de fond lorsque la vidéo apparaît (chargement de la page) et lorsque la lecture est terminée.
+- Gestion de la suppression du média vidéo.
+Dans la page du positionnement :
+- Utilisation de Projekktor comme lecteur video qui utilise la balise <video> en HTML5 (pour les navigateurs modernes) ou Flash Player (pour les versions inférieures à Internet Explorer 8, et à condition que Flash Player soit installé sur le poste de l'utilisateur).
+- Création d'un thème visuel pour le lecteur vidéo.
+- Au chargement de la page la vidéo est à l'arrêt
+- Un bouton de lecture principal se trouve au milieu de la fenêtre de la vidéo et devient invisible lorsque la vidéo est démarrée. Il réapparaît lorsque la vidéo est arretée.
+- Lorsque la souris survole la vidéo, une barre apparaît. Elle indique à l'utilisateur l'état d'avancement et permet également la lecture et l'arrêt de la vidéo. Elle disparaît lorsque la souris n'est plus sur la vidéo.
+
+
+Mise en place des "degrés d'interprétation des acquis"
+
+- Création d'une table "valid_acquis" où sont enregistrés les dégrés d'interprétation des acquis.
+- Ajout d'un champ "ref_valid_acquis" dans la table "session" qui permet de lier un degré d'acquis à un positionnement.
+- Création des classes d'accès aux données.
+Dans la partie administration :
+- Un bouton "gestion des degrés d'interprétation des requis" a été ajouté dans le menu admin.
+- Un clic sur ce bouton permet d'afficher un formulaire de saisie des degrés.
+- Le formulaire fonctionne comme le formulaire "Gestion des degrés d'aptitude" et permet de visualiser, d'éditer, de supprimer et de saisir les différents degrés d'interprétation des acquis".
+Dans la page de restitution :
+- Création d'une liste déroulante en bas de la fenêtre dans l'onglet "infos utilisateur" où figurent les différents degrés d'interprétation des acquis.
+- La liste n'est visible que si un positionnement a été sélectionné.
+- La liste est vérrouillée par défaut, il faut cliquer sur le bouton "modifier" pour la dévérrouiller.
+- Il faut ensuite sélectionner le degré puis cliquer sur "enregistrer". Le degré est alors attaché au positionnement lors de l‘enregistrement.
+- Un bouton "supprimer" a été ajouté pour annuler la sélection en cours et vérrouiller de nouveau la liste déroulante.
+
+
+Gestion des temps de chargement et d'enregistrement
+
+Création d'un système de gestion des temps d'attente visible par l'utilisateur sous forme d'une disque qui tourne sur lui-même (preloader).
+- Ajout de style pour le preloader, pour le centrer au milieu de la page ou du média (image - vidéo).
+Dans le formulaire de gestion des questions :
+- Le preloader apparaît si l'enregistrement d'une question est long, comme l'enregistrement d'une question contenant un fichier vidéo qui peut prendre plusieurs minutes à être "uploader".
+Dans la page du positionnement :
+La page du positionnement a été repensée pour afficher correctement les médias :
+- Le preloader apparaît. L'image et le son sont précharchés.
+- L'image apparaît progressivement une fois chargée. Le preloader disparaît.
+- L'audio apparaît une fois l'image affichée et démarre automatiquement (cela empêche le point d'interrogation, qui est un lien vers Dewplayer, d'apparaître).
+
+
+Modifications / corrections
+
+- Nettoyage / suppression des fichiers obsolètes.
+- Fichiers javascript : les liens ont été déplacés en bas de chaque page, ce qui permet d'importer uniquement les fichiers javascript nécessaires, à l'exception du fichier "projekktor.js" qui doit rester en haut de la page pour pouvoir fonctionner.
+- Le viewport du head n'a plus de max-scale qui empêche le zoom (c-à-d qu'un attribut de configuration empêchait de zoomer sur smartphone et tablette).
+- La balise noscript a été supprimée du head et a été placée à la fin du template de la page : un message apparaît en haut de la page, si le navigateur du client a désactivé javascript.
+- Dans l'inscription, correction d'un bug majeur dans le système de détection de la saisie du nom d'une personne déjà inscrite. Désormais, la vérification d'une date de naissance existante compare aussi correctement le nom et prénom saisis et permet à l'utilisateur d'être averti lorsque un doublon existe et demande une confirmation.
+- Un probléme dans le système de sessions (authentification, stockage d'informations provisoires), qui renvoyait vers une page d'erreur (page 503), a été corrigé.
+Dans le formulaire de gestion des questions :
+La mise en place de la vidéo a révélé plusieurs bugs au niveau de la gestion des médias qui ont du être corrigés. D'autres bugs ont été également résolus :
+- Correction d'un probléme de décalage des médias lors de l'ajout-insertion ou modification d'une question.
+- Ajout d'un système de "reset" pour chaque média (image - audio - vidéo). Cela permet de vider le contenu du champ, si on s'est trompé en ayant sélectionné par erreur un fichier média. Ce qui permet d'annuler l'erreur avant l'enregiqtrement de la question.
+- Un message de succès apparait désormais lorsque la question a été correctement enregistrée.
+- Le système de sauvegarde des questions a été revu et corrigé.
+Dans la page du positionnement :
+- Les deux lecteurs video et audio sont différenciés dans un soucis de synchronisation, c‘est-à-dire que la vidéo possède sa propre bande son et que si le lecteur audio  a lui aussi une piste, les 2 sons seront joués. Il faut donc faire attention à ne pas saisir de média audio dans la partie médias du formulaire de gestion des questions lorsque l’on a inséré une vidéo.
+- Le champ réponse fonctionne correctement sur Internet Explorer (Le champ obtient automatiquement le focus lorsque la bande son est terminée et l'utilisateur doit saisir au moins 2 caractères pour faire apparaître le bouton suite).
+ - Pour les boutons radios des réponses de type QCM, un simple clic sur le texte d'une réponse sélectionne le bouton correspondant.
+
+
+Autres
+
+- Ajout d'un favicon : petite icône visible dans l'onglet et la barre d'adresse du navigateur (logo Dalia ou logo du client).
+- Le numero de version se trouve désormais dans le fichier config.php et est appelé dynamiquement dans le pied de page (footer).
+- Mise à jour de JQuery vers la version 1.11.2.
+- Un fichier javascript a été ajouté qui permet de simuler l'attribut 'placeholder' pour les anciennes versions de Internet Explorer. Cet attribut place un faux texte grisé dans un champ de saisie pour guider l'utilisateur sur le type de texte à saisir.
+- L'envoi de l'email au référent devient automatique et paramétrable depuis le fichier config.
+- Création d'un script SQL permettant d'insérer automatiquement les dernières modifications dans la base de données (de v0.17.01 vers 0.19.03).

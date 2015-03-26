@@ -4,7 +4,7 @@
 
 <?php
     // Inclusion du bloc <head>
-    require_once(ROOT.'views/templates/head_default.php');
+    require_once(ROOT.'views/templates/head_inscription.php');
 ?>
 
 

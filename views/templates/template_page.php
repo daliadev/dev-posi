@@ -4,7 +4,7 @@
 
 <?php
     // Inclusion du bloc <head>
-    require_once(ROOT.'views/templates/head.php');
+    require_once(ROOT.'views/templates/head_page.php');
 ?>
 
 
@@ -21,8 +21,7 @@
         
         //jQuery object
         $(function() {
-            
-            //$(document).tooltip();
+
             
         });
 

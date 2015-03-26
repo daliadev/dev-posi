@@ -88,7 +88,7 @@ class ServicesPositionnement extends Main
         }
 
         $this->setResponse($returnData);
-        $this->setTemplate("template_page");
+        $this->setTemplate("template_inscript");
         $this->render("intro");
     }
     

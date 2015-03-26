@@ -211,7 +211,7 @@ class ServicesInscription extends Main
         {
             $this->setResponse($this->returnData);
             
-            $this->setTemplate("template_page");
+            $this->setTemplate("template_inscript");
             $this->render("organisme");
         }
 
@@ -354,7 +354,7 @@ class ServicesInscription extends Main
         {
             $this->setResponse($this->returnData);
             
-            $this->setTemplate("template_page");
+            $this->setTemplate("template_inscript");
             $this->render("utilisateur");
         }
     }

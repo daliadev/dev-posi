@@ -44,7 +44,8 @@ class ServicesAuth
             session_start();
         }
         */
-        ServicesAuth::startSession();
+        
+		ServicesAuth::startSession();
 
         //echo "Session logout.";
         //exit();

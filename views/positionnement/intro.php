@@ -65,7 +65,7 @@
 
     </div>
 
-
+    
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
     

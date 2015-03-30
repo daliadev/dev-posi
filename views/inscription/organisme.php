@@ -236,8 +236,8 @@ $form_url = $response['url'];
 
     
     
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
     
-    <!--   Script spécifiques à la page   -->
     
     <script language="javascript" type="text/javascript">
 

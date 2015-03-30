@@ -107,11 +107,12 @@
     </div>
 
 
+    
+    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
 
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
-
 
     <script type="text/javascript">
 

@@ -260,8 +260,9 @@ $form_url = $response['url'];
     
     <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
 
-    <script src="<?php echo SERVER_URL; ?>media/js/message-box.js"></script>
+    <script src="<?php echo SERVER_URL; ?>media/js/message-box.js" type="text/javascript"></script>
     
+
     <script language="javascript" type="text/javascript">
 
         // jQuery object

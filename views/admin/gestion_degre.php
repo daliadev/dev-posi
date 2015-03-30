@@ -168,6 +168,8 @@ $form_url = WEBROOT."admin/degre/";
 
 
 
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+
     <script type="text/javascript">
         
         $(function() { 

@@ -201,6 +201,8 @@ $form_url = WEBROOT."admin/compte/";
     </div>
 
 
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+
     <script type="text/javascript">
 
         

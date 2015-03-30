@@ -384,7 +384,7 @@ class ServicesPositionnement extends Main
         
         $this->setResponse($dataPage);
         
-        $this->setTemplate("template_page");
+        $this->setTemplate("tpl_page");
         $this->render("page");
     }
     
@@ -771,7 +771,7 @@ class ServicesPositionnement extends Main
         /*** Affichage de la page de résultat ***/
         $this->setResponse($dataPage);
         
-        $this->setTemplate("template_page");
+        $this->setTemplate("tpl_results");
         $this->render("resultat");
     }
  

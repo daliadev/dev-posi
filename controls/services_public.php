@@ -428,7 +428,7 @@ class ServicesPublic extends Main
         }
         else
         {
-            $this->setTemplate("template_page");
+            $this->setTemplate("tpl_public");
             $this->render("restitution");
         }
 
@@ -630,7 +630,7 @@ class ServicesPublic extends Main
         else
         {
             // Sinon on affiche la page normalement
-            $this->setTemplate("template_page");
+            $this->setTemplate("tpl_public");
             $this->render("statistique");
         }
     }

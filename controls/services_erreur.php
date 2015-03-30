@@ -13,21 +13,21 @@ class ServicesErreur extends Main
     
     public function page404()
     {
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_error");
         $this->render('page404');
     }
     
     
     public function page503()
     {
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_error");
         $this->render('page503');
     }
     
     
     public function page500()
     {
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_error");
         $this->render('page500');
     }
     

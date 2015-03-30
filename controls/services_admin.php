@@ -103,7 +103,7 @@ class ServicesAdmin extends Main
         
 
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("form_login");
         
     }
@@ -134,7 +134,7 @@ class ServicesAdmin extends Main
         }
 
         $this->setResponse($menuList);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("menu"); 
     }
     
@@ -447,7 +447,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_question");
         $this->render("gestion_question");
         
     }
@@ -702,7 +702,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_categorie");    
     }
     
@@ -948,7 +948,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_degre");
         
     }
@@ -1198,7 +1198,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_valid_acquis");
         
     }
@@ -1457,7 +1457,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_organisme"); 
 		
     }
@@ -1757,7 +1757,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_utilisateur"); 
         
     }
@@ -1778,7 +1778,7 @@ class ServicesAdmin extends Main
         // Authentification
         ServicesAuth::checkAuthentication("admin");
         
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_activite"); 
         
     }
@@ -2046,7 +2046,7 @@ class ServicesAdmin extends Main
         /*** Envoi des données et rendu de la vue ***/
         
         $this->setResponse($this->returnData);
-        $this->setTemplate("template_default");
+        $this->setTemplate("tpl_admin_form");
         $this->render("gestion_compte");    
     }
 

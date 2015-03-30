@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+
+<html>
+
 <head>
     
     <meta charset="UTF-8">
@@ -7,7 +11,6 @@
     
     <link type="image/x-icon" rel="shortcut icon" href="<?php echo SERVER_URL; ?>favicon.ico" />
 
-    <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/hot-sneaks/jquery-ui-1.10.3.custom.css" />
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/layout.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/480.css" />
@@ -16,8 +19,16 @@
     <script src="<?php echo SERVER_URL; ?>media/js/dist/html5shiv.js"></script>
     <![endif]-->
     
-    <!-- <script src="<?php //echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script> -->
-    <!-- <script src="<?php //echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script> -->
-    
 </head>
-  
+
+<body>
+    
+    <?php
+        echo $template_content;
+    ?>
+
+    <noscript><div id="no-js">Pour un fonctionnement correct du positionnement, activez JavaScript en modifiant les options de votre navigateur</div></noscript>
+	
+</body>
+
+</html>

@@ -230,9 +230,12 @@ $form_url = WEBROOT."admin/utilisateur/";
 
     </div>
 
+    
+
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
 
     <script type="text/javascript">
-
         
         $(function() { 
 

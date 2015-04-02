@@ -275,7 +275,7 @@ body {
 		.content .fieldsets-parts {
 			/*display: block;*/
 			width: 100%;
-			position: relative;
+			/*position: relative;*/
 			background-color: #fff;
 			/*overflow: hidden;*/
 		}
@@ -283,7 +283,7 @@ body {
 			.content fieldset {
 				/*display: block;*/
 				/* Stacking fieldsets above each other */
-				position: relative;
+				/*position: relative;*/
 				width: 100%;
 				height: auto;
 				margin: 0;
@@ -295,7 +295,7 @@ body {
 			/* Hide all except first fieldset */
 			.content fieldset:not(:first-of-type) {
 				display: none;
-				position: absolute;
+				/*position: absolute;*/
 			}
 				
 				.content fieldset .fieldset-title {

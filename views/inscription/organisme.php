@@ -108,8 +108,7 @@ $form_url = $response['url'];
                 <input type="hidden" value="" name="name_validation" id="name-validation"> -->
                 
                 <!-- Fieldsets parts -->
-                <div class="fieldsets-parts">
-
+                <!-- <div class="fieldsets-parts"> -->
                 <fieldset>
 
                     <div class="fieldset-title" id="titre-organ">
@@ -195,7 +194,8 @@ $form_url = $response['url'];
                                 
                                 <label for="email_intervenant">Email formateur <span class="asterix">*</span></label><br/>
                                 <input type="email" name="email_intervenant" id="email_intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" required />
-                            
+                                <span class="form-hint">Format email requis(exemple@xxx.yy)</span>
+                                
                             <?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
                                     
                                 <label for="ref_inter_cbox">Email formateur <span class="asterix">*</span></label><br/>
@@ -233,7 +233,7 @@ $form_url = $response['url'];
 
                 </fieldset>
 
-                </div>
+                <!-- </div> -->
 
             </form>
 

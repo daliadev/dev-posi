@@ -17,23 +17,6 @@ body {
 
 
 
-/*  styles for template */ 
-.section {
-	width: 93.75%;
-	max-width: 900px;
-	margin: 0 auto;
-	padding: 3.125%;
-}
-#forms {
-	background: #fff;
-}
-/* end template */ 
-
-
-
-
-
-
 .main {
 	width: 100%;
 	height: auto;
@@ -274,9 +257,9 @@ body {
 
 		.content .fieldsets-parts {
 			/*display: block;*/
-			width: 100%;
+			/*width: 100%;*/
 			/*position: relative;*/
-			background-color: #fff;
+			/*background-color: #fff;*/
 			/*overflow: hidden;*/
 		}
 
@@ -293,10 +276,10 @@ body {
 			}
 
 			/* Hide all except first fieldset */
-			.content fieldset:not(:first-of-type) {
-				display: none;
+			/*.content fieldset:not(:first-of-type) {*/
+				/*display: none;*/
 				/*position: absolute;*/
-			}
+			/*}*/
 				
 				.content fieldset .fieldset-title {
 					border-bottom: 2px solid #bdbdbd;
@@ -326,7 +309,32 @@ body {
 					-moz-border-radius: 5px;
 					border-radius: 5px;
 				}
+
+					.content fieldset .form-hint {
+						padding-left: 8px;
+						/*padding: 1px 6px;*/
+						display: none;
+					}
+
+					.content fieldset .form-hint::before {
+						content: '\25B2'; /* Left point triangle in escaped unicode U+25B2*/
+						color: #d45252;
+						/*position: absolute;*/
+						/*top: 1px;
+						left: -6px;*/
+						padding-right: 8px;
+					}
+
+					.content fieldset input:focus + .form-hint {
+						/*display: inline;*/
+					}
+
+					.content fieldset input:invalid + .form-hint {
+						/*background: #28921f;*/ /* Change form hint color when valid */
+						display: inline;
+					}
 			
+
 				.content fieldset .label-title {
 					margin: 0;
 					padding: 5px 0 5px 0;

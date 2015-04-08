@@ -11,14 +11,23 @@
     
     <link type="image/x-icon" rel="shortcut icon" href="<?php echo SERVER_URL; ?>favicon.ico" />
 
-    <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
-    <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/layout.css" />
-    <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/480.css" />
+    <!-- <link type="text/css" rel="stylesheet" href="<?php //echo SERVER_URL; ?>media/css/reset.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="<?php //echo SERVER_URL; ?>media/css/layout.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="<?php //echo SERVER_URL; ?>media/css/480.css" />
+    <link type="text/css" rel="stylesheet" href="<?php //echo SERVER_URL; ?>media/projekktor/themes/dalia/projekktor-dalia.style.css" media="screen" /> -->
+
+    <!-- css -->
+    <link type="text/css" rel="stylesheet" media="all" href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' /> 
+    <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/font-awesome.min.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/css/reset_new.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/css/base.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/css/main.css" />
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/projekktor/themes/dalia/projekktor-dalia.style.css" media="screen" />
-    
+
     <!--[if lt IE 9]>
     <script src="<?php echo SERVER_URL; ?>media/js/dist/html5shiv.js"></script>
     <![endif]-->
+
     <script src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js" type="text/javascript"></script>
     
 </head>

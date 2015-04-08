@@ -7,47 +7,162 @@
     $videoFile = $response['question']->getVideo();
 ?>
 
+    <div id="posi-page" class="main">
+        
+        <div class="header">
 
-    <div id="posi_content">
+            <div class="header-wrapper">
+                <div class="logo">
+                    <!-- <img src="images/logo-dalia_40x40.png" alt="Positionnement Dalia"> -->
+                </div>
+                <div class="header-title">
+                    <i class="fa fa-file-text-o"></i>
+                    <h1>Test de positionnement</h1>
+                </div>
+                <div class="clear"></div>
+            </div>
+
+        </div>
+        
+
+        <div class="content">
+
+        
+            <!-- Image ou vidéo -->
+            <div class="media-display" id="media-question">
+
+                <div class="image-loader"></div>
+                <img src="uploads/img/img_1_53bb9b2bac838.jpg" />
+
+            </div>
+            
+
+            <!-- Intitulé question -->
+            <div class="question" id="intitule-question">
+                <p>3. Vous commencez le travail à 8 heures. Pour être sûr de ne pas être en retard, vous partez 45 minutes plus tôt. A quelle heure partez-vous ?</p>
+            </div>
+            
+
+            <!-- Formulaire réponse -->
+            <form class="form-page" id="form-page" name="form_page" action="" method="post">
+                
+                <input type="hidden" name="num_page" value="3" />
+                <input type="hidden" name="ref_question" value="3" />
+                
+                <input type="hidden" id="image-filename" name="image-filename" value="img_1_53bb9b2bac838.jpg" />
+                <input type="hidden" id="audio-filename" name="audio-filename" value="audio_1_53bb9b5ed4cbb.mp3" />
+                <input type="hidden" id="video-filename" name="video-filename" value="" />
+                
+                <input type="hidden" name="start_timer" value="0" />
+
+                <!-- Réponse utilisateur -->
+                <div class="reponse-user" id="reponse-user">
+                    
+                    <!-- Réponse QCM -->
+                    <ul class="radio-group">
+                        <li>
+                            <input type="radio" class="reponse-qcm" id="reponse-qcm-1" name="reponse_qcm" value="1" />
+                            <label for="reponse-qcm-1">Ascenseur</label>
+                        </li>
+                        <li>
+                            <input type="radio" class="reponse-qcm" id="reponse-qcm-2" name="reponse_qcm" value="2" />
+                            <label for="reponse-qcm-2">Sortie de secours</label>
+                        </li>
+                        <li>
+                            <input type="radio" class="reponse-qcm" id="reponse-qcm-3" name="reponse_qcm" value="3" />
+                            <label for="reponse-qcm-3">Interdiction de fumer</label>
+                        </li>
+                        <li>
+                            <input type="radio" class="reponse-qcm" id="reponse-qcm-4" name="reponse_qcm" value="4" />
+                            <label for="reponse-qcm-4">Travaux</label>
+                        </li>
+                    </ul>
+
+                    <input type="hidden" name="ref_reponse_correcte" value="2" />
+                    
+                    <!-- Réponse champ -->
+                    <!-- <textarea class="champ-reponse" id="reponse_champ" name="reponse_champ"></textarea> -->
+     
+                </div>
+                
+
+                <!-- Audio -->
+                <div class="audio-media" id="audio"></div>
 
 
-        <?php if (!empty($videoFile)) : ?>
+                <!-- Bouton suite -->
+                <!-- <div id="submit"> -->
+                <div class="btn-suite">
+                    <input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+                </div>
+                
+                <div style="clear:both;"></div>
+
+            </form>
+
+        </div>
+
+        <!-- Footer -->
+        <?php
+            require_once(ROOT.'views/templates/footer.php');
+        ?>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div id="posi_content">
+
+
+        <?php //if (!empty($videoFile)) : ?>
 
             <div id="image-content-appli">
                 <div id="lecteurvideo" class="projekktor"></div>
             </div>
             
-        <?php elseif (!empty($imageFile)) : ?>
+        <?php //elseif (!empty($imageFile)) : ?>
 
             <div id="image-content-appli">
                 
                 <div class="image-loader"></div>
             </div>
 
-        <?php else : ?>
+        <?php //else : ?>
             
             <div id="image-content-appli"></div>
 
-        <?php endif; ?>
+        <?php //endif; ?>
 
 
-        <div id="txt-content-appli"><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
+        <div id="txt-content-appli"><?php //echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
 
-        <form action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
+        <form action="<?php //echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
             
-            <input type="hidden" name="num_page" value="<?php echo $response['question']->getNumeroOrdre(); ?>" />
-            <input type="hidden" name="ref_question" value="<?php echo $response['question']->getId(); ?>" />
+            <input type="hidden" name="num_page" value="<?php //echo $response['question']->getNumeroOrdre(); ?>" />
+            <input type="hidden" name="ref_question" value="<?php //echo $response['question']->getId(); ?>" />
             
-            <input type="hidden" id="image-filename" name="image-filename" value="<?php echo $imageFile; ?>" />
-            <input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $audioFile; ?>" />
-            <input type="hidden" id="video-filename" name="video-filename" value="<?php echo $videoFile; ?>" />
+            <input type="hidden" id="image-filename" name="image-filename" value="<?php //echo $imageFile; ?>" />
+            <input type="hidden" id="audio-filename" name="audio-filename" value="<?php //echo $audioFile; ?>" />
+            <input type="hidden" id="video-filename" name="video-filename" value="<?php //echo $videoFile; ?>" />
 
 
             
             <div id="reponse-content-appli">
 
                 <?php
-                
+                /*
                 if ($response['question']->getType() == "qcm")
                 {
                     $j = 0;
@@ -69,23 +184,23 @@
                 {
                     echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
                 }
-                
+                */
                 ?>
                 
             </div>
 
-            <?php if (empty($videoFile) && !empty($audioFile)) : ?>
+            <?php //if (empty($videoFile) && !empty($audioFile)) : ?>
 
                 <div id="lecteuraudio"></div>
 
-            <?php endif; ?>
+            <?php //endif; ?>
             
             <?php
 
-                $startTimer = microtime(true);
+                //$startTimer = microtime(true);
             ?>
 
-            <input type="hidden" name="start_timer" value="<?php echo $startTimer; ?>" />
+            <input type="hidden" name="start_timer" value="<?php //echo $startTimer; ?>" />
             
             <div id="submit">
   
@@ -101,13 +216,13 @@
 
         <?php
             // Inclusion du footer
-            require_once(ROOT.'views/templates/footer.php');
+            //require_once(ROOT.'views/templates/footer.php');
         ?>
 
-    </div>
+    </div> -->
 
 
-    
+    <!-- JQuery -->
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
 
     <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>

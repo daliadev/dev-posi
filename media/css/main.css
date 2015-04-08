@@ -344,6 +344,8 @@ body {
 					    list-style: none;
 					}
 				*/
+
+
 				
 				.content fieldset .sub-form {
 					padding: 5px 15px 15px 15px;
@@ -382,6 +384,16 @@ body {
 
 					.content fieldset input:required:valid + .form-hint::before {
 						/*color: #28921f;*/ /* Change form hint arrow color when valid */
+					}
+
+					.content fieldset .dropdown-menu.inner {
+						/*margin: 0 auto;*/
+						width: 100%;
+						max-width: 100px;
+						/*padding: 20px 10px;*/
+						/*position: relative;*/
+						/*overflow: hidden;*/
+						max-height: 100px;
 					}
 			
 

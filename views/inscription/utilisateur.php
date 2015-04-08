@@ -112,6 +112,41 @@ $form_url = $response['url'];
 						<i class="fa fa-user"></i> <h2 class="section-form"> Votre profil</h2>
 					</div>
 
+					<?php
+				
+						if (isset($response['errors']) && !empty($response['errors']))
+						{ 
+							
+							echo '<div class="error-zone">';
+							echo '<ul>';
+							foreach($response['errors'] as $error)
+							{
+								if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+								{
+									echo '<li>- '.$error['message'].'</li>';
+								}
+								
+							}
+							echo '</ul>';
+							echo '</div>';
+							
+						}
+						else if (isset($response['success']) && !empty($response['success']))
+						{
+							echo '<div class="zone-success">';
+							echo '<ul>';
+							foreach($response['success'] as $message)
+							{
+								if ($message)
+								{
+									echo '<li>'.$message.'</li>';
+								}
+							}
+							echo '</ul>';
+							echo '</div>';
+						}
+
+					?>
 					
 					<label for="nom_user">Nom<!--  <span class="asterix">*</span> --></label>
 					<input type="text" name="nom_user" id="nom_user" class="input-text" value="<?php echo $formData['nom_user']; ?>" title="Saisissez votre nom" placeholder="Ex: Durand" />
@@ -121,13 +156,13 @@ $form_url = $response['url'];
 					<input type="text" name="prenom_user" id="prenom_user" class="input-text" value="<?php echo $formData['prenom_user']; ?>" title="Saisissez votre prénom" placeholder="Ex: Alain" />
 					<span class="form-hint">Indiquez votre prénom</span>
 
-					<p class="form-text">Date de naissance <span class="asterix">*</span></p>
+					<p class="form-text" style="margin-top: 15px;">Date de naissance<!--  <span class="asterix">*</span> --></p>
 					
 					<div id="date_naiss_user">
 						
 						<div style="float: left; width: 26%;">
 
-							<label for="jour_naiss_user_cbox" class="form-text-small">Jour</label>
+							<label for="jour_naiss_user_cbox" class="form-text-small" >Jour</label>
 							<select name="jour_naiss_user_cbox" id="jour_naiss_user_cbox" class="selectpicker">
 								<option value="select_cbox">---</option>
 
@@ -232,7 +267,8 @@ $form_url = $response['url'];
 							{
 								$selected = "selected";
 							}
-							echo '<option value="'.$niveau->getId().'" title="'.htmlentities($niveau->getDescription()).'" '.$selected.'>'.$niveau->getNom().'</option>';
+							//echo '<option value="'.$niveau->getId().'" title="'.$niveau->getDescription().'" '.$selected.'>'.$niveau->getNom().'</option>';
+							echo '<option value="'.$niveau->getId().'" '.$selected.'>'.$niveau->getNom().'</option>';
 						}
 						
 						?>
@@ -716,8 +752,8 @@ $form_url = $response['url'];
 
 				if (valid) {
 
-					//$('#form-inscription').submit();
-					alert('submit ok');	
+					$('#form-inscription').submit();
+					//alert('submit ok');	
 				}
 				else {
 					return false;

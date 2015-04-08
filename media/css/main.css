@@ -299,9 +299,54 @@ body {
 						font-weight: 600;
 						line-height: 1em;
 					}
+
+
+				.content fieldset .error-zone {
+					/*background: #fce3e0;*/
+					/*border: 1px solid #ff786a;*/
+				    width: 100%;
+					margin: 5px 0;
+					padding: 10px 12px;
+					background-color: #fce3e0;
+					border: 2px solid #e74c3c;
+					-webkit-border-radius: 5px;
+					-moz-border-radius: 5px;
+					border-radius: 5px;
+					box-shadow: none;
+					color: #757575;
+					font-family: inherit;
+					font-size: 0.75em;
+					/*line-height: 1.125em;*/
+					font-weight: 600;
+					vertical-align: middle;
+				}
+
+					.content fieldset .error-zone li {
+						/*margin-left: -30px;
+						margin-bottom: 5px; 
+						list-style: disc outside none;*/
+						/*list-style: none;*/
+					}
+
+				/*
+				.content fieldset .zone-success{
+				    background: #bcede6;
+				    margin: 20px 0 0 0;
+				    padding: 10px;
+				    border: 1px solid #1FBBA6;
+				    border-radius: 5px 5px 5px 5px;
+				    color: #039b87;
+				    font-size: 12px;
+				}
+
+					.content fieldset .zone-success li {
+					    margin-left: -30px;
+					    list-style: none;
+					}
+				*/
 				
 				.content fieldset .sub-form {
-					padding: 15px;
+					padding: 5px 15px 15px 15px;
 					margin-bottom: 10px;
 					background-color: #F4F4F4;
 					border: 2px solid #bdbdbd;
@@ -462,11 +507,15 @@ body {
 		margin: 0 auto;
 		border: 0 none;
 		border-top: 1px solid #bdbdbd;
-		color: #bdc3c7;
+		/*color: #bdbdbd;*/
 		font-size: 0.75em;
 		line-height: 0.75em;
 		text-align: center; 
 	}
+
+		.footer .txt-footer {
+			color: #999999;
+		}
 
 
 

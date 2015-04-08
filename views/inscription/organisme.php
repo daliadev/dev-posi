@@ -97,15 +97,11 @@ $form_url = $response['url'];
 					<li>Validation</li>
 				</ul>
 			</div> -->
-
 			<form class="form-inscript" id="form-inscription" name="form_inscription" action="<?php echo $form_url; ?>" method="post">
 				
-				<input type="hidden" value="<?php echo $formData['ref_organ']; ?>" name="ref_organ">
-				<input type="hidden" value="<?php echo $formData['ref_intervenant']; ?>" name="ref_intervenant">
-				<!-- <input type="hidden" value="" name="ref_organ">
-				<input type="hidden" value="" name="ref_intervenant">
-				<input type="hidden" value="" name="ref_user">
-				<input type="hidden" value="" name="name_validation" id="name-validation"> -->
+				<input type="hidden" name="ref_organ" value="<?php echo $formData['ref_organ']; ?>" />
+                <input type="hidden" name="ref_intervenant" value="<?php echo $formData['ref_intervenant']; ?>" />
+
 				
 				<!-- Fieldsets parts -->
 				<!-- <div class="fieldsets-parts"> -->
@@ -115,28 +111,54 @@ $form_url = $response['url'];
 						<i class="fa fa-cube"></i> <h2 class="section-form"> Votre organisme</h2>
 					</div>
 
+					<?php
+				
+						if (isset($response['errors']) && !empty($response['errors']))
+						{ 
+							
+							echo '<div class="error-zone">';
+							echo '<ul>';
+							foreach($response['errors'] as $error)
+							{
+								if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+								{
+									echo '<li>- '.$error['message'].'</li>';
+								}
+								
+							}
+							echo '</ul>';
+							echo '</div>';
+							
+						}
+						else if (isset($response['success']) && !empty($response['success']))
+						{
+							echo '<div class="zone-success">';
+							echo '<ul>';
+							foreach($response['success'] as $message)
+							{
+								if ($message)
+								{
+									echo '<li>'.$message.'</li>';
+								}
+							}
+							echo '</ul>';
+							echo '</div>';
+						}
+
+					?>
+
 					<div id="first-part">
 
-						<label for="code_identification">Code organisme <span class="asterix">*</span></label>
+						<label for="code_identification">Code organisme<!--  <span class="asterix">*</span> --></label>
 						<br/>
 						<input type="password" name="code_identification" class="input-text" id="code_identification" title="Entrer votre code organisme" value="" />
-						<span class="form-hint">Vous devez saisir le code qui vous a été attribué</span>
+						<span class="form-hint">Le code n'a pas été correctement saisi</span>
 
 					</div>
 
 					<div id="second-part">
 
-						<!-- <label for="ref_organ_cbox">Veuillez entrer votre organisme <span class="asterix">*</span></label>
-						<br/>
-						<select name="ref_organ_cbox" id="ref_organ_cbox" class="selectpicker">
-							<option value="select_cbox">---</option>
-							<option value="1">Education et Formation</option>
-							<option value="2">AFPA</option>
-							<option value="3">Active Formation</option>
-							<option value="new" style="font-weight: bold;">Autre</option>
-						</select> -->
-
-						<label for="ref_organ_cbox">Veuillez entrer votre organisme <span class="asterix">*</span></label><br/>
+						<label for="ref_organ_cbox">Sélectionnez votre organisme<!--  <span class="asterix">*</span> --></label><br/>
 						<select name="ref_organ_cbox" id="ref_organ_cbox" class="selectpicker">
 							<option value="select_cbox">---</option>
 
@@ -174,15 +196,15 @@ $form_url = $response['url'];
 					
 					<div id="third-part" class="sub-form">
 
-						<label for="nom_organ">Nom de votre organisme <span class="asterix">*</span></label><br/>
+						<label for="nom_organ">Nom de votre organisme<!--  <span class="asterix">*</span> --></label><br/>
 						<input type="text" name="nom_organ" id="nom_organ" class="input-text" value="<?php echo $formData['nom_organ']; ?>" />
 						<span class="form-hint">Veuillez saisir le nom de l'organisme</span>
 
-						<label for="code_postal_organ">Code postal <span class="asterix">*</span></label><br/>
+						<label for="code_postal_organ">Code postal<!--  <span class="asterix">*</span> --></label><br/>
 						<input type="tel" name="code_postal_organ" id="code_postal_organ" class="input-text" value="<?php echo $formData['code_postal_organ']; ?>" title="Ex:76000" />
 						<span class="form-hint">Le code postal est incorrect</span>
 
-						<label for="tel_organ">Téléphone <span class="asterix">*</span></label><br/>
+						<label for="tel_organ">Téléphone<!--  <span class="asterix">*</span> --></label><br/>
 						<input type="tel" name="tel_organ" id="tel_organ" class="input-text" value="<?php echo $formData['tel_organ']; ?>" />
 						<span class="form-hint">Le numéro de téléphone n'a pas été correctement saisi</span>
 
@@ -190,45 +212,38 @@ $form_url = $response['url'];
 
 					<div id="fourth-part">
 								
-						
-						
-						
-						<div class="input">
+						<?php if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
 								
-							<?php if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
+							<label for="email_intervenant">Email formateur<!--  <span class="asterix">*</span> --></label><br/>
+							<input type="email" name="email_intervenant" id="email_intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" />
+							<span class="form-hint">Vous devez saisir une adresse email valide (exemple@domaine.fr)</span>
+							
+						<?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
 								
-								<label for="email_intervenant">Email formateur <span class="asterix">*</span></label><br/>
-								<input type="email" name="email_intervenant" id="email_intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" required />
-								<span class="form-hint">Format email requis (exemple@domaine.fr)</span>
-								
-							<?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
-									
-								<label for="ref_inter_cbox">Email formateur <span class="asterix">*</span></label><br/>
-								<select name="ref_inter_cbox" id="ref_inter_cbox" class="selectpicker">
-									<option value="select_cbox">---</option>
+							<label for="ref_inter_cbox">Email formateur<!--  <span class="asterix">*</span> --></label><br/>
+							<select name="ref_inter_cbox" id="ref_inter_cbox" class="selectpicker">
+								<option value="select_cbox">---</option>
 
-									<?php
-	
-									foreach(Config::$emails_referent as $email_referent)
-									{  
-										$selected = "";
-										
-										if (!empty($formData['ref_inter_cbox']) && $formData['ref_inter_cbox'] != "select_cbox" && $formData['ref_inter_cbox'] == $email_referent)
-										{
-											$selected = "selected";
-										}
-										
-										echo '<option value="'.$email_referent.'" '.$selected.'>'.$email_referent.'</option>';
+								<?php
+
+								foreach(Config::$emails_referent as $email_referent)
+								{  
+									$selected = "";
+									
+									if (!empty($formData['ref_inter_cbox']) && $formData['ref_inter_cbox'] != "select_cbox" && $formData['ref_inter_cbox'] == $email_referent)
+									{
+										$selected = "selected";
 									}
 									
-									?>
+									echo '<option value="'.$email_referent.'" '.$selected.'>'.$email_referent.'</option>';
+								}
+								
+								?>
 
-								</select>
-								<span class="form-hint">Sélectionnez l'adresse email du référent dans la liste</span>
+							</select>
+							<span class="form-hint">Sélectionnez l'adresse email du référent dans la liste</span>
 
-							<?php endif; ?>
-
-						</div>
+						<?php endif; ?>
 
 					</div>
 
@@ -248,207 +263,14 @@ $form_url = $response['url'];
 		<div class="clear"></div>
 		
 		<!-- Footer -->
-		<div class="footer">
-			<p class="txt-footer">
-				© Education et formation 2014
-			</p>
-		</div>
-
-		
+		<?php
+			require_once(ROOT.'views/templates/footer.php');
+		?>
 
 	</div>
 
 
 
-
-	<!-- <div id="content"> -->
-
-		<?php
-			// Inclusion du header
-			//require_once(ROOT.'views/templates/header_posi.php');
-		?>
-
-
-		
-		<!-- <div id="organisme">
-			<div class="zone-formu">
-
-				<div class="titre-form" id="titre-organ">Organisme</div>
-				
-				<?php
-					/*
-					if (isset($response['errors']) && !empty($response['errors']))
-					{
-						echo '<div id="zone-erreur">';
-						echo '<ul>';
-						foreach($response['errors'] as $error)
-						{
-							if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-							{
-								echo '<li>- '.$error['message'].'</li>';
-							}
-						}
-						echo '</ul>';
-						echo '</div>';
-					}
-					else if (isset($response['success']) && !empty($response['success']))
-					{
-						echo '<div id="zone-success">';
-						echo '<ul>';
-						foreach($response['success'] as $message)
-						{
-							if ($message)
-							{
-								echo '<li>'.$message.'</li>';
-							}
-						}
-						echo '</ul>';
-						echo '</div>';
-					}
-					*/
-				?>
-
-				<form id="form-posi" name="form_organisme" action="<?php //echo $form_url; ?>" method="post">
-					
-					<div class="form-small">
-
-						<input type="hidden" value="<?php //echo $formData['ref_organ']; ?>" name="ref_organ">
-						<input type="hidden" value="<?php //echo $formData['ref_intervenant']; ?>" name="ref_intervenant">
-
-						
-						<div id="first-part">
-
-							<div class="input"> 
-								<label for="code_identification">Code organisme <span class="asterix">*</span></label><br/>
-								<input type="password" name="code_identification" id="code_identification" value="" required title="Entrer votre code organisme">
-							</div>
-
-						</div>
-
-						<div id="second-part">
-
-							<div class="input"> 
-
-								<label for="ref_organ_cbox">Veuillez entrer votre organisme <span class="asterix">*</span></label><br/>
-								<select name="ref_organ_cbox" id="ref_organ_cbox">
-									<option value="select_cbox">---</option>
-
-									<?php 
-									/*
-									if (!empty($response['organisme']) && is_array($response['organisme']))
-									{
-										foreach($response['organisme'] as $organisme)
-										{  
-											$selected = "";
-											if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] != "select_cbox" && $formData['ref_organ_cbox'] == $organisme->getId())
-											{
-												$selected = "selected";
-											}
-											echo '<option value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
-										}
-									}
-
-									$selected = "";
-									if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] == "new")
-									{
-										$selected = "selected";
-									}
-
-									if (Config::ALLOW_OTHER_ORGAN)
-									{
-										echo '<option value="new" '.$selected.' style="font-weight:bold;">Autre</option>';
-									}
-									*/
-									?>
-
-								</select>
-							</div>
-						</div>
-
-						<div id="third-part">
-
-							<div class="input">
-								<label for="nom_organ">Nom de votre organisme <span class="asterix">*</span></label><br/>
-								<input value="<?php //echo $formData['nom_organ']; ?>" name="nom_organ" id="nom_organ" type="text">
-							</div>
-
-							<div class="input">
-								<label for="code_postal_organ">Code postal <span class="asterix">*</span></label><br/>
-								<input type="tel" value="<?php //echo $formData['code_postal_organ']; ?>" name="code_postal_organ" id="code_postal_organ"  pattern="[0-9]{5}" title="Ex:76000">
-							</div>
-
-							<div class="input">
-								<label for="tel_organ">Téléphone <span class="asterix">*</span></label><br/>
-								<input type="tel" value="<?php //echo $formData['tel_organ']; ?>" name="tel_organ" id="tel_organ" pattern="[0-9]{10}">
-							</div>
-
-						</div>
-
-
-						<div id="fourth-part">
-							
-							<div class="input">
-								
-								<?php //if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
-									
-									<label for="email_intervenant">EMail formateur <span class="asterix">*</span></label><br/>
-									<input type="email" value="<?php //echo $formData['email_intervenant']; ?>" name="email_intervenant" id="email_intervenant" required title="Format email requis(exemple@xxx.yy)">
-
-								<?php //elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
-										
-									<label for="ref_inter_cbox">EMail formateur <span class="asterix">*</span></label><br/>
-									<select name="ref_inter_cbox" id="ref_inter_cbox">
-										<option value="select_cbox">---</option>
-
-										<?php
-										/*
-										foreach(Config::$emails_referent as $referent)
-										{  
-											$selected = "";
-											
-											if (!empty($formData['ref_inter_cbox']) && $formData['ref_inter_cbox'] != "select_cbox" && $formData['ref_inter_cbox'] == $referent)
-											{
-												$selected = "selected";
-											}
-											
-											echo '<option value="'.$referent.'" '.$selected.'>'.$referent.'</option>';
-										}
-										*/
-										?>
-
-									</select>
-
-								<?php //endif; ?>
-
-							</div>
-							
-						</div>
-
-				
-						<div id="submit">
-							<input type="submit" value="Envoyer" name="valid_form_organ">
-						</div>
-
-					</div>
-
-				</form>
-
-			</div>
-		</div>
-		
-		
-	
-		<div style="clear:both;"></div> -->
-
-
-		<?php
-			// Inclusion du footer
-			//require_once(ROOT.'views/templates/footer.php');
-		?>
-	
-	<!-- <div> -->
-
-	
 	
 	<!-- JQuery -->
 	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
@@ -466,12 +288,6 @@ $form_url = $response['url'];
 		// jQuery object
 		$(function() {
 			
-			// Menu droit (hamburger)
-			$('.menu-btn').on('click', function(e) {
-				$(this).next().slideToggle(250);
-			});
-
-
 			// Gestion des listes déroulantes (select)
 			$('.selectpicker').selectpicker({style: 'custom-select'});
 
@@ -479,18 +295,12 @@ $form_url = $response['url'];
 			$('#code_identification').focus();
 			
 			// Gestion du formulaire organisme caché
-			if ($('#second-part #ref_organ_cbox').val() == "new") {
-				
-				$('#third-part').show();
-			}
-			else {
-
-				$('#third-part').hide();
-			}
-
+			$('#third-part').hide();
+			
+			// Affichage du formulaire de saisie d'un nouvel organisme
 			$('#second-part #ref_organ_cbox').change(function() {
 
-				if ($(this).val() == "new") {
+				if ($(this).val() === "new") {
 
 					$('#third-part').show(250);
 				}
@@ -501,81 +311,38 @@ $form_url = $response['url'];
 			});
 
 
+
+
 			/***   Gestion des erreurs   ***/
 
-			/*
-			$('.input-text').each(function() {
-
-				$hint = $(this).next();
-
-				$(this).on('blur', function(event) {
-
-					if ($(this).val() === '') {
-
-						$hint.show();
-					}
-				});
-
-				// $(this).on('focus', function(event) {
-				// 	$hint.hide();
-				// }
-			});
-			*/
-
-			/*
-			$('.form-hint').each(function(item) {
-
-				if ($(this).children('.tooltip-inner').text() === '') {
-
-					$(this).hide();
-				}
-				else {
-					
-					var $prev = $(this).prev();
-
-					if ($prev.is(':input') || $prev.hasClass('bootstrap-select')) {
-
-						$prev.addClass('error');
-					}
-					
-					$(this).show(250);
-				}
-			});
-			*/
-
-
-			/* test */
-
-			
-			$code = $('#code_identification');
-			$organ = $('#ref_organ_cbox');
-			$email = $('#email_intervenant');
 
 			$('.input-text').each(function() {
 
-				$(this).bind({
+				if ($(this).parent().not('#third-part')) {
 
-					focus: function() {
+					$(this).bind({
 
-						$(this).removeClass('error');
-						$(this).next('.form-hint').hide();
-					},
-					blur : function() {
+						focus: function(event) {
 
-						if ($(this).val() === '') {
+							$(this).removeClass('error');
+							$(this).next('.form-hint').hide();
+						},
+						blur : function(event) {
 
-							$(this).addClass('error');
-							$(this).next('.form-hint').show();
+							if ($(this).val() === '') {
+
+								$(this).addClass('error');
+								$(this).next('.form-hint').show();
+							}
 						}
-					}
-				});
+					});
+				}
 			});
+
 
 			$('.selectpicker').each(function() {
 
-				//alert($(this).next().children());
-
-				$(this).on('change', function() {
+				$(this).change(function() {
 
 					if ($(this).val() === 'select_cbox') {
 
@@ -589,35 +356,59 @@ $form_url = $response['url'];
 					}
 				});
 
+				if ($(this).val() === 'new') {
+
+					$('.input-text').each(function() {
+
+						if ($(this).parent().is('#third-part')) {
+
+							$(this).bind({
+
+								focus: function(event) {
+
+									$(this).removeClass('error');
+									$(this).next('.form-hint').hide();
+								},
+								blur : function(event) {
+
+									if ($(this).val() === '') {
+
+										$(this).addClass('error');
+										$(this).next('.form-hint').show();
+									}
+								}
+							});
+						}
+					});
+				}
 
 			});
-
-			if ($('.selectpicker').val() === 'new') {
-
-			}
 
 
 
 
 			$('#submit').click(function(event) {
 
-				event.preventDefault();
-
 				var valid = true;
 
-				if ($organ.val() === 'select_cbox') {
-					$organ.addClass('error');
-					$organ.next('.form-hint').show();
+				$code = $('#code_identification');
+				$organ = $('#ref_organ_cbox');
+				$nomOrgan = $('#nom_organ');
+				$codePostalOrgan = $('#code_postal_organ');
+				$telOrgan = $('#tel_organ');
+				$email = $('#email_intervenant');
+
+				if ($code.val() === '') {
+
+					$code.addClass('error');
+					$code.next('.form-hint').show();
 					valid = false;
 				}
-				else if ($organ.val() === 'new') {
-
-				}
 				else {
-					$organ.removeClass('error');
-					$organ.next('.form-hint').hide();
-				}
 
+					$code.removeClass('error');
+					$code.next('.form-hint').hide();
+				}
 
 				if ($email.val() === '') {
 
@@ -626,15 +417,80 @@ $form_url = $response['url'];
 					valid = false;
 				}
 				else {
+
 					$email.removeClass('error');
 					$email.next('.form-hint').hide();
 				}
 
+				if ($organ.val() === 'new') {
+
+					if ($nomOrgan.val() === '') {
+
+						$nomOrgan.addClass('error');
+						$nomOrgan.next('.form-hint').show();
+						valid = false;
+					}
+					else {
+
+						$email.removeClass('error');
+						$email.next('.form-hint').hide();
+					}
+
+					if ($codePostalOrgan.val() === '' || isNaN(Number($codePostalOrgan.val())) || String($codePostalOrgan.val()).length != 5) {
+
+						$codePostalOrgan.addClass('error');
+						$codePostalOrgan.next('.form-hint').show();
+						valid = false;
+					}
+					else {
+
+						$codePostalOrgan.removeClass('error');
+						$codePostalOrgan.next('.form-hint').hide();
+					}
+					
+					if ($telOrgan.val() === '' || isNaN(Number($telOrgan.val())) || String($telOrgan.val()).length != 10) {
+
+						$telOrgan.addClass('error');
+						$telOrgan.next('.form-hint').show();
+						valid = false;
+					}
+					else {
+
+						$telOrgan.removeClass('error');
+						$telOrgan.next('.form-hint').hide();
+					}
+					
+				}
+				
+
+				$('.selectpicker').each(function() {
+
+					if ($(this).val() === 'select_cbox') {
+
+						$(this).siblings('.bootstrap-select').addClass('error');
+						$(this).siblings('.form-hint').show();
+						valid = false;
+					}
+					else {
+
+						$(this).siblings('.bootstrap-select').removeClass('error');
+						$(this).siblings('.form-hint').hide();
+					}
+				});
+
+				
+
 				if (valid) {
 
-					alert('submit ok');	
+					$('#form-inscription').submit();
+					//alert('submit ok');	
 				}
-			})
+				else {
+					return false;
+				}
+
+				
+			});
 
 
 		});

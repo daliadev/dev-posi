@@ -570,39 +570,6 @@ form input[type="text"][disabled]
 
 
 
-#zone-erreur{
-	background: #fce3e0;
-	margin: 20px 0 10px 0;
-    padding: 0 0 0 20px;
-	border: 1px solid #ff786a;
-	border-radius: 5px 5px 5px 5px;
-	color:#c0392b;
-    font-size: 12px;
-}
-
-#zone-erreur li {
-	margin-left: -30px;
-	margin-bottom: 5px; 
-	list-style: disc outside none;
-	/*list-style: none;*/
-}
-
-    
-#zone-success{
-    background: #bcede6;
-    margin: 20px 0 0 0;
-    padding: 10px;
-    border: 1px solid #1FBBA6;
-    border-radius: 5px 5px 5px 5px;
-    color: #039b87;
-    font-size: 12px;
-}
-
-#zone-success li {
-    margin-left: -30px;
-    /*list-style: disc outside none;*/
-    list-style: none;
-}
 
 
 

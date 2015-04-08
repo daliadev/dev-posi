@@ -424,9 +424,10 @@ input[type=password] {
 .btn-group, .btn-group-vertical {
 	display: inline-block;
 	position: relative;
-	vertical-align: middle;
+	vertical-align: middle;	
 }
 .bootstrap-select {
+	
 }
 .bootstrap-select.btn-group:not(.input-group-btn), .bootstrap-select.btn-group[class*="col-"] {
 	display: inline-block;
@@ -443,7 +444,8 @@ input[type=password] {
 		cursor: pointer;
 		display: inline-block;
 		vertical-align: middle;
-		white-space: nowrap;
+		/*white-space: nowrap;*/
+		/*overflow: scroll;*/
 	}
 
 	.btn-group > .btn, .btn-group-vertical > .btn {
@@ -486,7 +488,6 @@ input[type=password] {
 		line-height: 0.875em;
 		/*vertical-align: middle;*/
 		/*white-space: nowrap;*/
-		/*overflow: hidden;*/
 	}
 
 	.custom-select:hover, .custom-select:active {
@@ -507,6 +508,7 @@ input[type=password] {
 		-webkit-border-radius: 5px 5px 0px 0px;
 		-moz-border-radius: 5px 5px 0px 0px;
 		border-radius: 5px 5px 0px 0px;
+
 	}
 
 	.custom-select:focus {
@@ -596,6 +598,7 @@ input[type=password] {
 			text-align: left;
 			top: 100%;
 			z-index: 1000;
+			overflow: hidden;
 		}
 		.open > .dropdown-menu {
 			display: block;
@@ -615,6 +618,7 @@ input[type=password] {
 				max-width: 840px;
 				padding: 20px 10px;
 				position: relative;
+				overflow: hidden;
 			}
 			.bootstrap-select.btn-group .dropdown-menu.inner {
 				border: 0 none;

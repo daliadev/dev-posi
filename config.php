@@ -64,6 +64,7 @@ class Config
     const ALLOW_REFERENT_INPUT = 1; // Activer (1) / désactiver (0)
 
     // Tableau des emails des référents/formateurs présaisis lors de l'inscription.
+    // Attention : ne marche que si ALLOW_REFERENT_INPUT = 0 et si ce tableau n'est pas vide.
     public static $emails_referent = array(
         "xxx.xxxx@organisme1.fr"
     );

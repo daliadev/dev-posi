@@ -321,6 +321,51 @@ button:disabled, input[type=button]:disabled, input[type=submit]:disabled {
 }
 
 
+
+
+/* vert d'eau */
+.green1-text {
+    color: #00bfa5;
+}
+
+/* vert d'eau foncé */
+.green2-text {
+    color: #009688;
+}
+
+/* vert */
+.green-success1-text {
+    color: #2ecc71;
+}
+
+/* vert foncé */
+.green-success2-text {
+    color: #27ae60;
+}
+
+/* orange */
+.orange1-text {
+    color: #ff9800;
+}
+
+/* orange foncé */
+.orange2-text {
+    color: #f57c00;
+}
+
+/* rouge */
+.red1-text {
+    color: #e74c3c;
+}
+
+/* rouge foncé */
+.red2-text {
+    color: #c0392b;
+}
+
+
+
+
 .form-hint {
 	color: #999;
 	font-family: inherit;

@@ -1,91 +1,112 @@
 <?php
 
-    $form_url = $response['url'];
+	$form_url = $response['url'];
 ?>
+	
 
-    <div id="content">
+	<div id="posi-inscript" class="main">
+		
+		<div class="header">
 
-        <?php
-            // Inclusion du header
-            require_once(ROOT.'views/templates/header_posi_intro.php');
-        ?>
-    
-        
+			<div class="header-wrapper">
 
-        <div id="utilisateur">
-            <div class="zone-formu">
+				<div class="logo"></div>
 
-                <div class="titre-form" id="titre-intro">Introduction</div>
+				<div class="header-title">
+					<h1>Test de positionnement DALIA</h1>
+				</div>
 
-                <form id="form-posi" action="<?php echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
+			</div>
 
-                    <div class="form-small">
-
-                        <div id="txt-intro">
-                            
-                            <p>Bonjour,</p>
-
-                            <p>En vue d’établir le parcours de formation le plus adapté à votre niveau et vos objectifs, vous allez effectuer un test de positionnement.</p>
-                            <p>Vous allez pour cela répondre à une série de questions en lien avec le domaine professionnel.</p> 
-                            <p>Les résultats que vous obtiendrez indiqueront d’une part vos acquis et de l’autre, les compétences à travailler.</p>
-                            <p>Lisez bien les consignes et prenez le temps d’observer les documents avant de répondre.</p>
-
-                            <p class="rouge">Vous avez près de <?php echo $response['nbre_questions']; ?> questions.</p>
-
-                            <p>Bon courage !!</p>
-
-                        </div>
-                        
-                        <div id="lecteur-intro"></div>
-                        <!-- <object type="application/x-shockwave-flash" data="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="160" height="20" id="dewplayer" name="dewplayer"> 
-                            <param name="wmode" value="transparent" />
-                            <param name="movie" value="<?php //echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" /> 
-                            <param name="flashvars" value="mp3=<?php //echo SERVER_URL; ?>media/mp3/intro.mp3&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />
-                        </object> -->
-
-                        <div id="submit">
-                            <input type="submit" value="Commencer" />
-                        </div>
-
-                    </div>
-                </form>
-            </div> 
-        </div>
-
-        
-
-        
-        <div style="clear:both;"></div>
+		</div>
 
 
-        <?php
-            // Inclusion du footer
-            require_once(ROOT.'views/templates/footer.php');
-        ?>
+		<div class="content">
+			
+			<div class="form-header">
+				<h2>Introduction</h2>
+				<i class="fa fa-chevron-down"></i>
+				<div class="clear"></div>
+			</div>
 
-    </div>
 
-    
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
-    
-    <script language="javascript" type="text/javascript">
+			<form class="form-inscript" id="form-intro" name="form_intro" action="<?php echo $form_url; ?>" method="post">
+				
+				<fieldset>
 
-        var player;
+					<p class="form-text-large">Bonjour,</p>
 
-        if (FlashDetect.installed) {
+					<p class="form-text-large">En vue d’établir le parcours de formation le plus adapté à votre niveau et vos objectifs, vous allez effectuer un test de positionnement.</p>
+					<p class="form-text-large">Vous allez pour cela répondre à une série de questions en lien avec le domaine professionnel.</p> 
+					<p class="form-text-large">Les résultats que vous obtiendrez indiqueront d’une part vos acquis et de l’autre, les compétences à travailler.</p>
+					<p class="form-text-large">Lisez bien les consignes et prenez le temps d’observer les documents avant de répondre.</p>
 
-            player = '<object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="300" height="20" id="dewplayer" name="dewplayer">'; 
-            player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
-            player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>media/mp3/intro.mp3&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-            player += '<param name="wmode" value="transparent" />';
-            player += '</object>';
-        }
-        else {
+					<p class="orange2-text">Vous avez près de <?php echo $response['nbre_questions']; ?> questions.</p>
 
-            player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>media/mp3/intro.mp3" preload="auto" autoplay controls></audio>';
-        }
+					<p class="form-text-large">Bon courage !!</p>
 
-        document.getElementById("lecteur-intro").innerHTML = player;
+					
+					<div id="lecteur-intro"></div>
 
-    </script>
+					<input type="submit" name="submit" class="button-primary action-button" id="submit" value="Continuer" title="Cliquez sur ce bouton pour continuer" />
+
+				</fieldset>
+
+			</form>
+
+		</div>
+		 
+		<div class="clear"></div>
+		
+		<!-- Footer -->
+		<?php
+			require_once(ROOT.'views/templates/footer.php');
+		?>
+
+	</div>
+
+
+	
+
+	<!-- JQuery -->
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+	
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
+	
+	<script language="javascript" type="text/javascript">
+
+		var player;
+
+		if (FlashDetect.installed) {
+
+			player = '<object type="application/x-shockwave-flash" data="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" width="300" height="20" id="dewplayer" name="dewplayer">'; 
+			player += '<param name="movie" value="<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf" />'; 
+			player += '<param name="flashvars" value="mp3=<?php echo SERVER_URL; ?>media/mp3/intro.mp3&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+			player += '<param name="wmode" value="transparent" />';
+			player += '</object>';
+		}
+		else {
+
+			player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>media/mp3/intro.mp3" preload="auto" autoplay controls></audio>';
+		}
+
+		document.getElementById("lecteur-intro").innerHTML = player;
+
+
+
+		$(function() {
+			/*
+			if (valid) {
+
+				$('#form-intro').submit();
+				//alert('submit ok');   
+			}
+			else {
+				return false;
+			}
+			*/
+
+		});
+
+	</script>

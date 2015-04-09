@@ -1,115 +1,130 @@
 <?php
 
-    $form_url = $response['url'];
+	$form_url = $response['url'];
 
-    $imageFile = $response['question']->getImage();
-    $audioFile = $response['question']->getSon();
-    $videoFile = $response['question']->getVideo();
+	$imageFile = $response['question']->getImage();
+	$audioFile = $response['question']->getSon();
+	$videoFile = $response['question']->getVideo();
 ?>
 
-    <div id="posi-page" class="main">
-        
-        <div class="header">
+	<div id="posi-page" class="main">
+		
+		<div class="header">
 
-            <div class="header-wrapper">
-                <div class="logo">
-                    <!-- <img src="images/logo-dalia_40x40.png" alt="Positionnement Dalia"> -->
-                </div>
-                <div class="header-title">
-                    <i class="fa fa-file-text-o"></i>
-                    <h1>Test de positionnement</h1>
-                </div>
-                <div class="clear"></div>
-            </div>
+			<div class="header-wrapper">
+				<div class="logo">
+					<!-- <img src="images/logo-dalia_40x40.png" alt="Positionnement Dalia"> -->
+				</div>
+				<div class="header-title">
+					<i class="fa fa-file-text-o"></i>
+					<h1>Test de positionnement</h1>
+				</div>
+				<div class="clear"></div>
+			</div>
 
-        </div>
-        
+		</div>
+		
 
-        <div class="content">
+		<div class="content">
+			
+			<!-- Image ou vidéo -->
+			<?php if (!empty($videoFile)) : ?>
 
-        
-            <!-- Image ou vidéo -->
-            <div class="media-display" id="media-question">
+				<div class="media-display" id="media-question">
+					<div id="lecteurvideo" class="projekktor"></div>
+				</div>
+				
+			<?php elseif (!empty($imageFile)) : ?>
 
-                <div class="image-loader"></div>
-                <img src="uploads/img/img_1_53bb9b2bac838.jpg" />
+				<div class="media-display" id="media-question">
+					<div class="image-loader"></div>
+				</div>
 
-            </div>
-            
+			<?php else : ?>
+				
+				<div class="media-display" id="media-question"></div>
 
-            <!-- Intitulé question -->
-            <div class="question" id="intitule-question">
-                <p>3. Vous commencez le travail à 8 heures. Pour être sûr de ne pas être en retard, vous partez 45 minutes plus tôt. A quelle heure partez-vous ?</p>
-            </div>
-            
+			<?php endif; ?>
+			
 
-            <!-- Formulaire réponse -->
-            <form class="form-page" id="form-page" name="form_page" action="" method="post">
-                
-                <input type="hidden" name="num_page" value="3" />
-                <input type="hidden" name="ref_question" value="3" />
-                
-                <input type="hidden" id="image-filename" name="image-filename" value="img_1_53bb9b2bac838.jpg" />
-                <input type="hidden" id="audio-filename" name="audio-filename" value="audio_1_53bb9b5ed4cbb.mp3" />
-                <input type="hidden" id="video-filename" name="video-filename" value="" />
-                
-                <input type="hidden" name="start_timer" value="0" />
+			<!-- Intitulé question -->
+			<div class="question" id="intitule-question"><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
+			
 
-                <!-- Réponse utilisateur -->
-                <div class="reponse-user" id="reponse-user">
-                    
-                    <!-- Réponse QCM -->
-                    <ul class="radio-group">
-                        <li>
-                            <input type="radio" class="reponse-qcm" id="reponse-qcm-1" name="reponse_qcm" value="1" />
-                            <label for="reponse-qcm-1">Ascenseur</label>
-                        </li>
-                        <li>
-                            <input type="radio" class="reponse-qcm" id="reponse-qcm-2" name="reponse_qcm" value="2" />
-                            <label for="reponse-qcm-2">Sortie de secours</label>
-                        </li>
-                        <li>
-                            <input type="radio" class="reponse-qcm" id="reponse-qcm-3" name="reponse_qcm" value="3" />
-                            <label for="reponse-qcm-3">Interdiction de fumer</label>
-                        </li>
-                        <li>
-                            <input type="radio" class="reponse-qcm" id="reponse-qcm-4" name="reponse_qcm" value="4" />
-                            <label for="reponse-qcm-4">Travaux</label>
-                        </li>
-                    </ul>
+			<!-- Formulaire réponse -->
+			<form class="form-page" id="form-page" name="form_page" action="<?php //echo $form_url; ?>" method="post">
+			
+				<input type="hidden" name="num_page" value="<?php echo $response['question']->getNumeroOrdre(); ?>" />
+				<input type="hidden" name="ref_question" value="<?php echo $response['question']->getId(); ?>" />
+				
+				<input type="hidden" id="image-filename" name="image-filename" value="<?php echo $imageFile; ?>" />
+				<input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $audioFile; ?>" />
+				<input type="hidden" id="video-filename" name="video-filename" value="<?php echo $videoFile; ?>" />
 
-                    <input type="hidden" name="ref_reponse_correcte" value="2" />
-                    
-                    <!-- Réponse champ -->
-                    <!-- <textarea class="champ-reponse" id="reponse_champ" name="reponse_champ"></textarea> -->
-     
-                </div>
-                
+				<!-- <input type="hidden" name="start_timer" value="0" /> -->
+				
 
-                <!-- Audio -->
-                <div class="audio-media" id="audio"></div>
+				<div class="reponse-user" id="reponse-user">
 
+					<?php
+					
+					if ($response['question']->getType() === 'qcm')
+					{
+						/* Réponse QCM */
 
-                <!-- Bouton suite -->
-                <!-- <div id="submit"> -->
-                <div class="btn-suite">
-                    <input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
-                </div>
-                
-                <div style="clear:both;"></div>
+						$j = 0;
 
-            </form>
+						echo '<ul class="radio-group">';
 
-        </div>
+						foreach ($response['reponse'] as $reponse)
+						{
+							echo '<li>';
+								echo '<input type="radio" class="reponse-qcm" id="reponse-qcm-'.$j.'" name="reponse_qcm" value="'.$reponse->getId().'" />';
+								echo '<label for="reponse-qcm-'.$j.'"> &nbsp;'.$reponse->getIntitule().'</label>';
+							 echo '</li>';
 
-        <!-- Footer -->
-        <?php
-            require_once(ROOT.'views/templates/footer.php');
-        ?>
+							if ($reponse->getEstCorrect())
+							{
+								echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'" />';
+							}
 
-    </div>
+							$j++;
+						}
+
+						echo '</ul>';
+					}
+					else if ($response['question']->getType() === 'champ_saisie')
+					{
+						/* Réponse champ */
+						echo '<textarea class="champ-reponse" id="reponse-champ" name="reponse_champ"></textarea>';
+					}
+					
+					?>
+	 
+				</div>
+				
+
+				<!-- Audio -->
+				<div class="audio-media" id="audio"></div>
 
 
+				<!-- Bouton suite -->
+				<div class="btn-suite">
+					<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+				</div>
+				
+				<div style="clear:both;"></div>
+
+			</form>
+
+		</div>
+
+		<!-- Footer -->
+		<?php
+			require_once(ROOT.'views/templates/footer.php');
+		?>
+
+	</div>
 
 
 
@@ -123,552 +138,554 @@
 
 
 
-    <!-- <div id="posi_content">
 
 
-        <?php //if (!empty($videoFile)) : ?>
-
-            <div id="image-content-appli">
-                <div id="lecteurvideo" class="projekktor"></div>
-            </div>
-            
-        <?php //elseif (!empty($imageFile)) : ?>
-
-            <div id="image-content-appli">
-                
-                <div class="image-loader"></div>
-            </div>
-
-        <?php //else : ?>
-            
-            <div id="image-content-appli"></div>
-
-        <?php //endif; ?>
+	<!-- <div id="posi_content">
 
 
-        <div id="txt-content-appli"><?php //echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
+		<?php //if (!empty($videoFile)) : ?>
 
-        <form action="<?php //echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
-            
-            <input type="hidden" name="num_page" value="<?php //echo $response['question']->getNumeroOrdre(); ?>" />
-            <input type="hidden" name="ref_question" value="<?php //echo $response['question']->getId(); ?>" />
-            
-            <input type="hidden" id="image-filename" name="image-filename" value="<?php //echo $imageFile; ?>" />
-            <input type="hidden" id="audio-filename" name="audio-filename" value="<?php //echo $audioFile; ?>" />
-            <input type="hidden" id="video-filename" name="video-filename" value="<?php //echo $videoFile; ?>" />
+			<div id="image-content-appli">
+				<div id="lecteurvideo" class="projekktor"></div>
+			</div>
+			
+		<?php //elseif (!empty($imageFile)) : ?>
+
+			<div id="image-content-appli">
+				
+				<div class="image-loader"></div>
+			</div>
+
+		<?php //else : ?>
+			
+			<div id="image-content-appli"></div>
+
+		<?php //endif; ?>
 
 
-            
-            <div id="reponse-content-appli">
+		<div id="txt-content-appli"><?php //echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
 
-                <?php
-                /*
-                if ($response['question']->getType() == "qcm")
-                {
-                    $j = 0;
+		<form action="<?php //echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
+			
+			<input type="hidden" name="num_page" value="<?php //echo $response['question']->getNumeroOrdre(); ?>" />
+			<input type="hidden" name="ref_question" value="<?php //echo $response['question']->getId(); ?>" />
+			
+			<input type="hidden" id="image-filename" name="image-filename" value="<?php //echo $imageFile; ?>" />
+			<input type="hidden" id="audio-filename" name="audio-filename" value="<?php //echo $audioFile; ?>" />
+			<input type="hidden" id="video-filename" name="video-filename" value="<?php //echo $videoFile; ?>" />
 
-                    foreach ($response['reponse'] as $reponse)
-                    {
-                        echo '<p>';
-                            echo '<label for="radio_reponse_'.$j.'"><input type="radio" class="radio_posi" id="radio_reponse_'.$j.'" name="radio_reponse" value="'.$reponse->getId().'"> &nbsp;'.$reponse->getIntitule().'</label><br />';
-                        echo '</p>';
-                        if ($reponse->getEstCorrect())
-                        {
-                            echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'" />';
-                        }
 
-                        $j++;
-                    } 
-                }
-                else if ($response['question']->getType() == "champ_saisie")
-                {
-                    echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
-                }
-                */
-                ?>
-                
-            </div>
+			
+			<div id="reponse-content-appli">
 
-            <?php //if (empty($videoFile) && !empty($audioFile)) : ?>
+				<?php
+				/*
+				if ($response['question']->getType() == "qcm")
+				{
+					$j = 0;
 
-                <div id="lecteuraudio"></div>
+					foreach ($response['reponse'] as $reponse)
+					{
+						echo '<p>';
+							echo '<label for="radio_reponse_'.$j.'"><input type="radio" class="radio_posi" id="radio_reponse_'.$j.'" name="radio_reponse" value="'.$reponse->getId().'"> &nbsp;'.$reponse->getIntitule().'</label><br />';
+						echo '</p>';
+						if ($reponse->getEstCorrect())
+						{
+							echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'" />';
+						}
 
-            <?php //endif; ?>
-            
-            <?php
+						$j++;
+					} 
+				}
+				else if ($response['question']->getType() == "champ_saisie")
+				{
+					echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
+				}
+				*/
+				?>
+				
+			</div>
 
-                //$startTimer = microtime(true);
-            ?>
+			<?php //if (empty($videoFile) && !empty($audioFile)) : ?>
 
-            <input type="hidden" name="start_timer" value="<?php //echo $startTimer; ?>" />
-            
-            <div id="submit">
+				<div id="lecteuraudio"></div>
+
+			<?php //endif; ?>
+			
+			<?php
+
+				//$startTimer = microtime(true);
+			?>
+
+			<input type="hidden" name="start_timer" value="<?php //echo $startTimer; ?>" />
+			
+			<div id="submit">
   
-                <input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" disabled />
-                
-            </div>
+				<input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" disabled />
+				
+			</div>
 
-        </form>
+		</form>
 
-        
-        <div style="clear:both;"></div>
+		
+		<div style="clear:both;"></div>
 
 
-        <?php
-            // Inclusion du footer
-            //require_once(ROOT.'views/templates/footer.php');
-        ?>
+		<?php
+			// Inclusion du footer
+			//require_once(ROOT.'views/templates/footer.php');
+		?>
 
-    </div> -->
+	</div> -->
 
 
-    <!-- JQuery -->
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
+	<!-- JQuery -->
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
 
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
-    <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
 
-    <script type="text/javascript">
+	<script type="text/javascript">
 
 
-        $(function() {
-            
+		$(function() {
+			
 
-            // Le bouton suite est desactiver par défaut.
-            $("#submit_suite").prop("disabled", true);
+			// Le bouton suite est desactiver par défaut.
+			$("#submit_suite").prop("disabled", true);
 
-            //$(".radio_posi").prop("disabled", true);
+			//$(".radio_posi").prop("disabled", true);
 
-            // S'il y a une champ de réponse, on le désactive et on met un placeholder.
-            //$("#reponse_champ").prop("disabled", true);
-            //$("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+			// S'il y a une champ de réponse, on le désactive et on met un placeholder.
+			//$("#reponse_champ").prop("disabled", true);
+			//$("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
 
-            if ($('.radio_posi') != null) {
+			if ($('.radio_posi') != null) {
 
-                // S'il y a des boutons radio, on les désactive.
-                $(".radio_posi").prop("disabled", true);
-            }
+				// S'il y a des boutons radio, on les désactive.
+				$(".radio_posi").prop("disabled", true);
+			}
 
-            if ($('#reponse_champ') != null) {
+			if ($('#reponse_champ') != null) {
 
-                // S'il y a une champ de réponse, on le désactive et on met un placeholder.
-                $("#reponse_champ").prop("disabled", true);
-                $("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
-            }
+				// S'il y a une champ de réponse, on le désactive et on met un placeholder.
+				$("#reponse_champ").prop("disabled", true);
+				$("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+			}
 
 
-            // Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
-            var imageFilename = $('#image-filename').val();
-            var audioFilename = $('#audio-filename').val();
-            var videoFilename = $('#video-filename').val();
+			// Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
+			var imageFilename = $('#image-filename').val();
+			var audioFilename = $('#audio-filename').val();
+			var videoFilename = $('#video-filename').val();
 
-            // Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
-            var imageActive = imageFilename != '' ? true : false;
-            var videoActive = videoFilename != '' ? true : false;
-            var audioActive = audioFilename != '' ? true : false;
+			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
+			var imageActive = imageFilename != '' ? true : false;
+			var videoActive = videoFilename != '' ? true : false;
+			var audioActive = audioFilename != '' ? true : false;
 
 
 
-            // Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
-            var isVideoComplete = false;
+			// Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
+			var isVideoComplete = false;
 
-            // Etat du chargement de l'image
-            var isImageLoaded = false;
+			// Etat du chargement de l'image
+			var isImageLoaded = false;
 
-            // Etat du chargement du lecteur audio
-            var isAudioLoaded = false;
+			// Etat du chargement du lecteur audio
+			var isAudioLoaded = false;
 
 
-            // Timer du chargement de l'image
-            var timerImage = null;
+			// Timer du chargement de l'image
+			var timerImage = null;
 
-            // Timer de selection automatique du champ de saisie
-            var timerPlayerComplete = null;
+			// Timer de selection automatique du champ de saisie
+			var timerPlayerComplete = null;
 
 
-            // Contenu du lecteur audio
-            var audioHtml = '';
+			// Contenu du lecteur audio
+			var audioHtml = '';
 
 
 
 
-            /* Fonctions */
+			/* Fonctions */
 
-            function getPlayerComplete() {
+			function getPlayerComplete() {
 
-                var mediaPlayer = null;
+				var mediaPlayer = null;
 
-                if (videoActive) {
+				if (videoActive) {
 
-                    if (isVideoComplete) {
+					if (isVideoComplete) {
 
-                        return true;
-                    }
+						return true;
+					}
 
-                }
-                else if (audioActive) {
+				}
+				else if (audioActive) {
 
-                    if (FlashDetect.installed) {
+					if (FlashDetect.installed) {
 
-                        mediaPlayer = document.getElementById('dewplayer');
+						mediaPlayer = document.getElementById('dewplayer');
 
-                        if (mediaPlayer != null) {
-                            
-                            if (mediaPlayer.dewgetpos() == 0 && isAudioLoaded)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                    else {
+						if (mediaPlayer != null) {
+							
+							if (mediaPlayer.dewgetpos() == 0 && isAudioLoaded)
+							{
+								return true;
+							}
+						}
+					}
+					else {
 
-                        mediaPlayer = document.getElementById('audioplayer');
+						mediaPlayer = document.getElementById('audioplayer');
 
-                        if (mediaPlayer != null) {
+						if (mediaPlayer != null) {
 
-                            if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0 && isAudioLoaded) {
+							if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0 && isAudioLoaded) {
 
-                                return true;
-                            }
-                        }
-                    }
-                }
+								return true;
+							}
+						}
+					}
+				}
 
-                return false;
-            }
+				return false;
+			}
 
-            
-            function checkPlayerComplete() {
+			
+			function checkPlayerComplete() {
 
-                
-                //alert ('player complete');
+				
+				//alert ('player complete');
 
-                if (getPlayerComplete()) {
+				if (getPlayerComplete()) {
 
-                    clearInterval(timerPlayerComplete);
+					clearInterval(timerPlayerComplete);
 
-                    if ($('.radio_posi') != null) {
+					if ($('.radio_posi') != null) {
 
-                        $(".radio_posi").prop("disabled", false);
-                    }
+						$(".radio_posi").prop("disabled", false);
+					}
 
-                    if ($('#reponse_champ') != null) {
+					if ($('#reponse_champ') != null) {
 
-                        $('#reponse_champ').removeProp('disabled');
-                        $('#reponse_champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
-                        $('#reponse_champ').focus();
-                    }
-                }
-            }
-            
+						$('#reponse_champ').removeProp('disabled');
+						$('#reponse_champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+						$('#reponse_champ').focus();
+					}
+				}
+			}
+			
 
 
 
-            function displayImage(link) {
+			function displayImage(link) {
 
-                var imageBox = new Image();
+				var imageBox = new Image();
 
-                imageBox.onload = function() {
+				imageBox.onload = function() {
 
-                    $('.image-loader').fadeOut(250);
-                    $('#image-content-appli').prepend(imageBox);
-                    $('#image-content-appli img').hide().fadeIn(1000);
-                    isImageLoaded = true;
-                };
+					$('.image-loader').fadeOut(250);
+					$('#image-content-appli').prepend(imageBox);
+					$('#image-content-appli img').hide().fadeIn(1000);
+					isImageLoaded = true;
+				};
 
-                imageBox.src = link;
-                $('.image-loader').fadeIn(250);
-            }
+				imageBox.src = link;
+				$('.image-loader').fadeIn(250);
+			}
 
 
-            function displayAudioPlayer() {
+			function displayAudioPlayer() {
 
-                //$(".radio_posi").prop("disabled", true);
+				//$(".radio_posi").prop("disabled", true);
 
-                var $audioPlayer = $("#lecteuraudio");
+				var $audioPlayer = $("#lecteuraudio");
 
-                if ($audioPlayer != null && audioHtml != '') {
+				if ($audioPlayer != null && audioHtml != '') {
 
-                    $audioPlayer.html(audioHtml);
-                }
+					$audioPlayer.html(audioHtml);
+				}
 
-                var dewp = document.getElementById('dewplayer');
-                var $playerHtml = $('#audioplayer');
-                
-                if (dewp != null) {
+				var dewp = document.getElementById('dewplayer');
+				var $playerHtml = $('#audioplayer');
+				
+				if (dewp != null) {
 
-                    dewp.style.display = 'none';
-                    //dewp.dewplay();
-                }
-                else if ($playerHtml != null) {
-                    
-                    $('#audioplayer').css('display', 'none');
-                    $('#audioplayer').prop('autoplay', true);
-                }
+					dewp.style.display = 'none';
+					//dewp.dewplay();
+				}
+				else if ($playerHtml != null) {
+					
+					$('#audioplayer').css('display', 'none');
+					$('#audioplayer').prop('autoplay', true);
+				}
 
-                setTimeout(onAudioPlayerLoaded, 500); 
-            }
+				setTimeout(onAudioPlayerLoaded, 500); 
+			}
 
 
-            function onAudioPlayerLoaded() {
-                
-                var dewp = document.getElementById('dewplayer');
-                var $playerHtml = $('#audioplayer');
-                
-                if (dewp != null) {
+			function onAudioPlayerLoaded() {
+				
+				var dewp = document.getElementById('dewplayer');
+				var $playerHtml = $('#audioplayer');
+				
+				if (dewp != null) {
 
-                    dewp.style.display = 'block';
-                    //dewp.dewplay();
-                }
-                else if ($playerHtml != null) {
-                    
-                    $('#audioplayer').css('display', 'block');
-                }
-                else {
-                    //alert('player not found');
-                }
-                
+					dewp.style.display = 'block';
+					//dewp.dewplay();
+				}
+				else if ($playerHtml != null) {
+					
+					$('#audioplayer').css('display', 'block');
+				}
+				else {
+					//alert('player not found');
+				}
+				
 
-                isAudioLoaded = true;
+				isAudioLoaded = true;
 
-                timerPlayerComplete = setInterval(checkPlayerComplete, 500);
-            }
+				timerPlayerComplete = setInterval(checkPlayerComplete, 500);
+			}
 
 
-            function checkImageLoaded() {
+			function checkImageLoaded() {
 
-                if (isImageLoaded) {
+				if (isImageLoaded) {
 
-                    clearInterval(timerImage);
+					clearInterval(timerImage);
 
-                    if (audioActive) {
+					if (audioActive) {
 
-                        displayAudioPlayer();
-                    }
-                    else {
+						displayAudioPlayer();
+					}
+					else {
 
-                        $(".radio_posi").prop("disabled", false);
-                    }
-                } 
-            }
+						$(".radio_posi").prop("disabled", false);
+					}
+				} 
+			}
 
 
 
 
 
 
-            /* Création et instanciation des médias */
+			/* Création et instanciation des médias */
 
 
-            // Chargement de l'image (si il n'y a pas de vidéo) */
+			// Chargement de l'image (si il n'y a pas de vidéo) */
 
-            if (imageActive) {
+			if (imageActive) {
 
-                var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
-                
-                if (!videoActive) {
+				var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+				
+				if (!videoActive) {
 
-                    displayImage(imageUrl);
-                }                
-            }
+					displayImage(imageUrl);
+				}                
+			}
 
 
-            // S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
-            if (videoActive) {
+			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
+			if (videoActive) {
 
-                // L'image, si elle existe, sert alors de "poster" pour la vidéo.
-                var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
+				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
+				var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
 
-                // On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
-                var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
+				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
+				var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
 
-                // Puis l'adresse absolue de la vidéo.
-                var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
+				// Puis l'adresse absolue de la vidéo.
+				var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
 
-                // On génére le lecteur vidéo et on le configure.
-                projekktor('#lecteurvideo', {
+				// On génére le lecteur vidéo et on le configure.
+				projekktor('#lecteurvideo', {
 
-                        poster: imageUrl,
-                        title: 'Lecteur vidéo',
-                        playerFlashMP4: videoPlayerUrl,
-                        playerFlashMP3: videoPlayerUrl,
-                        width: 750,
-                        height: 420,
-                        controls: true,
-                        enableFullscreen: false,
-                        autoplay: true,
-                        playlist: [{
-                            0: {src: videoUrl, type: "video/mp4"}
-                        }],
-                        plugins: ['display', 'controlbar'],
-                        messages: {
-                            0: 'Une erreur s\'est produite.',
-                            1: 'Vous avez interrompu la lecture de la vidéo.',
-                            2: 'La vidéo n\'a pas pu être chargée.',
-                            3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
-                            4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
-                            5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
-                            6: 'Vous devez disposer de la version %{flashver} ou plus du lecteur Flash.',
-                            7: 'Aucun média n\'a été trouvé.',
-                            8: 'La configuration du média est incompatible !',
-                            9: 'Le fichier (%{file}) n\'a pas été trouvé.',
-                            10: 'Les paramètres de qualité sont invalide pour %{title}.',
-                            11: 'Les paramètres de streaming sont invalides ou incompatible avec %{title}.',
-                            12: 'Le paramètrage de la qualité est incompatible pour %{title}.',
-                            80: 'Le média requis n\'existe pas ou son contenu est invalide.',
-                            97: 'Aucun média n\'a été prévu.',
-                            98: 'Les données de la playlist sont invalides !',
-                            99: 'Cliquez sur le média pour continuer. ',
-                            100: 'Espace réservé.'
-                        } 
+						poster: imageUrl,
+						title: 'Lecteur vidéo',
+						playerFlashMP4: videoPlayerUrl,
+						playerFlashMP3: videoPlayerUrl,
+						width: 750,
+						height: 420,
+						controls: true,
+						enableFullscreen: false,
+						autoplay: true,
+						playlist: [{
+							0: {src: videoUrl, type: "video/mp4"}
+						}],
+						plugins: ['display', 'controlbar'],
+						messages: {
+							0: 'Une erreur s\'est produite.',
+							1: 'Vous avez interrompu la lecture de la vidéo.',
+							2: 'La vidéo n\'a pas pu être chargée.',
+							3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
+							4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
+							5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
+							6: 'Vous devez disposer de la version %{flashver} ou plus du lecteur Flash.',
+							7: 'Aucun média n\'a été trouvé.',
+							8: 'La configuration du média est incompatible !',
+							9: 'Le fichier (%{file}) n\'a pas été trouvé.',
+							10: 'Les paramètres de qualité sont invalide pour %{title}.',
+							11: 'Les paramètres de streaming sont invalides ou incompatible avec %{title}.',
+							12: 'Le paramètrage de la qualité est incompatible pour %{title}.',
+							80: 'Le média requis n\'existe pas ou son contenu est invalide.',
+							97: 'Aucun média n\'a été prévu.',
+							98: 'Les données de la playlist sont invalides !',
+							99: 'Cliquez sur le média pour continuer. ',
+							100: 'Espace réservé.'
+						} 
 
-                    }, function(player) {
+					}, function(player) {
 
-                        // on player ready
-                        
-                        var stateListener = function(state) {
+						// on player ready
+						
+						var stateListener = function(state) {
 
-                            switch(state) {
-                                    
-                                case 'PLAYING':
-                                    break;
+							switch(state) {
+									
+								case 'PLAYING':
+									break;
 
-                                case 'PAUSED':
+								case 'PAUSED':
 
-                                    $('.ppstart').removeClass('inactive');
-                                    $('.ppstart').addClass('active');
-                                    break;
+									$('.ppstart').removeClass('inactive');
+									$('.ppstart').addClass('active');
+									break;
 
-                                case 'STOPPED':
-                                case 'IDLE':
-                                case 'COMPLETED':
+								case 'STOPPED':
+								case 'IDLE':
+								case 'COMPLETED':
 
-                                    $(".radio_posi").prop("disabled", false);
-                                    
-                                    isVideoComplete = true;
+									$(".radio_posi").prop("disabled", false);
+									
+									isVideoComplete = true;
 
-                                    checkPlayerComplete();
-                                    break;
-                            }
-                        };
+									checkPlayerComplete();
+									break;
+							}
+						};
 
-                        player.addListener('state', stateListener);
+						player.addListener('state', stateListener);
 
-                        
-                        var playerError =  function(data) { 
+						
+						var playerError =  function(data) { 
 
-                            //console.log('error : ' + data);
-                            isVideoComplete = true; 
+							//console.log('error : ' + data);
+							isVideoComplete = true; 
 
-                            $('#lecteurvideo').html('');
+							$('#lecteurvideo').html('');
 
-                            if (imageActive) {
+							if (imageActive) {
 
-                                displayImage(imageUrl);
-                            }                 
-                        };
-                        player.addListener('error', playerError);
-                        
-                    }
-                );
-            }
+								displayImage(imageUrl);
+							}                 
+						};
+						player.addListener('error', playerError);
+						
+					}
+				);
+			}
 
 
-            // Sinon, on créé le lecteur audio
-            else if (audioActive) {
+			// Sinon, on créé le lecteur audio
+			else if (audioActive) {
 
-                var audioHtml = '';
+				var audioHtml = '';
 
-                var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
-                var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+				var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
-                if (FlashDetect.installed) {
-                    
-                    audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
-                    audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-                    //audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-                    audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-                    audioHtml += '<param name="wmode" value="transparent" />';
-                    audioHtml += '</object>';
-                }
-                else {
-                    
-                    audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
-                }
-                
+				if (FlashDetect.installed) {
+					
+					audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
+					audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
+					//audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+					audioHtml += '<param name="wmode" value="transparent" />';
+					audioHtml += '</object>';
+				}
+				else {
+					
+					audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
+				}
+				
 
-                timerImage = setInterval(checkImageLoaded, 500);
+				timerImage = setInterval(checkImageLoaded, 500);
 
-                /*
-                var $audioPlayer = $("#lecteuraudio");
+				/*
+				var $audioPlayer = $("#lecteuraudio");
 
-                if ($audioPlayer != null) {
+				if ($audioPlayer != null) {
 
-                    //$audioPlayer.html(audioHtml);
-                }
-                */
-            }
-            
+					//$audioPlayer.html(audioHtml);
+				}
+				*/
+			}
+			
 
 
 
-            /* Evenements */
+			/* Evenements */
 
-            // Sur click d'un des boutons radio
-            $(".radio_posi").on("click", function(e) {
+			// Sur click d'un des boutons radio
+			$(".radio_posi").on("click", function(e) {
 
-                if (getPlayerComplete()) {
+				if (getPlayerComplete()) {
 
-                    $("#submit_suite").removeProp("disabled");
-                }
-                else {
+					$("#submit_suite").removeProp("disabled");
+				}
+				else {
 
-                    $(this).attr("checked", false);
-                }
-            });
-            
+					$(this).attr("checked", false);
+				}
+			});
+			
 
-            // Sur click dans le champ de réponse s'il existe.
-            $("#reponse_champ").on("click", function(e) {
+			// Sur click dans le champ de réponse s'il existe.
+			$("#reponse_champ").on("click", function(e) {
 
-                if (getPlayerComplete()) {
+				if (getPlayerComplete()) {
 
-                    //$(this).removeProp("readonly");
-                    //$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
-                }
-                else {
+					//$(this).removeProp("readonly");
+					//$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
+				}
+				else {
 
-                    $(this).blur();
-                }
-            });
-            
+					$(this).blur();
+				}
+			});
+			
 
-            // Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
-            //var numChar = 0;
+			// Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
+			//var numChar = 0;
 
-            $("#reponse_champ").on("keydown", function(e) {
+			$("#reponse_champ").on("keydown", function(e) {
 
-                // On s'assure que la vidéo ou le son sont terminés
-                // et que l'utilisateur a saisi au moins 2 caractères.
-                if (getPlayerComplete()) {
+				// On s'assure que la vidéo ou le son sont terminés
+				// et que l'utilisateur a saisi au moins 2 caractères.
+				if (getPlayerComplete()) {
 
-                    $(this).attr("placeholder", "");
-                    //$(this).removeProp("placeholder");
+					$(this).attr("placeholder", "");
+					//$(this).removeProp("placeholder");
 
-                    //numChar++;
+					//numChar++;
 
-                    if ($(this).val().length > 1) {
+					if ($(this).val().length > 1) {
 
-                        $("#submit_suite").removeProp("disabled");
-                    }
-                    else if ($(this).val().length <= 1) {
+						$("#submit_suite").removeProp("disabled");
+					}
+					else if ($(this).val().length <= 1) {
 
-                        $("#submit_suite").prop("disabled", true);
-                    }
-                }
-            });
-            
-        });
+						$("#submit_suite").prop("disabled", true);
+					}
+				}
+			});
+			
+		});
 
-    </script>
+	</script>

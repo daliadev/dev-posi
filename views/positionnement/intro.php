@@ -34,19 +34,19 @@
 				
 				<fieldset>
 
-					<p class="form-text-large">Bonjour,</p>
+					<p class="form-text-large"><strong>Bonjour,</strong></p>
 
 					<p class="form-text-large">En vue d’établir le parcours de formation le plus adapté à votre niveau et vos objectifs, vous allez effectuer un test de positionnement.</p>
 					<p class="form-text-large">Vous allez pour cela répondre à une série de questions en lien avec le domaine professionnel.</p> 
 					<p class="form-text-large">Les résultats que vous obtiendrez indiqueront d’une part vos acquis et de l’autre, les compétences à travailler.</p>
 					<p class="form-text-large">Lisez bien les consignes et prenez le temps d’observer les documents avant de répondre.</p>
 
-					<p class="orange2-text">Vous avez près de <?php echo $response['nbre_questions']; ?> questions.</p>
+					<p class="text-primary2">Vous avez près de <?php echo $response['nbre_questions']; ?> questions.</p>
 
-					<p class="form-text-large">Bon courage !!</p>
+					<p class="form-text-large"><strong>Bon courage !!</strong></p>
 
-					
-					<div id="lecteur-intro"></div>
+					<!-- Audio -->
+					<div id="audio" style="margin-top: 20px;"></div>
 
 					<input type="submit" name="submit" class="button-primary action-button" id="submit" value="Continuer" title="Cliquez sur ce bouton pour continuer" />
 
@@ -91,7 +91,7 @@
 			player = '<audio id="audioplayer" name="audioplayer" src="<?php echo SERVER_URL; ?>media/mp3/intro.mp3" preload="auto" autoplay controls></audio>';
 		}
 
-		document.getElementById("lecteur-intro").innerHTML = player;
+		document.getElementById("audio").innerHTML = player;
 
 
 

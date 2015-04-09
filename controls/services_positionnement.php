@@ -271,9 +271,9 @@ class ServicesPositionnement extends Main
                 }
 
                 // On test si la réponse est de type qcm ou champ
-                if (isset($_POST['radio_reponse']) && !empty($_POST['radio_reponse']))
+                if (isset($_POST['reponse_qcm']) && !empty($_POST['reponse_qcm']))
                 {
-                    $dataResultat['ref_reponse_qcm'] = $_POST['radio_reponse'];
+                    $dataResultat['ref_reponse_qcm'] = $_POST['reponse_qcm'];
 
                     // On récupère la référence de la bonne réponse
                     if (isset($_POST['ref_reponse_correcte']) && !empty($_POST['ref_reponse_correcte']))
@@ -395,7 +395,7 @@ class ServicesPositionnement extends Main
     public function resultat()
     {
         /*** Test d'authentification de l'intervenant/utilisateur ***/
-        ServicesAuth::checkAuthentication("user");
+        //ServicesAuth::checkAuthentication("user");
 
 
         // On commence par récupérer la liste complète des categories.
@@ -764,14 +764,15 @@ class ServicesPositionnement extends Main
         
 
         /*** Déconnexion automatique de l'utilisateur ***/
-        ServicesAuth::logout();
+        //ServicesAuth::logout();
         
 
 
         /*** Affichage de la page de résultat ***/
         $this->setResponse($dataPage);
         
-        $this->setTemplate("tpl_results");
+        //$this->setTemplate("tpl_results");
+        $this->setTemplate("tpl_inscript");
         $this->render("resultat");
     }
  

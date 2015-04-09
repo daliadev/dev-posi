@@ -22,14 +22,12 @@
     <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/css/reset_new.css" />
     <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/css/base.css" />
     <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/css/main.css" />
-    <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/projekktor/themes/dalia/projekktor-dalia.style.css" media="screen" />
+    <link type="text/css" rel="stylesheet" media="screen" href="<?php echo SERVER_URL; ?>media/projekktor/themes/dalia/projekktor-dalia.style.css" />
 
     <!--[if lt IE 9]>
     <script src="<?php echo SERVER_URL; ?>media/js/dist/html5shiv.js"></script>
     <![endif]-->
-
-    <script src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js" type="text/javascript"></script>
-    
+    <!-- <script src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js" type="text/javascript"></script> -->
 </head>
 
 <body>

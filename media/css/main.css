@@ -441,12 +441,12 @@ body {
 
 
 		#posi-page .media-display {
+			position: relative;
 			width: 100%;
 			max-width: 750px;
 			height: auto;
 			max-height: 420px;
 			/*padding: 20px;*/
-			position: relative;
 			background-color: #fff;
 		}
 
@@ -464,6 +464,30 @@ body {
 				#posi-page .media-display img {
 					width: 100%;
 				}
+			
+			#posi-page .media-display #lecteurvideo {
+				max-width: 100%;
+				height: 100%;
+			}
+
+
+		#posi-page #audio {
+			float: left;
+			min-width: 184px;
+			min-height: 44px;
+			max-height: 44px;
+			height: 22px;
+			/*margin-top: 10px;*/
+			padding: 11px;
+			background-color: #fff;
+			/*border: 1px #ccc8c8 solid;*/
+			/*border-radius: 5px;*/
+		}
+
+
+			
+
+
 
 		#posi-page .question {
 			width: 100%;
@@ -482,13 +506,13 @@ body {
 
 		#posi-page .reponse-user {
 			width: 100%;
-			padding: 20px 30px;
+			padding: 20px 20px;
 			margin: 0 0 20px 0;
 			background-color: #fff;
 		}
 
 			#posi-page .reponse-user .radio-group {
-				margin: 0;
+				margin: 0 10px;
 			}
 
 				#posi-page .reponse-user .radio-group li {
@@ -497,11 +521,21 @@ body {
 
 				#posi-page .reponse-user .radio-group li label {
 					width: auto;
+					margin: 0;
 				}
 		
+		#posi-page .reponse-champ {
+			/*width: 100%;*/
+			height: 100%;
+			/*padding: 20px 30px;*/
+			/*margin: 0 0 20px 0;*/*/
+			/*background-color: #fff;*/
+		}
+
 		#posi-page .audio-media {
 			float: left;
 		}
+		
 
 		#posi-page input {
 			float: right;
@@ -770,13 +804,6 @@ body {
 				line-height: 44px;
 			}
 
-
-	/*-----  Content Inscription  ------*/
-	
-	#posi-inscript .content {
-		/*float: left;
-		margin: 0;*/
-	}
 
 
 	/*-----  Content Page  ------*/

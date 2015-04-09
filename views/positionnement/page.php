@@ -2,10 +2,12 @@
 
 	$form_url = $response['url'];
 
-	$imageFile = $response['question']->getImage();
-	$audioFile = $response['question']->getSon();
-	$videoFile = $response['question']->getVideo();
+    $imageFile = $response['question']->getImage();
+    $audioFile = $response['question']->getSon();
+    $videoFile = $response['question']->getVideo();
+
 ?>
+
 
 	<div id="posi-page" class="main">
 		
@@ -45,14 +47,17 @@
 				<div class="media-display" id="media-question"></div>
 
 			<?php endif; ?>
+
 			
 
 			<!-- Intitulé question -->
-			<div class="question" id="intitule-question"><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
+			<div class="question" id="intitule-question">
+				<p><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></p>
+			</div>
 			
 
 			<!-- Formulaire réponse -->
-			<form class="form-page" id="form-page" name="form_page" action="<?php //echo $form_url; ?>" method="post">
+			<form class="form-page" id="form-page" name="form_page" action="<?php echo $form_url; ?>" method="post">
 			
 				<input type="hidden" name="num_page" value="<?php echo $response['question']->getNumeroOrdre(); ?>" />
 				<input type="hidden" name="ref_question" value="<?php echo $response['question']->getId(); ?>" />
@@ -60,10 +65,9 @@
 				<input type="hidden" id="image-filename" name="image-filename" value="<?php echo $imageFile; ?>" />
 				<input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $audioFile; ?>" />
 				<input type="hidden" id="video-filename" name="video-filename" value="<?php echo $videoFile; ?>" />
-
-				<!-- <input type="hidden" name="start_timer" value="0" /> -->
 				
-
+				
+				<!-- Réponse de l'utilisateur -->
 				<div class="reponse-user" id="reponse-user">
 
 					<?php
@@ -71,7 +75,6 @@
 					if ($response['question']->getType() === 'qcm')
 					{
 						/* Réponse QCM */
-
 						$j = 0;
 
 						echo '<ul class="radio-group">';
@@ -96,7 +99,7 @@
 					else if ($response['question']->getType() === 'champ_saisie')
 					{
 						/* Réponse champ */
-						echo '<textarea class="champ-reponse" id="reponse-champ" name="reponse_champ"></textarea>';
+						echo '<textarea class="reponse-champ" id="reponse-champ" name="reponse_champ"></textarea>';
 					}
 					
 					?>
@@ -105,8 +108,19 @@
 				
 
 				<!-- Audio -->
-				<div class="audio-media" id="audio"></div>
+				<?php if (empty($videoFile) && !empty($audioFile)) : ?>
 
+					<div class="audio-media" id="audio"></div>
+
+				<?php endif; ?>
+				
+
+				<!-- Timer -->
+				<?php
+					$startTimer = microtime(true);
+				?>
+				<input type="hidden" name="start_timer" value="<?php echo $startTimer; ?>" />
+				
 
 				<!-- Bouton suite -->
 				<div class="btn-suite">
@@ -129,122 +143,14 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-	<!-- <div id="posi_content">
-
-
-		<?php //if (!empty($videoFile)) : ?>
-
-			<div id="image-content-appli">
-				<div id="lecteurvideo" class="projekktor"></div>
-			</div>
-			
-		<?php //elseif (!empty($imageFile)) : ?>
-
-			<div id="image-content-appli">
-				
-				<div class="image-loader"></div>
-			</div>
-
-		<?php //else : ?>
-			
-			<div id="image-content-appli"></div>
-
-		<?php //endif; ?>
-
-
-		<div id="txt-content-appli"><?php //echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></div>
-
-		<form action="<?php //echo $form_url; ?>" method="post" id="formulaire" name="formulaire">
-			
-			<input type="hidden" name="num_page" value="<?php //echo $response['question']->getNumeroOrdre(); ?>" />
-			<input type="hidden" name="ref_question" value="<?php //echo $response['question']->getId(); ?>" />
-			
-			<input type="hidden" id="image-filename" name="image-filename" value="<?php //echo $imageFile; ?>" />
-			<input type="hidden" id="audio-filename" name="audio-filename" value="<?php //echo $audioFile; ?>" />
-			<input type="hidden" id="video-filename" name="video-filename" value="<?php //echo $videoFile; ?>" />
-
-
-			
-			<div id="reponse-content-appli">
-
-				<?php
-				/*
-				if ($response['question']->getType() == "qcm")
-				{
-					$j = 0;
-
-					foreach ($response['reponse'] as $reponse)
-					{
-						echo '<p>';
-							echo '<label for="radio_reponse_'.$j.'"><input type="radio" class="radio_posi" id="radio_reponse_'.$j.'" name="radio_reponse" value="'.$reponse->getId().'"> &nbsp;'.$reponse->getIntitule().'</label><br />';
-						echo '</p>';
-						if ($reponse->getEstCorrect())
-						{
-							echo '<input type="hidden" name="ref_reponse_correcte" value="'.$reponse->getId().'" />';
-						}
-
-						$j++;
-					} 
-				}
-				else if ($response['question']->getType() == "champ_saisie")
-				{
-					echo '<textarea class="reponse_champ" id="reponse_champ" name="reponse_champ"></textarea>';
-				}
-				*/
-				?>
-				
-			</div>
-
-			<?php //if (empty($videoFile) && !empty($audioFile)) : ?>
-
-				<div id="lecteuraudio"></div>
-
-			<?php //endif; ?>
-			
-			<?php
-
-				//$startTimer = microtime(true);
-			?>
-
-			<input type="hidden" name="start_timer" value="<?php //echo $startTimer; ?>" />
-			
-			<div id="submit">
-  
-				<input id="submit_suite" type="submit" name="submit_suite" class="bt-suivant" style="width:100px;" value="Suite" disabled />
-				
-			</div>
-
-		</form>
-
-		
-		<div style="clear:both;"></div>
-
-
-		<?php
-			// Inclusion du footer
-			//require_once(ROOT.'views/templates/footer.php');
-		?>
-
-	</div> -->
-
-
 	<!-- JQuery -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
 
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
+
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
 
 	<script type="text/javascript">
 
@@ -253,25 +159,20 @@
 			
 
 			// Le bouton suite est desactiver par défaut.
-			$("#submit_suite").prop("disabled", true);
+			$("#submit-suite").prop("disabled", true);
 
-			//$(".radio_posi").prop("disabled", true);
 
-			// S'il y a une champ de réponse, on le désactive et on met un placeholder.
-			//$("#reponse_champ").prop("disabled", true);
-			//$("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
-
-			if ($('.radio_posi') != null) {
+			if ($('.reponse-qcm') != null) {
 
 				// S'il y a des boutons radio, on les désactive.
-				$(".radio_posi").prop("disabled", true);
+				$(".reponse-qcm").prop("disabled", true);
 			}
 
-			if ($('#reponse_champ') != null) {
+			if ($('#reponse-champ') != null) {
 
 				// S'il y a une champ de réponse, on le désactive et on met un placeholder.
-				$("#reponse_champ").prop("disabled", true);
-				$("#reponse_champ").attr("placeholder", "Veuillez attendre que le son se termine...");
+				$("#reponse-champ").prop("disabled", true);
+				$("#reponse-champ").attr("placeholder", "Veuillez attendre que le son se termine...");
 			}
 
 
@@ -365,16 +266,16 @@
 
 					clearInterval(timerPlayerComplete);
 
-					if ($('.radio_posi') != null) {
+					if ($('.reponse-qcm') != null) {
 
-						$(".radio_posi").prop("disabled", false);
+						$(".reponse-qcm").prop("disabled", false);
 					}
 
-					if ($('#reponse_champ') != null) {
+					if ($('#reponse-champ') != null) {
 
-						$('#reponse_champ').removeProp('disabled');
-						$('#reponse_champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
-						$('#reponse_champ').focus();
+						$('#reponse-champ').removeProp('disabled');
+						$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+						$('#reponse-champ').focus();
 					}
 				}
 			}
@@ -389,8 +290,8 @@
 				imageBox.onload = function() {
 
 					$('.image-loader').fadeOut(250);
-					$('#image-content-appli').prepend(imageBox);
-					$('#image-content-appli img').hide().fadeIn(1000);
+					$('#media-question').prepend(imageBox);
+					$('#media-question img').hide().fadeIn(1000);
 					isImageLoaded = true;
 				};
 
@@ -401,9 +302,9 @@
 
 			function displayAudioPlayer() {
 
-				//$(".radio_posi").prop("disabled", true);
+				//$(".reponse-qcm").prop("disabled", true);
 
-				var $audioPlayer = $("#lecteuraudio");
+				var $audioPlayer = $("#audio");
 
 				if ($audioPlayer != null && audioHtml != '') {
 
@@ -416,7 +317,6 @@
 				if (dewp != null) {
 
 					dewp.style.display = 'none';
-					//dewp.dewplay();
 				}
 				else if ($playerHtml != null) {
 					
@@ -465,18 +365,14 @@
 					}
 					else {
 
-						$(".radio_posi").prop("disabled", false);
+						$(".reponse-qcm").prop("disabled", false);
 					}
 				} 
 			}
 
 
 
-
-
-
 			/* Création et instanciation des médias */
-
 
 			// Chargement de l'image (si il n'y a pas de vidéo) */
 
@@ -561,7 +457,7 @@
 								case 'IDLE':
 								case 'COMPLETED':
 
-									$(".radio_posi").prop("disabled", false);
+									$(".reponse-qcm").prop("disabled", false);
 									
 									isVideoComplete = true;
 
@@ -575,7 +471,6 @@
 						
 						var playerError =  function(data) { 
 
-							//console.log('error : ' + data);
 							isVideoComplete = true; 
 
 							$('#lecteurvideo').html('');
@@ -604,7 +499,6 @@
 					
 					audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
 					audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-					//audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
 					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
 					audioHtml += '<param name="wmode" value="transparent" />';
 					audioHtml += '</object>';
@@ -617,14 +511,6 @@
 
 				timerImage = setInterval(checkImageLoaded, 500);
 
-				/*
-				var $audioPlayer = $("#lecteuraudio");
-
-				if ($audioPlayer != null) {
-
-					//$audioPlayer.html(audioHtml);
-				}
-				*/
 			}
 			
 
@@ -633,11 +519,11 @@
 			/* Evenements */
 
 			// Sur click d'un des boutons radio
-			$(".radio_posi").on("click", function(e) {
+			$(".reponse-qcm").on("click", function(e) {
 
 				if (getPlayerComplete()) {
 
-					$("#submit_suite").removeProp("disabled");
+					$("#submit-suite").removeProp("disabled");
 				}
 				else {
 
@@ -647,7 +533,7 @@
 			
 
 			// Sur click dans le champ de réponse s'il existe.
-			$("#reponse_champ").on("click", function(e) {
+			$("#reponse-champ").on("click", function(e) {
 
 				if (getPlayerComplete()) {
 
@@ -662,30 +548,28 @@
 			
 
 			// Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
-			//var numChar = 0;
 
-			$("#reponse_champ").on("keydown", function(e) {
+			$("#reponse-champ").on("keydown", function(e) {
 
 				// On s'assure que la vidéo ou le son sont terminés
 				// et que l'utilisateur a saisi au moins 2 caractères.
 				if (getPlayerComplete()) {
 
 					$(this).attr("placeholder", "");
-					//$(this).removeProp("placeholder");
-
-					//numChar++;
-
+					
 					if ($(this).val().length > 1) {
 
-						$("#submit_suite").removeProp("disabled");
+						$("#submit-suite").removeProp("disabled");
 					}
 					else if ($(this).val().length <= 1) {
 
-						$("#submit_suite").prop("disabled", true);
+						$("#submit-suite").prop("disabled", true);
 					}
 				}
 			});
 			
 		});
+
+
 
 	</script>

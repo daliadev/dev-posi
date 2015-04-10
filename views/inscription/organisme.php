@@ -100,7 +100,7 @@ $form_url = $response['url'];
 			<form class="form-inscript" id="form-inscription" name="form_inscription" action="<?php echo $form_url; ?>" method="post">
 				
 				<input type="hidden" name="ref_organ" value="<?php echo $formData['ref_organ']; ?>" />
-                <input type="hidden" name="ref_intervenant" value="<?php echo $formData['ref_intervenant']; ?>" />
+				<input type="hidden" name="ref_intervenant" value="<?php echo $formData['ref_intervenant']; ?>" />
 
 				
 				<!-- Fieldsets parts -->
@@ -215,9 +215,13 @@ $form_url = $response['url'];
 						<?php if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
 								
 							<label for="email_intervenant">Email formateur<!--  <span class="asterix">*</span> --></label><br/>
-							<input type="email" name="email_intervenant" id="email_intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" />
-							<span class="form-hint">Vous devez saisir une adresse email valide (exemple@domaine.fr)</span>
+							<input type="email" name="email_intervenant" id="email-intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" autocomplete="off" />
 							
+							<!-- Autocompletion -->
+							<div id="interv-results"></div>
+
+							<span class="form-hint">Vous devez saisir une adresse email valide (exemple@domaine.fr)</span>
+
 						<?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
 								
 							<label for="ref_inter_cbox">Email formateur<!--  <span class="asterix">*</span> --></label><br/>
@@ -248,7 +252,7 @@ $form_url = $response['url'];
 					</div>
 
 
-					<input type="submit" name="submit" class="button-primary action-button" id="submit" value="Continuer" title="Cliquez sur ce bouton pour continuer" />
+					<input type="submit" name="submit_organ" class="button-primary action-button" id="submit" value="Continuer" title="Cliquez sur ce bouton pour continuer" />
 
 					<div class="clear"></div>
 
@@ -396,7 +400,7 @@ $form_url = $response['url'];
 				$nomOrgan = $('#nom_organ');
 				$codePostalOrgan = $('#code_postal_organ');
 				$telOrgan = $('#tel_organ');
-				$email = $('#email_intervenant');
+				$email = $('#email-intervenant');
 
 				if ($code.val() === '') {
 
@@ -491,6 +495,377 @@ $form_url = $response['url'];
 
 				
 			});
+
+
+			
+			/* Recherche des émails d'intervenant dynamique en ajax */
+
+			<?php if (Config::ALLOW_AJAX) : ?>
+
+
+			// Effectue une requête et récupère les résultats
+
+			/*
+			function getResult(searchStr) {
+
+				
+				var xhr = new XMLHttpRequest();
+
+				xhr.open('POST', 'autocomplete.php');
+				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+				xhr.onreadystatechange = function() {
+
+					if (xhr.readyState == 4 && xhr.status == 200) {
+						
+						displayResult(xhr.responseText);
+					}
+				}
+
+				var searchString = encodeURIComponent(this.value);
+				xhr.send('searchstr=' + searchStr);
+
+				return xhr;
+				
+			}
+			*/
+
+
+			// Affiche les résultats d'une requête
+			/*
+			function displayResult(response) {
+
+				// On cache le conteneur si on n'a pas de résultats
+				if (response.length > 0) {
+
+					divResults.style.display = 'block';
+				}
+				else {
+
+					divResults.style.display = 'none';
+				}
+				
+				// On ne modifie les résultats que si on en a obtenu		
+				if (response.length > 0) {
+
+					// On parse la réponse de la requête afin d'obtenir les résultats dans un tableau
+					response = response.split('|');
+					//var responseLength = response.length;
+					
+					// On vide les anciens résultats
+					divResults.innerHTML = "";
+
+
+					// On parcourt les nouveaux résultats
+					for (var i = 0, count = response.length; i < count; i++) {
+
+						// Ajout d'un nouvel élément <div>
+						var divResult = divResults.appendChild(document.createElement('div'));
+						divResult.className = "result";
+						
+						divResult.innerHTML = response[i];
+
+						// Le résultat sera choisi s'il est cliqué
+						divResult.onclick = function(event) {
+
+							chooseResult(this);
+						};
+					}
+				}
+				
+			}
+			*/
+
+
+			// Choisit un des résultats d'une requête et gère tout ce qui y est attaché
+			/*
+			function chooseResult(result) {
+
+				// On change le contenu du champ de recherche et on enregistre en tant que précédente valeur
+				previousValue = result.innerHTML;
+				searchField.value = previousValue;
+
+				// On cache les résultats
+				divResults.style.display = 'none';
+
+				// On supprime l'effet de focus
+				result.className = '';
+
+				// On remet la sélection à zéro
+				selectedIndex = -1;
+
+				// Si le résultat a été choisi par le biais d'un clic, alors le focus est perdu, donc on le réattribue
+				searchField.focus();
+			}
+			*/
+
+
+			var $searchField = $('#email-intervenant');
+			var $resultsList = $('#interv-results');
+			
+			var selectedIndex = -1;
+			var previousValue = $searchField.val();
+
+			var url = $('#form-inscription').attr('action');
+
+
+
+			$searchField.keyup(function(evt) {
+
+
+				//var evt = e || window.event;
+
+				// On récupére chaque 'div' contenues dans le bloc results
+				//var resultsDivs = divResults.getElementsByTagName('div');
+				var $resultsElements = $resultsList.find('div');
+
+
+				
+				// Si la touche pressée est la flèche "haut"
+				if (evt.keyCode == 38 && selectedIndex > -1) {
+
+					// On retire la classe de l'élément inférieur et on décrémente la variable "selectedIndex"
+					$resultsElements.eq(selectedIndex--).removeClass('result');
+
+					// Cette condition évite une modification de childNodes[-1], qui n'existe pas, bien entendu
+					if (selectedIndex > -1) {
+
+						// On applique une classe à l'élément actuellement sélectionné
+						$resultsElements.eq(selectedIndex).addClass('result-focus');
+					}
+				}
+
+
+				// Si la touche pressée est la flèche "bas"
+				else if (evt.keyCode == 40 && selectedIndex < $resultsElements.length - 1) {
+
+					// On affiche les résultats "au cas où"
+					$resultsList.css('display', 'block');
+					
+					// Cette condition évite une modification de childNodes[-1], qui n'existe pas, bien entendu
+					if (selectedIndex > -1) {
+						
+						$resultsElements.eq(selectedIndex).removeClass('result');
+					}
+					
+					$resultsElements.eq(++selectedIndex).addClass('result-focus');
+				}
+
+
+				// Si la touche pressée est la touche "Entrée"
+				else if (evt.keyCode == 13) {
+
+					alert('Enter');
+					//chooseResult($resultsElements[selectedIndex]);
+					var $resultElement = $resultsElements.eq(selectedIndex);
+
+					// On change le contenu du champ de recherche et on enregistre en tant que précédente valeur
+					previousValue = $resultElement.html();
+					$searchField.val(previousValue);
+
+					// On cache les résultats
+					$resultsList.css('display', 'none');
+
+					// On supprime l'effet de focus
+					$resultElement.removeClass('result');
+
+					// On remet la sélection à zéro
+					selectedIndex = -1;
+
+					// Si le résultat a été choisi par le biais d'un clic, alors le focus est perdu, donc on le réattribue
+					$searchField.focus();
+				}
+				
+
+				// Si le contenu du champ de recherche a changé
+				else if ($('#email-intervenant').val() != previousValue) {
+
+					// On change la valeur précédente par la valeur actuelle
+					previousValue = $('#email-intervenant').val();
+
+					// Si on a toujours une requête en cours, on l'arrête
+					if (request && request.readyState < 4) {
+
+						request.abort();
+					}
+
+					// On stocke la nouvelle requête
+					//request = getResult(previousValue);
+
+					$.post(url, {"search_interv": previousValue, "ref_organ": refOrgan}, function (data) {
+
+						if (data.error) {
+
+							alert(data.error);
+							//$('#testjson').fadeOut();
+							//$('#testjson').before(data.retour);
+						}
+						else {
+
+							// On cache le conteneur si on n'a pas de résultats
+							if (data.length > 0) {
+
+								$resultsList.css('display', 'block');
+							}
+							else {
+
+								$resultsList.css('display', 'none');
+							}
+							
+							// On ne modifie les résultats que si on en a obtenu		
+							if (data.length > 0) {
+
+								// On parse la réponse de la requête afin d'obtenir les résultats dans un tableau
+								var datasTab = data.split('|');
+								//var responseLength = response.length;
+								
+								// On vide les anciens résultats
+								$resultsList.html('');
+
+
+								// On parcourt les nouveaux résultats
+								for (var i = 0, count = datasTab.length; i < count; i++) {
+
+									// Ajout d'un nouvel élément <div>
+									var $divResult = $resultsList.append('div');
+									$divResult.addClass('result');
+									
+									$divResult.html(datasTab[i]);
+
+									// Le résultat sera choisi s'il est cliqué
+									$divResult.click(function(e) {;
+
+										// On change le contenu du champ de recherche et on enregistre en tant que précédente valeur
+										previousValue = $(this).html();
+										$searchField.value = previousValue;
+
+										// On cache les résultats
+										$resultsList.css('display', 'none');
+
+										// On supprime l'effet de focus
+										$(this).removeClass('result');
+
+										// On remet la sélection à zéro
+										selectedIndex = -1;
+
+										// Si le résultat a été choisi par le biais d'un clic, alors le focus est perdu, donc on le réattribue
+										$searchField.focus();
+									};
+								}
+							}
+						}
+
+					}, 'json');
+
+					// On remet la sélection à zéro à chaque caractère écrit
+					selectedIndex = -1;
+				}
+
+				//return false;
+
+			});
+
+
+			/*
+			$('.ajax-list').change(function(event) {
+
+
+				var select = $(this);
+				var target = '#' + select.data('target');
+				var url = select.data('url');
+				var sortOf = select.data('sort');
+				
+				var refOrgan = null;
+				var refUser = null;
+
+				if (sortOf === "user") {
+
+					$("#ref_session_cbox").parents('.filter-item').hide();
+
+					refOrgan = $("#ref_organ_cbox").val();
+				}
+				else if (sortOf === "session") {
+
+					//$('#ref_session_cbox').show();
+
+					$('.organ-option').each(function() {
+
+						var option = $(this)[0];
+						
+						if ($(option).prop('selected')) {
+
+							refOrgan = $(option).val();
+						}
+					});
+
+					refUser = $('#ref_user_cbox').val();
+
+
+					var cbox = $('#ref_session_cbox').get(0);
+
+					if (cbox.options.length > 1) {
+
+						cbox.options.length = 1;
+						
+					}
+				}
+
+
+				$.post(url, {"ref_organ":refOrgan,"ref_user":refUser,"sort":sortOf}, function(data) {
+					
+					if (data.error) {
+
+						alert(data.error);
+					}
+					else {
+
+						$(target).parents('.filter-item').show();
+						var $target = $(target).get(0);
+						$target.options.length = 1;
+						
+						if (data.results.utilisateur) {
+							
+							var i = 1;
+							for (var prop in data.results.utilisateur) {
+							
+								var result = data.results.utilisateur[prop];
+
+								$target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
+
+								i++;
+							}
+						}
+						else if (data.results.session) {
+
+							var i = 1;
+							for (var prop in data.results.session) {
+							
+								var result = data.results.session[prop];
+
+								$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
+
+								i++;
+							}
+						}
+						
+					}
+
+				}, 'json');
+				
+
+			}).each(function() {
+
+				var select = $(this);
+				if (select.val() == "select_cbox")
+				{
+					var target = $('#' + select.data('target'));
+					target.parents('.filter-item').hide();
+				}
+				
+			});
+			*/
+
+			<?php endif; ?>
 
 
 		});

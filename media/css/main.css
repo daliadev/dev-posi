@@ -357,43 +357,64 @@ body {
 					border-radius: 5px;
 				}
 
-					.content fieldset .form-hint {
-						/*padding-left: 8px;*/
-						/*padding: 1px 6px;*/
-						display: none;
+				.content fieldset .form-hint {
+					/*padding-left: 8px;*/
+					/*padding: 1px 6px;*/
+					display: none;
+				}
+
+				/*.content fieldset .form-hint::before {
+					content: '\25B2';
+					color: #d45252;
+					padding-right: 8px;
+				}*/
+
+				.content fieldset input:focus + .form-hint {
+					/*display: none;*/
+				}
+				
+				.content fieldset input:invalid + .form-hint {
+					/*background: #28921f;*/ /* Change form hint color when valid */
+					/*display: inline;*/
+				}
+
+				.content fieldset input:required:valid + .form-hint {
+					/*background: #28921f;*/ /* Change form hint color when valid */
+				}
+
+				.content fieldset input:required:valid + .form-hint::before {
+					/*color: #28921f;*/ /* Change form hint arrow color when valid */
+				}
+
+				.content fieldset .dropdown-menu.inner {
+					/*margin: 0 auto;*/
+					width: 100%;
+					max-width: 100px;
+					/*padding: 20px 10px;*/
+					/*position: relative;*/
+					/*overflow: hidden;*/
+					max-height: 100px;
+				}
+
+				.content fieldset #interv-results {
+					display: none;
+					width: 200px;
+					margin: 0;
+					border: 1px solid #cccccc;
+					box-shadow: 2px 2px 4px #999999;
+				}
+
+					.content fieldset #interv-results .result {
+
+						/*padding-left: 2px;*/
+						cursor: pointer;
 					}
 
-					/*.content fieldset .form-hint::before {
-						content: '\25B2';
-						color: #d45252;
-						padding-right: 8px;
-					}*/
+					/*#interv-results .result:focus*/
+					.content fieldset #interv-results .result-focus {
 
-					.content fieldset input:focus + .form-hint {
-						/*display: none;*/
-					}
-					
-					.content fieldset input:invalid + .form-hint {
-						/*background: #28921f;*/ /* Change form hint color when valid */
-						/*display: inline;*/
-					}
-
-					.content fieldset input:required:valid + .form-hint {
-						/*background: #28921f;*/ /* Change form hint color when valid */
-					}
-
-					.content fieldset input:required:valid + .form-hint::before {
-						/*color: #28921f;*/ /* Change form hint arrow color when valid */
-					}
-
-					.content fieldset .dropdown-menu.inner {
-						/*margin: 0 auto;*/
-						width: 100%;
-						max-width: 100px;
-						/*padding: 20px 10px;*/
-						/*position: relative;*/
-						/*overflow: hidden;*/
-						max-height: 100px;
+						/*padding-left: 2px;*/
+						background-color: #ddd;
 					}
 			
 

@@ -410,6 +410,8 @@ button:disabled, input[type=button]:disabled, input[type=submit]:disabled {
 }
 
 
+
+
 .form-hint {
 	color: #999;
 	font-family: inherit;

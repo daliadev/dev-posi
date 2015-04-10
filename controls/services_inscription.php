@@ -42,6 +42,145 @@ class ServicesInscription extends Main
         ServicesAuth::logout();
 
 
+        /*** Requêtes ajax ***/
+
+        if (Config::ALLOW_AJAX)
+        {   
+
+            $error = "";
+
+            $towns = null;
+            $searchInter = "";
+
+            $searchResults = array();
+            $resultString = "";
+
+            if (isset($_POST['search_interv']) && !empty($_POST['search_interv']) && isset($_POST['ref_organ']) && !empty($_POST['ref_organ'])) {
+
+                $searchInter = $_POST['search_interv'];
+                $refOrgan = $_POST['ref_organ'];
+
+                /*** On récupère également les infos sur l'intervenant ***/
+                $resultsetIntervenant = $this->servicesRestitution->getIntervenants($resultsetSession['response']['session'][0]->getRefIntervenant());
+                $this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
+                $this->returnData['response']['infos_user']['search_interv'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
+            }
+
+
+            if ($file !== 0) {
+
+                $towns = unserialize($file);
+
+                if (!is_array($towns)) {
+
+                    $towns = array();
+                    $error = "La liste est vide.";
+                }
+
+                foreach ($towns as $key => $townName) {
+
+                    if (stripos($townName, $searchString) === 0) {
+                        
+                        array_push($searchResults, $townName);
+                    }
+                }
+
+                sort($searchResults);
+            }
+            else {
+
+                $error = "Impossible de lire le fichier de données.";
+            }
+
+
+            $resultString = implode("|", $searchResults);
+
+
+            if (empty($error)) {
+
+                echo $resultString;
+            }
+    
+
+
+            $searchInter = "";
+
+            if (isset($_POST['email_intervenant']) && !empty($_POST['email_intervenant']))
+            {
+                $searchInter = $_POST['email_intervenant']
+
+            }
+                if ($_POST['sort'] == "user")
+                {
+                    if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+                    {
+                        $utilisateurs = $this->servicesRestitution->getUsersFromOrganisme($_POST['ref_organ']);
+                        
+                        if ($utilisateurs)
+                        {
+                            $response = array('error' => false, 'results' => $utilisateurs['response']);
+                        }
+                        else
+                        {
+                            $response = array('error' => "Il n'existe pas d'utilisateur qui correspond à l'organisme.");
+                        }
+                    }
+                    else
+                    {
+                        $response = array('error' => "Vous n'avez pas sélectionné d'organisme.");
+                    }
+                }
+                else if ($_POST['sort'] == "session")
+                {
+
+                    if ((isset($_POST['ref_organ']) && !empty($_POST['ref_organ'])) && (isset($_POST['ref_user']) && !empty($_POST['ref_user'])))
+                    {
+                        $sessions = $this->servicesRestitution->getUserSessions($_POST['ref_user'], $_POST['ref_organ']);
+                        
+                        if ($sessions)
+                        {
+                            $i = 0;
+
+                            foreach($sessions['response']['session'] as $session)
+                            {
+                                $id = $session->getId();
+                                $date = Tools::toggleDate(substr($session->getDate(), 0, 10));
+                                $timeToSeconds = Tools::timeToSeconds(substr($session->getDate(), 11, 8), $inputFormat = "h:m:s");
+                                $time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
+
+                                $sessions['response']['session'][$i] = array();
+                                $sessions['response']['session'][$i]['id'] = $id;
+                                $sessions['response']['session'][$i]['date'] = $date;
+                                $sessions['response']['session'][$i]['time'] = $time;
+
+                                $i++;
+                            }
+
+                            $response = array('error' => false, 'results' => $sessions['response']);
+                        }
+                        else
+                        {
+                            $response = array('error' => "Il n'existe pas de positionnement qui correspond à l'utilisateur.");
+                        }
+                    }
+                    else
+                    {
+                        $response = array('error' => "Vous n'avez pas sélectionné d'utilisateur.");
+                    }
+                }
+                else
+                {
+                    $response = array('error' => "Le type n'a pas été trouvé.");
+                }
+
+                echo json_encode($response);
+                exit();
+            }
+        }
+
+        /*** Fin requêtes ajax ***/
+
+
         /*** Initialisation des données ***/
 
         // Initialisation des tableaux de données qui seront inserés ou mis à jour dans la base.

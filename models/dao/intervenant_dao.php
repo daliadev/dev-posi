@@ -100,6 +100,31 @@ class IntervenantDAO extends ModelDAO
         
         return $this->resultset;
     }
+
+
+    /**
+     * selectByOrgan - Récupère les intervenants correspondant à l'id d'un organisme
+     * 
+     * @param int Référence de l'organisme
+     * @return array Objets "Intervenant" correspondant à l'organisme sinon erreur
+     */
+    public function selectByOrgan($ref_organ) 
+    {
+        $this->initialize();
+        
+        if (!empty($ref_organ))
+        {
+            $request = "SELECT * FROM intervenant WHERE ref_organ = '".$ref_organ."'";
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "intervenant", "Intervenant");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+        }
+        
+        return $this->resultset;
+    }
     
     
     

@@ -1056,7 +1056,7 @@ class ServicesInscriptionGestion extends Main
 
 
     
-    private function getOrganisme($fieldName, $value)
+    public function getOrganisme($fieldName, $value)
     {
         switch($fieldName) 
         {
@@ -1095,7 +1095,7 @@ class ServicesInscriptionGestion extends Main
 
 
 
-    private function getIntervenant($fieldName, $fieldValue)
+    public function getIntervenant($fieldName, $fieldValue)
     {
         switch($fieldName) 
         {
@@ -1105,6 +1105,10 @@ class ServicesInscriptionGestion extends Main
             
             case "email":
                 $resultset = $this->intervenantDAO->selectByEmail($fieldValue);
+                break;
+
+            case "organ":
+                $resultset = $this->intervenantDAO->selectByOrgan($fieldValue);
                 break;
             
             default :
@@ -1130,7 +1134,7 @@ class ServicesInscriptionGestion extends Main
 
     
     
-    private function getUtilisateur($fieldName, $fieldValue)
+    public function getUtilisateur($fieldName, $fieldValue)
     {
         switch($fieldName) 
         {
@@ -1183,7 +1187,7 @@ class ServicesInscriptionGestion extends Main
     
 
 
-    private function getInscription($fieldName, $fieldValues)
+    public function getInscription($fieldName, $fieldValues)
     {
         switch($fieldName) 
         {

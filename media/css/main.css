@@ -398,24 +398,59 @@ body {
 
 				.content fieldset #interv-results {
 					display: none;
-					width: 200px;
-					margin: 0;
-					border: 1px solid #cccccc;
-					box-shadow: 2px 2px 4px #999999;
+					float: left;
+					width: 100%;
+					min-width: 100px;
+					margin: -10px 0px 10px 0px;
+					padding: 0;
+					/*background-clip: padding-box;*/
+					background-color: #fff;
+					border: 2px solid #bdbdbd;
+					border-top: none;
+					-webkit-border-radius: 0px 0px 5px 5px;
+					-moz-border-radius: 0px 0px 5px 5px;
+					border-radius: 0px 0px 5px 5px;
+					text-align: left;
+					z-index: 1000;
+					overflow: hidden;
 				}
+
+					.content fieldset #interv-results ul {
+						list-style: outside none none;
+					}
 
 					.content fieldset #interv-results .result {
 
-						/*padding-left: 2px;*/
+						
+					}
+					
+					.content fieldset #interv-results li > a {
+						/*clear: both;*/
+						display: block;
+						color: #757575;
+						font-family: inherit;
+						font-size: 0.875em;
+						font-weight: 400;
+						line-height: 0.875em;
+						padding: 10px 20px;
+						white-space: nowrap;
+					}
+					
+					.content fieldset #interv-results li a:hover, .content fieldset #interv-results li a:active, .content fieldset #interv-results li.selected a:hover, .content fieldset #interv-results li.selected a:active {
+						background-color: #00bfa5;
+						color: #fff;
+						font-weight: 600;
 						cursor: pointer;
 					}
 
-					/*#interv-results .result:focus*/
-					.content fieldset #interv-results .result-focus {
-
-						/*padding-left: 2px;*/
-						background-color: #ddd;
+					.content fieldset #interv-results li.selected a {
+						background-color: #fff;
+						color: #00bfa5;
+						font-weight: 600;
+						cursor: auto;
 					}
+
+
 			
 
 				.content fieldset .label-title {

@@ -141,7 +141,7 @@ class IntervenantDAO extends ModelDAO
      * @param int Référence de l'organisme
      * @return array Objets "Intervenant" correspondant à/aux intervenant(s) trouvé(s) sinon erreur
      */
-    public function selectFromEmail($search, $ref_organ = null) 
+    public function selectSearchByEmail($search, $ref_organ = null) 
     {
         $this->initialize();
         
@@ -155,6 +155,7 @@ class IntervenantDAO extends ModelDAO
             }
 
             $request = "SELECT * FROM intervenant WHERE LOWER(email_intervenant) LIKE '%".strtolower($search)."%'".$organSql;
+            $request .= " GROUP BY email_intervenant"; // ORDER BY nbre ASC";
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "intervenant", "Intervenant");
         }

@@ -60,36 +60,32 @@ class ServicesInscription extends Main
 			if (isset($_POST['search_interv']) && !empty($_POST['search_interv'])) {
 
 				$searchInter = $_POST['search_interv'];
+				$refOrgan = null;
 
 				if (isset($_POST['ref_organisme']) && !empty($_POST['ref_organisme']))
 				{
 					$refOrgan = $_POST['ref_organisme'];
+				}
 
-					// On récupère tous les intervenants correspondant à l'organisme préselectionné
-					$intervenants = $this->servicesInscriptGestion->getIntervenant('organ', $refOrgan);
-					
-					if (is_array($intervenants['response']['intervenant']) && !empty($intervenants['response']['intervenant']) && count($intervenants['response']['intervenant']) > 0)
-					{
-						foreach ($intervenants['response']['intervenant'] as $intervenant) {
+				// On récupère tous les intervenants correspondant au lettres saisies et à l'organisme si préselectionné
+				$intervenants = $this->servicesInscriptGestion->searchIntervenants($searchInter, $refOrgan);
+				//exit();
+				if (is_array($intervenants['response']['intervenant']) && !empty($intervenants['response']['intervenant']) && count($intervenants['response']['intervenant']) > 0)
+				{
+					foreach ($intervenants['response']['intervenant'] as $intervenant) {
 
-							if (stripos($intervenant->getEmail(), $searchInter) === 0) {
-								
-								array_push($searchResults, $intervenant->getEmail());
-							}
+						if (stripos($intervenant->getEmail(), $searchInter) <= 3) {
+							
+							array_push($searchResults, $intervenant->getEmail());
 						}
+					}
 
-						sort($searchResults);
-					}
-					else
-					{
-						$error = true;
-					}
+					sort($searchResults);
 				}
 				else
 				{
 					$error = true;
 				}
-
 
 				if (!$error) {
 

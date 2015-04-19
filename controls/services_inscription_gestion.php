@@ -1134,8 +1134,12 @@ class ServicesInscriptionGestion extends Main
 
     public function searchIntervenants($searchValue, $refOrgan = null) {
 
-        $resultset = $this->intervenantDAO->selectFromEmail($searchValue, $refOrgan);
-  
+        $resultset = $this->intervenantDAO->selectSearchByEmail($searchValue, $refOrgan);
+        
+        //var_dump($resultset);
+        //exit();
+
+
         // Traitement des erreurs de la requête
         if (!$this->filterDataErrors($resultset['response']))
         {

@@ -77,11 +77,39 @@ class IntervenantDAO extends ModelDAO
     
     
     
+   
     /**
+     * selectByOrgan - Récupère les intervenants correspondant à l'id d'un organisme
+     * 
+     * @param int Référence de l'organisme
+     * @return array Objets "Intervenant" correspondant à l'intervenant sinon erreur
+     */
+    public function selectByOrgan($ref_organ) 
+    {
+        $this->initialize();
+        
+        if (!empty($ref_organ))
+        {
+            $request = "SELECT * FROM intervenant WHERE ref_organ = '".$ref_organ."'";
+
+            $this->resultset['response'] = $this->executeRequest("select", $request, "intervenant", "Intervenant");
+        }
+        else
+        {
+            $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+        }
+        
+        return $this->resultset;
+    }
+    
+
+
+
+     /**
      * selectByEmail - Récupère l'intervenant correspondant à l'email
      * 
      * @param string Email intervenant
-     * @return array Objet "Intervenant" correspondant à l'email sinon erreurs
+     * @return array Objet "Intervenant" correspondant à l'intervenant sinon erreurs
      */
     public function selectByEmail($emailIntervenant) 
     {
@@ -102,19 +130,31 @@ class IntervenantDAO extends ModelDAO
     }
 
 
+
+
+
+
     /**
-     * selectByOrgan - Récupère les intervenants correspondant à l'id d'un organisme
+     * selectFromEmail - Récupère le/les intervenant(s) correspondant(s) au mot de recherche et
      * 
+     * @param string Mot à chercher dans l'email
      * @param int Référence de l'organisme
-     * @return array Objets "Intervenant" correspondant à l'organisme sinon erreur
+     * @return array Objets "Intervenant" correspondant à/aux intervenant(s) trouvé(s) sinon erreur
      */
-    public function selectByOrgan($ref_organ) 
+    public function selectFromEmail($search, $ref_organ = null) 
     {
         $this->initialize();
         
-        if (!empty($ref_organ))
+        if (!empty($search))
         {
-            $request = "SELECT * FROM intervenant WHERE ref_organ = '".$ref_organ."'";
+            $organSql = "";
+
+            if ($ref_organ !== null)
+            {
+                $organSql =  " AND ref_organ = '".$ref_organ."'";
+            }
+
+            $request = "SELECT * FROM intervenant WHERE LOWER(email_intervenant) LIKE '%".strtolower($search)."%'".$organSql;
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "intervenant", "Intervenant");
         }
@@ -124,11 +164,12 @@ class IntervenantDAO extends ModelDAO
         }
         
         return $this->resultset;
-    }
+    } 
     
     
-    
-    
+
+
+
     
     /**
      * insert - Insère un organisme

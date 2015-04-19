@@ -1130,6 +1130,27 @@ class ServicesInscriptionGestion extends Main
         
         return false;
     }
+
+
+    public function searchIntervenants($searchValue, $refOrgan = null) {
+
+        $resultset = $this->intervenantDAO->selectFromEmail($searchValue, $refOrgan);
+  
+        // Traitement des erreurs de la requête
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            // Si le résultat est unique
+            if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
+            { 
+                $intervenant = $resultset['response']['intervenant'];
+                $resultset['response']['intervenant'] = array($intervenant);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
     
 
     

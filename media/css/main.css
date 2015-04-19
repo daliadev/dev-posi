@@ -395,17 +395,30 @@ body {
 					/*overflow: hidden;*/
 					max-height: 100px;
 				}
+				
+
+				.content fieldset #email-intervenant {
+					/*position: relative;*/
+				}
+
+				.content fieldset .interv-container {
+					position: relative;
+					width: 100%;
+				}
 
 				.content fieldset #interv-results {
 					display: none;
-					float: left;
-					width: 100%;
-					min-width: 100px;
-					margin: -10px 0px 10px 0px;
-					padding: 0;
+					position: absolute;
+					/*float: left;*/
+					/*width: 100%;*/
+					/*min-width: 100px;*/
+					left: 0;
+					right: 0;
+					margin: -10px 0px 0px 0px;
+					padding-top: 5px;
 					/*background-clip: padding-box;*/
 					background-color: #fff;
-					border: 2px solid #bdbdbd;
+					border: 2px solid #00bfa5;
 					border-top: none;
 					-webkit-border-radius: 0px 0px 5px 5px;
 					-moz-border-radius: 0px 0px 5px 5px;
@@ -416,7 +429,8 @@ body {
 				}
 
 					.content fieldset #interv-results ul {
-						list-style: outside none none;
+						/*list-style: outside none none;*/
+						margin: 0;
 					}
 
 					.content fieldset #interv-results .result {
@@ -427,12 +441,12 @@ body {
 					.content fieldset #interv-results li > a {
 						/*clear: both;*/
 						display: block;
+						padding: 10px;
 						color: #757575;
 						font-family: inherit;
 						font-size: 0.875em;
 						font-weight: 400;
 						line-height: 0.875em;
-						padding: 10px 20px;
 						white-space: nowrap;
 					}
 					

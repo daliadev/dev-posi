@@ -215,10 +215,13 @@ $form_url = $response['url'];
 						<?php if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
 								
 							<label for="email_intervenant">Email formateur<!--  <span class="asterix">*</span> --></label><br/>
+
 							<input type="email" name="email_intervenant" id="email-intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" autocomplete="off" />
 							<!-- Autocompletion -->
-							<div id="interv-results" class=""></div>
-
+							<div class="interv-container">
+								<div id="interv-results" class=""></div>
+							</div>
+							
 							<span class="form-hint">Vous devez saisir une adresse email valide (exemple@domaine.fr)</span>
 
 						<?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
@@ -516,6 +519,8 @@ $form_url = $response['url'];
 			var url = $('#form-inscription').attr('action');
 			var refOrgan = null;
 
+			var isSelectedEmail = false;
+
 
 			// On récupère la valeur de la liste des organismes
 			$('#ref_organ_cbox').change(function() {
@@ -531,20 +536,17 @@ $form_url = $response['url'];
 
 				$resultsList.css('display', 'none');
 				$resultsList.find('li').remove();
-				/*
-				var option = $(this)[0];
-				
-				if ($(option).prop('selected') && $(option).val() != 'select_cbox') {
 
-					refOrgan = $(option).val();
-					alert(refOrgan);
+				if (isSelectedEmail) {
+
+					$searchField.val('');
 				}
-				*/
-				//alert(refOrgan);
 			});
 
 
 			var chooseResult = function($result) {
+
+				isSelectedEmail = true;
 
 				// On change le contenu du champ de recherche et on enregistre le résultat en tant que précédente valeur
 				previousValue = $result.children('a').text();
@@ -614,6 +616,8 @@ $form_url = $response['url'];
 				// Si le contenu du champ de recherche a changé
 				else if ($('#email-intervenant').val() != previousValue) {
 
+					isSelectedEmail = false;
+
 					// On change la valeur précédente par la valeur actuelle
 					previousValue = $('#email-intervenant').val();
 
@@ -638,8 +642,9 @@ $form_url = $response['url'];
 							if (data.length > 0) {
 
 								$resultsList.css('display', 'block');
+								//$resultsList.css('width', $resultsWidth);
 							}
-							else {
+							else { 
 
 								$resultsList.css('display', 'none');
 							}

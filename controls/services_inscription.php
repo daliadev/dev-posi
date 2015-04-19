@@ -58,8 +58,7 @@ class ServicesInscription extends Main
 			//$resultString = "";
 
 			if (isset($_POST['search_interv']) && !empty($_POST['search_interv'])) {
-				//echo 'search';
-				//exit();
+
 				$searchInter = $_POST['search_interv'];
 
 				if (isset($_POST['ref_organisme']) && !empty($_POST['ref_organisme']))
@@ -77,25 +76,19 @@ class ServicesInscription extends Main
 								
 								array_push($searchResults, $intervenant->getEmail());
 							}
-
-							//$response = array('error' => false, 'results' => $intervenants['response']);
 						}
 
 						sort($searchResults);
 					}
 					else
 					{
-						//$response = array('error' => "Il n'existe pas d'intervenant qui correspond à l'organisme.");
 						$error = true;
 					}
 				}
 				else
 				{
-					//$response = array('error' => "Vous n'avez pas sélectionné d'organisme.");
 					$error = true;
 				}
-
-				//$resultString = implode("|", $searchResults);
 
 
 				if (!$error) {

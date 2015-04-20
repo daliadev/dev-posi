@@ -1132,6 +1132,9 @@ class ServicesInscriptionGestion extends Main
     }
 
 
+
+
+
     public function searchIntervenants($searchValue, $refOrgan = null) {
 
         $resultset = $this->intervenantDAO->selectSearchByEmail($searchValue, $refOrgan);

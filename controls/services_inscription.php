@@ -74,7 +74,7 @@ class ServicesInscription extends Main
 				{
 					foreach ($intervenants['response']['intervenant'] as $intervenant) {
 
-						if (stripos($intervenant->getEmail(), $searchInter) <= 3) {
+						if (stripos($intervenant->getEmail(), $searchInter) === 0) {
 							
 							array_push($searchResults, $intervenant->getEmail());
 						}
@@ -87,11 +87,11 @@ class ServicesInscription extends Main
 					$error = true;
 				}
 
-				if (!$error) {
-
+				if (!$error) 
+				{
 					echo json_encode($searchResults);
-					
 				}
+				
 				exit();
 			}
 			

@@ -13,768 +13,844 @@ require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/organisme_dao.php');
 
+require_once(ROOT.'utils/mailsender.php');
+
 
 
 class ServicesPositionnement extends Main
 {
 
-    private $sessionDAO = null;
-    private $utilisateurDAO = null;
-    private $intervenantDAO = null;
-    private $questionDAO = null;
-    private $reponseDAO = null;
-    private $resultatDAO = null;
-    private $questionCatDAO = null;
-    private $categorieDAO = null;
-    private $organismeDAO = null;
-    
-    
-    
-    public function __construct()
-    {
-        $this->errors = array();
-        $this->controllerName = "positionnement";
-        
-        $this->sessionDAO = new SessionDAO();
-        $this->utilisateurDAO = new UtilisateurDAO();
-        $this->intervenantDAO = new IntervenantDAO();
-        $this->questionDAO = new QuestionDAO();
-        $this->reponseDAO = new ReponseDAO();
-        $this->resultatDAO = new ResultatDAO();
-        $this->questionCatDAO = new QuestionCategorieDAO();
-        $this->categorieDAO = new CategorieDAO();
-        $this->organismeDAO = new OrganismeDAO();
-    }
-    
-    
-    
-    
-    
-    public function intro()
-    {
-        /*** Test d'authentification de l'intervenant/utilisateur ***/
-        
-        ServicesAuth::checkAuthentication("user");
-        
-        $numPage = ServicesAuth::getSessionData("num_page");
-        if ($numPage)
-        {
-            // Redirection vers la dernière page du positionnement visitée
-            header("Location: ".SERVER_URL."positionnement/page");
-            exit();
-        }
-        else 
-        {
-            ServicesAuth::setSessionData("num_page", 0);
-        }
-        
-        
-        $returnData = array();
-        $returnData['response'] = array();
-        $returnData['response']['errors'] = array();
-        
-        $url = WEBROOT."positionnement/session";
-        $returnData['response'] = array('url' => $url);
-        
-        
-        /*** Il faut récupérer le nombre de questions ***/
-        $resultset = $this->questionDAO->selectAll();
-            
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            // Le nombre est enregistré dans la session
-            $returnData['response']['nbre_questions'] = count($resultset['response']['question']);
-        }
-
-        $this->setResponse($returnData);
-        $this->setTemplate("tpl_inscript");
-        $this->render("intro");
-    }
-    
-    
-    
-    public function session()
-    {
-        
-        /*** Test d'authentification de l'intervenant/utilisateur ***/
-        ServicesAuth::checkAuthentication("user");
-        
-        // On test si l'utilisateur est déjà dans une session, c-à-d si il a déjà cliqué sur le bouton suite de la page d'intro
-        if (!ServicesAuth::checkUserSession())
-        {
-            // Si ce n'est pas le cas, on ouvre une session
-            ServicesAuth::openUserSession();
-            
-            // Il faut savoir combien de questions possède le questionnaire
-            $resultset = $this->questionDAO->selectAll();
-            
-            // Traitement des erreurs de la requête
-            if (!$this->filterDataErrors($resultset['response']))
-            {
-                // Le nombre est enregistré dans la session
-                $total = count($resultset['response']['question']);
-                ServicesAuth::setSessionData("nbre_questions", $total);
-            }
-            
-
-            /*-----   Enregistrement des infos de départ de la session : ref_user, date, validation  -----*/
-
-            // Récupération des infos necéssaires
-            $refUser = ServicesAuth::getSessionData("ref_user");
-            $refIntervenant = ServicesAuth::getSessionData("ref_intervenant");
-              
-            $dateSession = date("Y-m-d H:i:s");
-            ServicesAuth::setSessionData("date_session", $dateSession);
-
-            $dataSession = array(
-                'ref_user' => $refUser,
-                'ref_intervenant' => $refIntervenant,
-                'date_session' => $dateSession,
-                'session_accomplie' => 0,
-                'temps_total' => "0",
-                'validation' => 0
-            );
-
-            // Insertion dans la table session
-            $resultset = $this->sessionDAO->insert($dataSession);
-            
-            // Traitement des erreurs de la requête
-            if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['session']['last_insert_id']) && !empty($resultset['response']['session']['last_insert_id']))
-            {
-                ServicesAuth::setSessionData("ref_session", $resultset['response']['session']['last_insert_id']);
-            }
-            else 
-            {
-                $this->registerError("form_request", "La session n'a pu être insérée.");
-            }
-            
-            
-            // Mise à jour du nbre de sessions de l'utilisateur
-
-            $resultsetUser = $this->utilisateurDAO->selectById($refUser);
-            
-            if (!$this->filterDataErrors($resultsetUser['response']))
-            {
-                $nbreUserSession = $resultsetUser['response']['utilisateur']->getSessionsTotales();
-                $dataUser['nbre_sessions_totales'] = intval($nbreUserSession) + 1;
-                $dataUser['ref_user'] = $refUser;
-                
-                // On met a jour la table "utilisateur"
-                $resultset = $this->utilisateurDAO->update($dataUser);
-            }
-            
-        }
-
-
-        // S'il n'y a aucune erreur
-        if (empty($this->errors)) 
-        {
-            ServicesAuth::setSessionData("num_page", 1);
-            ServicesAuth::setSessionData("page_reset", false);
-            
-            // Redirection vers la première page du positionnement
-            header("Location: ".SERVER_URL."positionnement/page");
-            exit();
-        }
-        else 
-        {
-            // Redirection vers la page d'erreur interne
-            header("Location: ".SERVER_URL."erreur/page500");
-            exit();
-        }
-
-    }
-    
-    
-    
-    
-    
-    
-    public function page()
-    {
-        
-        /*** Test d'authentification de l'intervenant/utilisateur ***/ 
-        ServicesAuth::checkAuthentication("user");
-        
-        
-        /*** Gestion du temps de réponse de l'utilisateur ***/
-        
-        $totalTime = 0;
-        // On stop le timer (fin du temps de réponse)
-        $endTimer = microtime(true);
-        
-        // On récupère le temps de départ si il existe et on établit le temps total de réponse
-        if (isset($_POST['start_timer']) && !empty($_POST['start_timer']))
-        {
-            $startTimer = $_POST['start_timer'];
-            
-            // le temps total est arrondi en millisecondes
-            $totalTime = $endTimer - $startTimer;
-        }
-        
-        
-        /*** Récupération du numero de la page courante ***/
-        
-        $pageCourante = 1;
-        
-        if (isset($_POST['num_page']) && !empty($_POST['num_page']))
-        {
-            $pageCourante = $_POST['num_page'];
-        
-            if (ServicesAuth::getSessionData("num_page") == $_POST['num_page'])
-            {
-                $pageCourante++;
-                ServicesAuth::setSessionData("page_reset", false);
-            }
-            else 
-            {
-                $pageCourante = ServicesAuth::getSessionData("num_page");
-                ServicesAuth::setSessionData("page_reset", true);
-            }
-        }
-        else
-        {
-            $pageCourante = ServicesAuth::getSessionData("num_page");
-        }
-        
-        $numeroOrdre = $pageCourante;
-        
-        ServicesAuth::setSessionData("num_page", $numeroOrdre);
-
-        
-        
-        /*** On récupère le nombre de questions totales ***/
-        
-        $nbreQuestions = ServicesAuth::getSessionData("nbre_questions");  
-            
-        
-        if (!ServicesAuth::getSessionData("page_reset"))
-        {
-            
-            /*-----   Traitement des données de la réponse à la question qui vient d'être saisie pour insertion dans la base (table résultat)   -----*/
-
-            if (!empty($_POST))
-            {
-                $dataResultat = array();
-
-                $dataResultat['ref_session'] = ServicesAuth::getSessionData("ref_session");
-
-                // On récupère la référence de la question
-                if (isset($_POST['ref_question']) && !empty($_POST['ref_question']))
-                {
-                    $dataResultat['ref_question'] = $_POST['ref_question'];
-                }
-                else 
-                {
-                    $this->registerError("form_data", "La question n'est pas référencée.");
-                }
-
-                // On test si la réponse est de type qcm ou champ
-                if (isset($_POST['reponse_qcm']) && !empty($_POST['reponse_qcm']))
-                {
-                    $dataResultat['ref_reponse_qcm'] = $_POST['reponse_qcm'];
-
-                    // On récupère la référence de la bonne réponse
-                    if (isset($_POST['ref_reponse_correcte']) && !empty($_POST['ref_reponse_correcte']))
-                    {
-                        $dataResultat["ref_reponse_qcm_correcte"] = $_POST['ref_reponse_correcte'];
-                    }
-                }
-                else if (isset($_POST['reponse_champ']))
-                {
-                    if (!empty($_POST['reponse_champ']))
-                    {
-                        $dataResultat['reponse_champ'] = $this->filterData($_POST['reponse_champ'], "string");
-                    }
-                    else
-                    {
-                        $dataResultat['reponse_champ'] = "";
-                    }
-                }
-                else
-                {
-                    // Erreur enregistrement réponse utilisateur
-                    // Redirection vers la page d'erreur interne
-                    header("Location: ".SERVER_URL."erreur/page500");
-                    exit();
-                }
-
-                // La validation du résultat de la réponse n'est pas encore effectué
-                $dataResultat['validation_reponse_champ'] = 0;
-
-                // Récupération du temps total
-                $dataResultat['temps_reponse'] = $totalTime;
-
-                // Insertion de la réponse de l'utilisateur dans la table "resultat"
-
-                $resultset = $this->resultatDAO->insert($dataResultat);
-            }
-        }
-        
-        /*----- Redirection fin de questionnaire vers la page résultat  -----*/
-        
-        // On évalue l'état d'avancement du questionnaire
-        if ($numeroOrdre > $nbreQuestions)
-        {
-            // Redirection vers la page résultat
-            header("Location: ".SERVER_URL."positionnement/resultat");
-            exit();
-        }
-        
-        
-        /*-----   Chargement des infos de la question courante   -----*/
-        
-        $dataPage = array();
-        $dataPage['response'] = array();
-
-        
-        // On va chercher dans la table "question", la question correspondant au numéro d'ordre (la page suivante)
-        $resultsetQuestion = $this->questionDAO->selectByOrdre($numeroOrdre);
-        
-                
-        // Traitement des erreurs de récupération de la question
-        if (!$this->filterDataErrors($resultsetQuestion['response']))
-        {
-
-            $dataPage['response'] = array_merge($resultsetQuestion['response'], $dataPage['response']);
-            
-            // On commence par récupérer la référence de la question
-            $refQuestion = $dataPage['response']['question']->getId();
-            
-            // Ensuite on va chercher les réponses
-            if ($dataPage['response']['question']->getType() == "qcm")
-            {
-                $resultsetReponses = $this->reponseDAO->selectByQuestion($refQuestion);
-                
-                if (!$this->filterDataErrors($resultsetReponses['response']))
-                {
-                    if (!empty($resultsetReponses['response']['reponse']) && count($resultsetReponses['response']['reponse']) == 1)
-                    { 
-                        $reponse = $resultsetReponses['response']['reponse'];
-                        $resultsetReponses['response']['reponse'] = array($reponse);
-                    }
-                    
-                    $dataPage['response'] = array_merge($resultsetReponses['response'], $dataPage['response']);
-                }
-            } 
-
-            // On passe à la page suivante
-            if ($dataPage['response']['question']->getNumeroOrdre() <= $nbreQuestions)
-            {
-                $dataPage['response']['url'] = WEBROOT."positionnement/page";
-            }
-            else
-            {
-                // Erreur page inexistante
-                header("Location: ".SERVER_URL."erreur/page404");
-                exit();
-            }
-        }
-        else
-        {
-            // Redirection vers la page d'erreur interne
-
-            //header("Location: ".SERVER_URL."erreur/page500");
-            exit();
-        }
-      
-        
-        /*** Affichage de la page ***/
-        
-        $this->setResponse($dataPage);
-        
-        $this->setTemplate("tpl_page");
-        $this->render("page");
-    }
-    
-    
-    
-    
-    
-    public function resultat()
-    {
-        /*** Test d'authentification de l'intervenant/utilisateur ***/
-        //ServicesAuth::checkAuthentication("user");
-
-
-        // On commence par récupérer la liste complète des categories.
-        $categories = array();
-        
-        $resultsetCategories = $this->categorieDAO->selectAll();
-        
-        if (!$this->filterDataErrors($resultsetCategories['response']))
-        {
-            if (!empty($resultsetCategories['response']['categorie']) && count($resultsetCategories['response']['categorie']) == 1)
-            { 
-                $categorie = $resultsetCategories['response']['categorie'];
-                $resultsetCategories['response']['categorie'] = array($categorie);
-            }
-            
-            $categories = $resultsetCategories['response']['categorie'];
-        }
-
-        
-        $totalTime = 0;
-        
-        // On liste l'ensemble des résultats de l'utilisateur pour la correction
-        $tabResultats = array();
-        
-        $refSession = ServicesAuth::getSessionData("ref_session");
-        
-        // On sélectionne tous les résultats correspondant à la session en cours
-        $resultsetResultats = $this->resultatDAO->selectBySession($refSession);
-        
-        if (!$this->filterDataErrors($resultsetResultats['response']))
-        { 
-            $i = 0;
-            
-            foreach($resultsetResultats['response']['resultat'] as $resultat)
-            {
-                // On ajoute le temps du résultat de l'utilisateur au temps total.
-                $totalTime += $resultat->getTempsReponse();
-                        
-                // On établit si le résultat est correct ou non
-                if ($resultat->getRefReponseQcm() && $resultat->getRefReponseQcmCorrecte())
-                {
-                    if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
-                    {
-                        $tabResultats[$i]['correct'] = true;
-                    }
-                    else 
-                    {
-                        $tabResultats[$i]['correct'] = false;
-                    }
-                
-                    // Ensuite on va chercher les données sur la question correspondant au résultat
-                    $resultsetQuestion = $this->questionDAO->selectById($resultat->getRefQuestion());
-
-                    if (!$this->filterDataErrors($resultsetQuestion['response']))
-                    {        
-                        // On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
-                        $resultsetCatQuestion = $this->questionCatDAO->selectByRefQuestion($resultsetQuestion['response']['question']->getId());
-
-                        if (!$this->filterDataErrors($resultsetCatQuestion['response']))
-                        {
-                            $tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat']->getCodeCat();
-                        }
-                        else 
-                        {
-                            $this->registerError("form_request", "Aucune categorie ne correspond à la question.");
-                        }
-                    }
-                    else 
-                    {
-                        $this->registerError("form_request", "Aucune question n'a été trouvée.");
-                    }
-                    
-                    $i++;
-                }
-            }
-        }
-        
-        
-
-
-        /*-----   Mise à jour de la table "session"   -----*/
-        
-        $dataSession = array();
-        $dataSession['session_accomplie'] = 1;
-        $dataSession['temps_total'] = $totalTime;
-        
-        $idSession = ServicesAuth::getSessionData("ref_session");
-
-
-        
-        // Mise à jour du nbre de sessions terminée de l'utilisateur
-
-        $dataUser = array();
-        $resultsetUser = $this->utilisateurDAO->selectById(ServicesAuth::getSessionData("ref_user"));
-
-        if (!$this->filterDataErrors($resultsetUser['response']))
-        {
-            $nbreUserSession = $resultsetUser['response']['utilisateur']->getSessionsAccomplies();
-            $dataUser['nbre_sessions_accomplies'] = intval($nbreUserSession) + 1;
-            $dataUser['ref_user'] = ServicesAuth::getSessionData("ref_user");
-
-            // On met a jour la table "utilisateur"
-            $resultset = $this->utilisateurDAO->update($dataUser);
-        }
-        
-
-
-        // Mise à jour du nbre de positionnements total de l'organisme
-
-        $dataOrgan = array();
-        $resultsetOrgan = $this->organismeDAO->selectById(ServicesAuth::getSessionData('ref_organ'));
-
-        if (!$this->filterDataErrors($resultsetOrgan['response']))
-        {
-            $nbrePosiTotal = $resultsetOrgan['response']['organisme']->getNbrePosiTotal();
-            $dataOrgan['nbre_posi_total'] = intval($nbrePosiTotal) + 1;
-            $dataOrgan['ref_organ'] = ServicesAuth::getSessionData('ref_organ');
-
-            // On met a jour la table "organisme"
-            $resultset = $this->organismeDAO->update($dataOrgan);
-        }
-
-
-        
-        /*** Calcul du nombre total de questions par catégories et le nombre de bonnes réponses pour chaque catégorie.  ***/
-        
-        $tabCorrection = array();
-        $totalGlobal = 0;
-        $totalCorrectGlobal = 0;
-        $percentGlobal = 0;
-        $j = 0;
-                
-        foreach ($categories as $categorie)
-        {
-            $codeCat = $categorie->getCode();
-            
-            $tabCorrection[$j]['code_cat'] = $codeCat;
-            $tabCorrection[$j]['total'] = 0;
-            $tabCorrection[$j]['total_correct'] = 0;
-            $tabCorrection[$j]['nom'] = $categorie->getNom();
-            $tabCorrection[$j]['description'] = $categorie->getDescription();
-            $tabCorrection[$j]['type_lien'] = $categorie->getTypeLien();
-
-            for ($i = 0; $i < count($tabResultats); $i++)
-            {
-                if ($tabResultats[$i]['code_cat'] == $codeCat)
-                {
-                    $tabCorrection[$j]['total']++;
-                    $totalGlobal++;
-
-                    if ($tabResultats[$i]['correct'])
-                    {
-                        $tabCorrection[$j]['total_correct']++;
-                        $totalCorrectGlobal++;
-                    }
-                }
-                
-            }
-            
-            
-            $j++;
-        }
-
-        
-        
-        /*** Intégration du système d'héritage des résultats ***/
-        
-        for ($i = 0; $i < count($tabCorrection); $i++)
-        {
-            // On détermine si c'est une categorie principale ou une sous-categorie
-            if (strlen($tabCorrection[$i]['code_cat']) == 2)
-            {
-                // Catégorie parent
-                
-                if ($tabCorrection[$i]['type_lien'] == "dynamic")
-                {
-                    $tabCorrection[$i]['parent'] = true;
-                    $parentCode = $tabCorrection[$i]['code_cat'];
-                    $tabCorrection[$i]['total'] = 0;
-                    $tabCorrection[$i]['total_correct'] = 0;
-                    $tabCorrection[$i]['children'] = array();
-
-                    for ($j = 0; $j < count($tabCorrection); $j++)
-                    { 
-                        if (strlen($tabCorrection[$j]['code_cat']) > 2 && substr($tabCorrection[$j]['code_cat'], 0, 2) == $parentCode)
-                        {
-                            $tabCorrection[$i]['total'] += $tabCorrection[$j]['total'];
-                            $tabCorrection[$i]['total_correct'] += $tabCorrection[$j]['total_correct'];
-                            $tabCorrection[$i]['children'][] = $tabCorrection[$j];
-                        }
-                    }
-                }
-                else if ($tabCorrection[$i]['type_lien'] == "static")
-                {
-                    $tabCorrection[$i]['parent'] = true;
-                    $parentCode = $tabCorrection[$i]['code_cat'];
-                    $tabCorrection[$i]['children'] = false;
-                }
-                
-            }
-            else 
-            {
-                $tabCorrection[$i]['parent'] = false;
-                $tabCorrection[$i]['children'] = false;
-            }
-        }
-        
-        
-        /*** Données envoyées à la page de résultat ***/
-        
-        $dataPage = array();
-        $dataPage['response'] = array();
-        $dataPage['response']['correction'] = array();
-        $k = 0;
-        
-        foreach ($tabCorrection as $correction)
-        {
-            $dataPage['response']['correction'][$k]['parent'] = $correction['parent'];
-            $dataPage['response']['correction'][$k]['children'] = $correction['children'];
-            $dataPage['response']['correction'][$k]['nom_categorie'] = $correction['nom'];
-            $dataPage['response']['correction'][$k]['descript_categorie'] = $correction['description'];
-            $dataPage['response']['correction'][$k]['total'] = $correction['total'];
-            $dataPage['response']['correction'][$k]['total_correct'] = $correction['total_correct'];
-
-            if ($correction['total'] > 0)
-            {
-                $dataPage['response']['correction'][$k]['percent'] = round(($correction['total_correct'] * 100) / $correction['total']);
-            }
-            else 
-            {
-                $dataPage['response']['correction'][$k]['percent'] = 0;
-            }
-            
-            $k++;
-        }
-        
-        
-        /*** Gestion du temps ***/
-        
-        $stringTime = Tools::timeToString($totalTime);
-        $dataPage['response']['temps'] = $stringTime;
-        
-        
-        /*** Injection des stats globales dans la réponse ***/
-        
-        $percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
-        $dataPage['response']['percent_global'] = $percentGlobal;
-        $dataPage['response']['total_global'] = $totalGlobal;
-        $dataPage['response']['total_correct_global'] = $totalCorrectGlobal;
-        
-
-        /*** Mise à jour de la session  ***/
-        $dataSession['score_pourcent'] = $percentGlobal;
-
-        $resultset = $this->sessionDAO->update($dataSession, $idSession);
-
-        // Traitement des erreurs de la requête
-        if ($this->filterDataErrors($resultset['response']) || !isset($resultset['response']['session']['row_count']) || empty($resultset['response']['session']['row_count']))
-        {
-            $this->registerError("form_request", "La session n'a pu être mise à jour.");
-        }
-
-
-
-        /*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
-
-        $emailInfos = array();
-
-        $emailInfos['nom_organ'] = "";
-        $codeOrgan = "";
-        $emailInfos['url_restitution'] = "";
-        $emailInfos['url_stats'] = "";
-        $emailInfos['code_postal_organ'] = "";
-        $emailInfos['tel_organ'] = "";
-
-        $emailInfos['nom_user'] = "";
-        $emailInfos['prenom_user'] = "";
-
-        $emailInfos['email_intervenant'] = "";
-
-        $emailInfos['date_posi'] = "";
-        $emailInfos['temps_posi'] = "";
-
-
-        // Email -> infos organisme
-
-        $refOrgan = ServicesAuth::getSessionData('ref_organ');
-        $resultsetOrgan = $this->organismeDAO->selectById($refOrgan);
-
-        if (!$this->filterDataErrors($resultsetOrgan['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultsetOrgan['response']['organisme']) && count($resultsetOrgan['response']['organisme']) == 1)
-            { 
-                $organisme = $resultsetOrgan['response']['organisme'];
-                $resultsetOrgan['response']['organisme'] = array($organisme);
-            }
-
-            $emailInfos['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
-
-            $codeOrgan = $resultsetOrgan['response']['organisme'][0]->getNumeroInterne();
-            $emailInfos['url_restitution'] = SERVER_URL."public/restitution/".$codeOrgan;
-            $emailInfos['url_stats'] = SERVER_URL."public/statistique/".$codeOrgan;
-
-            $emailInfos['code_postal_organ'] = $resultsetOrgan['response']['organisme'][0]->getCodePostal();
-            $emailInfos['tel_organ'] = $resultsetOrgan['response']['organisme'][0]->getTelephone();
-        }
-
-
-        // Email -> infos utilisateur
-
-        $refUser = ServicesAuth::getSessionData('ref_user');
-        $resultsetUser = $this->utilisateurDAO->selectById($refUser);
-
-        if (!$this->filterDataErrors($resultsetUser['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultsetUser['response']['utilisateur']) && count($resultsetUser['response']['utilisateur']) == 1)
-            { 
-                $utilisateur = $resultsetUser['response']['utilisateur'];
-                $resultsetUser['response']['utilisateur'] = array($utilisateur);
-            }
-
-            $emailInfos['nom_user'] = $resultsetUser['response']['utilisateur'][0]->getNom();
-            $emailInfos['prenom_user'] = $resultsetUser['response']['utilisateur'][0]->getPrenom();
-        }
-
-
-        // Email -> infos intervenant
-
-        $refInter = ServicesAuth::getSessionData('ref_intervenant');
-        $resultsetInter = $this->intervenantDAO->selectById($refInter);
-
-        if (!$this->filterDataErrors($resultsetInter['response']))
-        {
-            // Si le résultat est unique
-            if (!empty($resultsetInter['response']['intervenant']) && count($resultsetInter['response']['intervenant']) == 1)
-            { 
-                $intervenant = $resultsetInter['response']['intervenant'];
-                $resultsetInter['response']['intervenant'] = array($intervenant);
-            }
-
-            $emailInfos['email_intervenant'] = $resultsetInter['response']['intervenant'][0]->getEmail();
-        }
-
-
-        // Email -> infos détails du positionnement
-        
-        $date_posi = substr(ServicesAuth::getSessionData('date_session'), 0, 10);
-        $time_posi = substr(ServicesAuth::getSessionData('date_session'), 10);
-        $emailInfos['date_posi'] = Tools::toggleDate($date_posi, 'fr').' '.$time_posi;
-        $emailInfos['temps_posi'] = $stringTime;
-
-
-        $dataPage['response']['email_infos'] = $emailInfos;
-
-
-
-        /*** Gestion des erreurs ***/
-        
-        if (!empty($this->errors))
-        {
-            // S'il y a eu des erreurs, on les affiche dans la page "résultat".
-            $dataPage['response']['errors'] = $this->errors;
-        }
-        
-
-        /*** Déconnexion automatique de l'utilisateur ***/
-        //ServicesAuth::logout();
-        
-
-
-        /*** Affichage de la page de résultat ***/
-        $this->setResponse($dataPage);
-        
-        //$this->setTemplate("tpl_results");
-        $this->setTemplate("tpl_inscript");
-        $this->render("resultat");
-    }
+	private $sessionDAO = null;
+	private $utilisateurDAO = null;
+	private $intervenantDAO = null;
+	private $questionDAO = null;
+	private $reponseDAO = null;
+	private $resultatDAO = null;
+	private $questionCatDAO = null;
+	private $categorieDAO = null;
+	private $organismeDAO = null;
+	
+	
+	
+	public function __construct()
+	{
+		$this->errors = array();
+		$this->controllerName = "positionnement";
+		
+		$this->sessionDAO = new SessionDAO();
+		$this->utilisateurDAO = new UtilisateurDAO();
+		$this->intervenantDAO = new IntervenantDAO();
+		$this->questionDAO = new QuestionDAO();
+		$this->reponseDAO = new ReponseDAO();
+		$this->resultatDAO = new ResultatDAO();
+		$this->questionCatDAO = new QuestionCategorieDAO();
+		$this->categorieDAO = new CategorieDAO();
+		$this->organismeDAO = new OrganismeDAO();
+	}
+	
+	
+	
+	
+	
+	public function intro()
+	{
+		/*** Test d'authentification de l'intervenant/utilisateur ***/
+		
+		ServicesAuth::checkAuthentication("user");
+		
+		$numPage = ServicesAuth::getSessionData("num_page");
+		if ($numPage)
+		{
+			// Redirection vers la dernière page du positionnement visitée
+			header("Location: ".SERVER_URL."positionnement/page");
+			exit();
+		}
+		else 
+		{
+			ServicesAuth::setSessionData("num_page", 0);
+		}
+		
+		
+		$returnData = array();
+		$returnData['response'] = array();
+		$returnData['response']['errors'] = array();
+		
+		$url = WEBROOT."positionnement/session";
+		$returnData['response'] = array('url' => $url);
+		
+		
+		/*** Il faut récupérer le nombre de questions ***/
+		$resultset = $this->questionDAO->selectAll();
+			
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			// Le nombre est enregistré dans la session
+			$returnData['response']['nbre_questions'] = count($resultset['response']['question']);
+		}
+
+		$this->setResponse($returnData);
+		$this->setTemplate("tpl_inscript");
+		$this->render("intro");
+	}
+	
+	
+	
+	public function session()
+	{
+		
+		/*** Test d'authentification de l'intervenant/utilisateur ***/
+		ServicesAuth::checkAuthentication("user");
+		
+		// On test si l'utilisateur est déjà dans une session, c-à-d si il a déjà cliqué sur le bouton suite de la page d'intro
+		if (!ServicesAuth::checkUserSession())
+		{
+			// Si ce n'est pas le cas, on ouvre une session
+			ServicesAuth::openUserSession();
+			
+			// Il faut savoir combien de questions possède le questionnaire
+			$resultset = $this->questionDAO->selectAll();
+			
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']))
+			{
+				// Le nombre est enregistré dans la session
+				$total = count($resultset['response']['question']);
+				ServicesAuth::setSessionData("nbre_questions", $total);
+			}
+			
+
+			/*-----   Enregistrement des infos de départ de la session : ref_user, date, validation  -----*/
+
+			// Récupération des infos necéssaires
+			$refUser = ServicesAuth::getSessionData("ref_user");
+			$refIntervenant = ServicesAuth::getSessionData("ref_intervenant");
+			  
+			$dateSession = date("Y-m-d H:i:s");
+			ServicesAuth::setSessionData("date_session", $dateSession);
+
+			$dataSession = array(
+				'ref_user' => $refUser,
+				'ref_intervenant' => $refIntervenant,
+				'date_session' => $dateSession,
+				'session_accomplie' => 0,
+				'temps_total' => "0",
+				'validation' => 0
+			);
+
+			// Insertion dans la table session
+			$resultset = $this->sessionDAO->insert($dataSession);
+			
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['session']['last_insert_id']) && !empty($resultset['response']['session']['last_insert_id']))
+			{
+				ServicesAuth::setSessionData("ref_session", $resultset['response']['session']['last_insert_id']);
+			}
+			else 
+			{
+				$this->registerError("form_request", "La session n'a pu être insérée.");
+			}
+			
+			
+			// Mise à jour du nbre de sessions de l'utilisateur
+
+			$resultsetUser = $this->utilisateurDAO->selectById($refUser);
+			
+			if (!$this->filterDataErrors($resultsetUser['response']))
+			{
+				$nbreUserSession = $resultsetUser['response']['utilisateur']->getSessionsTotales();
+				$dataUser['nbre_sessions_totales'] = intval($nbreUserSession) + 1;
+				$dataUser['ref_user'] = $refUser;
+				
+				// On met a jour la table "utilisateur"
+				$resultset = $this->utilisateurDAO->update($dataUser);
+			}
+			
+		}
+
+
+		// S'il n'y a aucune erreur
+		if (empty($this->errors)) 
+		{
+			ServicesAuth::setSessionData("num_page", 1);
+			ServicesAuth::setSessionData("page_reset", false);
+			
+			// Redirection vers la première page du positionnement
+			header("Location: ".SERVER_URL."positionnement/page");
+			exit();
+		}
+		else 
+		{
+			// Redirection vers la page d'erreur interne
+			header("Location: ".SERVER_URL."erreur/page500");
+			exit();
+		}
+
+	}
+	
+	
+	
+	
+	
+	
+	public function page()
+	{
+		
+		/*** Test d'authentification de l'intervenant/utilisateur ***/ 
+		ServicesAuth::checkAuthentication("user");
+		
+		
+		/*** Gestion du temps de réponse de l'utilisateur ***/
+		
+		$totalTime = 0;
+		// On stop le timer (fin du temps de réponse)
+		$endTimer = microtime(true);
+		
+		// On récupère le temps de départ si il existe et on établit le temps total de réponse
+		if (isset($_POST['start_timer']) && !empty($_POST['start_timer']))
+		{
+			$startTimer = $_POST['start_timer'];
+			
+			// le temps total est arrondi en millisecondes
+			$totalTime = $endTimer - $startTimer;
+		}
+		
+		
+		/*** Récupération du numero de la page courante ***/
+		
+		$pageCourante = 1;
+		
+		if (isset($_POST['num_page']) && !empty($_POST['num_page']))
+		{
+			$pageCourante = $_POST['num_page'];
+		
+			if (ServicesAuth::getSessionData("num_page") == $_POST['num_page'])
+			{
+				$pageCourante++;
+				ServicesAuth::setSessionData("page_reset", false);
+			}
+			else 
+			{
+				$pageCourante = ServicesAuth::getSessionData("num_page");
+				ServicesAuth::setSessionData("page_reset", true);
+			}
+		}
+		else
+		{
+			$pageCourante = ServicesAuth::getSessionData("num_page");
+		}
+		
+		$numeroOrdre = $pageCourante;
+		
+		ServicesAuth::setSessionData("num_page", $numeroOrdre);
+
+		
+		
+		/*** On récupère le nombre de questions totales ***/
+		
+		$nbreQuestions = ServicesAuth::getSessionData("nbre_questions");  
+			
+		
+		if (!ServicesAuth::getSessionData("page_reset"))
+		{
+			
+			/*-----   Traitement des données de la réponse à la question qui vient d'être saisie pour insertion dans la base (table résultat)   -----*/
+
+			if (!empty($_POST))
+			{
+				$dataResultat = array();
+
+				$dataResultat['ref_session'] = ServicesAuth::getSessionData("ref_session");
+
+				// On récupère la référence de la question
+				if (isset($_POST['ref_question']) && !empty($_POST['ref_question']))
+				{
+					$dataResultat['ref_question'] = $_POST['ref_question'];
+				}
+				else 
+				{
+					$this->registerError("form_data", "La question n'est pas référencée.");
+				}
+
+				// On test si la réponse est de type qcm ou champ
+				if (isset($_POST['reponse_qcm']) && !empty($_POST['reponse_qcm']))
+				{
+					$dataResultat['ref_reponse_qcm'] = $_POST['reponse_qcm'];
+
+					// On récupère la référence de la bonne réponse
+					if (isset($_POST['ref_reponse_correcte']) && !empty($_POST['ref_reponse_correcte']))
+					{
+						$dataResultat["ref_reponse_qcm_correcte"] = $_POST['ref_reponse_correcte'];
+					}
+				}
+				else if (isset($_POST['reponse_champ']))
+				{
+					if (!empty($_POST['reponse_champ']))
+					{
+						$dataResultat['reponse_champ'] = $this->filterData($_POST['reponse_champ'], "string");
+					}
+					else
+					{
+						$dataResultat['reponse_champ'] = "";
+					}
+				}
+				else
+				{
+					// Erreur enregistrement réponse utilisateur
+					// Redirection vers la page d'erreur interne
+					header("Location: ".SERVER_URL."erreur/page500");
+					exit();
+				}
+
+				// La validation du résultat de la réponse n'est pas encore effectué
+				$dataResultat['validation_reponse_champ'] = 0;
+
+				// Récupération du temps total
+				$dataResultat['temps_reponse'] = $totalTime;
+
+				// Insertion de la réponse de l'utilisateur dans la table "resultat"
+
+				$resultset = $this->resultatDAO->insert($dataResultat);
+			}
+		}
+		
+		/*----- Redirection fin de questionnaire vers la page résultat  -----*/
+		
+		// On évalue l'état d'avancement du questionnaire
+		if ($numeroOrdre > $nbreQuestions)
+		{
+			// Redirection vers la page résultat
+			header("Location: ".SERVER_URL."positionnement/resultat");
+			exit();
+		}
+		
+		
+		/*-----   Chargement des infos de la question courante   -----*/
+		
+		$dataPage = array();
+		$dataPage['response'] = array();
+
+		
+		// On va chercher dans la table "question", la question correspondant au numéro d'ordre (la page suivante)
+		$resultsetQuestion = $this->questionDAO->selectByOrdre($numeroOrdre);
+		
+				
+		// Traitement des erreurs de récupération de la question
+		if (!$this->filterDataErrors($resultsetQuestion['response']))
+		{
+
+			$dataPage['response'] = array_merge($resultsetQuestion['response'], $dataPage['response']);
+			
+			// On commence par récupérer la référence de la question
+			$refQuestion = $dataPage['response']['question']->getId();
+			
+			// Ensuite on va chercher les réponses
+			if ($dataPage['response']['question']->getType() == "qcm")
+			{
+				$resultsetReponses = $this->reponseDAO->selectByQuestion($refQuestion);
+				
+				if (!$this->filterDataErrors($resultsetReponses['response']))
+				{
+					if (!empty($resultsetReponses['response']['reponse']) && count($resultsetReponses['response']['reponse']) == 1)
+					{ 
+						$reponse = $resultsetReponses['response']['reponse'];
+						$resultsetReponses['response']['reponse'] = array($reponse);
+					}
+					
+					$dataPage['response'] = array_merge($resultsetReponses['response'], $dataPage['response']);
+				}
+			} 
+
+			// On passe à la page suivante
+			if ($dataPage['response']['question']->getNumeroOrdre() <= $nbreQuestions)
+			{
+				$dataPage['response']['url'] = WEBROOT."positionnement/page";
+			}
+			else
+			{
+				// Erreur page inexistante
+				header("Location: ".SERVER_URL."erreur/page404");
+				exit();
+			}
+		}
+		else
+		{
+			// Redirection vers la page d'erreur interne
+
+			//header("Location: ".SERVER_URL."erreur/page500");
+			exit();
+		}
+	  
+		
+		/*** Affichage de la page ***/
+		
+		$this->setResponse($dataPage);
+		
+		$this->setTemplate("tpl_page");
+		$this->render("page");
+	}
+	
+	
+	
+	
+	
+	public function resultat()
+	{
+		/*** Test d'authentification de l'intervenant/utilisateur ***/
+		//ServicesAuth::checkAuthentication("user");
+
+
+		// On commence par récupérer la liste complète des categories.
+		$categories = array();
+		
+		$resultsetCategories = $this->categorieDAO->selectAll();
+		
+		if (!$this->filterDataErrors($resultsetCategories['response']))
+		{
+			if (!empty($resultsetCategories['response']['categorie']) && count($resultsetCategories['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultsetCategories['response']['categorie'];
+				$resultsetCategories['response']['categorie'] = array($categorie);
+			}
+			
+			$categories = $resultsetCategories['response']['categorie'];
+		}
+
+		
+		$totalTime = 0;
+		
+		// On liste l'ensemble des résultats de l'utilisateur pour la correction
+		$tabResultats = array();
+		
+		$refSession = ServicesAuth::getSessionData("ref_session");
+		
+		// On sélectionne tous les résultats correspondant à la session en cours
+		$resultsetResultats = $this->resultatDAO->selectBySession($refSession);
+		
+		if (!$this->filterDataErrors($resultsetResultats['response']))
+		{ 
+			$i = 0;
+			
+			foreach($resultsetResultats['response']['resultat'] as $resultat)
+			{
+				// On ajoute le temps du résultat de l'utilisateur au temps total.
+				$totalTime += $resultat->getTempsReponse();
+						
+				// On établit si le résultat est correct ou non
+				if ($resultat->getRefReponseQcm() && $resultat->getRefReponseQcmCorrecte())
+				{
+					if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
+					{
+						$tabResultats[$i]['correct'] = true;
+					}
+					else 
+					{
+						$tabResultats[$i]['correct'] = false;
+					}
+				
+					// Ensuite on va chercher les données sur la question correspondant au résultat
+					$resultsetQuestion = $this->questionDAO->selectById($resultat->getRefQuestion());
+
+					if (!$this->filterDataErrors($resultsetQuestion['response']))
+					{        
+						// On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
+						$resultsetCatQuestion = $this->questionCatDAO->selectByRefQuestion($resultsetQuestion['response']['question']->getId());
+
+						if (!$this->filterDataErrors($resultsetCatQuestion['response']))
+						{
+							$tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat']->getCodeCat();
+						}
+						else 
+						{
+							$this->registerError("form_request", "Aucune categorie ne correspond à la question.");
+						}
+					}
+					else 
+					{
+						$this->registerError("form_request", "Aucune question n'a été trouvée.");
+					}
+					
+					$i++;
+				}
+			}
+		}
+		
+		
+
+
+		/*-----   Mise à jour de la table "session"   -----*/
+		
+		$dataSession = array();
+		$dataSession['session_accomplie'] = 1;
+		$dataSession['temps_total'] = $totalTime;
+		
+		$idSession = ServicesAuth::getSessionData("ref_session");
+
+
+		
+		// Mise à jour du nbre de sessions terminée de l'utilisateur
+
+		$dataUser = array();
+		$resultsetUser = $this->utilisateurDAO->selectById(ServicesAuth::getSessionData("ref_user"));
+
+		if (!$this->filterDataErrors($resultsetUser['response']))
+		{
+			$nbreUserSession = $resultsetUser['response']['utilisateur']->getSessionsAccomplies();
+			$dataUser['nbre_sessions_accomplies'] = intval($nbreUserSession) + 1;
+			$dataUser['ref_user'] = ServicesAuth::getSessionData("ref_user");
+
+			// On met a jour la table "utilisateur"
+			$resultset = $this->utilisateurDAO->update($dataUser);
+		}
+		
+
+
+		// Mise à jour du nbre de positionnements total de l'organisme
+
+		$dataOrgan = array();
+		$resultsetOrgan = $this->organismeDAO->selectById(ServicesAuth::getSessionData('ref_organ'));
+
+		if (!$this->filterDataErrors($resultsetOrgan['response']))
+		{
+			$nbrePosiTotal = $resultsetOrgan['response']['organisme']->getNbrePosiTotal();
+			$dataOrgan['nbre_posi_total'] = intval($nbrePosiTotal) + 1;
+			$dataOrgan['ref_organ'] = ServicesAuth::getSessionData('ref_organ');
+
+			// On met a jour la table "organisme"
+			$resultset = $this->organismeDAO->update($dataOrgan);
+		}
+
+
+		
+		/*** Calcul du nombre total de questions par catégories et le nombre de bonnes réponses pour chaque catégorie.  ***/
+		
+		$tabCorrection = array();
+		$totalGlobal = 0;
+		$totalCorrectGlobal = 0;
+		$percentGlobal = 0;
+		$j = 0;
+				
+		foreach ($categories as $categorie)
+		{
+			$codeCat = $categorie->getCode();
+			
+			$tabCorrection[$j]['code_cat'] = $codeCat;
+			$tabCorrection[$j]['total'] = 0;
+			$tabCorrection[$j]['total_correct'] = 0;
+			$tabCorrection[$j]['nom'] = $categorie->getNom();
+			$tabCorrection[$j]['description'] = $categorie->getDescription();
+			$tabCorrection[$j]['type_lien'] = $categorie->getTypeLien();
+
+			for ($i = 0; $i < count($tabResultats); $i++)
+			{
+				if ($tabResultats[$i]['code_cat'] == $codeCat)
+				{
+					$tabCorrection[$j]['total']++;
+					$totalGlobal++;
+
+					if ($tabResultats[$i]['correct'])
+					{
+						$tabCorrection[$j]['total_correct']++;
+						$totalCorrectGlobal++;
+					}
+				}
+				
+			}
+			
+			
+			$j++;
+		}
+
+		
+		
+		/*** Intégration du système d'héritage des résultats ***/
+		
+		for ($i = 0; $i < count($tabCorrection); $i++)
+		{
+			// On détermine si c'est une categorie principale ou une sous-categorie
+			if (strlen($tabCorrection[$i]['code_cat']) == 2)
+			{
+				// Catégorie parent
+				
+				if ($tabCorrection[$i]['type_lien'] == "dynamic")
+				{
+					$tabCorrection[$i]['parent'] = true;
+					$parentCode = $tabCorrection[$i]['code_cat'];
+					$tabCorrection[$i]['total'] = 0;
+					$tabCorrection[$i]['total_correct'] = 0;
+					$tabCorrection[$i]['children'] = array();
+
+					for ($j = 0; $j < count($tabCorrection); $j++)
+					{ 
+						if (strlen($tabCorrection[$j]['code_cat']) > 2 && substr($tabCorrection[$j]['code_cat'], 0, 2) == $parentCode)
+						{
+							$tabCorrection[$i]['total'] += $tabCorrection[$j]['total'];
+							$tabCorrection[$i]['total_correct'] += $tabCorrection[$j]['total_correct'];
+							$tabCorrection[$i]['children'][] = $tabCorrection[$j];
+						}
+					}
+				}
+				else if ($tabCorrection[$i]['type_lien'] == "static")
+				{
+					$tabCorrection[$i]['parent'] = true;
+					$parentCode = $tabCorrection[$i]['code_cat'];
+					$tabCorrection[$i]['children'] = false;
+				}
+				
+			}
+			else 
+			{
+				$tabCorrection[$i]['parent'] = false;
+				$tabCorrection[$i]['children'] = false;
+			}
+		}
+		
+		
+		/*** Données envoyées à la page de résultat ***/
+		
+		$dataPage = array();
+		$dataPage['response'] = array();
+		$dataPage['response']['correction'] = array();
+		$k = 0;
+		
+		foreach ($tabCorrection as $correction)
+		{
+			$dataPage['response']['correction'][$k]['parent'] = $correction['parent'];
+			$dataPage['response']['correction'][$k]['children'] = $correction['children'];
+			$dataPage['response']['correction'][$k]['nom_categorie'] = $correction['nom'];
+			$dataPage['response']['correction'][$k]['descript_categorie'] = $correction['description'];
+			$dataPage['response']['correction'][$k]['total'] = $correction['total'];
+			$dataPage['response']['correction'][$k]['total_correct'] = $correction['total_correct'];
+
+			if ($correction['total'] > 0)
+			{
+				$dataPage['response']['correction'][$k]['percent'] = round(($correction['total_correct'] * 100) / $correction['total']);
+			}
+			else 
+			{
+				$dataPage['response']['correction'][$k]['percent'] = 0;
+			}
+			
+			$k++;
+		}
+		
+		
+		/*** Gestion du temps ***/
+		
+		$stringTime = Tools::timeToString($totalTime);
+		$dataPage['response']['temps'] = $stringTime;
+		
+		
+		/*** Injection des stats globales dans la réponse ***/
+		
+		$percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
+		$dataPage['response']['percent_global'] = $percentGlobal;
+		$dataPage['response']['total_global'] = $totalGlobal;
+		$dataPage['response']['total_correct_global'] = $totalCorrectGlobal;
+		
+
+		/*** Mise à jour de la session  ***/
+		$dataSession['score_pourcent'] = $percentGlobal;
+
+		$resultset = $this->sessionDAO->update($dataSession, $idSession);
+
+		// Traitement des erreurs de la requête
+		if ($this->filterDataErrors($resultset['response']) || !isset($resultset['response']['session']['row_count']) || empty($resultset['response']['session']['row_count']))
+		{
+			$this->registerError("form_request", "La session n'a pu être mise à jour.");
+		}
+
+
+
+		/*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
+
+		$emailInfos = array();
+
+		$emailInfos['nom_organ'] = "";
+		$codeOrgan = "";
+		$emailInfos['url_restitution'] = "";
+		$emailInfos['url_stats'] = "";
+		$emailInfos['code_postal_organ'] = "";
+		$emailInfos['tel_organ'] = "";
+
+		$emailInfos['nom_user'] = "";
+		$emailInfos['prenom_user'] = "";
+
+		$emailInfos['email_intervenant'] = "";
+
+		$emailInfos['date_posi'] = "";
+		$emailInfos['temps_posi'] = "";
+
+
+		// Email -> infos organisme
+
+		$refOrgan = ServicesAuth::getSessionData('ref_organ');
+		$resultsetOrgan = $this->organismeDAO->selectById($refOrgan);
+
+		if (!$this->filterDataErrors($resultsetOrgan['response']))
+		{
+			// Si le résultat est unique
+			if (!empty($resultsetOrgan['response']['organisme']) && count($resultsetOrgan['response']['organisme']) == 1)
+			{ 
+				$organisme = $resultsetOrgan['response']['organisme'];
+				$resultsetOrgan['response']['organisme'] = array($organisme);
+			}
+
+			$emailInfos['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
+
+			$codeOrgan = $resultsetOrgan['response']['organisme'][0]->getNumeroInterne();
+			$emailInfos['url_restitution'] = SERVER_URL."public/restitution/".$codeOrgan;
+			$emailInfos['url_stats'] = SERVER_URL."public/statistique/".$codeOrgan;
+
+			$emailInfos['code_postal_organ'] = $resultsetOrgan['response']['organisme'][0]->getCodePostal();
+			$emailInfos['tel_organ'] = $resultsetOrgan['response']['organisme'][0]->getTelephone();
+		}
+
+
+		// Email -> infos utilisateur
+
+		$refUser = ServicesAuth::getSessionData('ref_user');
+		$resultsetUser = $this->utilisateurDAO->selectById($refUser);
+
+		if (!$this->filterDataErrors($resultsetUser['response']))
+		{
+			// Si le résultat est unique
+			if (!empty($resultsetUser['response']['utilisateur']) && count($resultsetUser['response']['utilisateur']) == 1)
+			{ 
+				$utilisateur = $resultsetUser['response']['utilisateur'];
+				$resultsetUser['response']['utilisateur'] = array($utilisateur);
+			}
+
+			$emailInfos['nom_user'] = $resultsetUser['response']['utilisateur'][0]->getNom();
+			$emailInfos['prenom_user'] = $resultsetUser['response']['utilisateur'][0]->getPrenom();
+		}
+
+
+		// Email -> infos intervenant
+
+		$refInter = ServicesAuth::getSessionData('ref_intervenant');
+		$resultsetInter = $this->intervenantDAO->selectById($refInter);
+
+		if (!$this->filterDataErrors($resultsetInter['response']))
+		{
+			// Si le résultat est unique
+			if (!empty($resultsetInter['response']['intervenant']) && count($resultsetInter['response']['intervenant']) == 1)
+			{ 
+				$intervenant = $resultsetInter['response']['intervenant'];
+				$resultsetInter['response']['intervenant'] = array($intervenant);
+			}
+
+			$emailInfos['email_intervenant'] = $resultsetInter['response']['intervenant'][0]->getEmail();
+		}
+
+
+		// Email -> infos détails du positionnement
+		
+		$date_posi = substr(ServicesAuth::getSessionData('date_session'), 0, 10);
+		$time_posi = substr(ServicesAuth::getSessionData('date_session'), 10);
+		$emailInfos['date_posi'] = Tools::toggleDate($date_posi, 'fr').' '.$time_posi;
+		$emailInfos['temps_posi'] = $stringTime;
+
+
+		//$dataPage['response']['email_infos'] = $emailInfos;
+
+		/*** Envoi du mail à l'intervenant ***/
+		/*
+		$Destinataire = "";
+		foreach (Config::$emails_admin as $email_admin) 
+		{
+			$Destinataire .=  $email_admin.',';
+		}
+
+
+		if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($response['email_infos']['email_intervenant']) && !empty($response['email_infos']['email_intervenant'])) 
+		{
+			$Destinataire .=  $response['email_infos']['email_intervenant'];
+		}
+
+		$pourqui = "f.rampion@educationetformation.fr";
+		$Sujet = Config::POSI_NAME;
+
+		$From  = "From:";
+		$From .= $pourqui;
+		$From .= "\n";
+		$From .= "MIME-version: 1.0\n";
+		$From .= 'Content-Type: text/html; charset=utf-8'."\n"; 
+
+		
+		$message = '<html><head><title>'.Config::POSI_NAME.'</title></head>';
+		$message .= '<body>';
+		$message .= 'Date du positionnement : <strong>'.$response['email_infos']['date_posi'].'</strong><br/>';
+		$message .= 'Organisme : <strong>'.$response['email_infos']['nom_organ'].'</strong><br/>';
+		$message .= '<br/>';
+		$message .= 'Nom : <strong>'.$response['email_infos']['nom_user'].'</strong><br/>';
+		$message .= 'Prénom : <strong>'.$response['email_infos']['prenom_user'].'</strong><br/>';
+		$message .= 'Email intervenant : <strong>'.$response['email_infos']['email_intervenant'].'</strong><br/>';
+		$message .= '<br/>';
+		$message .= 'Temps : <strong>'.$response['email_infos']['temps_posi'].'</strong><br/>';
+		$message .= 'Score globale : <strong>'.$response['percent_global'].' %</strong><br/>';
+		$message .= '<br/>';
+		$message .= 'Score détaillé : <br/>'.$content;
+		$message .= '<br/>';
+		$message .= '<br/>';
+		$message .= 'Votre accès à la page des résultats : '.$response['email_infos']['url_restitution'];
+		$message .= '<br/>';
+		$message .= 'Votre accès à la page des statistiques : '.$response['email_infos']['url_stats'];
+
+		$message .= '</body>';
+		$message .= '</html>';
+							 
+		mail($Destinataire,$Sujet,$message,$From);
+		*/
+
+		$destinataires = array();
+
+		if (!empty(Config::$main_email_admin)) 
+		{
+			$destinataires[0] = Config::$main_email_admin;
+		}
+			
+		foreach (Config::$emails_admin as $email_admin) 
+		{
+			if (!empty(Config::$main_email_admin) && Config::$main_email_admin == $email_admin) 
+			{
+				
+			}
+
+			$destinataires[] = $email_admin;
+		}
+
+		if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($response['email_infos']['email_intervenant']) && !empty($response['email_infos']['email_intervenant'])) 
+		{
+			$destinataires[] = $response['email_infos']['email_intervenant'];
+		}
+
+
+		/* Envoi du mail */
+		var $mail = new MailSender($destinataires, $from, $subject);
+
+
+
+		/*** Gestion des erreurs ***/
+		
+		if (!empty($this->errors))
+		{
+			// S'il y a eu des erreurs, on les affiche dans la page "résultat".
+			$dataPage['response']['errors'] = $this->errors;
+		}
+		
+
+		/*** Déconnexion automatique de l'utilisateur ***/
+		//ServicesAuth::logout();
+		
+
+		/*** Affichage de la page de résultat ***/
+		$this->setResponse($dataPage);
+		
+		//$this->setTemplate("tpl_results");
+		$this->setTemplate("tpl_inscript");
+		$this->render("resultat");
+	}
  
  
 }

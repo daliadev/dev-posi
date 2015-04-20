@@ -80,6 +80,9 @@ class Config
     // Permet l'envoi du mail de résultats au référent/formateur
     const ENVOI_EMAIL_REFERENT = 1; // Envoi (1) / pas d'envoi (0)
 
+    // Email du responsable du positionnement
+    public static $main_email_admin = "f.rampion@educationetformation.fr";
+
     // Tableau des adresse emails des administrateurs pour la réception des positionnements effectués.
     public static $emails_admin = array(
         "f.rampion@educationetformation.fr",

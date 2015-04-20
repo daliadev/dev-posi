@@ -14,7 +14,7 @@
 			}
 		}
 	}
-	
+	/*
 	$Destinataire = "";
 	foreach (Config::$emails_admin as $email_admin) 
 	{
@@ -60,7 +60,7 @@
 	$message .= '</html>';
 						 
 	mail($Destinataire,$Sujet,$message,$From);
-
+	*/
 
 	/*-------------------------------------------------*/
 

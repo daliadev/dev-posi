@@ -807,17 +807,19 @@ class ServicesPositionnement extends Main
 
 		if (!empty(Config::$main_email_admin)) 
 		{
-			$destinataires[0] = Config::$main_email_admin;
+			$destinataires[] = Config::$main_email_admin;
 		}
 			
 		foreach (Config::$emails_admin as $email_admin) 
 		{
 			if (!empty(Config::$main_email_admin) && Config::$main_email_admin == $email_admin) 
 			{
-				
+				// Ne rien faire
 			}
-
-			$destinataires[] = $email_admin;
+			else
+			{
+				$destinataires[] = $email_admin;
+			}
 		}
 
 		if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($response['email_infos']['email_intervenant']) && !empty($response['email_infos']['email_intervenant'])) 
@@ -825,9 +827,62 @@ class ServicesPositionnement extends Main
 			$destinataires[] = $response['email_infos']['email_intervenant'];
 		}
 
+		$from = !empty(Config::$main_email_admin) ? $main_email_admin : "f.rampion@educationetformation.fr";
+		$subject = Config::POSI_NAME;
+
+		
 
 		/* Envoi du mail */
-		var $mail = new MailSender($destinataires, $from, $subject);
+		$mail = new MailSender($destinataires, $from, $subject);
+		$mail->setHeader('1.0', 'text/html', 'utf-8');
+
+		$messageBody = '';
+		//$messageBody .= '<html><head><title>'.Config::POSI_NAME.'</title></head>';
+		//$messageBody .= '<body>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
+		$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br />';
+		$messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
+		//$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br />';
+		$messageBody .= 'Score globale : <strong>'.$dataPage['response']['percent_global'].' %</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Score détaillé : <br />'.;
+
+		$results = "";
+		foreach ($response['correction'] as $correction)
+		{
+			if ($correction['parent'])
+			{         
+				if ($correction['total'] > 0)
+				{
+						$content .= '</br>';
+						$content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].' questions)';
+				}
+			}
+		}
+
+		$messageBody .= '</p>';
+		$messageBody .= '<br />';
+		$messageBody .= '<p>';
+		$messageBody .= 'Votre accès à la page des résultats : <br />'.$emailInfos['url_restitution'].'<br />';
+		$messageBody .= 'Votre accès à la page des statistiques : <br />'.$emailInfos['url_stats'].'<br />';
+		$messageBody .= '</p>';
+		//$messageBody .= '</body>';
+		//$messageBody .= '</html>';
+
+		$mail->setMessage($messageBody, 'html', Config::POSI_NAME);
+
+
 
 
 

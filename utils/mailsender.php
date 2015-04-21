@@ -38,7 +38,7 @@ class MailSender
 	}
 
 
-	public function createHeaders($mimeVersion = '1.0', $contentType = 'text/html', $charset = 'utf-8', $cc = null, $bcc = null)
+	public function setHeader($mimeVersion = '1.0', $contentType = 'text/html', $charset = 'utf-8', $cc = null, $bcc = null)
 	{
 		$this->headers[] = 'MIME-Version: '.$this->$mimeVersion;
 		$this->headers[] = 'Content-type: '.$contentType.'; charset='.$charset;
@@ -54,7 +54,7 @@ class MailSender
 	}
 
 
-	public function createMessage($messageBody, $messageType = "html", $title = null)
+	public function setMessage($messageBody, $messageType = "html", $title = null)
 	{
 
 	}

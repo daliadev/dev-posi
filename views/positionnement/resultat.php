@@ -1,7 +1,7 @@
 <?php
 
 	/*-------------------- Envoi d'emails ----------------------*/
-
+	/*
 	$content = "";
 	foreach ($response['correction'] as $correction)
 	{
@@ -14,6 +14,7 @@
 			}
 		}
 	}
+	*/
 	/*
 	$Destinataire = "";
 	foreach (Config::$emails_admin as $email_admin) 

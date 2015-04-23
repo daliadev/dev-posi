@@ -15,6 +15,9 @@ class MailSender
 	private $from = null;
 	private $headers = array();
 
+	private $canBeSend = false;
+	private $isSend = false;
+
 
 
 	public function __construct($to, $from, $subject)
@@ -33,9 +36,15 @@ class MailSender
 		
 		$this->from = $from;
 		$this->subject = $subject;
-
-		
 	}
+
+
+
+	public function getIsSend()
+	{
+		return $this->isSend;
+	}
+
 
 
 	public function setHeader($mimeVersion = '1.0', $contentType = 'text/html', $charset = 'utf-8', $cc = null, $bcc = null)
@@ -54,18 +63,52 @@ class MailSender
 	}
 
 
-	public function setMessage($messageBody, $messageType = "html", $title = null)
+	public function setMessage($messageBody, $messageType = "html", $title = null, $style = null)
 	{
 
+		$this->canBeSend = true;
+
+		switch ($messageType) 
+		{
+			case 'text':
+				$this->message = $messageBody;
+				break;
+
+			case 'html':
+				$this->message = '<html>';
+				$this->message .= '<head>';
+				$this->message .= '<title>'.$title.'</title>';
+				$this->message .= '<style>'.$style.'</style>';
+				$this->message .= '</head>';
+				$this->message .= '<body>';
+				$this->message .= $messageBody;
+				$this->message .= '</body>';
+				$this->message .= '</html>';
+				break;
+
+			default :
+				$this->canBeSend = false;
+				break;
+		}
 	}
 
 
 	public function send()
 	{
-		echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('/r/n', $this->headers).')';
-		exit;
-
-		//mail($this->to, $this->subject, $this->message, implode('/r/n', $this->headers));
+		if ($this->canBeSend) {
+			echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('/r/n', $this->headers).')';
+			exit;
+		}
+		
+		//$sending = mail($this->to, $this->subject, $this->message, implode('/r/n', $this->headers));
+		/*
+		if ($sending)
+		{
+			$this->isSend = true;
+			return true;
+		}
+		*/
+		return false;
 	}
 	
 }

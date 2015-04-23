@@ -754,54 +754,8 @@ class ServicesPositionnement extends Main
 
 		//$dataPage['response']['email_infos'] = $emailInfos;
 
-		/*** Envoi du mail à l'intervenant ***/
-		/*
-		$Destinataire = "";
-		foreach (Config::$emails_admin as $email_admin) 
-		{
-			$Destinataire .=  $email_admin.',';
-		}
 
-
-		if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($response['email_infos']['email_intervenant']) && !empty($response['email_infos']['email_intervenant'])) 
-		{
-			$Destinataire .=  $response['email_infos']['email_intervenant'];
-		}
-
-		$pourqui = "f.rampion@educationetformation.fr";
-		$Sujet = Config::POSI_NAME;
-
-		$From  = "From:";
-		$From .= $pourqui;
-		$From .= "\n";
-		$From .= "MIME-version: 1.0\n";
-		$From .= 'Content-Type: text/html; charset=utf-8'."\n"; 
-
-		
-		$message = '<html><head><title>'.Config::POSI_NAME.'</title></head>';
-		$message .= '<body>';
-		$message .= 'Date du positionnement : <strong>'.$response['email_infos']['date_posi'].'</strong><br/>';
-		$message .= 'Organisme : <strong>'.$response['email_infos']['nom_organ'].'</strong><br/>';
-		$message .= '<br/>';
-		$message .= 'Nom : <strong>'.$response['email_infos']['nom_user'].'</strong><br/>';
-		$message .= 'Prénom : <strong>'.$response['email_infos']['prenom_user'].'</strong><br/>';
-		$message .= 'Email intervenant : <strong>'.$response['email_infos']['email_intervenant'].'</strong><br/>';
-		$message .= '<br/>';
-		$message .= 'Temps : <strong>'.$response['email_infos']['temps_posi'].'</strong><br/>';
-		$message .= 'Score globale : <strong>'.$response['percent_global'].' %</strong><br/>';
-		$message .= '<br/>';
-		$message .= 'Score détaillé : <br/>'.$content;
-		$message .= '<br/>';
-		$message .= '<br/>';
-		$message .= 'Votre accès à la page des résultats : '.$response['email_infos']['url_restitution'];
-		$message .= '<br/>';
-		$message .= 'Votre accès à la page des statistiques : '.$response['email_infos']['url_stats'];
-
-		$message .= '</body>';
-		$message .= '</html>';
-							 
-		mail($Destinataire,$Sujet,$message,$From);
-		*/
+		/* Configuration du mail */
 
 		$destinataires = array();
 
@@ -830,15 +784,13 @@ class ServicesPositionnement extends Main
 		$from = !empty(Config::$main_email_admin) ? $main_email_admin : "f.rampion@educationetformation.fr";
 		$subject = Config::POSI_NAME;
 
-		
-
-		/* Envoi du mail */
 		$mail = new MailSender($destinataires, $from, $subject);
 		$mail->setHeader('1.0', 'text/html', 'utf-8');
 
+
+		/* Création du mail */
+
 		$messageBody = '';
-		//$messageBody .= '<html><head><title>'.Config::POSI_NAME.'</title></head>';
-		//$messageBody .= '<body>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
 		$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
@@ -856,7 +808,7 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Score globale : <strong>'.$dataPage['response']['percent_global'].' %</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Score détaillé : <br />'.;
+		$messageBody .= 'Score détaillé : <br />';
 
 		$results = "";
 		foreach ($response['correction'] as $correction)
@@ -877,12 +829,16 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Votre accès à la page des résultats : <br />'.$emailInfos['url_restitution'].'<br />';
 		$messageBody .= 'Votre accès à la page des statistiques : <br />'.$emailInfos['url_stats'].'<br />';
 		$messageBody .= '</p>';
-		//$messageBody .= '</body>';
-		//$messageBody .= '</html>';
 
-		$mail->setMessage($messageBody, 'html', Config::POSI_NAME);
+		$style = 'p { font-family: Arial,sans-serif; }';
 
 
+		$mail->setMessage($messageBody, 'html', Config::POSI_NAME, $style);
+
+
+		/* Envoi du mail */
+
+		$mail->send()
 
 
 

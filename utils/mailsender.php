@@ -39,6 +39,10 @@ class MailSender
 	}
 
 
+	public function getCanBeSend()
+	{
+		return $this->canBeSend;
+	}
 
 	public function getIsSend()
 	{
@@ -98,16 +102,22 @@ class MailSender
 		if ($this->canBeSend) {
 			echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('/r/n', $this->headers).')';
 			exit;
+
+			//$sending = mail($this->to, $this->subject, $this->message, implode('/r/n', $this->headers));
+
+			/*
+			if ($sending)
+			{
+				$this->isSend = true;
+				return true;
+			}
+			else
+			{
+				$this->isSend = false;
+			}
+			*/
 		}
 		
-		//$sending = mail($this->to, $this->subject, $this->message, implode('/r/n', $this->headers));
-		/*
-		if ($sending)
-		{
-			$this->isSend = true;
-			return true;
-		}
-		*/
 		return false;
 	}
 	

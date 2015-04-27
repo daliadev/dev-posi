@@ -917,6 +917,8 @@ textarea {
 
 	.radio-group label, .radio-group label.disabled {
 		position: relative;
+		/*min-height: 20px;*/
+		margin-top: 3px;
 		padding-left: 28px;
 		color: #757575;
 		font-family: inherit;

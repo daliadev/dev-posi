@@ -225,7 +225,7 @@ $form_url = WEBROOT."admin/utilisateur/";
 
         <?php
             // Inclusion du footer
-            require_once(ROOT.'views/templates/footer.php');
+            require_once(ROOT.'views/templates/footer_old.php');
         ?>
 
     </div>

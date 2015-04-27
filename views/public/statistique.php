@@ -264,7 +264,7 @@ $form_url = $response['url'];
 
         <?php
             // Inclusion du footer
-            require_once(ROOT.'views/templates/footer.php');
+            require_once(ROOT.'views/templates/footer_old.php');
         ?>
 
     </div>

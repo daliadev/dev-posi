@@ -443,7 +443,7 @@ $form_url = $response['url'];
 
         <?php
             // Inclusion du footer
-            require_once(ROOT.'views/templates/footer.php');
+            require_once(ROOT.'views/templates/footer_old.php');
         ?>
 
     </div>
@@ -452,6 +452,7 @@ $form_url = $response['url'];
 
 
     <script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
 
     <script src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js" type="text/javascript"></script>
     <script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js" type="text/javascript"></script>

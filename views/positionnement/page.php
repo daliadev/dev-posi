@@ -61,7 +61,8 @@
 					<div class="media-display" id="media-question">
 						<div class="image-loader"></div>
 						<div class="btn-suite">
-							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
+						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 						<button type="button" class="speaker">
 							<i class="fa fa-volume-up"></i>
@@ -129,14 +130,14 @@
 				</div>
 				
 
-				<!-- Audio -->
-				<!--  
-				<?php //if (empty($videoFile) && !empty($audioFile)) : ?>
+				<!-- Audio (caché par du js, le bouton se trouve plus haut)-->
+				
+				<?php if (empty($videoFile) && !empty($audioFile)) : ?>
 
 					<div class="audio-media" id="audio"></div>
 
-				<?php //endif; ?>
-				-->
+				<?php endif; ?>
+				
 
 				<!-- Bouton suite -->
 				<!-- <div class="btn-suite">
@@ -176,9 +177,10 @@
 
 			// Le bouton suite est desactiver par défaut.
 			$("#submit-suite").prop("disabled", true);
+			$("#submit-suite").hide();
 
-			// Le bouton son est desactiver par défaut.
-			//$("#submit-suite").prop("disabled", true);
+			// Le barre du lecteur audio est cachée.
+			$("#audio").hide();
 
 
 			if ($('.reponse-qcm') != null) {
@@ -231,9 +233,12 @@
 
 
 			/* Fonctions */
-			/*
+			
 			function audioPlay() {
 
+				if (getPlayerComplete()) {
+
+				}
 			}
 
 
@@ -241,7 +246,9 @@
 			{
 
 			}
-			*/
+			
+
+
 			function getPlayerComplete() {
 
 				var mediaPlayer = null;
@@ -548,6 +555,11 @@
 
 
 			/* Evenements */
+
+			// Sur click du haut-parleur
+
+
+			
 
 			// Sur click d'un des boutons radio
 			$(".reponse-qcm").on("click", function(e) {

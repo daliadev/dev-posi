@@ -17,6 +17,8 @@ require_once(ROOT.'utils/mailsender.php');
 
 
 
+/*** Attention : logout() désactivé ***/
+
 class ServicesPositionnement extends Main
 {
 
@@ -662,6 +664,10 @@ class ServicesPositionnement extends Main
 
 
 
+		/****************************************/
+		/***   Envoi de mails des résultats   ***/
+		/****************************************/
+
 		/*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
 
 		$emailInfos = array();
@@ -836,9 +842,9 @@ class ServicesPositionnement extends Main
 		$mail->setMessage($messageBody, 'html', Config::POSI_NAME, $style);
 
 
-		/* Envoi du mail */
+		/*** Envoi du mail ***/
 
-		$mail->send()
+		$mail->send();
 
 
 

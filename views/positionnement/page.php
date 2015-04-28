@@ -51,16 +51,18 @@
 
 					<div class="media-display" id="media-question">
 						<div id="lecteurvideo" class="projekktor"></div>
-						<!-- <div class="btn-suite"> -->
+						<div class="btn-suite">
 							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
-						<!-- </div> -->
+						</div>
 					</div>
 					
 				<?php elseif (!empty($imageFile)) : ?>
 
 					<div class="media-display" id="media-question">
 						<div class="image-loader"></div>
-						<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+						<div class="btn-suite">
+							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+						</div>
 						<button type="button" class="speaker">
 							<i class="fa fa-volume-up"></i>
 						</button>
@@ -69,9 +71,9 @@
 				<?php else : ?>
 					
 					<div class="media-display" id="media-question">
-						<!-- <div class="btn-suite"> -->
+						<div class="btn-suite">
 							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
-						<!-- </div> -->
+						</div>
 					</div>
 
 				<?php endif; ?>
@@ -176,7 +178,7 @@
 			$("#submit-suite").prop("disabled", true);
 
 			// Le bouton son est desactiver par défaut.
-			$("#submit-suite").prop("disabled", true);
+			//$("#submit-suite").prop("disabled", true);
 
 
 			if ($('.reponse-qcm') != null) {
@@ -229,7 +231,7 @@
 
 
 			/* Fonctions */
-
+			/*
 			function audioPlay() {
 
 			}
@@ -239,7 +241,7 @@
 			{
 
 			}
-
+			*/
 			function getPlayerComplete() {
 
 				var mediaPlayer = null;

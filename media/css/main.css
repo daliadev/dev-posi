@@ -547,29 +547,34 @@ body {
 
 			#posi-page .btn-suite {
 				/*float: right;*/
-				position: relative;
+				position: absolute;
+				display: inline;
+				line-height: 100%;
+				text-align: center;
 				/*margin-top: 0;*/
 				width: 100%;
 				height: 100%;
-				/*display: none;*/
+				top: 0;
+				left: 0;
 				
-				/*bottom: 15px;
-				right: 15px;*/
-				/*width: 32px;
-				height: 32px;*/
-				/*padding: 0 auto;*/
-				/*margin: 0 auto;*/
 				z-index: 9990;
 				/*background-color: #3498db;*/
 			}
 
-				#posi-page input#submit-suite {
-					position: absolute;
-					/*margin-top: 0;*/
-					/*width: 100%;
-					height: 100%;*/
+				#posi-page .btn-suite input {
+					position: static;
+					display: inline-block;
 					width: 100px;
+					padding: 0;
+					margin: auto;
+					/*height: 100%;*/
+					/*margin: 0;*/
+					/*padding: 0;*/
+					padding: 0;
 					margin: 0 auto;
+					line-height: normal;
+					text-align: center;
+					vertical-align: middle;
 				}
 
 

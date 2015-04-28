@@ -29,33 +29,6 @@
 
 		<div class="content">
 			
-			<!-- Image ou vidéo -->
-			<?php if (!empty($videoFile)) : ?>
-
-				<div class="media-display" id="media-question">
-					<div id="lecteurvideo" class="projekktor"></div>
-				</div>
-				
-			<?php elseif (!empty($imageFile)) : ?>
-
-				<div class="media-display" id="media-question">
-					<div class="image-loader"></div>
-				</div>
-
-			<?php else : ?>
-				
-				<div class="media-display" id="media-question"></div>
-
-			<?php endif; ?>
-
-			
-
-			<!-- Intitulé question -->
-			<div class="question" id="intitule-question">
-				<p><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></p>
-			</div>
-			
-
 			<!-- Formulaire réponse -->
 			<form class="form-page" id="form-page" name="form_page" action="<?php echo $form_url; ?>" method="post">
 			
@@ -65,6 +38,53 @@
 				<input type="hidden" id="image-filename" name="image-filename" value="<?php echo $imageFile; ?>" />
 				<input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo $audioFile; ?>" />
 				<input type="hidden" id="video-filename" name="video-filename" value="<?php echo $videoFile; ?>" />
+				
+				<!-- Timer -->
+				<?php
+					$startTimer = microtime(true);
+				?>
+				<input type="hidden" name="start_timer" value="<?php echo $startTimer; ?>" />
+
+
+				<!-- Image ou vidéo -->
+				<?php if (!empty($videoFile)) : ?>
+
+					<div class="media-display" id="media-question">
+						<div id="lecteurvideo" class="projekktor"></div>
+						<!-- <div class="btn-suite"> -->
+							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+						<!-- </div> -->
+					</div>
+					
+				<?php elseif (!empty($imageFile)) : ?>
+
+					<div class="media-display" id="media-question">
+						<div class="image-loader"></div>
+						<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+						<button type="button" class="speaker">
+							<i class="fa fa-volume-up"></i>
+						</button>
+					</div>
+
+				<?php else : ?>
+					
+					<div class="media-display" id="media-question">
+						<!-- <div class="btn-suite"> -->
+							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+						<!-- </div> -->
+					</div>
+
+				<?php endif; ?>
+
+			
+
+				<!-- Intitulé question -->
+				<div class="question" id="intitule-question">
+					<p><?php echo $response['question']->getNumeroOrdre().'. '.$response['question']->getIntitule(); ?></p>
+				</div>
+			
+
+			
 				
 				
 				<!-- Réponse de l'utilisateur -->
@@ -108,24 +128,18 @@
 				
 
 				<!-- Audio -->
-				<?php if (empty($videoFile) && !empty($audioFile)) : ?>
+				<!--  
+				<?php //if (empty($videoFile) && !empty($audioFile)) : ?>
 
 					<div class="audio-media" id="audio"></div>
 
-				<?php endif; ?>
-				
-
-				<!-- Timer -->
-				<?php
-					$startTimer = microtime(true);
-				?>
-				<input type="hidden" name="start_timer" value="<?php echo $startTimer; ?>" />
-				
+				<?php //endif; ?>
+				-->
 
 				<!-- Bouton suite -->
-				<div class="btn-suite">
+				<!-- <div class="btn-suite">
 					<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
-				</div>
+				</div> -->
 				
 				<div style="clear:both;"></div>
 
@@ -159,6 +173,9 @@
 			
 
 			// Le bouton suite est desactiver par défaut.
+			$("#submit-suite").prop("disabled", true);
+
+			// Le bouton son est desactiver par défaut.
 			$("#submit-suite").prop("disabled", true);
 
 
@@ -212,6 +229,16 @@
 
 
 			/* Fonctions */
+
+			function audioPlay() {
+
+			}
+
+
+			function audioStop();
+			{
+
+			}
 
 			function getPlayerComplete() {
 

@@ -284,11 +284,12 @@
 
 
 			function displayImage(link) {
-
+				
 				var imageBox = new Image();
 
 				imageBox.onload = function() {
 
+					$('.media-display').css('height', 'auto').css('padding-bottom', '0');
 					$('.image-loader').fadeOut(250);
 					$('#media-question').prepend(imageBox);
 					$('#media-question img').hide().fadeIn(1000);
@@ -297,6 +298,7 @@
 
 				imageBox.src = link;
 				$('.image-loader').fadeIn(250);
+				
 			}
 
 

@@ -172,6 +172,9 @@
 	<script type="text/javascript">
 
 
+		
+		
+
 		$(function() {
 			
 
@@ -180,9 +183,13 @@
 			$("#submit-suite").hide();
 
 			// Le barre du lecteur audio est cachée.
-			$("#audio").hide();
+			//$("#audio").hide();
+
+			// Le haut-parleur est également caché le temps du chargement du son
+			$(".speaker").prop('disabled', true);
 
 
+			// Désactivation des éléments de réponse
 			if ($('.reponse-qcm') != null) {
 
 				// S'il y a des boutons radio, on les désactive.
@@ -218,6 +225,8 @@
 			// Etat du chargement du lecteur audio
 			var isAudioLoaded = false;
 
+			// Etat de lecture du lecteur audio
+			var audioIsPlaying = false;
 
 			// Timer du chargement de l'image
 			var timerImage = null;
@@ -234,21 +243,6 @@
 
 			/* Fonctions */
 			
-			function audioPlay() {
-
-				if (getPlayerComplete()) {
-
-				}
-			}
-
-
-			function audioStop();
-			{
-
-			}
-			
-
-
 			function getPlayerComplete() {
 
 				var mediaPlayer = null;
@@ -295,12 +289,12 @@
 			
 			function checkPlayerComplete() {
 
-				
 				//alert ('player complete');
 
 				if (getPlayerComplete()) {
 
 					clearInterval(timerPlayerComplete);
+					audioIsPlaying = false;
 
 					if ($('.reponse-qcm') != null) {
 
@@ -334,7 +328,6 @@
 
 				imageBox.src = link;
 				$('.image-loader').fadeIn(250);
-				
 			}
 
 
@@ -359,8 +352,10 @@
 				else if ($playerHtml != null) {
 					
 					$('#audioplayer').css('display', 'none');
-					$('#audioplayer').prop('autoplay', true);
+					//$('#audioplayer').prop('autoplay', true);
 				}
+
+				//audioPlay();
 
 				setTimeout(onAudioPlayerLoaded, 500); 
 			}
@@ -375,10 +370,14 @@
 
 					dewp.style.display = 'block';
 					//dewp.dewplay();
+					$(".speaker").prop('disabled', false);
+					//audioIsPlaying = true;
 				}
 				else if ($playerHtml != null) {
 					
 					$('#audioplayer').css('display', 'block');
+					$(".speaker").prop('disabled', false);
+					//audioIsPlaying = true;
 				}
 				else {
 					//alert('player not found');
@@ -386,6 +385,7 @@
 				
 
 				isAudioLoaded = true;
+
 
 				timerPlayerComplete = setInterval(checkPlayerComplete, 500);
 			}
@@ -406,6 +406,49 @@
 						$(".reponse-qcm").prop("disabled", false);
 					}
 				} 
+			}
+
+
+
+			function audioPlay() {
+
+				if (!audioIsPlaying) {
+
+					var dewp = document.getElementById('dewplayer');
+					var playerHtml = document.getElementById('audioplayer');
+					
+					if (dewp != null) {
+
+						dewp.dewplay();
+						audioIsPlaying = true;
+					}
+					else if (playerHtml != null) {
+						
+						playerHtml.play();
+						audioIsPlaying = true;
+					}
+				}
+			}
+
+
+			function audioPause() {
+
+				if (audioIsPlaying) {
+
+					var dewp = document.getElementById('dewplayer');
+					var playerHtml = document.getElementById('audioplayer');
+					
+					if (dewp != null) {
+
+						dewp.dewpause();
+						audioIsPlaying = false;
+					}
+					else if (playerHtml != null) {
+						
+						playerHtml.pause();
+						audioIsPlaying = false;
+					}
+				}
 			}
 
 
@@ -537,7 +580,7 @@
 					
 					audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
 					audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
 					audioHtml += '<param name="wmode" value="transparent" />';
 					audioHtml += '</object>';
 				}
@@ -558,6 +601,21 @@
 
 			// Sur click du haut-parleur
 
+			$(".speaker").on("click", function(e) {
+
+				if (isAudioLoaded) {
+
+					if (!audioIsPlaying) {
+
+						audioPlay();
+					}
+					else {
+
+						audioPause();
+					}
+				}
+			});
+
 
 			
 
@@ -567,6 +625,7 @@
 				if (getPlayerComplete()) {
 
 					$("#submit-suite").removeProp("disabled");
+					$("#submit-suite").show(250);
 				}
 				else {
 
@@ -603,6 +662,7 @@
 					if ($(this).val().length > 1) {
 
 						$("#submit-suite").removeProp("disabled");
+						$("#submit-suite").show(250);
 					}
 					else if ($(this).val().length <= 1) {
 

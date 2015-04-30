@@ -218,9 +218,9 @@ $form_url = $response['url'];
 
 							<input type="email" name="email_intervenant" id="email-intervenant" class="input-text"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" autocomplete="off" />
 							<!-- Autocompletion -->
-							<div class="interv-container">
+							<!-- <div class="interv-container">
 								<div id="interv-results" class=""></div>
-							</div>
+							</div> -->
 							
 							<span class="form-hint">Vous devez saisir une adresse email valide (exemple@domaine.fr)</span>
 
@@ -507,7 +507,7 @@ $form_url = $response['url'];
 			
 			
 			/***   Gestion de l'autocompletion dans le champ email formateur   ***/
-
+			/*
 			var $request = null; // jQuery XHR object
 
 			var $searchField = $('#email-intervenant');
@@ -690,7 +690,7 @@ $form_url = $response['url'];
 				//return false;
 
 			});
-			
+			*/
 
 			<?php endif; ?>
 

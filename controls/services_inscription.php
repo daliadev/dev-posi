@@ -44,7 +44,7 @@ class ServicesInscription extends Main
 
 
 		/*** Requêtes ajax ***/
-
+		/*
 		if (Config::ALLOW_AJAX)
 		{   
 
@@ -96,7 +96,7 @@ class ServicesInscription extends Main
 			}
 			
 		}
-
+		*/
 		/*** Fin requêtes ajax ***/
 
 

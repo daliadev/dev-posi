@@ -171,9 +171,14 @@
 
 	<script type="text/javascript">
 
+		/*
+		var agent = new NavigatorAgent();
+		var agentName = agent.getName();
+		var versionName = agent.getVersion();
 
-		
-		
+		alert(agentName);
+		alert(versionName);
+		*/
 
 		$(function() {
 			

@@ -53,7 +53,7 @@ class MailSender
 
 	public function setHeader($mimeVersion = '1.0', $contentType = 'text/html', $charset = 'utf-8', $cc = null, $bcc = null)
 	{
-		$this->headers[] = 'MIME-Version: '.$this->$mimeVersion;
+		$this->headers[] = 'MIME-Version: '.$mimeVersion;
 		$this->headers[] = 'Content-type: '.$contentType.'; charset='.$charset;
 		$this->headers[] = 'From: '.$this->from;
 		if ($cc !== null)
@@ -99,9 +99,10 @@ class MailSender
 
 	public function send()
 	{
-		if ($this->canBeSend) {
+		if ($this->canBeSend) 
+		{
 			echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('/r/n', $this->headers).')';
-			exit;
+			//exit;
 
 			//$sending = mail($this->to, $this->subject, $this->message, implode('/r/n', $this->headers));
 

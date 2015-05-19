@@ -787,11 +787,11 @@ class ServicesPositionnement extends Main
 			$destinataires[] = $response['email_infos']['email_intervenant'];
 		}
 
-		$from = !empty(Config::$main_email_admin) ? $main_email_admin : "f.rampion@educationetformation.fr";
+		$from = !empty(Config::$main_email_admin) ? Config::$main_email_admin : "f.rampion@educationetformation.fr";
 		$subject = Config::POSI_NAME;
 
 		$mail = new MailSender($destinataires, $from, $subject);
-		$mail->setHeader('1.0', 'text/html', 'utf-8');
+		$mail->setHeader();
 
 
 		/* Création du mail */
@@ -816,15 +816,15 @@ class ServicesPositionnement extends Main
 		$messageBody .= '<p>';
 		$messageBody .= 'Score détaillé : <br />';
 
-		$results = "";
-		foreach ($response['correction'] as $correction)
+		//$results = "";
+		foreach ($dataPage['response']['correction'] as $correction)
 		{
 			if ($correction['parent'])
 			{         
 				if ($correction['total'] > 0)
 				{
-						$content .= '</br>';
-						$content .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].' questions)';
+					$messageBody .= '</br>';
+					$messageBody .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].' questions)';
 				}
 			}
 		}
@@ -836,7 +836,7 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Votre accès à la page des statistiques : <br />'.$emailInfos['url_stats'].'<br />';
 		$messageBody .= '</p>';
 
-		$style = 'p { font-family: Arial,sans-serif; }';
+		$style = 'p { font-family: Arial, sans-serif; }';
 
 
 		$mail->setMessage($messageBody, 'html', Config::POSI_NAME, $style);

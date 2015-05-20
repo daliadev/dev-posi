@@ -52,7 +52,7 @@
 					<div class="media-display" id="media-question">
 						<div id="lecteurvideo" class="projekktor"></div>
 						<div class="btn-suite">
-							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+							<input type="submit" class="button-primary big" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 					</div>
 					
@@ -62,7 +62,7 @@
 						<div class="image-loader"></div>
 						<div class="btn-suite">
 							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
-						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+						 --><input type="submit" class="button-primary big" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 						<button type="button" class="speaker">
 							<i class="fa fa-volume-up"></i>
@@ -73,7 +73,7 @@
 					
 					<div class="media-display" id="media-question">
 						<div class="btn-suite">
-							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
+							<input type="submit" class="button-primary big" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 					</div>
 

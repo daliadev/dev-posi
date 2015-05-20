@@ -196,6 +196,14 @@ hr {
 	cursor: pointer; 
 }
 
+.button.big, button.big, input[type=button].big, input[type=submit].big {
+	height: 60px;
+	font-size: 1.25em;
+	line-height: 1.25em;
+}
+
+
+
 .button:hover, .button:active, button:hover, button:active, input[type=button]:hover, input[type=button]:active, input[type=submit]:hover, input[type=submit]:active {
 	background: #757575;
 }
@@ -279,6 +287,7 @@ button::-moz-focus-inner, input[type=button]::-moz-focus-inner, input[type=submi
 button:disabled, input[type=button]:disabled, input[type=submit]:disabled {
 	background: #bdbdbd !important;
 }
+
 
 
 

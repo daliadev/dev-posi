@@ -12,7 +12,8 @@
 			var navAgent = new NavigatorAgent();
 
 			var footerTxt = document.getElementById('footer').innerHTML;
-			footerTxt += '<p>Navigateur : ' + navAgent.getName() + ' ' + navAgent.getVersion() + '</p>';
+			//footerTxt += '<p>Navigateur : ' + navAgent.getUserAgent() + '</p>';
+			footerTxt += '<p>' + navAgent.getName() + ' ' + navAgent.getVersion() + '</p>';
 			document.getElementById('footer').innerHTML = footerTxt;
 
 

@@ -197,9 +197,13 @@ hr {
 }
 
 .button.big, button.big, input[type=button].big, input[type=submit].big {
+	min-width: 120px;
 	height: 60px;
 	font-size: 1.25em;
 	line-height: 1.25em;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
 }
 
 

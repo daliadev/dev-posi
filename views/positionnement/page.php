@@ -166,7 +166,8 @@
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
-
+	
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/navigator-agent.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
 
 	<script type="text/javascript">
@@ -186,6 +187,11 @@
 			// Le bouton suite est desactiver par défaut.
 			$("#submit-suite").prop("disabled", true);
 			$("#submit-suite").hide();
+
+			// var popbox = PopBox;
+			// popbox.init();
+
+
 
 			// Le barre du lecteur audio est cachée.
 			//$("#audio").hide();
@@ -317,7 +323,6 @@
 			
 
 
-
 			function displayImage(link) {
 				
 				var imageBox = new Image();
@@ -336,7 +341,8 @@
 			}
 
 
-			function displayAudioPlayer() {
+
+			function createAudioPlayer() {
 
 				//$(".reponse-qcm").prop("disabled", true);
 
@@ -356,14 +362,15 @@
 				}
 				else if ($playerHtml != null) {
 					
-					$('#audioplayer').css('display', 'none');
-					//$('#audioplayer').prop('autoplay', true);
+					$playerHtml.css('display', 'none');
+					$playerHtml.attr('autoplay', true);
 				}
 
 				//audioPlay();
 
-				setTimeout(onAudioPlayerLoaded, 500); 
+				setTimeout(onAudioPlayerLoaded, 500);
 			}
+
 
 
 			function onAudioPlayerLoaded() {
@@ -380,12 +387,12 @@
 				}
 				else if ($playerHtml != null) {
 					
-					$('#audioplayer').css('display', 'block');
-					$(".speaker").prop('disabled', false);
+					$playerHtml.css('display', 'block');
+					$playerHtml.prop('disabled', false);
 					//audioIsPlaying = true;
 				}
 				else {
-					//alert('player not found');
+					alert('player not found');
 				}
 				
 
@@ -404,7 +411,7 @@
 
 					if (audioActive) {
 
-						displayAudioPlayer();
+						createAudioPlayer();
 					}
 					else {
 
@@ -581,17 +588,23 @@
 				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
 				var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
-				if (FlashDetect.installed) {
+				if (navAgent.isAudioEnabled()) {
+
+					audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
+				}
+				else if (FlashDetect.installed) {
 					
 					audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
 					audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=0&amp;nopointer=1&amp;javascript=on" />';
+					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
 					audioHtml += '<param name="wmode" value="transparent" />';
 					audioHtml += '</object>';
 				}
+				
 				else {
 					
-					audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
+					//audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
+					alert('Audioplay not supported by the browser');
 				}
 				
 
@@ -602,7 +615,9 @@
 
 
 
-			/* Evenements */
+			/****   Evenements  *****/
+
+
 
 			// Sur click du haut-parleur
 
@@ -675,6 +690,21 @@
 					}
 				}
 			});
+
+			/*
+			$("#submit-suite").on("click", function(e) {
+
+				var innerHtml = '<div id="popbox-fill"></div>';
+				$("body").append(innerHtml);
+
+				$("#popbox-fill").hide().fadeTo(250, 0.7);
+				$("#popbox-fill").on('click', function(event) {
+					$(this).fadeOut(PopBox.animDuration, function() {
+						$(this).remove();
+					});
+				});
+			});
+			*/
 			
 		});
 

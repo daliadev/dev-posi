@@ -90,19 +90,19 @@ var NavigatorAgent = function() {
 	}
 	*/
 
+
 	/* Browser version detection */
 
 	if (detectRegexp.test(this.agent)) {
 
 		matchVersion = RegExp.$1
-		//var versionPointIndex = matchVersion.indexOf('.') != -1 ? matchVersion.indexOf('.') : matchVersion.length; // - 1;
-		//matchVersion = parseFloat(matchVersion.substring(0, versionPointIndex + 1));
+		versionPointIndex = matchVersion.indexOf('.') != -1 ? matchVersion.indexOf('.') : matchVersion.length - 1;
+		matchVersion = parseFloat(matchVersion.substring(0, versionPointIndex + 2));
 
 		if (matchVersion != null && matchVersion >= 0) {
 
-			//this.agentVersion = parseFloat(matchVersion.substring(0, versionPointIndex + 1));
-			this.agentVersion = parseInt(matchVersion);
-			//this.agentVersion = matchVersion;
+			//this.agentVersion = parseInt(matchVersion);
+			this.agentVersion = matchVersion;
 		}
 	}
 
@@ -134,15 +134,39 @@ var NavigatorAgent = function() {
 	};
 
 
-	this.isAudioEnable = function() {
+	this.isAudioEnabled = function() {
 
-		return null;
+		if ((this.agentName == 'ie' && this.agentVersion >= 9) || 
+			(this.agentName == 'chrome' && this.agentVersion >= 4) || 
+			(this.agentName == 'firefox' && this.agentVersion >= 3.5) || 
+			(this.agentName == 'safari' && this.agentVersion >= 4) || 
+			(this.agentName == 'opera' && this.agentVersion >= 10.5)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+
+		//return null;
 	};
 
-	this.isVideoEnable = function() {
+	this.isVideoEnabled = function() {
 
-		return null;
+		if ((this.agentName == 'ie' && this.agentVersion >= 9) || 
+			(this.agentName == 'chrome' && this.agentVersion >= 4) || 
+			(this.agentName == 'firefox' && this.agentVersion >= 3.5) || 
+			(this.agentName == 'safari' && this.agentVersion >= 4) || 
+			(this.agentName == 'opera' && this.agentVersion >= 10.5)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+		//return null;
 	};
+
 
 	this.isPngEnable = function() {
 

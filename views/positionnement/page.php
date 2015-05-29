@@ -184,7 +184,6 @@
 
 				- Creation de l'image
 				- Création du lecteur video
-
 				- Création du lecteur audio
 
 
@@ -194,12 +193,12 @@
 				- Le bouton suite est désactivé
 				- Le bouton suite est affiché
 				- Le bouton suite est masqué
-				- Sur bouton suite clické
+
 
 				- Le bouton son est désactivé
 				- Le bouton son est affiché
 				- Le bouton son est masqué
-				- Sur bouton son clické
+				
 
 				- Le lecteur audio est chargé
 				- Le lecteur audio est créé
@@ -208,15 +207,13 @@
 				- Le lecteur audio est en pause
 				- Le lecteur audio est affiché
 				- Le lecteur audio est masqué
-				- Sur bouton son clické
 
 				- l'image est créée
 				- L'image est chargée
 				- L'image est affichée
 				- L'image est masquée
 
-				- Sur son chargé
-
+				
 
 				- Les boutons radio sont désactivés
 				- Les boutons radio sont activés
@@ -224,8 +221,12 @@
 				- Le champ texte est désactivé
 				- Le champ texte est activé
 
+				- Sur image chargée
+				- Sur son chargé
+				- Sur vidéo chargée
 
-
+				- Sur bouton son clické
+				- Sur bouton suite clické
 
 			
 			**/
@@ -299,8 +300,209 @@
 
 
 
-			/* Fonctions */
+			/*** Fonctions ***/
+
+
+			/* Création des médias */
+
+
+			// Lecteur audio
+
+
+			function createImage(link) {
+
+				var imageBox = new Image();
+
+				imageBox.onload = function() {
+
+					$('.media-display').css('height', 'auto').css('padding-bottom', '0');
+					$('.image-loader').fadeOut(250);
+					$('#media-question').prepend(imageBox);
+					$('#media-question img').hide().fadeIn(1000);
+					isImageLoaded = true;
+				};
+
+				imageBox.src = link;
+				$('.image-loader').fadeIn(250);
+			}
+
+
+
+			function createAudioPlayer() {
+
+				var $audioPlayer = $("#audio");
+
+				if ($audioPlayer != null && audioHtml != '') {
+
+					$audioPlayer.html(audioHtml);
+				}
+
+				var dewp = document.getElementById('dewplayer');
+				var $playerHtml = $('#audioplayer');
+				
+				if (dewp != null) {
+
+					dewp.style.display = 'none';
+				}
+				else if ($playerHtml != null) {
+					
+					$playerHtml.css('display', 'none');
+					$playerHtml.attr('autoplay', true);
+				}
+
+				//audioPlay();
+
+				setTimeout(onAudioPlayerLoaded, 500);
+
+
+
+
+				var audio = new Audio('audio_file.mp3');
+				audio.load();
+				audio.play();
+			}
+
+
+
+
+			// Lecteur vidéo
+			function createVideoPlayer() {
+
+				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
+				var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
+
+				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
+				var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
+
+				// Puis l'adresse absolue de la vidéo.
+				var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
+
+				// On génére le lecteur vidéo et on le configure.
+				projekktor('#lecteurvideo', {
+
+						poster: imageUrl,
+						title: 'Lecteur vidéo',
+						playerFlashMP4: videoPlayerUrl,
+						playerFlashMP3: videoPlayerUrl,
+						width: 750,
+						height: 420,
+						controls: true,
+						enableFullscreen: false,
+						autoplay: true,
+						playlist: [{
+							0: {src: videoUrl, type: "video/mp4"}
+						}],
+						plugins: ['display', 'controlbar'],
+						messages: {
+							0: 'Une erreur s\'est produite.',
+							1: 'Vous avez interrompu la lecture de la vidéo.',
+							2: 'La vidéo n\'a pas pu être chargée.',
+							3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
+							4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
+							5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
+							6: 'Vous devez disposer de la version %{flashver} ou plus du lecteur Flash.',
+							7: 'Aucun média n\'a été trouvé.',
+							8: 'La configuration du média est incompatible !',
+							9: 'Le fichier (%{file}) n\'a pas été trouvé.',
+							10: 'Les paramètres de qualité sont invalide pour %{title}.',
+							11: 'Les paramètres de streaming sont invalides ou incompatible avec %{title}.',
+							12: 'Le paramètrage de la qualité est incompatible pour %{title}.',
+							80: 'Le média requis n\'existe pas ou son contenu est invalide.',
+							97: 'Aucun média n\'a été prévu.',
+							98: 'Les données de la playlist sont invalides !',
+							99: 'Cliquez sur le média pour continuer. ',
+							100: 'Espace réservé.'
+						} 
+
+					}, function(player) {
+
+						// on player ready
+						
+						var stateListener = function(state) {
+
+							switch(state) {
+									
+								case 'PLAYING':
+									break;
+
+								case 'PAUSED':
+
+									$('.ppstart').removeClass('inactive');
+									$('.ppstart').addClass('active');
+									break;
+
+								case 'STOPPED':
+								case 'IDLE':
+								case 'COMPLETED':
+
+									$(".reponse-qcm").prop("disabled", false);
+									
+									isVideoComplete = true;
+
+									checkPlayerComplete();
+									break;
+							}
+						};
+
+						player.addListener('state', stateListener);
+
+						
+						var playerError = function(data) { 
+
+							isVideoComplete = true; 
+
+							$('#lecteurvideo').html('');
+
+							if (imageActive) {
+
+								displayImage(imageUrl);
+							}                 
+						};
+						player.addListener('error', playerError);
+						
+					}
+				);
+			}
+
+
+
+			function onImageLoaded() {
+
+			}
+
+
+			function onAudioLoaded() {
+				
+			}
+
+
+			function onVideoLoaded() {
+				
+			}
+
+			/*
+			function onMediaLoaded() {
+
+			}
+			*/
+
+
+			function displayMedia() {
+
+			}
+
+
+			function hideMedia() {
+
+			}
+
+
+
+
 			
+
+
+
 			function getPlayerComplete() {
 
 				var mediaPlayer = null;
@@ -369,56 +571,7 @@
 			}
 			
 
-
-			function displayImage(link) {
-				
-				var imageBox = new Image();
-
-				imageBox.onload = function() {
-
-					$('.media-display').css('height', 'auto').css('padding-bottom', '0');
-					$('.image-loader').fadeOut(250);
-					$('#media-question').prepend(imageBox);
-					$('#media-question img').hide().fadeIn(1000);
-					isImageLoaded = true;
-				};
-
-				imageBox.src = link;
-				$('.image-loader').fadeIn(250);
-			}
-
-
-
-			function createAudioPlayer() {
-
-				//$(".reponse-qcm").prop("disabled", true);
-
-				var $audioPlayer = $("#audio");
-
-				if ($audioPlayer != null && audioHtml != '') {
-
-					$audioPlayer.html(audioHtml);
-				}
-
-				var dewp = document.getElementById('dewplayer');
-				var $playerHtml = $('#audioplayer');
-				
-				if (dewp != null) {
-
-					dewp.style.display = 'none';
-				}
-				else if ($playerHtml != null) {
-					
-					$playerHtml.css('display', 'none');
-					$playerHtml.attr('autoplay', true);
-				}
-
-				//audioPlay();
-
-				setTimeout(onAudioPlayerLoaded, 500);
-			}
-
-
+			
 
 			function onAudioPlayerLoaded() {
 				
@@ -465,6 +618,23 @@
 						$(".reponse-qcm").prop("disabled", false);
 					}
 				} 
+			}
+
+			function displayImage(link) {
+				
+				var imageBox = new Image();
+
+				imageBox.onload = function() {
+
+					$('.media-display').css('height', 'auto').css('padding-bottom', '0');
+					$('.image-loader').fadeOut(250);
+					$('#media-question').prepend(imageBox);
+					$('#media-question img').hide().fadeIn(1000);
+					isImageLoaded = true;
+				};
+
+				imageBox.src = link;
+				$('.image-loader').fadeIn(250);
 			}
 
 
@@ -527,6 +697,7 @@
 			}
 
 
+			/*
 			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
 			if (videoActive) {
 
@@ -625,9 +796,10 @@
 					}
 				);
 			}
-
+			*/
 
 			// Sinon, on créé le lecteur audio
+			/*
 			else if (audioActive) {
 
 				var audioHtml = '';
@@ -656,10 +828,10 @@
 				
 
 				timerImage = setInterval(checkImageLoaded, 500);
-
+		
 			}
 			
-
+			*/
 
 
 			/****   Evenements  *****/
@@ -752,7 +924,113 @@
 				});
 			});
 			*/
+
+
+
+
+
+			/**** Litteral object ***/
+			// "use strict";
+			/*
+			var Player = {
+
+				create: function() {
+
+				},
+
+
+			};
+
+			$.player = function(type, media, settings) {
+				var player = new Player;
+				player.initialize(text, settings);
+				player.show();
+				return player;
+			};
 			
+			$.player.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
+
+			$('.button').on('click', function() {
+				$.player('Voulez-vous continuer la navigation ?', {
+					icon: 'alert', 
+					buttons: ['Yes', 'Cancel'], 
+					callback: function(buttonText) {
+						if (buttonText === 'Yes') {
+							// Proceed and delete record
+						}
+					}
+				});
+			});
+			*/
+
+
+
+			/*** Class Object ***/
+			/*
+			// Constructeur de la classe
+			var Media = function(type) {
+
+				isCreated: false,
+				isLoaded: false,
+				isFinished: false,
+
+				init: function() {
+
+				},
+
+				load: function() {
+
+				},
+
+				display: function() {
+
+				},
+
+				show: function() {
+
+				},
+
+				hide: function() {
+
+				},
+
+				events: function() {
+
+				},
+
+				play: function() {
+
+				},
+
+				pause: function() {
+
+				},
+
+				stop: function() {
+
+				}
+			};
+
+
+			$.playerAudio = function (type) {
+				var player = new Media(type);
+				msg.initialize(text, settings);
+				msg.show();
+				return msg;
+			}
+
+			$.playerAudio.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
+
+			$.playerAudio('audio', {
+				icon: 'alert', 
+				buttons: ['Yes', 'Cancel'], 
+				callback: function(buttonText) {
+					if (buttonText === 'Yes') {
+						// Proceed and delete record
+					}
+				}
+			});
+			*/
 		});
 
 

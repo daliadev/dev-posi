@@ -172,16 +172,63 @@
 
 	<script type="text/javascript">
 
-		/*
-		var agent = new NavigatorAgent();
-		var agentName = agent.getName();
-		var versionName = agent.getVersion();
-
-		alert(agentName);
-		alert(versionName);
-		*/
 
 		$(function() {
+			
+
+
+			/**
+			
+				Etats :
+				-------
+
+				- Creation de l'image
+				- Création du lecteur video
+
+				- Création du lecteur audio
+
+
+				- Le loader apparait
+				- Le loader disparait
+
+				- Le bouton suite est désactivé
+				- Le bouton suite est affiché
+				- Le bouton suite est masqué
+				- Sur bouton suite clické
+
+				- Le bouton son est désactivé
+				- Le bouton son est affiché
+				- Le bouton son est masqué
+				- Sur bouton son clické
+
+				- Le lecteur audio est chargé
+				- Le lecteur audio est créé
+				- Le lecteur audio démarre
+				- Le lecteur audio est stoppé
+				- Le lecteur audio est en pause
+				- Le lecteur audio est affiché
+				- Le lecteur audio est masqué
+				- Sur bouton son clické
+
+				- l'image est créée
+				- L'image est chargée
+				- L'image est affichée
+				- L'image est masquée
+
+				- Sur son chargé
+
+
+				- Les boutons radio sont désactivés
+				- Les boutons radio sont activés
+
+				- Le champ texte est désactivé
+				- Le champ texte est activé
+
+
+
+
+			
+			**/
 			
 
 			// Le bouton suite est desactiver par défaut.

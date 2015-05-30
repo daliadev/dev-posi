@@ -52,17 +52,17 @@
 					<div class="media-display" id="media-question">
 						<div id="lecteurvideo" class="projekktor"></div>
 						<div class="btn-suite">
-							<input type="submit" class="button-primary big" id="submit-suite" name="submit_suite" value="Suite" />
+							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 					</div>
 					
 				<?php elseif (!empty($imageFile)) : ?>
 
 					<div class="media-display" id="media-question">
-						<div class="image-loader"></div>
+						<div id="loader" class="image-loader"></div>
 						<div class="btn-suite">
 							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
-						 --><input type="submit" class="button-primary big" id="submit-suite" name="submit_suite" value="Suite" />
+						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 						<button type="button" class="speaker">
 							<i class="fa fa-volume-up"></i>
@@ -73,7 +73,7 @@
 					
 					<div class="media-display" id="media-question">
 						<div class="btn-suite">
-							<input type="submit" class="button-primary big" id="submit-suite" name="submit_suite" value="Suite" />
+							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 					</div>
 
@@ -163,19 +163,23 @@
 	<!-- JQuery -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
 
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
-	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
-	
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/navigator-agent.js"></script>
+	
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-loader.js"></script>
+	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/audio-player.js"></script>
+	<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
+	
 
 	<script type="text/javascript">
 
 
 		$(function() {
 			
-
+			"use strict";
 
 			/**
 			
@@ -300,15 +304,126 @@
 
 
 
-			/*** Fonctions ***/
+			/*** Objets ***/
+
+			
+			// Constructeur de la classe
+			/*
+			"use strict";
+	
+			var Message = {
+				template: function(text, buttons, icon) {
+					return ['<div class="message-box-' + icon + '"></div>', 
+						'<p class="message-box-text">' + text + '</p>',
+						'<div class="message-box-buttons">', buttons, '</div>'].join('');
+				},
+				initialize: function(text, settings) {
+					this.text = text;
+					this.el = $('<div>', {'class': 'message-box', 'style': 'display: none'});
+					this.settings = $.extend({}, $.message.defaults, settings);
+					var buttons = this.createButtons(this.settings.buttons);
+					
+
+					this.el.html(this.template(text, buttons, this.settings.icon));
+					this.events();
+					return this;
+				},
+				createButtons: function(buttons) {
+					return $.map(buttons, function(button) {
+						return '<input type="submit" value="' + button + '" />';
+					}).join('');
+				},
+				events: function() {
+					var self = this;
+					this.el.find('input').on('click', function() {
+						self.close();
+						if (typeof self.settings.callback === 'function') {
+							self.settings.callback.call(self, $(this).val());
+						}
+					});
+				},
+				close: function() {
+					this.el.animate({
+						//top: $(window).height() / 2 - this.outerHeight() / 2, 
+						opacity: 'hide'}, 250, function() {
+							$(this).remove();
+					});
+				},
+				show: function() {
+					this.el.appendTo('#main').animate({top: $(window).height() / 2 - this.el.outerHeight() / 2, opacity: 'show'}, 500);
+					
+				}
+			};
+
+			$.message = function(text, settings) {
+				var msg = Message;
+				msg.initialize(text, settings);
+				msg.show();
+				return msg;
+			};
+			
+			$.message.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
+
+
+			$.playerAudio = function(type) {
+				var audioPlayer = new Player();
+				audioPlayer.create(type);
+				audioPlayer.load();
+				msg.initialize(text, settings);
+				msg.show();
+				return msg;
+			};
+
+			$.playerAudio.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
+
+			$.playerAudio('audio', {
+				icon: 'alert', 
+				buttons: ['Yes', 'Cancel'], 
+				callback: function(buttonText) {
+					if (buttonText === 'Yes') {
+						// Proceed and delete record
+					}
+				}
+			});
+			*/
+
+
+
+			
 
 
 			/* Création des médias */
 
+			//var playerAudio = new AudioPlayer($("#audio"));
+			//playerAudio.create($(".speaker"));
 
-			// Lecteur audio
+			var loader = document.getElementById('loader');
+			var container = document.getElementById('media-question');
+			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+
+			var imageLoader = new ImageLoader($('#media-question'), $('#loader'), onImageLoaded);
+			imageLoader.startLoading(imageUrl, 250);
+
+			// Fonction appelée par l'objet ImageLoader lorsque l'image est chargée.
+
+			function onImageLoaded() {
+
+				$('#media-question img').fadeIn(1000);
+				imageLoader.fadeInBlack(3000);
 
 
+				// Creation du lecteur audio s'il y a une source
+				if (audioActive) {
+
+					//createAudioPlayer();
+				}
+				else {
+
+					//$(".reponse-qcm").prop("disabled", false);
+				}
+			}
+
+			/*
 			function createImage(link) {
 
 				var imageBox = new Image();
@@ -325,11 +440,11 @@
 				imageBox.src = link;
 				$('.image-loader').fadeIn(250);
 			}
-
+			*/
 
 
 			function createAudioPlayer() {
-
+				/*
 				var $audioPlayer = $("#audio");
 
 				if ($audioPlayer != null && audioHtml != '') {
@@ -360,6 +475,7 @@
 				var audio = new Audio('audio_file.mp3');
 				audio.load();
 				audio.play();
+				*/
 			}
 
 
@@ -463,39 +579,7 @@
 					}
 				);
 			}
-
-
-
-			function onImageLoaded() {
-
-			}
-
-
-			function onAudioLoaded() {
-				
-			}
-
-
-			function onVideoLoaded() {
-				
-			}
-
-			/*
-			function onMediaLoaded() {
-
-			}
-			*/
-
-
-			function displayMedia() {
-
-			}
-
-
-			function hideMedia() {
-
-			}
-
+			
 
 
 
@@ -602,7 +686,7 @@
 				timerPlayerComplete = setInterval(checkPlayerComplete, 500);
 			}
 
-
+			/*
 			function checkImageLoaded() {
 
 				if (isImageLoaded) {
@@ -636,7 +720,7 @@
 				imageBox.src = link;
 				$('.image-loader').fadeIn(250);
 			}
-
+			*/
 
 
 			function audioPlay() {
@@ -692,12 +776,12 @@
 				
 				if (!videoActive) {
 
-					displayImage(imageUrl);
+					//displayImage(imageUrl);
 				}                
 			}
 
 
-			/*
+			
 			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
 			if (videoActive) {
 
@@ -788,7 +872,7 @@
 
 							if (imageActive) {
 
-								displayImage(imageUrl);
+								//displayImage(imageUrl);
 							}                 
 						};
 						player.addListener('error', playerError);
@@ -796,10 +880,10 @@
 					}
 				);
 			}
-			*/
+			
 
 			// Sinon, on créé le lecteur audio
-			/*
+			
 			else if (audioActive) {
 
 				var audioHtml = '';
@@ -827,11 +911,11 @@
 				}
 				
 
-				timerImage = setInterval(checkImageLoaded, 500);
+				//timerImage = setInterval(checkImageLoaded, 500);
 		
 			}
 			
-			*/
+			
 
 
 			/****   Evenements  *****/
@@ -929,108 +1013,7 @@
 
 
 
-			/**** Litteral object ***/
-			// "use strict";
-			/*
-			var Player = {
-
-				create: function() {
-
-				},
-
-
-			};
-
-			$.player = function(type, media, settings) {
-				var player = new Player;
-				player.initialize(text, settings);
-				player.show();
-				return player;
-			};
 			
-			$.player.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
-
-			$('.button').on('click', function() {
-				$.player('Voulez-vous continuer la navigation ?', {
-					icon: 'alert', 
-					buttons: ['Yes', 'Cancel'], 
-					callback: function(buttonText) {
-						if (buttonText === 'Yes') {
-							// Proceed and delete record
-						}
-					}
-				});
-			});
-			*/
-
-
-
-			/*** Class Object ***/
-			/*
-			// Constructeur de la classe
-			var Media = function(type) {
-
-				isCreated: false,
-				isLoaded: false,
-				isFinished: false,
-
-				init: function() {
-
-				},
-
-				load: function() {
-
-				},
-
-				display: function() {
-
-				},
-
-				show: function() {
-
-				},
-
-				hide: function() {
-
-				},
-
-				events: function() {
-
-				},
-
-				play: function() {
-
-				},
-
-				pause: function() {
-
-				},
-
-				stop: function() {
-
-				}
-			};
-
-
-			$.playerAudio = function (type) {
-				var player = new Media(type);
-				msg.initialize(text, settings);
-				msg.show();
-				return msg;
-			}
-
-			$.playerAudio.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
-
-			$.playerAudio('audio', {
-				icon: 'alert', 
-				buttons: ['Yes', 'Cancel'], 
-				callback: function(buttonText) {
-					if (buttonText === 'Yes') {
-						// Proceed and delete record
-					}
-				}
-			});
-			*/
 		});
 
 

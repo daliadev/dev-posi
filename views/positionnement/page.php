@@ -56,14 +56,25 @@
 						</div>
 					</div>
 					
-				<?php elseif (!empty($imageFile)) : ?>
+				<?php elseif (empty($videoFile) && !empty($imageFile)) : ?>
 
 					<div class="media-display" id="media-question">
+
 						<div id="loader" class="image-loader"></div>
-						<button type="button" class="speaker">
-							<i class="fa fa-volume-up"></i>
-						</button>
+
+						
+						<?php if (!empty($audioFile)) : ?>
+
+							<button type="button" class="speaker">
+								<i class="fa fa-volume-up"></i>
+							</button>
+
+							<div id="audio"></div>
+
+						<?php endif; ?>
+
 						<div id="black-bg"></div>
+
 						<div class="btn-suite">
 							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
 						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
@@ -74,9 +85,11 @@
 				<?php else : ?>
 					
 					<div class="media-display" id="media-question">
+
 						<div class="btn-suite">
 							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
+
 					</div>
 
 				<?php endif; ?>
@@ -134,11 +147,11 @@
 
 				<!-- Audio (caché par du js, le bouton se trouve plus haut)-->
 				
-				<?php if (empty($videoFile) && !empty($audioFile)) : ?>
+				<?php //if (empty($videoFile) && !empty($audioFile)) : ?>
 
-					<div class="audio-media" id="audio"></div>
+					<!-- <div class="audio-media" id="audio"></div> -->
 
-				<?php endif; ?>
+				<?php //endif; ?>
 				
 
 				<!-- Bouton suite -->
@@ -146,7 +159,7 @@
 					<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 				</div> -->
 				
-				<div style="clear:both;"></div>
+				<!-- <div style="clear:both;"></div> -->
 
 			</form>
 
@@ -164,16 +177,18 @@
 
 	<!-- JQuery -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
-
+	
+	<!-- Divers -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/navigator-agent.js"></script>
 	
-	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
+	<!-- Medias -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-loader.js"></script>
-	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/audio-speaker.js"></script>
-	<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/audio-player.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
+	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
 	
 
 	<script type="text/javascript">
@@ -308,25 +323,15 @@
 			
 
 
-			/* Création des médias */
+			/* Création / Gestion des médias */
 
-			var playerAudio = new AudioSpeaker($("#speaker"));
-			//playerAudio.create($(".speaker"));
-
-			//var loader = document.getElementById('loader');
-			//var container = document.getElementById('media-question');
-			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
-
-			var imageLoader = new ImageLoader($('#media-question'), $('#loader'), onImageLoaded);
-			imageLoader.startLoading(imageUrl, 250);
-
+			
 			// Fonction appelée par l'objet ImageLoader lorsque l'image est chargée.
 
 			function onImageLoaded() {
 
 				$('#media-question img').fadeIn(1000);
-				imageLoader.fadeToBlack(5000);
-
+				//this.fadeToBlack(5000);
 
 				// Creation du lecteur audio s'il y a une source
 				if (audioActive) {
@@ -338,6 +343,43 @@
 					//$(".reponse-qcm").prop("disabled", false);
 				}
 			}
+
+			function onAudioLoaded() {
+
+
+			}
+
+
+
+			//var loader = document.getElementById('loader');
+			//var container = document.getElementById('media-question');
+			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+
+			var imageLoader = new ImageLoader($('#media-question'), $('#loader'), onImageLoaded);
+			imageLoader.startLoading(imageUrl, 250);
+
+
+			var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+
+			var audioPlayer = new AudioPlayer($("#audio"), audioUrl);
+
+			if (navAgent.isAudioEnabled()) {
+
+				speaker.setPlayer('html');
+			}
+			else if (FlashDetect.installed) {
+
+				speaker.setPlayer('dewp-mini');
+			}
+			else {
+				alert('Ce navigateur ne prend pas en charge les médias audio.');
+			}
+
+			speaker.attachBasicControls($("#speaker"), null);
+
+
+
+			
 
 			/*
 			function createImage(link) {
@@ -360,6 +402,29 @@
 
 
 			function createAudioPlayer() {
+
+				/*
+				var audioHtml = '';
+
+				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+				var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+
+				var audioPlayer
+
+				if (navAgent.isAudioEnabled()) {
+
+					audioPlayer += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
+				}
+				else if (FlashDetect.installed) {
+					
+					audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
+					audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
+					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+					audioHtml += '<param name="wmode" value="transparent" />';
+					audioHtml += '</object>';
+				}
+				*/
+
 				/*
 				var $audioPlayer = $("#audio");
 

@@ -60,13 +60,15 @@
 
 					<div class="media-display" id="media-question">
 						<div id="loader" class="image-loader"></div>
+						<button type="button" class="speaker">
+							<i class="fa fa-volume-up"></i>
+						</button>
+						<div id="black-bg"></div>
 						<div class="btn-suite">
 							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
 						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
-						<button type="button" class="speaker">
-							<i class="fa fa-volume-up"></i>
-						</button>
+						
 					</div>
 
 				<?php else : ?>
@@ -170,7 +172,7 @@
 	
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-loader.js"></script>
-	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/audio-player.js"></script>
+	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/audio-speaker.js"></script>
 	<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
 	
 
@@ -303,102 +305,16 @@
 
 
 
-
-			/*** Objets ***/
-
-			
-			// Constructeur de la classe
-			/*
-			"use strict";
-	
-			var Message = {
-				template: function(text, buttons, icon) {
-					return ['<div class="message-box-' + icon + '"></div>', 
-						'<p class="message-box-text">' + text + '</p>',
-						'<div class="message-box-buttons">', buttons, '</div>'].join('');
-				},
-				initialize: function(text, settings) {
-					this.text = text;
-					this.el = $('<div>', {'class': 'message-box', 'style': 'display: none'});
-					this.settings = $.extend({}, $.message.defaults, settings);
-					var buttons = this.createButtons(this.settings.buttons);
-					
-
-					this.el.html(this.template(text, buttons, this.settings.icon));
-					this.events();
-					return this;
-				},
-				createButtons: function(buttons) {
-					return $.map(buttons, function(button) {
-						return '<input type="submit" value="' + button + '" />';
-					}).join('');
-				},
-				events: function() {
-					var self = this;
-					this.el.find('input').on('click', function() {
-						self.close();
-						if (typeof self.settings.callback === 'function') {
-							self.settings.callback.call(self, $(this).val());
-						}
-					});
-				},
-				close: function() {
-					this.el.animate({
-						//top: $(window).height() / 2 - this.outerHeight() / 2, 
-						opacity: 'hide'}, 250, function() {
-							$(this).remove();
-					});
-				},
-				show: function() {
-					this.el.appendTo('#main').animate({top: $(window).height() / 2 - this.el.outerHeight() / 2, opacity: 'show'}, 500);
-					
-				}
-			};
-
-			$.message = function(text, settings) {
-				var msg = Message;
-				msg.initialize(text, settings);
-				msg.show();
-				return msg;
-			};
-			
-			$.message.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
-
-
-			$.playerAudio = function(type) {
-				var audioPlayer = new Player();
-				audioPlayer.create(type);
-				audioPlayer.load();
-				msg.initialize(text, settings);
-				msg.show();
-				return msg;
-			};
-
-			$.playerAudio.defaults = {icon: 'info', buttons: ['Okay'], callback: null};
-
-			$.playerAudio('audio', {
-				icon: 'alert', 
-				buttons: ['Yes', 'Cancel'], 
-				callback: function(buttonText) {
-					if (buttonText === 'Yes') {
-						// Proceed and delete record
-					}
-				}
-			});
-			*/
-
-
-
 			
 
 
 			/* Création des médias */
 
-			//var playerAudio = new AudioPlayer($("#audio"));
+			var playerAudio = new AudioSpeaker($("#speaker"));
 			//playerAudio.create($(".speaker"));
 
-			var loader = document.getElementById('loader');
-			var container = document.getElementById('media-question');
+			//var loader = document.getElementById('loader');
+			//var container = document.getElementById('media-question');
 			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 
 			var imageLoader = new ImageLoader($('#media-question'), $('#loader'), onImageLoaded);
@@ -409,7 +325,7 @@
 			function onImageLoaded() {
 
 				$('#media-question img').fadeIn(1000);
-				imageLoader.fadeInBlack(3000);
+				imageLoader.fadeToBlack(5000);
 
 
 				// Creation du lecteur audio s'il y a une source
@@ -480,7 +396,7 @@
 
 
 
-
+			/*
 			// Lecteur vidéo
 			function createVideoPlayer() {
 
@@ -579,7 +495,7 @@
 					}
 				);
 			}
-			
+			*/
 
 
 
@@ -768,8 +684,8 @@
 
 			/* Création et instanciation des médias */
 
-			// Chargement de l'image (si il n'y a pas de vidéo) */
-
+			// Chargement de l'image (si il n'y a pas de vidéo)
+			
 			if (imageActive) {
 
 				var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;

@@ -551,7 +551,7 @@ body {
 				max-width: 100%;
 			}
 
-			#posi-page .media-display .black-bg {
+			#posi-page .media-display #black-bg {
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -629,7 +629,7 @@ body {
 				-webkit-border-radius: 20px;
 				-moz-border-radius: 20px;
 				border-radius: 20px;
-				z-index: 9999;
+				z-index: 995;
 				background-color: #3498db;
 			}
 

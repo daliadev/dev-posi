@@ -1,5 +1,6 @@
 
-var AudioPlayer = function(playerElement) {
+var AudioSpeaker = function(playerElement) {
+
 
 	this.$player = playerElement;
 	this.playerType = '';
@@ -9,7 +10,19 @@ var AudioPlayer = function(playerElement) {
 	this.isCreated = false;
 	this.isLoaded = false;
 	this.isFinished = false;
+
+	this.speaker = null;
+
+	var audio = new Audio('audio_file.mp3');
 	
+
+
+	this.setSpeaker = function(speakerEl) {
+
+		this.speaker = speakerEl;
+	}
+
+	/*
 	this.templateHtml = function(file) {
 
 		var html = '<audio id="audioplayer" name="audioplayer" src="' + file + '"></audio>';
@@ -26,8 +39,9 @@ var AudioPlayer = function(playerElement) {
 		html += '</object>';
 		return html;
 	};
+	*/
 	
-	this.create = function(file, flashPlayerUrl, buttonElement) {
+	this.create = function(file, flashPlayerUrl, buttons) {
 
 		if (navAgent.isAudioEnabled()) {
 

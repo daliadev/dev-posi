@@ -20,6 +20,7 @@ var ImageLoader = function(container, loader, onLoadCallback) {
 			self.container.style.paddingBottom = '0';
 			*/
 			$(this).hide();
+			self.blackBg.hide();
 			//self.container.prepend('<div id="black-bg"></div>');
 			self.container.prepend(this);
 			self.container.css('height', 'auto');
@@ -41,7 +42,7 @@ var ImageLoader = function(container, loader, onLoadCallback) {
 
 		//this.container.prepend('<div id="black-bg"></div>');
 		//this.blackBg = $('#black-bg');
-		this.blackBg.hide();
+		//this.blackBg.hide();
 		this.blackBg.fadeIn(duration);
 	};
 

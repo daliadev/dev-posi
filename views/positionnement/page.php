@@ -65,7 +65,7 @@
 						
 						<?php if (!empty($audioFile)) : ?>
 
-							<button type="button" class="speaker">
+							<button type="button" id="speaker" class="speaker">
 								<i class="fa fa-volume-up"></i>
 							</button>
 
@@ -178,16 +178,16 @@
 	<!-- JQuery -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script>
 	
-	<!-- Divers -->
+	<!-- Outils -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script>
-	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/navigator-agent.js"></script>
 	
 	<!-- Medias -->
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-loader.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/audio-player.js"></script>
-	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
 	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
 	
 
@@ -199,7 +199,6 @@
 			"use strict";
 
 			/**
-			
 				Etats :
 				-------
 
@@ -249,7 +248,6 @@
 				- Sur bouton son clické
 				- Sur bouton suite clické
 
-			
 			**/
 			
 
@@ -266,7 +264,7 @@
 			//$("#audio").hide();
 
 			// Le haut-parleur est également caché le temps du chargement du son
-			$(".speaker").prop('disabled', true);
+			//$(".speaker").prop('disabled', true);
 
 
 			// Désactivation des éléments de réponse
@@ -308,6 +306,7 @@
 			// Etat de lecture du lecteur audio
 			var audioIsPlaying = false;
 
+
 			// Timer du chargement de l'image
 			var timerImage = null;
 
@@ -316,7 +315,7 @@
 
 
 			// Contenu du lecteur audio
-			var audioHtml = '';
+			//var audioHtml = '';
 
 
 
@@ -344,120 +343,47 @@
 				}
 			}
 
-			function onAudioLoaded() {
+			function onAudioCompleted() {
 
-
+				console.log('audioCompleted');
 			}
 
 
 
-			//var loader = document.getElementById('loader');
-			//var container = document.getElementById('media-question');
+
+			// Création de l'image
 			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 
 			var imageLoader = new ImageLoader($('#media-question'), $('#loader'), onImageLoaded);
 			imageLoader.startLoading(imageUrl, 250);
 
 
+
+			// Création du lecteur audio caché (contrôle via le bouton speaker)
 			var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
-			var audioPlayer = new AudioPlayer($("#audio"), audioUrl);
+			var audioPlayer = new AudioPlayer(audioUrl);
 
 			if (navAgent.isAudioEnabled()) {
 
-				speaker.setPlayer('html');
+				audioPlayer.create($('#audio'), 'html', null, {w: 0, h: 0});
 			}
 			else if (FlashDetect.installed) {
 
-				speaker.setPlayer('dewp-mini');
+				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
+				audioPlayer.create($('#audio'), 'dewp-mini', playerAudioUrl, {w: 0, h: 0});
 			}
 			else {
+
 				alert('Ce navigateur ne prend pas en charge les médias audio.');
 			}
 
-			speaker.attachBasicControls($("#speaker"), null);
+			audioPlayer.attachControls({start: $("#speaker"), pause: $("#speaker")});
 
+			audioPlayer.onCompleteCallBack(onAudioCompleted);
 
+			audioPlayer.enable(false);
 
-			
-
-			/*
-			function createImage(link) {
-
-				var imageBox = new Image();
-
-				imageBox.onload = function() {
-
-					$('.media-display').css('height', 'auto').css('padding-bottom', '0');
-					$('.image-loader').fadeOut(250);
-					$('#media-question').prepend(imageBox);
-					$('#media-question img').hide().fadeIn(1000);
-					isImageLoaded = true;
-				};
-
-				imageBox.src = link;
-				$('.image-loader').fadeIn(250);
-			}
-			*/
-
-
-			function createAudioPlayer() {
-
-				/*
-				var audioHtml = '';
-
-				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
-				var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
-
-				var audioPlayer
-
-				if (navAgent.isAudioEnabled()) {
-
-					audioPlayer += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
-				}
-				else if (FlashDetect.installed) {
-					
-					audioHtml += '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
-					audioHtml += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-					audioHtml += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-					audioHtml += '<param name="wmode" value="transparent" />';
-					audioHtml += '</object>';
-				}
-				*/
-
-				/*
-				var $audioPlayer = $("#audio");
-
-				if ($audioPlayer != null && audioHtml != '') {
-
-					$audioPlayer.html(audioHtml);
-				}
-
-				var dewp = document.getElementById('dewplayer');
-				var $playerHtml = $('#audioplayer');
-				
-				if (dewp != null) {
-
-					dewp.style.display = 'none';
-				}
-				else if ($playerHtml != null) {
-					
-					$playerHtml.css('display', 'none');
-					$playerHtml.attr('autoplay', true);
-				}
-
-				//audioPlay();
-
-				setTimeout(onAudioPlayerLoaded, 500);
-
-
-
-
-				var audio = new Audio('audio_file.mp3');
-				audio.load();
-				audio.play();
-				*/
-			}
 
 
 
@@ -567,7 +493,7 @@
 			
 
 
-
+			/*
 			function getPlayerComplete() {
 
 				var mediaPlayer = null;
@@ -610,11 +536,11 @@
 
 				return false;
 			}
-
+			*/
 			
+			/*
 			function checkPlayerComplete() {
 
-				//alert ('player complete');
 
 				if (getPlayerComplete()) {
 
@@ -634,10 +560,10 @@
 					}
 				}
 			}
-			
+			*/
 
 			
-
+			/*
 			function onAudioPlayerLoaded() {
 				
 				var dewp = document.getElementById('dewplayer');
@@ -666,6 +592,7 @@
 
 				timerPlayerComplete = setInterval(checkPlayerComplete, 500);
 			}
+			*/
 
 			/*
 			function checkImageLoaded() {
@@ -703,7 +630,7 @@
 			}
 			*/
 
-
+			/*
 			function audioPlay() {
 
 				if (!audioIsPlaying) {
@@ -723,8 +650,9 @@
 					}
 				}
 			}
+			*/
 
-
+			/*
 			function audioPause() {
 
 				if (audioIsPlaying) {
@@ -744,7 +672,7 @@
 					}
 				}
 			}
-
+			*/
 
 
 			/* Création et instanciation des médias */
@@ -752,20 +680,21 @@
 			// Chargement de l'image (si il n'y a pas de vidéo)
 			
 			if (imageActive) {
-
+				/*
 				var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 				
 				if (!videoActive) {
 
 					//displayImage(imageUrl);
-				}                
+				} 
+				*/              
 			}
 
 
 			
 			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
 			if (videoActive) {
-
+				/*
 				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
 				var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
 
@@ -860,6 +789,7 @@
 						
 					}
 				);
+				*/
 			}
 			
 
@@ -867,6 +797,7 @@
 			
 			else if (audioActive) {
 
+				/*
 				var audioHtml = '';
 
 				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
@@ -884,7 +815,6 @@
 					audioHtml += '<param name="wmode" value="transparent" />';
 					audioHtml += '</object>';
 				}
-				
 				else {
 					
 					//audioHtml += '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
@@ -893,7 +823,7 @@
 				
 
 				//timerImage = setInterval(checkImageLoaded, 500);
-		
+				*/
 			}
 			
 			
@@ -904,7 +834,7 @@
 
 
 			// Sur click du haut-parleur
-
+			/*
 			$(".speaker").on("click", function(e) {
 
 				if (isAudioLoaded) {
@@ -919,10 +849,10 @@
 					}
 				}
 			});
-
+			*/
 
 			
-
+			/*
 			// Sur click d'un des boutons radio
 			$(".reponse-qcm").on("click", function(e) {
 
@@ -974,6 +904,7 @@
 					}
 				}
 			});
+			*/
 
 			/*
 			$("#submit-suite").on("click", function(e) {
@@ -989,10 +920,6 @@
 				});
 			});
 			*/
-
-
-
-
 
 			
 		});

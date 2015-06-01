@@ -1,97 +1,199 @@
 
-var AudioPlayer = function(container, sources) {
+var AudioPlayer = function(audioSources) {
 
 
 	//this.$player = playerElement;
-	this.container = container;
-	this.player = null;
-	this.playerType = null;
+	var self = this;
+	var container = null;
+	var player = null;
+	
 
-	this.sources = this.setSources(sources);
 
-	this.speaker = null;
-	this.startBtn = null;
-	this.pauseBtn = null;
+	/* Privates */
+	
+	//this.speaker = null;
+	//var controls;
+	var startBtn = null;
+	var pauseBtn = null;
 
-	this.isCreated = false;
-	this.isLoaded = false;
-	this.isFinished = false;
+	var isCreated = false;
+	var isLoaded = false;
+	var isFinished = false;
+	var isPlaying = false;
+
+	var completeCallBack = null;
 
 	//this.events = new Object();
-
 	/*
 	var audio = new Audio('audio_file.mp3');
 	audio.load();
 	audio.play();
 	*/
-	
-	this.createPlayer(playerType) {
 
-		this.playerType = playerType;
+	//var sources = aggregateSources(audioSources);
+	var sources = function(audioSrc) {
+
+		var src = new Array();
+
+		if (typeof audioSrc === 'array') {
+
+			for (var i = 0, count = audioSrc.length; i < count; i++) {
+
+				src.push('mp3/' + audioSrc[i]);
+			};
+		}
+		else if (typeof audioSrc === 'string') {
+
+			src[0] = 'mp3/' + audioSrc;
+		}
+		else {
+
+			console.log('AudioPlayer : Invalid audio sources.');
+		}
+
+		return src.join('|');
+	};
+
+
+	var update = function() {
+
+	}
+
+
+
+	var attachEvents = function() {
+
+		startBtn.on("click", function() {
+
+			console.log(self);
+			//self.play();
+		});
+
+		console.log(startBtn);
+
+		/*
+		pauseBtn.on('click', function(event) {
+
+			self.pause();
+		});
+		*/
+	};
+
+
+
+
+	/* Publics */
+
+	this.playerType = null;
+	
+	this.create = function(content, type, playerURL, size) {
+
+		container = content;
+		this.playerType = type;
+
+		var width = 160;
+		var height = 20;
+
+		if (typeof size === 'object') {
+
+			width = size.w;
+			height = size.h;
+		}
+
+		
 
 		if (this.playerType == 'html') {
 
-			//var playerHTML = new Audio();
-			this.player = '<audio id="audioplayer" name="audioplayer" src="' + audioUrl + '" preload="auto" controls></audio>';
+			this.player = '<audio id="audioplayer" name="audioplayer"></audio>';
 		}
-		else if (this.playerType == 'dewp') {
+		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
 			
+			var dewpType = null;
+
+			switch(this.playerType) {
+
+				case 'dewp' :
+					dewpType = playerURL + 'dewplayer';
+					break;
+
+				case 'dewp-mini' :
+					dewpType = playerURL + 'dewplayer-mini';
+					break;
+
+				default :
+					break;
+			}
+
+			if (playerURL !== null) {
+
+				container.append('<div id="dewp-content"></div>');
+
+				var flashvars = {
+					mp3: sources(audioSources), //'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3',
+					javascript: 'on'
+				};
+				var params = {
+					wmode: 'transparent'
+				};
+				var attributes = {
+					id: 'dewplayer',
+				};
+
+				swfobject.embedSWF(dewpType, 'dewp-content', width, height, '9.0.0', false, flashvars, params, attributes);
+			}
+			
+			/*
 			this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
 			this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
 			this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
 			this.player += '<param name="wmode" value="transparent" />';
 			this.player += '</object>';
-
-		}
-		/*
-		<div id="dewplayer_content">
-			<object data="dewplayer.swf" width="200" height="20" name="dewplayer" id="dewplayer" type="application/x-shockwave-flash">
-			<param name="movie" value="dewplayer.swf" />
-			<param name="flashvars" value="mp3=mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3&javascript=on" />
-			<param name="wmode" value="transparent" />
-			</object>
-		</div>
-		*/
-	}
-
-
-	this.setSources(audioSources) {
-
-		var src = new array();
-
-		if (typeof audioSources === 'array') {
-
-			for (var i = 0, count = audioSources.length; i < count; i++) {
-
-				src[i] = audioSources[i];
-			};
-		}
-		else if (typeof audioSources === 'string') {
-
-			src[0] = audioSources;
+			
+			<div id="dewplayer_content">
+				<object data="dewplayer.swf" width="200" height="20" name="dewplayer" id="dewplayer" type="application/x-shockwave-flash">
+				<param name="movie" value="dewplayer.swf" />
+				<param name="flashvars" value="mp3=mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3&javascript=on" />
+				<param name="wmode" value="transparent" />
+				</object>
+			</div>
+			*/
 		}
 		else {
 
-			console.log('AudioPlayer : Invalid audio sources.')
+			console.log('AudioPlayer : Player non spécifié ou inexistant.');
 		}
-	}
+	};
 
 
-	this.attachBasicControls(start, pause) {
-
-		this.startBtn = start;
-		this.pauseBtn = pause;
-	}
+	
 
 
-	this.attachVolumeControls(start, pause) {
+	this.attachControls = function(buttons) {
 
-	}
+		console.log(buttons);
+
+		if (buttons.start !== null) {
+
+			startBtn = buttons.start;
+		}
+
+		if (buttons.pause !== null) {
+
+			pauseBtn = buttons.pause;
+		}
+
+		if (buttons.start !== null && buttons.pause === null) {
+
+			pauseBtn = buttons.start;
+		}
+
+		attachEvents();
+	};
 
 
-	this.startLoading() {
+	this.startLoading = function() {
 
-	}
+	};
 
 	/*
 	this.templateHtml = function(file) {
@@ -111,7 +213,7 @@ var AudioPlayer = function(container, sources) {
 		return html;
 	};
 	*/
-	
+	/*
 	this.create = function(file, flashPlayerUrl, buttons) {
 
 		if (navAgent.isAudioEnabled()) {
@@ -134,11 +236,12 @@ var AudioPlayer = function(container, sources) {
 
 		this.isCreated = true;
 	};
+	*/
 	/*
 	this.loadFile = function(file) {
 
 	};
-	*/
+	
 	this.display = function(show) {
 
 	};
@@ -146,24 +249,44 @@ var AudioPlayer = function(container, sources) {
 	this.hide = function() {
 
 	};
+	*/
 
-	this.disable = function() {
+	this.enable = function(enabled) {
 
+		/*
+		for (var i in controls) {
+
+			// console.log(controls[i]);
+
+			if (!enabled) {
+
+				controls[i].prop('disabled', true);
+			}
+			else if (enabled) {
+
+				controls[i].removeProp('disabled');
+			}
+			
+		}
+		*/
 	};
 
-	this.events = function() {
 
-		this.button.on('click', function() {
-			/*
-			if (typeof self.settings.callback === 'function') {
-				self.settings.callback.call(self, $(this).val());
-			}
-			*/
-		});
-	},
 
 	this.play = function() {
 
+		console.log('play');
+
+		if (this.playerType == 'html') {
+			this.player.play();
+		}
+		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
+
+			var dewp = $("#dewplayer");
+  			if (dewp != null) {
+  				dewp.dewplay();
+  			}
+		}
 	};
 
 	this.pause = function() {
@@ -173,4 +296,13 @@ var AudioPlayer = function(container, sources) {
 	this.stop = function() {
 
 	};
+
+
+	this.onCompleteCallBack = function(callBack) {
+
+		completeCallBack = callBack;
+	}
+
+
+	
 };

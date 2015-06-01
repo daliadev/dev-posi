@@ -3,16 +3,16 @@ var AudioPlayer = function(audioSources) {
 
 
 	//this.$player = playerElement;
+	
+
+	/* Privates */
+	
 	var self = this;
 	var container = null;
 	var player = null;
 	
+	var sources = null;
 
-
-	/* Privates */
-	
-	//this.speaker = null;
-	//var controls;
 	var startBtn = null;
 	var pauseBtn = null;
 
@@ -23,15 +23,15 @@ var AudioPlayer = function(audioSources) {
 
 	var completeCallBack = null;
 
-	//this.events = new Object();
+
 	/*
 	var audio = new Audio('audio_file.mp3');
 	audio.load();
 	audio.play();
 	*/
 
-	//var sources = aggregateSources(audioSources);
-	var sources = function(audioSrc) {
+	
+	var aggregateSources = function(audioSrc) {
 
 		var src = new Array();
 
@@ -40,7 +40,7 @@ var AudioPlayer = function(audioSources) {
 			for (var i = 0, count = audioSrc.length; i < count; i++) {
 
 				src.push('mp3/' + audioSrc[i]);
-			};
+			}
 		}
 		else if (typeof audioSrc === 'string') {
 
@@ -53,11 +53,13 @@ var AudioPlayer = function(audioSources) {
 
 		return src.join('|');
 	};
+	sources = aggregateSources(audioSources);
+
 
 
 	var update = function() {
 
-	}
+	};
 
 
 
@@ -99,12 +101,11 @@ var AudioPlayer = function(audioSources) {
 			width = size.w;
 			height = size.h;
 		}
-
 		
-
 		if (this.playerType == 'html') {
 
 			this.player = '<audio id="audioplayer" name="audioplayer"></audio>';
+			container.append(this.player);
 		}
 		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
 			
@@ -162,8 +163,8 @@ var AudioPlayer = function(audioSources) {
 
 			console.log('AudioPlayer : Player non spécifié ou inexistant.');
 		}
-	};
 
+	};
 
 	
 
@@ -277,13 +278,13 @@ var AudioPlayer = function(audioSources) {
 
 		console.log('play');
 
-		if (this.playerType == 'html') {
+		if (this.playerType === 'html') {
 			this.player.play();
 		}
-		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
+		else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
 
 			var dewp = $("#dewplayer");
-  			if (dewp != null) {
+  			if (dewp !== null) {
   				dewp.dewplay();
   			}
 		}
@@ -301,7 +302,7 @@ var AudioPlayer = function(audioSources) {
 	this.onCompleteCallBack = function(callBack) {
 
 		completeCallBack = callBack;
-	}
+	};
 
 
 	

@@ -617,8 +617,7 @@ body {
 
 
 
-			#posi-page .media-display .speaker {
-				/*display: none;*/
+			#posi-page .media-display #speaker {
 				position: absolute;
 				bottom: 15px;
 				right: 15px;
@@ -633,28 +632,30 @@ body {
 				background-color: #3498db;
 			}
 
-			#posi-page .media-display .speaker:disabled {
+			#posi-page .media-display #speaker:disabled {
 				background-color: #bdbdbd;
 			}
 			
-			#posi-page .media-display .speaker:hover {
+			#posi-page .media-display #speaker:hover {
 				background-color: #2980b9;
 			}
 
-				#posi-page .media-display .speaker .fa {
+				#posi-page .media-display #speaker .fa {
 					font-size: 1.25em;
 					color: #fff;
 				}
 
 			#posi-page .media-display #audio {
 				position: absolute;
-				bottom: 0;
-				right: 0;
-				width: 0;
-				height: 0;
+				top: 0;
+				left: 0;
+				/*bottom: 0;*/
+				/*right: 0;*/
+				/*width: 0;*/
+				/*height: 0;*/
 				margin: 0;
 				padding: 0;
-				z-index: 980;
+				z-index: 920;
 			}
 
 

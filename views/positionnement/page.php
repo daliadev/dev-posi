@@ -268,13 +268,13 @@
 
 
 			// Désactivation des éléments de réponse
-			if ($('.reponse-qcm') != null) {
+			if ($('.reponse-qcm') !== null) {
 
 				// S'il y a des boutons radio, on les désactive.
 				$(".reponse-qcm").prop("disabled", true);
 			}
 
-			if ($('#reponse-champ') != null) {
+			if ($('#reponse-champ') !== null) {
 
 				// S'il y a une champ de réponse, on le désactive et on met un placeholder.
 				$("#reponse-champ").prop("disabled", true);
@@ -288,9 +288,9 @@
 			var videoFilename = $('#video-filename').val();
 
 			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
-			var imageActive = imageFilename != '' ? true : false;
-			var videoActive = videoFilename != '' ? true : false;
-			var audioActive = audioFilename != '' ? true : false;
+			var imageActive = imageFilename !== '' ? true : false;
+			var videoActive = videoFilename !== '' ? true : false;
+			var audioActive = audioFilename !== '' ? true : false;
 
 
 
@@ -382,7 +382,7 @@
 
 			audioPlayer.onCompleteCallBack(onAudioCompleted);
 
-			audioPlayer.enable(false);
+			//audioPlayer.enable(false);
 
 
 

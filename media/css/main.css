@@ -542,7 +542,7 @@ body {
 				left: 0;
 				width: 100%;
 				height: 100%;
-				z-index: 990;
+				z-index: 199;
 				background: url('../images/loader_bl.gif') center center no-repeat;
 			}
 			
@@ -551,7 +551,56 @@ body {
 				max-width: 100%;
 			}
 
-			#posi-page .media-display #black-bg {
+			
+			#posi-page .media-display #lecteurvideo {
+				max-width: 100%;
+				height: 100%;
+			}
+			
+
+			#posi-page .media-display #speaker {
+				position: absolute;
+				bottom: 15px;
+				right: 15px;
+				width: 40px;
+				height: 40px;
+				padding: 0;
+				margin: 0;
+				-webkit-border-radius: 20px;
+				-moz-border-radius: 20px;
+				border-radius: 20px;
+				z-index: 599;
+				background-color: #3498db;
+			}
+
+			#posi-page .media-display #speaker:disabled {
+				background-color: #bdbdbd;
+			}
+			
+			#posi-page .media-display #speaker:hover {
+				background-color: #2980b9;
+			}
+
+				#posi-page .media-display #speaker .fa {
+					font-size: 1.25em;
+					color: #fff;
+				}
+		
+
+			#posi-page .media-display #audio {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				z-index: 499;
+			}
+
+
+			/*#posi-page .media-display */
+			#black-bg {
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -562,12 +611,7 @@ body {
 				background-color: #000000;
 				opacity: 0.5;
 				filter: alpha(opacity=50);
-				z-index: 999;
-			}
-			
-			#posi-page .media-display #lecteurvideo {
-				max-width: 100%;
-				height: 100%;
+				z-index: 799;
 			}
 			
 
@@ -582,7 +626,7 @@ body {
 				/*line-height: 50%;*/
 				text-align: center;
 				/*vertical-align: middle;*/
-				z-index: 9990;
+				z-index: 999;
 				/*background-color: #3498db;*/
 			}
 
@@ -614,49 +658,6 @@ body {
 					vertical-align: middle;
 					/*text-align: center;*/
 				}
-
-
-
-			#posi-page .media-display #speaker {
-				position: absolute;
-				bottom: 15px;
-				right: 15px;
-				width: 40px;
-				height: 40px;
-				padding: 0;
-				margin: 0;
-				-webkit-border-radius: 20px;
-				-moz-border-radius: 20px;
-				border-radius: 20px;
-				z-index: 995;
-				background-color: #3498db;
-			}
-
-			#posi-page .media-display #speaker:disabled {
-				background-color: #bdbdbd;
-			}
-			
-			#posi-page .media-display #speaker:hover {
-				background-color: #2980b9;
-			}
-
-				#posi-page .media-display #speaker .fa {
-					font-size: 1.25em;
-					color: #fff;
-				}
-
-			#posi-page .media-display #audio {
-				position: absolute;
-				top: 0;
-				left: 0;
-				/*bottom: 0;*/
-				/*right: 0;*/
-				/*width: 0;*/
-				/*height: 0;*/
-				margin: 0;
-				padding: 0;
-				z-index: 920;
-			}
 
 
 		/*

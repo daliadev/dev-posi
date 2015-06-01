@@ -31,7 +31,8 @@ var AudioPlayer = function(audioSources) {
 	*/
 
 	
-	var aggregateSources = function(audioSrc) {
+	//var aggregateSources = function(audioSrc) {
+	var sources = function(audioSrc) {
 
 		var src = new Array();
 
@@ -53,7 +54,7 @@ var AudioPlayer = function(audioSources) {
 
 		return src.join('|');
 	};
-	sources = aggregateSources(audioSources);
+	//sources = aggregateSources(audioSources);
 
 
 
@@ -65,13 +66,15 @@ var AudioPlayer = function(audioSources) {
 
 	var attachEvents = function() {
 
+		console.log(startBtn);
+
 		startBtn.on("click", function() {
 
-			console.log(self);
+			console.log('click');
 			//self.play();
 		});
 
-		console.log(startBtn);
+		//console.log(startBtn);
 
 		/*
 		pauseBtn.on('click', function(event) {
@@ -105,6 +108,8 @@ var AudioPlayer = function(audioSources) {
 		if (this.playerType == 'html') {
 
 			this.player = '<audio id="audioplayer" name="audioplayer"></audio>';
+			$(this.player).css('width', width);
+			$(this.player).css('height', height);
 			container.append(this.player);
 		}
 		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
@@ -169,26 +174,36 @@ var AudioPlayer = function(audioSources) {
 	
 
 
-	this.attachControls = function(buttons) {
+	this.attachControls = function(controls) {
 
-		console.log(buttons);
+		//console.log(controls);
+		if (typeof controls === 'object') {
 
-		if (buttons.start !== null) {
+			if (controls.startBtn !== null) {
 
-			startBtn = buttons.start;
+				//startBtn = controls.startBtn;
+				//console.log($(startBtn));
+				/*
+				controls.startBtn.bind('click', function(event) {
+
+					console.log('click');
+					//self.play();
+				});
+				*/
+			}
+			/*
+			if (controls.pause !== null) {
+
+				pauseBtn = controls.pause;
+			}
+
+			if (controls.startBtn !== null && controls.pause === null) {
+
+				pauseBtn = controls.startBtn;
+			}
+			*/
+			//attachEvents();
 		}
-
-		if (buttons.pause !== null) {
-
-			pauseBtn = buttons.pause;
-		}
-
-		if (buttons.start !== null && buttons.pause === null) {
-
-			pauseBtn = buttons.start;
-		}
-
-		attachEvents();
 	};
 
 

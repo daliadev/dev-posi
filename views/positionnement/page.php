@@ -64,16 +64,16 @@
 
 						
 						<?php if (!empty($audioFile)) : ?>
-
-							<button type="button" id="speaker" class="speaker">
-								<i class="fa fa-volume-up"></i>
-							</button>
-
-							<div id="audio"></div>
+						
+						
+						<button type="button" id="speaker">
+							<i class="fa fa-volume-up"></i>
+						</button>
+						<div id="audio"></div>
 
 						<?php endif; ?>
 
-						<div id="black-bg"></div>
+						<!-- <div id="black-bg"></div> -->
 
 						<div class="btn-suite">
 							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
@@ -330,7 +330,7 @@
 			function onImageLoaded() {
 
 				$('#media-question img').fadeIn(1000);
-				//this.fadeToBlack(5000);
+				this.fadeToBlack(5000);
 
 				// Creation du lecteur audio s'il y a une source
 				if (audioActive) {
@@ -359,16 +359,18 @@
 
 
 
+
 			// Création du lecteur audio caché (contrôle via le bouton speaker)
 			var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
 			var audioPlayer = new AudioPlayer(audioUrl);
 
-			if (navAgent.isAudioEnabled()) {
+			//if (navAgent.isAudioEnabled()) {
 
-				audioPlayer.create($('#audio'), 'html', null, {w: 0, h: 0});
-			}
-			else if (FlashDetect.installed) {
+				//audioPlayer.create($('#audio'), 'html', null);
+			//}
+			//else 
+			if (FlashDetect.installed) {
 
 				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
 				audioPlayer.create($('#audio'), 'dewp-mini', playerAudioUrl, {w: 0, h: 0});
@@ -378,115 +380,12 @@
 				alert('Ce navigateur ne prend pas en charge les médias audio.');
 			}
 
-			audioPlayer.attachControls({start: $("#speaker"), pause: $("#speaker")});
+			audioPlayer.attachControls({startBtn: $("#speaker"), pause: $("#speaker")});
 
 			audioPlayer.onCompleteCallBack(onAudioCompleted);
 
 			//audioPlayer.enable(false);
 
-
-
-
-			/*
-			// Lecteur vidéo
-			function createVideoPlayer() {
-
-				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
-				var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
-
-				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
-				var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
-
-				// Puis l'adresse absolue de la vidéo.
-				var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
-
-				// On génére le lecteur vidéo et on le configure.
-				projekktor('#lecteurvideo', {
-
-						poster: imageUrl,
-						title: 'Lecteur vidéo',
-						playerFlashMP4: videoPlayerUrl,
-						playerFlashMP3: videoPlayerUrl,
-						width: 750,
-						height: 420,
-						controls: true,
-						enableFullscreen: false,
-						autoplay: true,
-						playlist: [{
-							0: {src: videoUrl, type: "video/mp4"}
-						}],
-						plugins: ['display', 'controlbar'],
-						messages: {
-							0: 'Une erreur s\'est produite.',
-							1: 'Vous avez interrompu la lecture de la vidéo.',
-							2: 'La vidéo n\'a pas pu être chargée.',
-							3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
-							4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
-							5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
-							6: 'Vous devez disposer de la version %{flashver} ou plus du lecteur Flash.',
-							7: 'Aucun média n\'a été trouvé.',
-							8: 'La configuration du média est incompatible !',
-							9: 'Le fichier (%{file}) n\'a pas été trouvé.',
-							10: 'Les paramètres de qualité sont invalide pour %{title}.',
-							11: 'Les paramètres de streaming sont invalides ou incompatible avec %{title}.',
-							12: 'Le paramètrage de la qualité est incompatible pour %{title}.',
-							80: 'Le média requis n\'existe pas ou son contenu est invalide.',
-							97: 'Aucun média n\'a été prévu.',
-							98: 'Les données de la playlist sont invalides !',
-							99: 'Cliquez sur le média pour continuer. ',
-							100: 'Espace réservé.'
-						} 
-
-					}, function(player) {
-
-						// on player ready
-						
-						var stateListener = function(state) {
-
-							switch(state) {
-									
-								case 'PLAYING':
-									break;
-
-								case 'PAUSED':
-
-									$('.ppstart').removeClass('inactive');
-									$('.ppstart').addClass('active');
-									break;
-
-								case 'STOPPED':
-								case 'IDLE':
-								case 'COMPLETED':
-
-									$(".reponse-qcm").prop("disabled", false);
-									
-									isVideoComplete = true;
-
-									checkPlayerComplete();
-									break;
-							}
-						};
-
-						player.addListener('state', stateListener);
-
-						
-						var playerError = function(data) { 
-
-							isVideoComplete = true; 
-
-							$('#lecteurvideo').html('');
-
-							if (imageActive) {
-
-								displayImage(imageUrl);
-							}                 
-						};
-						player.addListener('error', playerError);
-						
-					}
-				);
-			}
-			*/
 
 
 

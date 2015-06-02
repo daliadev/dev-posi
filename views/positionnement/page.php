@@ -59,23 +59,25 @@
 				<?php elseif (empty($videoFile) && !empty($imageFile)) : ?>
 
 					<div class="media-display" id="media-question">
+						
+						<div id="audio"></div>
+
+						<div id="visuel"></div>
 
 						<div id="loader" class="image-loader"></div>
 
 						
 						<?php if (!empty($audioFile)) : ?>
 						
-						
 						<button type="button" id="speaker">
 							<i class="fa fa-volume-up"></i>
 						</button>
-						<div id="audio"></div>
 
 						<?php endif; ?>
 
 						<!-- <div id="black-bg"></div> -->
 
-						<div class="btn-suite">
+						<div id="btn-suite">
 							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
 						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
@@ -254,10 +256,8 @@
 			// Le bouton suite est desactiver par défaut.
 			$("#submit-suite").prop("disabled", true);
 			$("#submit-suite").hide();
-
-			// var popbox = PopBox;
-			// popbox.init();
-
+			var $suite = $("#btn-suite");
+			$("#btn-suite").remove();
 
 
 			// Le barre du lecteur audio est cachée.
@@ -329,8 +329,10 @@
 
 			function onImageLoaded() {
 
-				$('#media-question img').fadeIn(1000);
-				this.fadeToBlack(5000);
+				$('#visuel img').fadeIn(1500);
+
+				//this.fadeToBlack($('body').children().first(), 5000);
+				//$('#media-question').append($suite);
 
 				// Creation du lecteur audio s'il y a une source
 				if (audioActive) {
@@ -345,6 +347,7 @@
 
 			function onAudioCompleted() {
 
+				//$('#audio').fadeIn(250);
 				console.log('audioCompleted');
 			}
 
@@ -354,36 +357,37 @@
 			// Création de l'image
 			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 
-			var imageLoader = new ImageLoader($('#media-question'), $('#loader'), onImageLoaded);
+			var imageLoader = new ImageLoader($('#visuel'), $('#loader'), onImageLoaded);
 			imageLoader.startLoading(imageUrl, 250);
 
 
 
 
 			// Création du lecteur audio caché (contrôle via le bouton speaker)
+			
 			var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
 			var audioPlayer = new AudioPlayer(audioUrl);
 
 			//if (navAgent.isAudioEnabled()) {
 
-				//audioPlayer.create($('#audio'), 'html', null);
+				//audioPlayer.create($('#audio'), 'html', null, {w: 200, h: 40});
 			//}
 			//else 
 			if (FlashDetect.installed) {
 
-				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/dewplayer-mini.swf';
-				audioPlayer.create($('#audio'), 'dewp-mini', playerAudioUrl, {w: 0, h: 0});
+				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/';
+				audioPlayer.create($('#audio'), 'dewp-mini', playerAudioUrl, {w: 200, h: 40});
 			}
 			else {
 
 				alert('Ce navigateur ne prend pas en charge les médias audio.');
 			}
 
-			audioPlayer.attachControls({startBtn: $("#speaker"), pause: $("#speaker")});
+			audioPlayer.attachControls({startBtn: $("#speaker")});
 
 			audioPlayer.onCompleteCallBack(onAudioCompleted);
-
+			
 			//audioPlayer.enable(false);
 
 

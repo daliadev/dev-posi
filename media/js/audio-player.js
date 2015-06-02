@@ -9,7 +9,6 @@ var AudioPlayer = function(audioSources) {
 	
 	var self = this;
 	var container = null;
-	var player = null;
 	
 	var sources = null;
 
@@ -45,7 +44,7 @@ var AudioPlayer = function(audioSources) {
 		}
 		else if (typeof audioSrc === 'string') {
 
-			src[0] = 'mp3/' + audioSrc;
+			src[0] = audioSrc;
 		}
 		else {
 
@@ -90,6 +89,7 @@ var AudioPlayer = function(audioSources) {
 	/* Publics */
 
 	this.playerType = null;
+	this.player = null;
 	
 	this.create = function(content, type, playerURL, size) {
 
@@ -107,10 +107,10 @@ var AudioPlayer = function(audioSources) {
 		
 		if (this.playerType == 'html') {
 
-			this.player = '<audio id="audioplayer" name="audioplayer"></audio>';
-			$(this.player).css('width', width);
-			$(this.player).css('height', height);
-			container.append(this.player);
+			var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
+			//$(player).css('width', width);
+			//$(player).css('height', height);
+			container.append(playerHTML);
 		}
 		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
 			
@@ -119,11 +119,11 @@ var AudioPlayer = function(audioSources) {
 			switch(this.playerType) {
 
 				case 'dewp' :
-					dewpType = playerURL + 'dewplayer';
+					dewpType = playerURL + 'dewplayer.swf';
 					break;
 
 				case 'dewp-mini' :
-					dewpType = playerURL + 'dewplayer-mini';
+					dewpType = playerURL + 'dewplayer-mini.swf';
 					break;
 
 				default :
@@ -142,10 +142,10 @@ var AudioPlayer = function(audioSources) {
 					wmode: 'transparent'
 				};
 				var attributes = {
-					id: 'dewplayer',
+					id: 'audioplayer'
 				};
 
-				swfobject.embedSWF(dewpType, 'dewp-content', width, height, '9.0.0', false, flashvars, params, attributes);
+				swfobject.embedSWF(dewpType, 'dewp-content', width.toString(), height.toString(), '9.0.0', false, flashvars, params, attributes);
 			}
 			
 			/*
@@ -176,32 +176,46 @@ var AudioPlayer = function(audioSources) {
 
 	this.attachControls = function(controls) {
 
-		//console.log(controls);
+		player = document.getElementById('audioplayer');
+
 		if (typeof controls === 'object') {
 
 			if (controls.startBtn !== null) {
 
-				//startBtn = controls.startBtn;
-				//console.log($(startBtn));
-				/*
-				controls.startBtn.bind('click', function(event) {
+				startBtn = controls.startBtn;
 
-					console.log('click');
-					//self.play();
+				startBtn.on('click', function(event) {
+
+					self.play();
 				});
-				*/
 			}
 			/*
-			if (controls.pause !== null) {
+			if (controls.pauseBtn !== undefined && controls.pauseBtn !== null) {
 
-				pauseBtn = controls.pause;
-			}
+				pauseBtn = controls.pauseBtn;
 
-			if (controls.startBtn !== null && controls.pause === null) {
+				pauseBtn.on('click', function(event) {
 
-				pauseBtn = controls.startBtn;
+					self.pause();
+				});
 			}
 			*/
+			if (controls.startBtn !== null && (controls.pauseBtn === undefined || controls.pauseBtn === null)) {
+
+				startBtn.on('click', function(event) {
+
+					if (!isPlaying) {
+
+						self.play();
+					}
+					else
+					{
+						self.pause();
+					}
+					
+				});
+			}
+
 			//attachEvents();
 		}
 	};
@@ -229,30 +243,7 @@ var AudioPlayer = function(audioSources) {
 		return html;
 	};
 	*/
-	/*
-	this.create = function(file, flashPlayerUrl, buttons) {
 
-		if (navAgent.isAudioEnabled()) {
-
-			this.$player.html(this.templateHtml(file));
-			this.$player.attr('autoplay', true);
-		}
-		else if (FlashDetect.installed) {
-			
-			this.$player.html(this.templateFlash(file, flashPlayerUrl));
-		}
-		else {
-
-			alert('Audioplay not supported by the browser');
-		}
-
-		this.$player.css('display', 'none');
-		
-		this.$button = buttonElement;
-
-		this.isCreated = true;
-	};
-	*/
 	/*
 	this.loadFile = function(file) {
 
@@ -291,22 +282,41 @@ var AudioPlayer = function(audioSources) {
 
 	this.play = function() {
 
-		console.log('play');
+		player = document.getElementById('audioplayer');
 
-		if (this.playerType === 'html') {
-			this.player.play();
-		}
-		else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
+		if (player !== null && !isPlaying) {
 
-			var dewp = $("#dewplayer");
-  			if (dewp !== null) {
-  				dewp.dewplay();
-  			}
+			if (self.playerType === 'html') {
+
+				player.play();
+			}
+			else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
+
+	  			player.dewplay();
+			}
+
+			isPlaying = true;
 		}
 	};
 
+
 	this.pause = function() {
 
+		player = document.getElementById('audioplayer');
+
+		if (player !== null && isPlaying) {
+
+			if (self.playerType === 'html') {
+
+				player.pause();
+			}
+			else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
+
+	  			player.dewpause();
+			}
+
+			isPlaying = false;
+		}
 	};
 
 	this.stop = function() {

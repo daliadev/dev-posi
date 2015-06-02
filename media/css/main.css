@@ -525,17 +525,37 @@ body {
 		#posi-page .media-display {
 			position: relative;
 			width: 100%;
-			max-width: 750px;
-			/*height: auto;*/
-			height: 0%;
-			padding-bottom: 56%;
-			max-height: 420px;
+			/*max-width: 750px;*/
+			height: 100%;
+			/*height: 0%;*/
+			/*padding-bottom: 56%;*/
+			/*max-height: 420px;*/
 			margin: 0 auto;
 			/*padding: 20px;*/
 			background-color: #fff;
 		}
+			
+			#posi-page .media-display #visuel {
+				position: relative;
+				width: 100%;
+				max-width: 750px;
+				height: 0%;
+				max-height: 420px;
+				padding-bottom: 56%;
+				
+			}
 
-			#posi-page .media-display .image-loader {
+				#posi-page .media-display img {
+					position: absolute;
+					width: 100%;
+					max-width: 100%;
+					/*height: 0%;
+					padding-bottom: 56%;
+					margin: 0;*/
+					z-index: 99;
+				}
+
+			#posi-page .media-display #loader {
 				display: none;
 				position: absolute;
 				top: 0;
@@ -546,10 +566,7 @@ body {
 				background: url('../images/loader_bl.gif') center center no-repeat;
 			}
 			
-			#posi-page .media-display img {
-				width: 100%;
-				max-width: 100%;
-			}
+			
 
 			
 			#posi-page .media-display #lecteurvideo {
@@ -557,6 +574,18 @@ body {
 				height: 100%;
 			}
 			
+			
+			#posi-page .media-display #audio {
+				/*display: none;*/
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				z-index: 90;
+			}
 
 			#posi-page .media-display #speaker {
 				position: absolute;
@@ -569,8 +598,8 @@ body {
 				-webkit-border-radius: 20px;
 				-moz-border-radius: 20px;
 				border-radius: 20px;
-				z-index: 599;
 				background-color: #3498db;
+				z-index: 599;
 			}
 
 			#posi-page .media-display #speaker:disabled {
@@ -587,18 +616,7 @@ body {
 				}
 		
 
-			#posi-page .media-display #audio {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				margin: 0;
-				padding: 0;
-				z-index: 499;
-			}
-
-
+	
 			/*#posi-page .media-display */
 			#black-bg {
 				position: absolute;
@@ -615,39 +633,34 @@ body {
 			}
 			
 
-			#posi-page .media-display .btn-suite {
-				/*float: right;*/
+			#posi-page .media-display #btn-suite {
+				display: none;
 				position: absolute;
-				/*display: inline;*/
 				width: 100%;
 				height: 100%;
 				top: 0;
 				left: 0;
-				/*line-height: 50%;*/
 				text-align: center;
-				/*vertical-align: middle;*/
-				z-index: 999;
+				z-index: 899;
 				/*background-color: #3498db;*/
 			}
 
-				#posi-page .media-display .btn-suite p {
+				#posi-page .media-display #btn-suite p {
 					display: block;
 					width: 100%;
 					height: 100%;
-					/*line-height: 60%;*/
 					text-align: center;
 					padding: 0;
 					margin: 0;
-					/*vertical-align: middle;*/
 				}
 
-				#posi-page .media-display .btn-suite .vert-align {
+				#posi-page .media-display #btn-suite .vert-align {
 					display: inline-block;
 					height: 100%;
 					vertical-align: middle;
 				}
 
-				#posi-page .media-display .btn-suite input {
+				#posi-page .media-display #btn-suite input {
 					/*position: static;*/
 					display: inline-block;
 					width: 100px;
@@ -715,13 +728,13 @@ body {
 			/*width: 100%;*/
 			height: 100%;
 			/*padding: 20px 30px;*/
-			/*margin: 0 0 20px 0;*/*/
+			/*margin: 0 0 20px 0;*/
 			/*background-color: #fff;*/
 		}
 
-		#posi-page .audio-media {
+		/*#posi-page .audio-media {
 			float: left;
-		}
+		}*/
 		
 
 		/*#posi-page input {

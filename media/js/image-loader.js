@@ -13,18 +13,12 @@ var ImageLoader = function(container, loader, onLoadCallback) {
 		this.fadeDuration = loaderFadeDuration;
 		this.imageBox.onload = function() {
 			
-			//imageBox.style.display = 'none';
-			/*
-			self.container.appendChild(this);
-			self.container.style.height = 'auto';
-			self.container.style.paddingBottom = '0';
-			*/
 			$(this).hide();
 			//self.blackBg.hide();
 			//self.container.prepend('<div id="black-bg"></div>');
 			self.container.prepend(this);
-			self.container.css('height', 'auto');
-			self.container.css('padding-bottom', '0px');
+			// self.container.css('height', 'auto');
+			// self.container.css('padding-bottom', '0px');
 			self.loader.fadeOut(self.fadeDuration);
 
 			if (typeof self.onLoadFunction === 'function') {
@@ -38,15 +32,10 @@ var ImageLoader = function(container, loader, onLoadCallback) {
 	};
 
 
-	this.fadeToBlack = function(duration) {
-
-		//var blackDiv = document.createElement('div');
-		//blackDiv.id = 'black-bg';
+	this.fadeToBlack = function(element, duration) {
 
 		//this.container.children().last().before('<div id="black-bg"></div>');
 		$('body').children().first().after('<div id="black-bg"></div>');
-		//var suiteBtn = this.container.lastChild;
-		//suiteBtn.appendChild('<div id="black-bg"></div>');
 		//this.container.prepend('<div id="black-bg"></div>');
 		this.blackBg = $('#black-bg');
 		this.blackBg.hide();

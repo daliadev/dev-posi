@@ -62,7 +62,7 @@ var AudioPlayer = function(audioSources) {
 	};
 
 
-
+	/*
 	var attachEvents = function() {
 
 		console.log(startBtn);
@@ -75,14 +75,8 @@ var AudioPlayer = function(audioSources) {
 
 		//console.log(startBtn);
 
-		/*
-		pauseBtn.on('click', function(event) {
-
-			self.pause();
-		});
-		*/
 	};
-
+	*/
 
 
 
@@ -184,12 +178,30 @@ var AudioPlayer = function(audioSources) {
 
 				startBtn = controls.startBtn;
 
-				startBtn.on('click', function(event) {
+				if (controls.pauseBtn !== undefined && controls.pauseBtn !== null) {
 
-					self.play();
-				});
+					startBtn.on('click', function(event) {
+
+						self.play();
+					});
+				}
+				else {
+
+					startBtn.on('click', function(event) {
+
+						if (!isPlaying) {
+
+							self.play();
+						}
+						else {
+
+							self.pause();
+						}
+						
+					});
+				}
 			}
-			/*
+			
 			if (controls.pauseBtn !== undefined && controls.pauseBtn !== null) {
 
 				pauseBtn = controls.pauseBtn;
@@ -199,7 +211,8 @@ var AudioPlayer = function(audioSources) {
 					self.pause();
 				});
 			}
-			*/
+			
+			/*
 			if (controls.startBtn !== null && (controls.pauseBtn === undefined || controls.pauseBtn === null)) {
 
 				startBtn.on('click', function(event) {
@@ -215,7 +228,8 @@ var AudioPlayer = function(audioSources) {
 					
 				});
 			}
-
+			*/
+			
 			//attachEvents();
 		}
 	};
@@ -296,6 +310,7 @@ var AudioPlayer = function(audioSources) {
 			}
 
 			isPlaying = true;
+
 		}
 	};
 
@@ -324,7 +339,7 @@ var AudioPlayer = function(audioSources) {
 	};
 
 
-	this.onCompleteCallBack = function(callBack) {
+	this.setOnCompleteCallBack = function(callBack) {
 
 		completeCallBack = callBack;
 	};

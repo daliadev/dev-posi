@@ -69,9 +69,20 @@
 						
 						<?php if (!empty($audioFile)) : ?>
 						
+						<!-- 
 						<button type="button" id="speaker">
 							<i class="fa fa-volume-up"></i>
-						</button>
+						</button> -->
+						
+						<div id="speaker">
+							<button type="button" id="speaker-button">
+								<i class="fa fa-volume-up"></i>
+							</button>
+							<svg class="svg-speaker-loader" version="1.1" viewBox="0 0 46 46" preserveAspectRatio="xMinYMin meet">
+								<!-- <circle cx="20" cy="20" r="20" id="sun" transform="rotate(90)" style="stroke-width: 18; stroke-dasharray: 2; stroke-dashoffset: 2;"></circle> -->
+								<circle id="speaker-progress" r="20" transform="translate(23, 23) rotate(-90)"></circle>
+							</svg>
+						</div>
 
 						<?php endif; ?>
 
@@ -331,7 +342,10 @@
 
 				$('#visuel img').fadeIn(1500);
 
+				$('#audio').show(1500);
+
 				//this.fadeToBlack($('body').children().first(), 5000);
+
 				//$('#media-question').append($suite);
 
 				// Creation du lecteur audio s'il y a une source
@@ -347,7 +361,7 @@
 
 			function onAudioCompleted() {
 
-				//$('#audio').fadeIn(250);
+				
 				console.log('audioCompleted');
 			}
 
@@ -358,7 +372,7 @@
 			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 
 			var imageLoader = new ImageLoader($('#visuel'), $('#loader'), onImageLoaded);
-			imageLoader.startLoading(imageUrl, 250);
+			imageLoader.startLoading(imageUrl, 500);
 
 
 
@@ -384,14 +398,14 @@
 				alert('Ce navigateur ne prend pas en charge les médias audio.');
 			}
 
-			audioPlayer.attachControls({startBtn: $("#speaker")});
+			audioPlayer.attachControls({startBtn: $("#speaker-button")});
 
-			audioPlayer.onCompleteCallBack(onAudioCompleted);
+			audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 			
 			//audioPlayer.enable(false);
 
-
-
+			//var circle = document.getElementById('speaker-progress');
+			//console.log(circle.getTotalLength());
 
 			
 

@@ -576,7 +576,7 @@ body {
 			
 			
 			#posi-page .media-display #audio {
-				/*display: none;*/
+				display: none;
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -586,7 +586,8 @@ body {
 				padding: 0;
 				z-index: 90;
 			}
-
+			
+			/*
 			#posi-page .media-display #speaker {
 				position: absolute;
 				bottom: 15px;
@@ -614,7 +615,91 @@ body {
 					font-size: 1.25em;
 					color: #fff;
 				}
-		
+				*/
+
+			#posi-page .media-display #speaker {
+				position: absolute;
+				bottom: 15px;
+				right: 15px;
+				width: 46px;
+				height: 46px;
+				padding: 0;
+				margin: 0;
+				/*-webkit-border-radius: 20px;
+				-moz-border-radius: 20px;
+				border-radius: 20px;*/
+				/*background-color: #3498db;*/
+				z-index: 599;
+
+
+			}
+
+				#posi-page .media-display #speaker #speaker-button {
+					position: absolute;
+					z-index: 601;
+					width: 40px;
+					height: 40px;
+					bottom: 0;
+					right: 0;
+					margin: 3px;
+					-webkit-border-radius: 20px;
+					-moz-border-radius: 20px;
+					border-radius: 20px;
+					background-color: #3498db;
+				}
+
+				#posi-page .media-display #speaker #speaker-button:disabled {
+					background-color: #bdbdbd;
+				}
+				
+				#posi-page .media-display #speaker #speaker-button:hover {
+					background-color: #2980b9;
+				}
+
+					#posi-page .media-display #speaker .fa {
+						
+						font-size: 1.25em;
+						color: #fff;
+					}
+
+				#posi-page .media-display #speaker .svg-speaker-loader {
+					position: absolute;
+					z-index: 600;
+					fill: #3498db;
+					stroke: #5bc0ff; /*#2980b9;*/
+					stroke-width: 6;
+					stroke-dasharray: 126; /* max: 125.7 pour 360° */
+					stroke-dashoffset: 0;
+					
+					animation: dash 5s linear; /* forwards; backwards; */
+
+					/* 
+					Avoir la longueur du stroke en js : 
+					var path = document.querySelector('.path');
+					var length = path.getTotalLength();
+					*/
+				}
+
+				@keyframes dash {
+					to {
+						stroke-dashoffset: -126;
+					}
+				}
+			/*
+			#posi-page .media-display #speaker.disabled {
+				background-color: #bdbdbd;
+			}
+			
+			#posi-page .media-display #speaker.hover {
+				background-color: #2980b9;
+			}
+
+				#posi-page .media-display #speaker .fa {
+					
+					font-size: 1.25em;
+					color: #fff;
+				}
+				*/
 
 	
 			/*#posi-page .media-display */

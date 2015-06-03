@@ -576,7 +576,7 @@ body {
 			
 			
 			#posi-page .media-display #audio {
-				display: none;
+				/*display: none;*/
 				position: absolute;
 				top: 0;
 				left: 0;
@@ -586,6 +586,14 @@ body {
 				padding: 0;
 				z-index: 90;
 			}
+
+				#posi-page .media-display #audio #audioplayer {
+					display: block;
+					/*position: absolute;
+					top: 0;
+					left: 0;
+					z-index: 91;*/
+				}
 			
 			/*
 			#posi-page .media-display #speaker {
@@ -719,7 +727,7 @@ body {
 			
 
 			#posi-page .media-display #btn-suite {
-				display: none;
+				/*display: none;*/
 				position: absolute;
 				width: 100%;
 				height: 100%;

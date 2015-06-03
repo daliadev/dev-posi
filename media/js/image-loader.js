@@ -35,7 +35,7 @@ var ImageLoader = function(container, loader, onLoadCallback) {
 	this.fadeToBlack = function(element, duration) {
 
 		//this.container.children().last().before('<div id="black-bg"></div>');
-		$('body').children().first().after('<div id="black-bg"></div>');
+		element.append('<div id="black-bg"></div>');
 		//this.container.prepend('<div id="black-bg"></div>');
 		this.blackBg = $('#black-bg');
 		this.blackBg.hide();

@@ -15,13 +15,14 @@ var AudioPlayer = function(audioSources) {
 	var startBtn = null;
 	var pauseBtn = null;
 
-	var isCreated = false;
-	var isLoaded = false;
-	var isFinished = false;
+	//var isCreated = false;
+	//var isLoaded = false;
+	var isCompleted = false;
+	var isStarted = false;
 	var isPlaying = false;
 
+	var progressCallBack = null;
 	var completeCallBack = null;
-
 
 	/*
 	var audio = new Audio('audio_file.mp3');
@@ -31,7 +32,7 @@ var AudioPlayer = function(audioSources) {
 
 	
 	//var aggregateSources = function(audioSrc) {
-	var sources = function(audioSrc) {
+	var getSources = function(audioSrc) {
 
 		var src = new Array();
 
@@ -44,7 +45,7 @@ var AudioPlayer = function(audioSources) {
 		}
 		else if (typeof audioSrc === 'string') {
 
-			src[0] = audioSrc;
+			src[0] = 'mp3/' + audioSrc;
 		}
 		else {
 
@@ -53,12 +54,32 @@ var AudioPlayer = function(audioSources) {
 
 		return src.join('|');
 	};
-	//sources = aggregateSources(audioSources);
 
 
 
 	var update = function() {
 
+		if (player !== null) {
+
+			var duration = player.duration; // Duree totale
+			var currenttime = player.currentTime; // Temps écoulé
+			
+			var percent = (currenttime / duration) * 100;
+			//console.log('percent : ' + percent);
+			//var roundPercent = Math.round(percent);
+			//console.log('roundPercent : ' + roundPercent);
+
+			if (progressCallBack !== null) {
+
+				progressCallBack.call(this, percent);
+			}
+
+			if (percent == 100 && completeCallBack !== null && !isCompleted) {
+
+				isCompleted = true;
+				completeCallBack.call(this);
+			}
+		}
 	};
 
 
@@ -82,13 +103,18 @@ var AudioPlayer = function(audioSources) {
 
 	/* Publics */
 
-	this.playerType = null;
+	this.playerType = 'html';
 	this.player = null;
+
+	this.setPlayerType = function(type) {
+
+		this.playerType = type;
+	};
+
 	
-	this.create = function(content, type, playerURL, size) {
+	this.create = function(content, playerURL, size) {
 
 		container = content;
-		this.playerType = type;
 
 		var width = 160;
 		var height = 20;
@@ -99,14 +125,25 @@ var AudioPlayer = function(audioSources) {
 			height = size.h;
 		}
 		
-		if (this.playerType == 'html') {
+		if (this.playerType === 'html') {
 
 			var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
-			//$(player).css('width', width);
-			//$(player).css('height', height);
 			container.append(playerHTML);
+			
+			var sources = getSources(audioSources).split('|');
+			for (var i = 0, count = sources.length; i < count; i++) {
+
+				var src = sources[i].replace('mp3/', '');
+				var sourceHTML = '<source src="' + src + '"></source>';
+				$('#audioplayer').append(sourceHTML);
+			}
+
+			document.getElementById('audioplayer').volume = 1;
+			$('#audioplayer').css('width', width);
+			$('#audioplayer').css('height', height);
+			//console.log($('#audioplayer'));
 		}
-		else if (this.playerType == 'dewp' || this.playerType == 'dewp-mini') {
+		else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
 			
 			var dewpType = null;
 
@@ -129,8 +166,10 @@ var AudioPlayer = function(audioSources) {
 				container.append('<div id="dewp-content"></div>');
 
 				var flashvars = {
-					mp3: sources(audioSources), //'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3',
-					javascript: 'on'
+					mp3: getSources(audioSources), //'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3',
+					javascript: 'on',
+					autostart: 1,
+					nopointer: 1
 				};
 				var params = {
 					wmode: 'transparent'
@@ -170,7 +209,7 @@ var AudioPlayer = function(audioSources) {
 
 	this.attachControls = function(controls) {
 
-		player = document.getElementById('audioplayer');
+		//player = document.getElementById('audioplayer');
 
 		if (typeof controls === 'object') {
 
@@ -197,7 +236,6 @@ var AudioPlayer = function(audioSources) {
 
 							self.pause();
 						}
-						
 					});
 				}
 			}
@@ -235,33 +273,6 @@ var AudioPlayer = function(audioSources) {
 	};
 
 
-	this.startLoading = function() {
-
-	};
-
-	/*
-	this.templateHtml = function(file) {
-
-		var html = '<audio id="audioplayer" name="audioplayer" src="' + file + '"></audio>';
-		return html;
-	};
-
-	this.templateFlash = function(file, flashPlayerUrl) {
-
-		var html = '';
-		html += '<object id="dewplayer" name="dewplayer" data="' + flashPlayerUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
-		html += '<param name="movie" value="' + flashPlayerUrl + '" />'; 
-		html += '<param name="flashvars" value="mp3=' + file + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-		html += '<param name="wmode" value="transparent" />';
-		html += '</object>';
-		return html;
-	};
-	*/
-
-	/*
-	this.loadFile = function(file) {
-
-	};
 	
 	this.display = function(show) {
 
@@ -270,7 +281,7 @@ var AudioPlayer = function(audioSources) {
 	this.hide = function() {
 
 	};
-	*/
+
 
 	this.enable = function(enabled) {
 
@@ -294,15 +305,22 @@ var AudioPlayer = function(audioSources) {
 
 
 
+	this.startPlaying = function() {
+
+	};
+
+
 	this.play = function() {
 
 		player = document.getElementById('audioplayer');
+		//console.log(player);
 
 		if (player !== null && !isPlaying) {
 
-			if (self.playerType === 'html') {
+			if (this.playerType === 'html') {
 
 				player.play();
+				player.ontimeupdate = update;
 			}
 			else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
 
@@ -321,7 +339,7 @@ var AudioPlayer = function(audioSources) {
 
 		if (player !== null && isPlaying) {
 
-			if (self.playerType === 'html') {
+			if (this.playerType === 'html') {
 
 				player.pause();
 			}
@@ -334,10 +352,33 @@ var AudioPlayer = function(audioSources) {
 		}
 	};
 
+
 	this.stop = function() {
 
+		player = document.getElementById('audioplayer');
+
+		if (player !== null && isPlaying) {
+
+			if (this.playerType === 'html') {
+
+				player.pause();
+				player.currentTime = 0;
+			}
+			else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
+
+	  			player.dewstop();
+			}
+
+			isPlaying = false;
+		}
 	};
 
+
+
+	this.setOnProgressCallBack = function(callBack) {
+
+		progressCallBack = callBack;
+	};
 
 	this.setOnCompleteCallBack = function(callBack) {
 

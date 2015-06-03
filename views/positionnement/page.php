@@ -324,6 +324,8 @@
 			// Timer de selection automatique du champ de saisie
 			var timerPlayerComplete = null;
 
+			var playerComplete = false;
+
 
 			// Contenu du lecteur audio
 			//var audioHtml = '';
@@ -342,7 +344,7 @@
 
 				$('#visuel img').fadeIn(1500);
 
-				$('#audio').show(1500);
+				//$('#audio').show();
 
 				//this.fadeToBlack($('body').children().first(), 5000);
 
@@ -359,10 +361,29 @@
 				}
 			}
 
+
+			function onAudioProgress(percent) {
+
+				//console.log('audioProgress : ' + percent + '%');
+
+			}
+
 			function onAudioCompleted() {
 
-				
 				console.log('audioCompleted');
+				playerComplete = true;
+
+				if ($('.reponse-qcm') !== null) {
+
+					$(".reponse-qcm").prop("disabled", false);
+				}
+
+				if ($('#reponse-champ') !== null) {
+
+					$('#reponse-champ').removeProp('disabled');
+					$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+					$('#reponse-champ').focus();
+				}
 			}
 
 
@@ -383,15 +404,16 @@
 
 			var audioPlayer = new AudioPlayer(audioUrl);
 
-			//if (navAgent.isAudioEnabled()) {
+			if (navAgent.isAudioEnabled()) {
 
-				//audioPlayer.create($('#audio'), 'html', null, {w: 200, h: 40});
-			//}
-			//else 
-			if (FlashDetect.installed) {
+				audioPlayer.setPlayerType('html');
+				audioPlayer.create($('#audio'), null, {w: 200, h: 40});
+			}
+			else if (FlashDetect.installed) {
 
+				audioPlayer.setPlayerType('dewp-mini');
 				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/';
-				audioPlayer.create($('#audio'), 'dewp-mini', playerAudioUrl, {w: 200, h: 40});
+				audioPlayer.create($('#audio'), playerAudioUrl, {w: 200, h: 40});
 			}
 			else {
 
@@ -399,15 +421,75 @@
 			}
 
 			audioPlayer.attachControls({startBtn: $("#speaker-button")});
-
+			
+			audioPlayer.setOnProgressCallBack(onAudioProgress);
 			audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 			
 			//audioPlayer.enable(false);
-
-			//var circle = document.getElementById('speaker-progress');
-			//console.log(circle.getTotalLength());
-
+			audioPlayer.startPlaying();
 			
+
+			/*** Events ***/
+			
+			// Sur click d'un des boutons radio
+			$(".reponse-qcm").on("click", function(e) {
+
+				if (playerComplete) {
+
+					imageLoader.fadeToBlack($('#media-question'), 2000);
+					$('#media-question').append($suite);
+					$("#submit-suite").hide().fadeIn(2000);
+					$("#submit-suite").prop("disabled", false);
+				}
+				else {
+
+					$(this).attr("checked", false);
+				}
+			});
+			
+
+			// Sur click dans le champ de réponse s'il existe.
+			$("#reponse-champ").on("click", function(e) {
+
+				if (playerComplete) {
+
+					$('#media-question').append($suite);
+					$("#submit-suite").show(500);
+					$("#submit-suite").prop("disabled", false);
+
+					//$(this).removeProp("readonly");
+					//$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
+				}
+				else {
+
+					$(this).blur();
+				}
+			});
+			
+
+			// Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
+
+			$("#reponse-champ").on("keydown", function(e) {
+
+				// On s'assure que la vidéo ou le son sont terminés
+				// et que l'utilisateur a saisi au moins 2 caractères.
+				if (playerComplete) {
+
+					$(this).attr("placeholder", "");
+					$('#media-question').append($suite);
+
+					if ($(this).val().length > 1) {
+
+						
+						$("#submit-suite").show(500);
+						$("#submit-suite").prop("disabled", false);
+					}
+					else if ($(this).val().length <= 1) {
+
+						$("#submit-suite").prop("disabled", false);
+					}
+				}
+			});
 
 
 			/*

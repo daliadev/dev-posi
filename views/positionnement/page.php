@@ -78,9 +78,9 @@
 							<button type="button" id="speaker-button">
 								<i class="fa fa-volume-up"></i>
 							</button>
-							<svg class="svg-speaker-loader" version="1.1" viewBox="0 0 46 46" preserveAspectRatio="xMinYMin meet">
-								<!-- <circle cx="20" cy="20" r="20" id="sun" transform="rotate(90)" style="stroke-width: 18; stroke-dasharray: 2; stroke-dashoffset: 2;"></circle> -->
-								<circle id="speaker-progress" r="20" transform="translate(23, 23) rotate(-90)"></circle>
+							<svg id="svg-speaker-progress" version="1.1" viewBox="0 0 46 46" preserveAspectRatio="xMinYMin meet">
+								<circle id="speaker-loader" r="20" transform="translate(23.5, 23) rotate(-90)"></circle>
+								<circle id="speaker-progress" r="20" transform="translate(23.5, 23) rotate(-90)"></circle>
 							</svg>
 						</div>
 
@@ -364,14 +364,21 @@
 
 			function onAudioProgress(percent) {
 
-				//console.log('audioProgress : ' + percent + '%');
+				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
+				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * -percent;
+				//$('#speaker-progress').css('stroke-dashoffset', offset.toString());
 
+				var rotation = Math.round(360 / 100 * percent - 90);
+				$('#speaker-progress').attr('transform', 'translate(23.5, 23) rotate(' + rotation.toString() + ')');
 			}
 
 			function onAudioCompleted() {
 
 				console.log('audioCompleted');
 				playerComplete = true;
+
+				//var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
+				//$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
 
 				if ($('.reponse-qcm') !== null) {
 
@@ -404,6 +411,7 @@
 
 			var audioPlayer = new AudioPlayer(audioUrl);
 
+			// Création du player
 			if (navAgent.isAudioEnabled()) {
 
 				audioPlayer.setPlayerType('html');
@@ -426,7 +434,7 @@
 			audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 			
 			//audioPlayer.enable(false);
-			audioPlayer.startPlaying();
+			//audioPlayer.startPlaying();
 			
 
 			/*** Events ***/
@@ -436,6 +444,7 @@
 
 				if (playerComplete) {
 
+					//imageLoader.fadeToBlank($('#media-question'), 0);
 					imageLoader.fadeToBlack($('#media-question'), 2000);
 					$('#media-question').append($suite);
 					$("#submit-suite").hide().fadeIn(2000);
@@ -453,9 +462,9 @@
 
 				if (playerComplete) {
 
-					$('#media-question').append($suite);
-					$("#submit-suite").show(500);
-					$("#submit-suite").prop("disabled", false);
+					// $('#media-question').append($suite);
+					// $("#submit-suite").show(500);
+					// $("#submit-suite").prop("disabled", false);
 
 					//$(this).removeProp("readonly");
 					//$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");

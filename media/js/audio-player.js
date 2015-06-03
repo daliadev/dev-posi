@@ -1,5 +1,5 @@
 
-var AudioPlayer = function(audioSources) {
+var AudioPlayer = function(audioTracks) {
 
 
 	//this.$player = playerElement;
@@ -21,18 +21,15 @@ var AudioPlayer = function(audioSources) {
 	var isStarted = false;
 	var isPlaying = false;
 
+	var loadingTimer = null;
+	var progressTimer = null;
+
 	var progressCallBack = null;
 	var completeCallBack = null;
 
-	/*
-	var audio = new Audio('audio_file.mp3');
-	audio.load();
-	audio.play();
-	*/
 
-	
-	//var aggregateSources = function(audioSrc) {
-	var getSources = function(audioSrc) {
+
+	var getTracks = function(audioSrc) {
 
 		var src = new Array();
 
@@ -57,7 +54,7 @@ var AudioPlayer = function(audioSources) {
 
 
 
-	var update = function() {
+	var updateProgress = function() {
 
 		if (player !== null) {
 
@@ -74,30 +71,18 @@ var AudioPlayer = function(audioSources) {
 				progressCallBack.call(this, percent);
 			}
 
-			if (percent == 100 && completeCallBack !== null && !isCompleted) {
+			if (percent == 100) {
 
-				isCompleted = true;
-				completeCallBack.call(this);
+				clearInterval(progressTimer);
+
+				if (completeCallBack !== null && !isCompleted) {
+
+					isCompleted = true;
+					completeCallBack.call(this);
+				}
 			}
 		}
 	};
-
-
-	/*
-	var attachEvents = function() {
-
-		console.log(startBtn);
-
-		startBtn.on("click", function() {
-
-			console.log('click');
-			//self.play();
-		});
-
-		//console.log(startBtn);
-
-	};
-	*/
 
 
 
@@ -130,10 +115,10 @@ var AudioPlayer = function(audioSources) {
 			var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
 			container.append(playerHTML);
 			
-			var sources = getSources(audioSources).split('|');
-			for (var i = 0, count = sources.length; i < count; i++) {
+			var tracks = getTracks(audioTracks).split('|');
+			for (var i = 0, count = tracks.length; i < count; i++) {
 
-				var src = sources[i].replace('mp3/', '');
+				var src = tracks[i].replace('mp3/', '');
 				var sourceHTML = '<source src="' + src + '"></source>';
 				$('#audioplayer').append(sourceHTML);
 			}
@@ -166,7 +151,7 @@ var AudioPlayer = function(audioSources) {
 				container.append('<div id="dewp-content"></div>');
 
 				var flashvars = {
-					mp3: getSources(audioSources), //'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3',
+					mp3: getTracks(audioTracks), //ex : 'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3'
 					javascript: 'on',
 					autostart: 1,
 					nopointer: 1
@@ -209,11 +194,10 @@ var AudioPlayer = function(audioSources) {
 
 	this.attachControls = function(controls) {
 
-		//player = document.getElementById('audioplayer');
 
 		if (typeof controls === 'object') {
 
-			if (controls.startBtn !== null) {
+			if (controls.startBtn !== undefined && controls.startBtn !== null) {
 
 				startBtn = controls.startBtn;
 
@@ -267,9 +251,19 @@ var AudioPlayer = function(audioSources) {
 				});
 			}
 			*/
-			
-			//attachEvents();
 		}
+	};
+
+
+
+	this.setOnProgressCallBack = function(callBack) {
+
+		progressCallBack = callBack;
+	};
+
+	this.setOnCompleteCallBack = function(callBack) {
+
+		completeCallBack = callBack;
 	};
 
 
@@ -304,11 +298,11 @@ var AudioPlayer = function(audioSources) {
 	};
 
 
-
+	/*
 	this.startPlaying = function() {
 
 	};
-
+	*/
 
 	this.play = function() {
 
@@ -319,8 +313,15 @@ var AudioPlayer = function(audioSources) {
 
 			if (this.playerType === 'html') {
 
+				if (isCompleted) {
+
+					isCompleted = false;
+				}
+
 				player.play();
-				player.ontimeupdate = update;
+
+				//player.ontimeupdate = update;
+				progressTimer = setInterval(updateProgress, 100);
 			}
 			else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
 
@@ -372,19 +373,6 @@ var AudioPlayer = function(audioSources) {
 			isPlaying = false;
 		}
 	};
-
-
-
-	this.setOnProgressCallBack = function(callBack) {
-
-		progressCallBack = callBack;
-	};
-
-	this.setOnCompleteCallBack = function(callBack) {
-
-		completeCallBack = callBack;
-	};
-
 
 	
 };

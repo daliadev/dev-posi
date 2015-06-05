@@ -1,8 +1,6 @@
 
 var AudioPlayer = function(audioTracks) {
 
-
-	//this.$player = playerElement;
 	
 
 	/* Privates */
@@ -15,15 +13,15 @@ var AudioPlayer = function(audioTracks) {
 	var startBtn = null;
 	var pauseBtn = null;
 
-	//var isCreated = false;
 	//var isLoaded = false;
-	var isCompleted = false;
+	var isEnded = false;
 	var isStarted = false;
 	var isPlaying = false;
 
 	var loadingTimer = null;
 	var progressTimer = null;
 
+	var loadCallBack = null;
 	var progressCallBack = null;
 	var completeCallBack = null;
 
@@ -54,11 +52,37 @@ var AudioPlayer = function(audioTracks) {
 
 
 
+	var updateLoading = function() {
+
+		//console.log(player);
+		if (player !== null) {
+
+			var duration = player.duration;
+			var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
+			var percentLoaded = (bufferedEnd / duration) * 100;
+			//console.log('percentLoaded :' + percentLoaded);
+
+			if (loadCallBack !== null) {
+
+				loadCallBack.call(this, percentLoaded);
+			}
+
+			if (percentLoaded == 100) {
+
+				clearInterval(loadingTimer);
+			}
+		}
+		else {
+			console.log('Player not found or not ready')
+		}
+	};
+
+
 	var updateProgress = function() {
 
 		if (player !== null) {
 
-			var duration = player.duration; // Duree totale
+			 // Duree totale
 			var currenttime = player.currentTime; // Temps écoulé
 			
 			var percent = (currenttime / duration) * 100;
@@ -71,13 +95,15 @@ var AudioPlayer = function(audioTracks) {
 				progressCallBack.call(this, percent);
 			}
 
-			if (percent == 100) {
+			if (player.ended || percent == 100) {
 
 				clearInterval(progressTimer);
+				// console.log('ended');
 
-				if (completeCallBack !== null && !isCompleted) {
+				//if (completeCallBack !== null && !isEnded) {
+				if (completeCallBack !== null) {
 
-					isCompleted = true;
+					//isEnded = true;
 					completeCallBack.call(this);
 				}
 			}
@@ -96,6 +122,22 @@ var AudioPlayer = function(audioTracks) {
 		this.playerType = type;
 	};
 
+	this.setOnLoadCallBack = function(callBack) {
+
+		loadCallBack = callBack;
+	};
+
+	this.setOnProgressCallBack = function(callBack) {
+
+		progressCallBack = callBack;
+	};
+
+	this.setOnCompleteCallBack = function(callBack) {
+
+		completeCallBack = callBack;
+	};
+
+
 	
 	this.create = function(content, playerURL, size) {
 
@@ -109,6 +151,8 @@ var AudioPlayer = function(audioTracks) {
 			width = size.w;
 			height = size.h;
 		}
+
+		
 		
 		if (this.playerType === 'html') {
 
@@ -123,10 +167,10 @@ var AudioPlayer = function(audioTracks) {
 				$('#audioplayer').append(sourceHTML);
 			}
 
-			document.getElementById('audioplayer').volume = 1;
+			$('#audioplayer').attr('volume', '1');
+			$('#audioplayer').attr('preload', 'auto');
 			$('#audioplayer').css('width', width);
 			$('#audioplayer').css('height', height);
-			//console.log($('#audioplayer'));
 		}
 		else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
 			
@@ -184,7 +228,42 @@ var AudioPlayer = function(audioTracks) {
 		}
 		else {
 
+			//clearInterval(loadingTimer);
+
 			console.log('AudioPlayer : Player non spécifié ou inexistant.');
+		}
+
+		if ($('#audioplayer') !== null && $('#audioplayer') !== undefined) {
+
+			//console.log($('#audioplayer'));
+			player = document.getElementById('audioplayer');
+
+			player.onloadstart = function() {
+				//console.log("Starting to load track");
+				loadingTimer = setInterval(updateLoading, 10);
+			};
+
+			player.onloadeddata = function() {
+
+				clearInterval(loadingTimer);
+
+				var percentLoaded = 100;
+
+				if (loadCallBack !== null) {
+
+					loadCallBack.call(this, percentLoaded.toString() + '%');
+				}
+				//console.log("Browser has loaded the current frame");
+			};
+
+			/*
+			player.onprogress = function() {
+				console.log("Downloading track : ");
+				console.log("Start : " + this.buffered.start(0) + ' - End : ' + this.buffered.end(0));
+			};
+			*/
+			//loadingTimer = setInterval(updateLoading, 10);
+			//setTimeout(updateLoading, 1000)
 		}
 
 	};
@@ -255,19 +334,6 @@ var AudioPlayer = function(audioTracks) {
 	};
 
 
-
-	this.setOnProgressCallBack = function(callBack) {
-
-		progressCallBack = callBack;
-	};
-
-	this.setOnCompleteCallBack = function(callBack) {
-
-		completeCallBack = callBack;
-	};
-
-
-	
 	this.display = function(show) {
 
 	};
@@ -306,16 +372,16 @@ var AudioPlayer = function(audioTracks) {
 
 	this.play = function() {
 
-		player = document.getElementById('audioplayer');
+		//player = document.getElementById('audioplayer');
 		//console.log(player);
 
 		if (player !== null && !isPlaying) {
 
 			if (this.playerType === 'html') {
 
-				if (isCompleted) {
+				if (isEnded) {
 
-					isCompleted = false;
+					isEnded = false;
 				}
 
 				player.play();
@@ -336,7 +402,7 @@ var AudioPlayer = function(audioTracks) {
 
 	this.pause = function() {
 
-		player = document.getElementById('audioplayer');
+		//player = document.getElementById('audioplayer');
 
 		if (player !== null && isPlaying) {
 
@@ -356,7 +422,7 @@ var AudioPlayer = function(audioTracks) {
 
 	this.stop = function() {
 
-		player = document.getElementById('audioplayer');
+		//player = document.getElementById('audioplayer');
 
 		if (player !== null && isPlaying) {
 

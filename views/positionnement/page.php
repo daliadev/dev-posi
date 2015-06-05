@@ -78,9 +78,9 @@
 							<button type="button" id="speaker-button">
 								<i class="fa fa-volume-up"></i>
 							</button>
-							<svg id="svg-speaker-progress" version="1.1" viewBox="0 0 46 46" preserveAspectRatio="xMinYMin meet">
-								<circle id="speaker-loader" r="20" transform="translate(23.5, 23) rotate(-90)"></circle>
-								<circle id="speaker-progress" r="20" transform="translate(23.5, 23) rotate(-90)"></circle>
+							<svg id="svg-speaker-progress" version="1.1" viewBox="0 0 52 52" preserveAspectRatio="xMinYMin meet">
+								<circle id="speaker-loader" r="24" transform="translate(26.5, 26) rotate(-90)"></circle>
+								<circle id="speaker-progress" r="24" transform="translate(26.5, 26) rotate(-90)"></circle>
 							</svg>
 						</div>
 
@@ -362,14 +362,21 @@
 			}
 
 
+
+			function onAudioLoad(percent) {
+
+				console.log(percent);
+			}
+
 			function onAudioProgress(percent) {
 
-				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
+				var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
 				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * -percent;
-				//$('#speaker-progress').css('stroke-dashoffset', offset.toString());
+				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) - 1;
+				$('#speaker-progress').css('stroke-dashoffset', offset.toString());
 
-				var rotation = Math.round(360 / 100 * percent - 90);
-				$('#speaker-progress').attr('transform', 'translate(23.5, 23) rotate(' + rotation.toString() + ')');
+				//var rotation = Math.round(360 / 100 * percent - 90);
+				//$('#speaker-progress').attr('transform', 'translate(23, 23) rotate(' + rotation.toString() + ')');
 			}
 
 			function onAudioCompleted() {
@@ -377,8 +384,8 @@
 				console.log('audioCompleted');
 				playerComplete = true;
 
-				//var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
-				//$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
+				var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
+				$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
 
 				if ($('.reponse-qcm') !== null) {
 
@@ -430,28 +437,29 @@
 
 			audioPlayer.attachControls({startBtn: $("#speaker-button")});
 			
+			audioPlayer.setOnLoadCallBack(onAudioLoad);
 			audioPlayer.setOnProgressCallBack(onAudioProgress);
 			audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 			
 			//audioPlayer.enable(false);
 			//audioPlayer.startPlaying();
 			
-
+			
 			/*** Events ***/
 			
 			// Sur click d'un des boutons radio
 			$(".reponse-qcm").on("click", function(e) {
-
+				
 				if (playerComplete) {
-
+					
 					//imageLoader.fadeToBlank($('#media-question'), 0);
-					imageLoader.fadeToBlack($('#media-question'), 2000);
+					imageLoader.fadeToBlack($('#media-question'), 1500);
 					$('#media-question').append($suite);
-					$("#submit-suite").hide().fadeIn(2000);
+					$("#submit-suite").hide().fadeIn(1500);
 					$("#submit-suite").prop("disabled", false);
 				}
 				else {
-
+					
 					$(this).attr("checked", false);
 				}
 			});

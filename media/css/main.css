@@ -643,7 +643,7 @@ body {
 					height: 40px;
 					bottom: 0;
 					right: 0;
-					margin: 3px;
+					margin: 6px;
 					-webkit-border-radius: 20px;
 					-moz-border-radius: 20px;
 					border-radius: 20px;
@@ -666,22 +666,27 @@ body {
 				#posi-page .media-display #speaker #svg-speaker-progress {
 					position: absolute;
 					z-index: 600;
+					min-width: 52px;
+					min-height: 52px;
+					bottom: 0;
+					right: 0;
+					/*margin: 5px;*/
 				}
 					
 					#posi-page .media-display #speaker #speaker-loader {
 						fill: none;
-						stroke: #bdbdbd;
-						stroke-width: 6;
-						stroke-dasharray: 126;
+						stroke: #bdbdbd;  /* #e0e0e0; */
+						stroke-width: 2;
+						stroke-dasharray: 170;
 						stroke-dashoffset: 0;
 					}
 
 					#posi-page .media-display #speaker #speaker-progress {
 						fill: none;
-						stroke: #3498db; /*#5bc0ff;*/ /*#2980b9;*/
-						stroke-width: 6;
-						stroke-dasharray: 126; /* max: 125.7 pour 360° */
-						stroke-dashoffset: 120;
+						stroke: #3498db;
+						stroke-width: 2;
+						stroke-dasharray: 170;
+						stroke-dashoffset: 170;
 						
 						/*animation: dash 5s linear;*/ /* forwards; backwards; */
 						/* 
@@ -724,8 +729,8 @@ body {
 				width: 100%;
 				height: 100%;
 				background-color: #000000;
-				opacity: 0.7;
-				filter: alpha(opacity=70);
+				opacity: 0.5;
+				filter: alpha(opacity=50);
 				z-index: 799;
 			}
 			

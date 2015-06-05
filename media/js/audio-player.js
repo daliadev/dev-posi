@@ -23,7 +23,7 @@ var AudioPlayer = function(audioTracks) {
 
 	var loadCallBack = null;
 	var progressCallBack = null;
-	var completeCallBack = null;
+	//var completeCallBack = null;
 
 
 
@@ -54,7 +54,6 @@ var AudioPlayer = function(audioTracks) {
 
 	var updateLoading = function() {
 
-		//console.log(player);
 		if (player !== null) {
 
 			var duration = player.duration;
@@ -73,6 +72,7 @@ var AudioPlayer = function(audioTracks) {
 			}
 		}
 		else {
+
 			console.log('Player not found or not ready')
 		}
 	};
@@ -82,7 +82,7 @@ var AudioPlayer = function(audioTracks) {
 
 		if (player !== null) {
 
-			 // Duree totale
+			var duration = player.duration; // Duree totale
 			var currenttime = player.currentTime; // Temps écoulé
 			
 			var percent = (currenttime / duration) * 100;
@@ -98,14 +98,16 @@ var AudioPlayer = function(audioTracks) {
 			if (player.ended || percent == 100) {
 
 				clearInterval(progressTimer);
-				// console.log('ended');
-
+				
+				isPlaying = false;
+				/*
 				//if (completeCallBack !== null && !isEnded) {
 				if (completeCallBack !== null) {
 
 					//isEnded = true;
 					completeCallBack.call(this);
 				}
+				*/
 			}
 		}
 	};
@@ -131,12 +133,12 @@ var AudioPlayer = function(audioTracks) {
 
 		progressCallBack = callBack;
 	};
-
+	/*
 	this.setOnCompleteCallBack = function(callBack) {
 
 		completeCallBack = callBack;
 	};
-
+	*/
 
 	
 	this.create = function(content, playerURL, size) {
@@ -233,6 +235,7 @@ var AudioPlayer = function(audioTracks) {
 			console.log('AudioPlayer : Player non spécifié ou inexistant.');
 		}
 
+
 		if ($('#audioplayer') !== null && $('#audioplayer') !== undefined) {
 
 			//console.log($('#audioplayer'));
@@ -251,7 +254,7 @@ var AudioPlayer = function(audioTracks) {
 
 				if (loadCallBack !== null) {
 
-					loadCallBack.call(this, percentLoaded.toString() + '%');
+					loadCallBack.call(this, percentLoaded);
 				}
 				//console.log("Browser has loaded the current frame");
 			};

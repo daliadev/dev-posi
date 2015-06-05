@@ -75,7 +75,7 @@
 						</button> -->
 						
 						<div id="speaker">
-							<button type="button" id="speaker-button">
+							<button type="button" id="speaker-button" class="button-info">
 								<i class="fa fa-volume-up"></i>
 							</button>
 							<svg id="svg-speaker-progress" version="1.1" viewBox="0 0 52 52" preserveAspectRatio="xMinYMin meet">
@@ -89,7 +89,7 @@
 						<!-- <div id="black-bg"></div> -->
 
 						<div id="btn-suite">
-							<div class="vert-align"></div><!-- Pas d'espace impératif entre ces 2 éléments
+							<!-- <div class="vert-align"></div> --><!-- Pas d'espace impératif entre ces 2 éléments
 						 --><input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
 						
@@ -365,7 +365,16 @@
 
 			function onAudioLoad(percent) {
 
-				console.log(percent);
+				var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
+				$('#speaker-loader').css('stroke-dashoffset', offset.toString());
+
+				if (percent == 100) {
+
+					isAudioLoaded = true;
+
+					var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
+					$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
+				}
 			}
 
 			function onAudioProgress(percent) {
@@ -377,11 +386,32 @@
 
 				//var rotation = Math.round(360 / 100 * percent - 90);
 				//$('#speaker-progress').attr('transform', 'translate(23, 23) rotate(' + rotation.toString() + ')');
+
+				if (percent == 100) {
+
+					//console.log('audioCompleted');
+					playerComplete = true;
+
+					var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
+					$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
+
+					if ($('.reponse-qcm') !== null) {
+
+						$(".reponse-qcm").prop("disabled", false);
+					}
+
+					if ($('#reponse-champ') !== null) {
+
+						$('#reponse-champ').removeProp('disabled');
+						$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+						$('#reponse-champ').focus();
+					}
+				}
 			}
 
-			function onAudioCompleted() {
-
-				console.log('audioCompleted');
+			//function onAudioCompleted() {
+				/*
+				//console.log('audioCompleted');
 				playerComplete = true;
 
 				var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
@@ -398,7 +428,8 @@
 					$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
 					$('#reponse-champ').focus();
 				}
-			}
+				*/
+			//}
 
 
 
@@ -439,7 +470,7 @@
 			
 			audioPlayer.setOnLoadCallBack(onAudioLoad);
 			audioPlayer.setOnProgressCallBack(onAudioProgress);
-			audioPlayer.setOnCompleteCallBack(onAudioCompleted);
+			//audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 			
 			//audioPlayer.enable(false);
 			//audioPlayer.startPlaying();
@@ -453,9 +484,9 @@
 				if (playerComplete) {
 					
 					//imageLoader.fadeToBlank($('#media-question'), 0);
-					imageLoader.fadeToBlack($('#media-question'), 1500);
+					//imageLoader.fadeToBlack($('#media-question'), 1500);
 					$('#media-question').append($suite);
-					$("#submit-suite").hide().fadeIn(1500);
+					$("#submit-suite").hide().fadeIn(1000);
 					$("#submit-suite").prop("disabled", false);
 				}
 				else {

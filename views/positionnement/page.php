@@ -391,6 +391,8 @@
 
 					//console.log('audioCompleted');
 					playerComplete = true;
+					//audioPlayer.startPlaying();
+					//audioPlayer.enableControls(true);
 
 					var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
 					$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
@@ -445,37 +447,81 @@
 
 			// Création du lecteur audio caché (contrôle via le bouton speaker)
 			
-			var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+			//var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
-			var audioPlayer = new AudioPlayer(audioUrl);
+			//var audioPlayer = new AudioPlayer($('#audio'), null, {w: 200, h: 40});
+			//audioPlayer.setTracks(audioUrl);
+			//var audioPlayer = new AudioPlayer(audioUrl);
 
 			// Création du player
+
+			//var audioPlayer;
+			var playerType; 
+			var playerURL;
+			var audioContainer = document.getElementById('audio');
+			var audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename
+
 			if (navAgent.isAudioEnabled()) {
 
-				audioPlayer.setPlayerType('html');
-				audioPlayer.create($('#audio'), null, {w: 200, h: 40});
+				playerType = 'html';
+				playerURL = null;
+				//audioPlayer.setPlayerType('html');
+				//audioPlayer.init(controls, loadCallBack, progressCallback, options);
+				//audioPlayer.init('html', $('#audio'), null, {w: 200, h: 40});
 			}
 			else if (FlashDetect.installed) {
 
-				audioPlayer.setPlayerType('dewp-mini');
-				var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/';
-				audioPlayer.create($('#audio'), playerAudioUrl, {w: 200, h: 40});
+				playerType = 'dewp-mini';
+				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
+				//audioPlayer.setPlayerType('dewp-mini');
+				//var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/';
+				//audioPlayer.init('dewp-mini', $('#audio'), playerAudioUrl, {w: 200, h: 40});
 			}
 			else {
 
 				alert('Ce navigateur ne prend pas en charge les médias audio.');
 			}
 
-			audioPlayer.attachControls({startBtn: $("#speaker-button")});
+
+			var audioPlayer = new AudioPlayer(audioTrack, playerType, audioContainer, playerURL, 200, 40);
+			//audioPlayer.addTracks('<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename);
+
+			//audioPlayer.setControls('on'); //{startBtn: $("#speaker-button")});
+			/*
+			audioPlayer.setControls({
+				start: {
+					//name: 'start',
+					action: 'play',
+					item: $("#speaker-button")
+				}
+			});
+			*/
+			var controls = [{
+					action: 'play',
+					item: $("#speaker-button")
+				}
+				/*
+				pause: {
+					action: 'pause',
+					item: $("#speaker-button")
+				}
+				*/
+			];
+
+			audioPlayer.init(controls, onAudioLoad, onAudioProgress);
+
+			//audioPlayer.enableControls(false);
 			
-			audioPlayer.setOnLoadCallBack(onAudioLoad);
-			audioPlayer.setOnProgressCallBack(onAudioProgress);
+			//audioPlayer.setLoadCallBack(onAudioLoad);
+			//audioPlayer.setProgressCallBack(onAudioProgress);
 			//audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 			
-			//audioPlayer.enable(false);
+			
 			//audioPlayer.startPlaying();
 			
 			
+
+
 			/*** Events ***/
 			
 			// Sur click d'un des boutons radio

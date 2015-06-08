@@ -484,8 +484,9 @@
 			}
 
 
-			var audioPlayer = new AudioPlayer(audioTrack, playerType, audioContainer, playerURL, 200, 40);
-			//audioPlayer.addTracks('<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename);
+			//var audioPlayer = new AudioPlayer(audioTrack, playerType, audioContainer, playerURL, 200, 40);
+			var audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+			//audioPlayer.setTrack(audioTrack);
 
 			//audioPlayer.setControls('on'); //{startBtn: $("#speaker-button")});
 			/*
@@ -499,12 +500,12 @@
 			*/
 			var controls = [{
 					action: 'play',
-					item: $("#speaker-button")
+					item: document.getElementById('speaker-button')
 				}
 				/*
 				pause: {
 					action: 'pause',
-					item: $("#speaker-button")
+					item: document.getElementById('speaker-button')
 				}
 				*/
 			];
@@ -516,7 +517,10 @@
 			//audioPlayer.setLoadCallBack(onAudioLoad);
 			//audioPlayer.setProgressCallBack(onAudioProgress);
 			//audioPlayer.setOnCompleteCallBack(onAudioCompleted);
-			//audioPlayer.load();
+
+			audioPlayer.setTrack(audioTrack);
+
+			//audioPlayer.startLoading();
 			
 			//audioPlayer.startPlaying();
 			

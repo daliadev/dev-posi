@@ -1,8 +1,9 @@
 
-var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, width, height) {
+//var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, width, height) {
+var AudioPlayer = function(playertype, playerContainer, playerURL, width, height) {
 
 	/// <summary>La classe audio</summary>
-	/// <param name="audioTracks" type="Array">Un tableau des pistes audios sous forme d'url pointant vers le médio audio.</param>
+	//// <param name="audioTracks" type="Array">Un tableau des pistes audios sous forme d'url pointant vers le médio audio.</param>
 	/// <param name="playertype" type="string">Le type de lecteur ('html' = natif, 'dewp' et 'dewp-mini' pour le lecteur flash).</param>
 	/// <param name="playerContainer" type="HTMLelement">Le conteneur ou sera intégré le lecteur.</param>
 	/// <param name="playerURL" type="string">Url du lecteur si différent du lecteur HTML natif (lecteur flash dewplayer).</param>
@@ -41,87 +42,84 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 
 
 
-	/*** Private methods ***/
+	
 
-	var create = function(tracks) {
+	//var create = function(tracks) {
 
-		audioSources = attachAudioTracks(tracks);
+	//audioSources = attachAudioTracks(tracks);
 
-		if (playerType === 'html') {
+	if (playerType === 'html') {
 
+		//var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
+		var playerHTML = document.createElement('audio');
+		playerHTML.id = 'audioplayer';
+		playerHTML.setAttribute('name', 'audioplayer');
+		playerHTML.setAttribute('preload', 'auto');
+		playerHTML.setAttribute('volume', 1);
+		// playerHTML.setAttribute('width', playerWidth);
+		// playerHTML.setAttribute('height', playerHeight);
 
-			//var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
-			var playerHTML = document.createElement('audio');
-			playerHTML.id = 'audioplayer';
-			playerHTML.name = 'audioplayer';
-			playerHTML.setAttribute('preload', 'none');
-			playerHTML.setAttribute('volume', '1');
-			playerHTML.width = 200;
-			playerHTML.height = 40;
+		//for (var i = 0, count = audioSources.length; i < count; i++) {
 
-			for (var i = 0, count = audioSources.length; i < count; i++) {
+			//playerHTML.appendChild(audioSources[0]);
+		//};
+		
+		container.appendChild(playerHTML);
+	}
+	else if (playerType === 'dewp' || playerType === 'dewp-mini') {
+		
+		var dewpType = null;
 
-				playerHTML.appendChild(audioSources[i]);
+		switch(playerType) {
+
+			case 'dewp' :
+				dewpType = playerURL + 'dewplayer.swf';
+				break;
+
+			case 'dewp-mini' :
+				dewpType = playerURL + 'dewplayer-mini.swf';
+				break;
+
+			default :
+				break;
+		}
+
+		if (dewpType !== null) {
+
+			var tempContent = document.createElement('div');
+			tempContent.id = 'dewp-content';
+			container.appendChild(tempContent);
+
+			var flashvars = {
+				//mp3: audioSources.join('|'), //ex : 'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3'
+				javascript: 'on',
+				//autostart: 1,
+				nopointer: 1
 			};
-			
-			container.appendChild(playerHTML);
+			var params = {
+				wmode: 'transparent'
+			};
+			var attributes = {
+				id: 'audioplayer'
+			};
+
+			swfobject.embedSWF(dewpType, 'dewp-content', playerWidth, playerHeight, '9.0.0', false, flashvars, params, attributes);
 		}
-		else if (playerType === 'dewp' || playerType === 'dewp-mini') {
-			
-			var dewpType = null;
+		
+		/*
+		this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
+		this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
+		this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+		this.player += '<param name="wmode" value="transparent" />';
+		this.player += '</object>';
+		*/
+	}
+	else {
 
-			switch(playerType) {
-
-				case 'dewp' :
-					dewpType = playerURL + 'dewplayer.swf';
-					break;
-
-				case 'dewp-mini' :
-					dewpType = playerURL + 'dewplayer-mini.swf';
-					break;
-
-				default :
-					break;
-			}
-
-			if (dewpType !== null) {
-
-				var tempContent = document.createElement('div');
-				tempContent.id = 'dewp-content';
-				container.appendChild(tempContent);
-
-				var flashvars = {
-					mp3: audioSources.join('|'), //ex : 'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3'
-					javascript: 'on',
-					autostart: 1,
-					nopointer: 1
-				};
-				var params = {
-					wmode: 'transparent'
-				};
-				var attributes = {
-					id: 'audioplayer'
-				};
-
-				swfobject.embedSWF(dewpType, 'dewp-content', playerWidth, playerHeight, '9.0.0', false, flashvars, params, attributes);
-			}
-			
-			/*
-			this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
-			this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-			this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-			this.player += '<param name="wmode" value="transparent" />';
-			this.player += '</object>';
-			*/
-		}
-		else {
-
-			console.log('AudioPlayer : Player non spécifié ou inexistant.');
-		}
+		console.log('AudioPlayer : Player non spécifié ou inexistant.');
 	}
 
-
-
+	/*
 	var attachAudioTracks = function(audioSrc) {
 
 		/// <summary>Permet de formater les données audios pour le player voulu.</summary>
@@ -165,6 +163,8 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 		// Retour des sources formattées selon le type de lecteur.
 		return srcArray;
 	};
+	*/
+
 
 
 
@@ -176,7 +176,7 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 
 			if (controllers.pause === undefined || controllers.pause === null) {
 
-				controllers.play.onclick = function(event) {
+				controllers.play.onclick = function() {
 
 					if (!isPlaying) {
 
@@ -204,11 +204,11 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 	};
 
 
-
+	/*
 	var attachEvents = function() {
 
 	};
-
+	*/
 
 
 	var updateLoading = function() {
@@ -274,7 +274,7 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 
 
 
-	create(audioTracks);
+	
 
 
 
@@ -294,9 +294,37 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 		return (playerType);
 	};
 
-	this.addTracks = function(tracks) {
 
-		//playerType = type;
+	this.setTrack = function(track) {
+
+		/// <summary>Ajoute la piste audio au lecteur</summary>
+		/// <param name="track" type="String">L'url de la piste audio</param>
+
+		//if (player !== null) {
+
+			if (playerType === 'html') {
+				var audioplay = document.getElementById('audioplayer');
+
+				if (audioplay.hasChildNodes()) {
+
+				}
+
+				var source = document.createElement('source');
+				source.src = track;
+				source.setAttribute('type', 'audio/mp3');
+
+				audioplay.appendChild(source);
+
+			}
+			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
+
+				var dewParams = document.getElementsByName('flashvars');
+
+				var flashvars = 'mp3=' + track + '&amp;';
+				flashvars += dewParams[0].getAttribute('value');
+				dewParams[0].setAttribute('value', flashvars);
+			}
+		//}
 	};
 
 	/*
@@ -407,10 +435,9 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 
 		player = document.getElementById('audioplayer');
 
+		if (player !== null && player !== undefined) {
 
-		if (player !== null  && player !== undefined) {
-
-			if (typeof controls === 'array') {
+			if (typeof controls === 'object') {
 
 				for (var i = 0, count = controls.length; i < count; i++) {
 
@@ -471,14 +498,72 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 			}
 		}
 
-		player.setAttribute('preload', 'auto');
-
 		
 		player.onloadstart = function() {
 
-			console.log('start loading');
+			console.log('loadstart');
 			loadingTimer = setInterval(updateLoading, 40);
 		};
+
+
+
+
+		player.onabort = function() {
+
+			console.log('abort');
+		};
+
+		player.oncanplay = function() {
+
+			console.log("canplay");
+		};
+
+		player.oncanplaythrough = function() {
+
+			console.log("canplaythrough");
+		};
+
+		player.ondurationchange = function() {
+
+			console.log("durationchange");
+		};
+
+		player.onerror = function() {
+
+			console.log("error");
+		};
+
+		player.onloadeddata = function() {
+
+			console.log("loadeddata");
+		};
+
+		player.onloadedmetadata = function() {
+
+			console.log("loadedmetadata ");
+		};
+
+		player.onsuspend = function() {
+
+			console.log("suspend");
+		};
+
+		player.onstalled = function() {
+
+			console.log("stalled");
+		};
+
+		player.onwaiting = function() {
+
+			console.log("waiting");
+		};
+
+		player.onemptied = function() {
+
+			console.log("emptied");
+		};
+		
+		
 		
 
 		/*
@@ -497,15 +582,23 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 	};
 
 
-	this.load = function() {
+	this.startLoading = function() {
 
-		
+		if (player !== null) {
 
-		//player.load();
+			player.load();
+		}
 
 		//loadingTimer = setInterval(updateLoading, 40);
-
 	}
+
+	/*
+	this.startPlaying = function() {
+
+	};
+	*/
+
+
 
 	this.show = function(duration) {
 
@@ -514,6 +607,7 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 	this.hide = function(duration) {
 
 	};
+
 
 
 	this.enableControls = function(enabled) {
@@ -537,14 +631,11 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 	};
 
 
-	/*
-	this.startPlaying = function() {
-
-	};
-	*/
+	
 
 	this.play = function() {
 
+		console.log('play');
 		if (player !== null && !isPlaying) {
 
 			if (this.playerType === 'html') {

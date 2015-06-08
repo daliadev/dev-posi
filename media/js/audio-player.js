@@ -13,9 +13,9 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 	var playerType = playertype;
 	var container = playerContainer;
 
+
 	var playerWidth = width;
 	var playerHeight = height;
-
 
 	var controllers = {
 		start: null,
@@ -27,7 +27,6 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 	};
 
 	var audioSources = null;
-	//var audioSources = attachAudioTracks(audioTracks);
 
 
 	var isLoaded = false;
@@ -42,73 +41,242 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 
 
 
-	if (playerType === 'html') {
+	/*** Private methods ***/
 
-		//var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
-		var playerHTML = document.createElement('audio');
-		playerHTML.id = 'audioplayer';
-		playerHTML.name = 'audioplayer';
-		playerHTML.setAttribute('volume', '1');
-		playerHTML.setAttribute('preload', 'none');
-		playerHTML.style.width = playerWidth;
-		playerHTML.style.height = playerHeight;
+	var create = function(tracks) {
 
-		container.appendChild(playerHTML);
-		//playerHTML.appendChild(audioSources);
+		audioSources = attachAudioTracks(tracks);
+
+		if (playerType === 'html') {
+
+
+			//var playerHTML = '<audio id="audioplayer" name="audioplayer"></audio>';
+			var playerHTML = document.createElement('audio');
+			playerHTML.id = 'audioplayer';
+			playerHTML.name = 'audioplayer';
+			playerHTML.setAttribute('preload', 'none');
+			playerHTML.setAttribute('volume', '1');
+			playerHTML.width = 200;
+			playerHTML.height = 40;
+
+			for (var i = 0, count = audioSources.length; i < count; i++) {
+
+				playerHTML.appendChild(audioSources[i]);
+			};
+			
+			container.appendChild(playerHTML);
+		}
+		else if (playerType === 'dewp' || playerType === 'dewp-mini') {
+			
+			var dewpType = null;
+
+			switch(playerType) {
+
+				case 'dewp' :
+					dewpType = playerURL + 'dewplayer.swf';
+					break;
+
+				case 'dewp-mini' :
+					dewpType = playerURL + 'dewplayer-mini.swf';
+					break;
+
+				default :
+					break;
+			}
+
+			if (dewpType !== null) {
+
+				var tempContent = document.createElement('div');
+				tempContent.id = 'dewp-content';
+				container.appendChild(tempContent);
+
+				var flashvars = {
+					mp3: audioSources.join('|'), //ex : 'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3'
+					javascript: 'on',
+					autostart: 1,
+					nopointer: 1
+				};
+				var params = {
+					wmode: 'transparent'
+				};
+				var attributes = {
+					id: 'audioplayer'
+				};
+
+				swfobject.embedSWF(dewpType, 'dewp-content', playerWidth, playerHeight, '9.0.0', false, flashvars, params, attributes);
+			}
+			
+			/*
+			this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
+			this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
+			this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+			this.player += '<param name="wmode" value="transparent" />';
+			this.player += '</object>';
+			*/
+		}
+		else {
+
+			console.log('AudioPlayer : Player non spécifié ou inexistant.');
+		}
 	}
-	else if (playerType === 'dewp' || playerType === 'dewp-mini') {
-		
-		var dewpType = null;
 
-		switch(playerType) {
 
-			case 'dewp' :
-				dewpType = playerURL + 'dewplayer.swf';
-				break;
 
-			case 'dewp-mini' :
-				dewpType = playerURL + 'dewplayer-mini.swf';
-				break;
+	var attachAudioTracks = function(audioSrc) {
 
-			default :
-				break;
+		/// <summary>Permet de formater les données audios pour le player voulu.</summary>
+		/// <param name="audioSrc" type="Array">Un tableau des données sous forme d'url.</param>
+		/// <returns type="Array">Un tableau contenant les pistes audios au format du lecteur audio.</returns>
+
+		var srcArray = new Array();
+
+		if (typeof audioSrc !== 'array') {
+
+			if (typeof audioSrc === 'string') {
+
+				var srcString = audioSrc;
+				audioSrc = [srcString];
+			}
+			else {
+
+				// Format de données incorrectes
+				console.log('AudioPlayer : Invalid audio sources.');
+			}
 		}
 
-		if (dewpType !== null) {
+		for (var i = 0, count = audioSrc.length; i < count; i++) {
 
-			container.append('<div id="dewp-content"></div>');
+			// Pour un lecteur HTML, les données du tableau sont rassemblées avec des balises <sources> et restituées sous forme d'HTMLElement.
+			if (playerType === 'html') {
 
-			var flashvars = {
-				mp3: audioSources, //ex : 'mp3/test1.mp3|mp3/test2.mp3|mp3/test3.mp3'
-				javascript: 'on',
-				autostart: 1,
-				nopointer: 1
-			};
-			var params = {
-				wmode: 'transparent'
-			};
-			var attributes = {
-				id: 'audioplayer'
-			};
-
-			swfobject.embedSWF(dewpType, 'dewp-content', width.toString(), height.toString(), '9.0.0', false, flashvars, params, attributes);
+					var source = document.createElement('source');
+					source.src = audioSrc[i];
+					source.setAttribute('type', 'audio/mp3');
+					srcArray[i] = source;
+				
+			}
+			// Pour le lecteur Dewplayer, les données du tableau sont préfixées par 'mp3/'.
+			else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
+				
+				srcArray[i] = 'mp3/' + audioSrc[i];
+			}
 		}
+
+		// Retour des sources formattées selon le type de lecteur.
+		return srcArray;
+	};
+
+
+
+	var attachControls = function() {
+
+		var self = this;
 		
-		/*
-		this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
-		this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-		this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-		this.player += '<param name="wmode" value="transparent" />';
-		this.player += '</object>';
-		*/
-	}
-	else {
+		if (controllers.play !== undefined && controllers.play !== null) {
 
-		console.log('AudioPlayer : Player non spécifié ou inexistant.');
-	}
+			if (controllers.pause === undefined || controllers.pause === null) {
+
+				controllers.play.onclick = function(event) {
+
+					if (!isPlaying) {
+
+						self.play();
+					}
+					else {
+
+						self.pause();
+					}
+				};
+			}
+			else {
+
+				controllers.play.onclick = function(event) {
+
+					self.play();
+				};
+
+				controllers.pause.onclick = function(event) {
+
+					self.pause();
+				};
+			}
+		}
+	};
 
 
-	
+
+	var attachEvents = function() {
+
+	};
+
+
+
+	var updateLoading = function() {
+
+		if (player !== null) {
+
+			var duration = player.duration;
+			console.log('duration :' + duration);
+			var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
+			var percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
+			console.log('percentLoaded :' + percentLoaded);
+
+			if (loadCallBack !== null) {
+
+				loadCallBack.call(this, percentLoaded);
+			}
+
+			if (percentLoaded == 100) {
+
+				clearInterval(loadingTimer);
+			}
+		}
+		else {
+
+			console.log('Player not found or not ready')
+		}
+	};
+
+
+	var updateProgress = function() {
+
+		if (player !== null) {
+
+			var duration = player.duration; // Duree totale
+			var currenttime = player.currentTime; // Temps écoulé
+			
+			var percent = (currenttime / duration) * 100;
+			console.log('percent : ' + percent);
+			//var roundPercent = Math.round(percent);
+			//console.log('roundPercent : ' + roundPercent);
+
+			if (progressCallBack !== null) {
+
+				progressCallBack.call(this, percent);
+			}
+
+			if (player.ended || percent == 100) {
+
+				clearInterval(progressTimer);
+				
+				isPlaying = false;
+				/*
+				//if (completeCallBack !== null && !isEnded) {
+				if (completeCallBack !== null) {
+
+					//isEnded = true;
+					completeCallBack.call(this);
+				}
+				*/
+			}
+		}
+	};
+
+
+
+	create(audioTracks);
+
+
 
 
 
@@ -303,10 +471,16 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 			}
 		}
 
+		player.setAttribute('preload', 'auto');
+
+		
 		player.onloadstart = function() {
 
+			console.log('start loading');
 			loadingTimer = setInterval(updateLoading, 40);
 		};
+		
+
 		/*
 		player.onloadeddata = function() {
 
@@ -320,12 +494,18 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 			}
 		};
 		*/
-
-		player.load();
-
 	};
 
 
+	this.load = function() {
+
+		
+
+		//player.load();
+
+		//loadingTimer = setInterval(updateLoading, 40);
+
+	}
 
 	this.show = function(duration) {
 
@@ -423,179 +603,6 @@ var AudioPlayer = function(audioTracks, playertype, playerContainer, playerURL, 
 			isPlaying = false;
 		}
 	};
-
-
-
-
-
-
-	/*** Private methods ***/
-
-
-	var attachAudioTracks = function(audioSrc) {
-
-		/// <summary>Permet de formater les données audios pour le player voulu.</summary>
-		/// <param name="audioSrc" type="Array">Un tableau des données sous forme d'url.</param>
-		/// <returns type="String">Une chaîne contenant les pistes audios au format du lecteur audio.</returns>
-
-		var src = new Array();
-		var sourcesString = '';
-
-		// Si les sources sont sous forme de tableau, chaque source est replacée dans un nouveau tableau.
-		if (typeof audioSrc === 'array') {
-
-			for (var i = 0, count = audioSrc.length; i < count; i++) {
-
-				src.push(audioSrc[i]);
-			}
-		}
-		// Si les sources sont sous forme de chaîne, la chaîne devient un élément du nouveau tableau.
-		else if (typeof audioSrc === 'string') {
-
-			src[0] = audioSrc;
-		}
-		else {
-			// Format de données incorrectes
-			console.log('AudioPlayer : Invalid audio sources.');
-		}
-
-		// Pour un lecteur HTML, les données du tableau sont rassemblées avec des balises <sources>.
-		if (playerType === 'html') {
-
-			for (var i = 0, count = src.length; i < count; i++) {
-
-				sourcesString += '<source src="' + src[i].replace('mp3/', '') + '"></source>';
-			}
-		}
-		// Pour le lecteur Dewplayer, les données du tableau sont séparées par un '|' et préfixées par 'mp3/'.
-		else if (this.playerType === 'dewp' || this.playerType === 'dewp-mini') {
-			
-			sourcesString += 'mp3/';
-			sourcesString += src.join('|mp3/');
-		}
-
-		// Les sources est concaténée selon le format du lecteur audio.
-		return sourcesString;
-	};
-
-
-
-
-	var attachControls = function() {
-
-		var self = this;
-		//var playItem = null;
-		//var pauseItem = null;
-
-		/*
-		if (controllers.play !== undefined && controllers.play !== null) {
-
-			playItem = controllers.play;
-		}
-		
-		if (controllers.pause !== undefined && controllers.pause !== null) {
-
-			pauseItem = controllers.pause;
-		}
-		*/
-
-		if (controllers.play !== undefined && controllers.play !== null) {
-
-			if (controllers.pause === undefined || controllers.pause === null) {
-
-				controllers.play.onclick = function(event) {
-
-					if (!isPlaying) {
-
-						self.play();
-					}
-					else {
-
-						self.pause();
-					}
-				};
-			}
-			else {
-
-				controllers.play.onclick = function(event) {
-
-					self.play();
-				};
-
-				controllers.pause.onclick = function(event) {
-
-					self.pause();
-				};
-			}
-		}
-	};
-
-
-	var attachEvents = function() {
-
-	};
-
-
-	var updateLoading = function() {
-
-		if (player !== null) {
-
-			var duration = player.duration;
-			var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
-			var percentLoaded = (bufferedEnd / duration) * 100;
-			//console.log('percentLoaded :' + percentLoaded);
-
-			if (loadCallBack !== null) {
-
-				loadCallBack.call(this, percentLoaded);
-			}
-
-			if (percentLoaded == 100) {
-
-				clearInterval(loadingTimer);
-			}
-		}
-		else {
-
-			console.log('Player not found or not ready')
-		}
-	};
-
-
-	var updateProgress = function() {
-
-		if (player !== null) {
-
-			var duration = player.duration; // Duree totale
-			var currenttime = player.currentTime; // Temps écoulé
-			
-			var percent = (currenttime / duration) * 100;
-			//console.log('percent : ' + percent);
-			//var roundPercent = Math.round(percent);
-			//console.log('roundPercent : ' + roundPercent);
-
-			if (progressCallBack !== null) {
-
-				progressCallBack.call(this, percent);
-			}
-
-			if (player.ended || percent == 100) {
-
-				clearInterval(progressTimer);
-				
-				isPlaying = false;
-				/*
-				//if (completeCallBack !== null && !isEnded) {
-				if (completeCallBack !== null) {
-
-					//isEnded = true;
-					completeCallBack.call(this);
-				}
-				*/
-			}
-		}
-	};
-
 
 	
 };

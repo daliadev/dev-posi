@@ -76,7 +76,8 @@
 						
 						<div id="speaker">
 							<button type="button" id="speaker-button" class="button-info">
-								<i class="fa fa-volume-up"></i>
+								<!-- <i class="fa fa-volume-up"></i> -->
+								<img src="<?php echo SERVER_URL ?>media/images/ic_volume_up_white_24dp.png" />
 							</button>
 							<svg id="svg-speaker-progress" version="1.1" viewBox="0 0 52 52" preserveAspectRatio="xMinYMin meet">
 								<circle id="speaker-loader" r="24" transform="translate(26.5, 26) rotate(-90)"></circle>
@@ -337,6 +338,37 @@
 
 			/* Création / Gestion des médias */
 
+			// Création de l'image
+			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+			var imageLoader = new ImageLoader($('#visuel'), $('#loader'));
+
+
+			// Création du player audio
+
+			var audioPlayer = null;
+			var playerType = null;
+			var playerURL = null;
+			var audioContainer = document.getElementById('audio');
+			var audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename
+
+			if (navAgent.isAudioEnabled()) {
+
+				playerType = 'html';
+				playerURL = null;
+			}
+			else if (FlashDetect.installed) {
+
+				playerType = 'dewp-mini';
+				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
+			}
+			else {
+
+				alert('Ce navigateur ne prend pas en charge les médias audio.');
+			}
+
+			var audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+
 			
 			// Fonction appelée par l'objet ImageLoader lorsque l'image est chargée.
 
@@ -344,17 +376,13 @@
 
 				$('#visuel img').fadeIn(1500);
 
-				//$('#audio').show();
-
 				//this.fadeToBlack($('body').children().first(), 5000);
-
-				//$('#media-question').append($suite);
 
 				// Creation du lecteur audio s'il y a une source
 				if (audioActive) {
 
 					//createAudioPlayer();
-
+					audioPlayer.setTrack(audioTrack);
 				}
 				else {
 
@@ -364,7 +392,7 @@
 
 
 
-			function onAudioLoad(percent) {
+			function onAudioLoading(percent) {
 
 				var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
 				//$('#speaker-loader').css('stroke-dashoffset', offset.toString());
@@ -375,6 +403,10 @@
 
 					var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
 					$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
+
+					audioPlayer.enableControls(true);
+					setTimeout(function() { audioPlayer.startPlaying(); }, 2000);
+					//audioPlayer.startPlaying();
 				}
 			}
 
@@ -391,10 +423,7 @@
 
 				if (percent == 100) {
 
-					//console.log('audioCompleted');
 					playerComplete = true;
-					//audioPlayer.startPlaying();
-					//audioPlayer.enableControls(true);
 
 					var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
 					$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
@@ -438,92 +467,20 @@
 
 
 
-			// Création de l'image
-			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
-
-			var imageLoader = new ImageLoader($('#visuel'), $('#loader'), onImageLoaded);
-			imageLoader.startLoading(imageUrl, 500);
+			// Paramétrage et chargement de l'image
+			imageLoader.startLoading(imageUrl, 500, onImageLoaded);
 
 
+			// Création du controleur audio (contrôle via le bouton speaker)
+			var audioControls = [{
+				action: 'play',
+				item: document.getElementById('speaker-button')
+			}];
 
-
-			// Création du lecteur audio caché (contrôle via le bouton speaker)
-			
-			//var audioUrl = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
-
-			//var audioPlayer = new AudioPlayer($('#audio'), null, {w: 200, h: 40});
-			//audioPlayer.setTracks(audioUrl);
-			//var audioPlayer = new AudioPlayer(audioUrl);
-
-			// Création du player
-
-			//var audioPlayer;
-			var playerType; 
-			var playerURL;
-			var audioContainer = document.getElementById('audio');
-			var audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename
-
-			if (navAgent.isAudioEnabled()) {
-
-				playerType = 'html';
-				playerURL = null;
-				//audioPlayer.setPlayerType('html');
-				//audioPlayer.init(controls, loadCallBack, progressCallback, options);
-				//audioPlayer.init('html', $('#audio'), null, {w: 200, h: 40});
-			}
-			else if (FlashDetect.installed) {
-
-				playerType = 'dewp-mini';
-				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
-				//audioPlayer.setPlayerType('dewp-mini');
-				//var playerAudioUrl = '<?php echo SERVER_URL; ?>media/dewplayer/';
-				//audioPlayer.init('dewp-mini', $('#audio'), playerAudioUrl, {w: 200, h: 40});
-			}
-			else {
-
-				alert('Ce navigateur ne prend pas en charge les médias audio.');
-			}
-
-
-			//var audioPlayer = new AudioPlayer(audioTrack, playerType, audioContainer, playerURL, 200, 40);
-			var audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-			//audioPlayer.setTrack(audioTrack);
-
-			//audioPlayer.setControls('on'); //{startBtn: $("#speaker-button")});
-			/*
-			audioPlayer.setControls({
-				start: {
-					//name: 'start',
-					action: 'play',
-					item: $("#speaker-button")
-				}
-			});
-			*/
-			var controls = [{
-					action: 'play',
-					item: document.getElementById('speaker-button')
-				}
-				/*
-				pause: {
-					action: 'pause',
-					item: document.getElementById('speaker-button')
-				}
-				*/
-			];
-
-			audioPlayer.init(controls, onAudioLoad, onAudioProgress);
+			audioPlayer.init(audioControls, onAudioLoading, onAudioProgress);
 
 			audioPlayer.enableControls(false);
-			
-			//audioPlayer.setLoadCallBack(onAudioLoad);
-			//audioPlayer.setProgressCallBack(onAudioProgress);
-			//audioPlayer.setOnCompleteCallBack(onAudioCompleted);
 
-			audioPlayer.setTrack(audioTrack);
-
-			//audioPlayer.reload();
-			
-			//audioPlayer.startPlaying();
 			
 			
 

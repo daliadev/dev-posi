@@ -390,11 +390,15 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 		}
 	};
 
-	/*
+	
 	this.startPlaying = function() {
 
+		//if (document.getElementById('audioplayer') !== null) {
+
+			this.play();
+		//}
 	};
-	*/
+
 
 
 
@@ -417,7 +421,7 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 				if (!enabled) {
 
 					controllers[i].disabled = true;
-					controllers[i].className = 'disabled';
+					//controllers[i].className = 'disabled';
 				}
 				else if (enabled) {
 

@@ -1,34 +1,32 @@
 
-var ImageLoader = function(container, loader, onLoadCallback) {
+var ImageLoader = function(container, loader) {
 
 	var self = this;
-	this.container = container;
-	this.loader = loader;
-	this.onLoadFunction = onLoadCallback;
-	this.imageBox = new Image();
-	this.blackBg = null; //$('#black-bg');
+	var container = container;
+	var loader = loader;
+	var onLoadFunction = null;
+	var imageBox = new Image();
+	var blackBg = null; //$('#black-bg');
 
-	this.startLoading = function(imgSrc, loaderFadeDuration) {
+	this.startLoading = function(imgSrc, loaderFadeDuration, onLoadCallback) {
 
-		this.fadeDuration = loaderFadeDuration;
-		this.imageBox.onload = function() {
+		onLoadFunction = onLoadCallback;
+
+		imageBox.onload = function() {
 			
-			$(this).hide();
-			//self.blackBg.hide();
-			//self.container.prepend('<div id="black-bg"></div>');
-			self.container.prepend(this);
-			// self.container.css('height', 'auto');
-			// self.container.css('padding-bottom', '0px');
-			self.loader.fadeOut(self.fadeDuration);
+			imageBox.style.display = 'none';
+			container.prepend(imageBox);
+			//self.container.css('height', 'auto');
+			//self.container.css('padding-bottom', '0px');
+			loader.fadeOut(loaderFadeDuration);
 
-			if (typeof self.onLoadFunction === 'function') {
-				self.onLoadFunction.call(self);
+			if (typeof onLoadFunction === 'function') {
+				onLoadFunction.call(self);
 			}
 		};
 
-		this.imageBox.src = imgSrc;
-		//this.imageBox.style.display = 'none';
-		this.loader.fadeIn(this.fadeDuration);
+		imageBox.src = imgSrc;
+		loader.fadeIn(loaderFadeDuration);
 	};
 
 

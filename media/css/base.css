@@ -207,7 +207,7 @@ hr {
 	height: 45px;
 	margin: 10px 0;
 	padding: 10px;
-	background-color: #bdbdbd;
+	background-color: #a5a5a5;
 	border: none;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -300,22 +300,23 @@ button::-moz-focus-inner, input[type=button]::-moz-focus-inner, input[type=submi
 
 /* Default */
 .button-default {
-	background-color: #a5a5a5 !important;
+	background-color: #a5a5a5;
 }
 
 .button-default:hover, .button-default:active, .button-default:focus {
-	background-color: #757575 !important;
+	background-color: #757575;
 }
+
 
 /* Disabled */
-.button-disabled {
-	background-color: #bdbdbd !important;
+.button-disabled, button:disabled, input[type=button]:disabled, input[type=submit]:disabled {
+	cursor: default;
+	background: #bdbdbd !important;
 }
-
-button:disabled, input[type=button]:disabled, input[type=submit]:disabled {
-	background-color: #bdbdbd !important;
+.button-disabled:hover, button:disabled:hover, input[type=button]:disabled:hover, input[type=submit]:disabled:hover {
+	cursor: default;
+	background: #bdbdbd !important;
 }
-
 
 
 

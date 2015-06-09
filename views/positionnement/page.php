@@ -380,10 +380,11 @@
 
 			function onAudioProgress(percent) {
 
+
 				var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
 				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * -percent;
 				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) - 1;
-				//$('#speaker-progress').css('stroke-dashoffset', offset.toString());
+				$('#speaker-progress').css('stroke-dashoffset', offset.toString());
 
 				//var rotation = Math.round(360 / 100 * percent - 90);
 				//$('#speaker-progress').attr('transform', 'translate(23, 23) rotate(' + rotation.toString() + ')');
@@ -396,7 +397,7 @@
 					//audioPlayer.enableControls(true);
 
 					var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
-					//$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
+					$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
 
 					if ($('.reponse-qcm') !== null) {
 
@@ -512,7 +513,7 @@
 
 			audioPlayer.init(controls, onAudioLoad, onAudioProgress);
 
-			//audioPlayer.enableControls(false);
+			audioPlayer.enableControls(false);
 			
 			//audioPlayer.setLoadCallBack(onAudioLoad);
 			//audioPlayer.setProgressCallBack(onAudioProgress);
@@ -520,7 +521,7 @@
 
 			audioPlayer.setTrack(audioTrack);
 
-			//audioPlayer.startLoading();
+			//audioPlayer.reload();
 			
 			//audioPlayer.startPlaying();
 			

@@ -29,10 +29,11 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 	//var audioSources = null;
 
-	//var isLoaded = false;
+	var isCreated = false;
 	var isPlaying = false;
 	var isEnded = false;
 
+	var createTimer = null;
 	var loadingTimer = null;
 	var progressTimer = null;
 
@@ -91,15 +92,17 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 			};
 
 			swfobject.embedSWF(dewpType, 'dewp-content', playerWidth, playerHeight, '9.0.0', false, flashvars, params, attributes);
+
+			/*
+			this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
+			this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
+			this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
+			this.player += '<param name="wmode" value="transparent" />';
+			this.player += '</object>';
+			*/
 		}
 		
-		/*
-		this.player = '<object id="dewplayer" name="dewplayer" data="' + playerAudioUrl + '" width="160" height="20" type="application/x-shockwave-flash" style="display:block;">'; 
-		this.player += '<param name="movie" value="' + playerAudioUrl + '" />'; 
-		this.player += '<param name="flashvars" value="mp3=' + audioUrl + '&amp;autostart=1&amp;nopointer=1&amp;javascript=on" />';
-		this.player += '<param name="wmode" value="transparent" />';
-		this.player += '</object>';
-		*/
+		createTimer = setInterval(waitingForCreation, 100);
 	}
 	else {
 
@@ -144,6 +147,20 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 
 
+	var waitingForCreation = function() {
+
+		console.log(isCreated);
+		if (document.getElementById('audioplayer') !== null && document.getElementById('audioplayer') !== undefined) {
+
+			isCreated = true;
+		}
+
+		if (isCreated) {
+
+			clearInterval(createTimer);
+			console.log('created');
+		}
+	}
 
 	var updateLoading = function() {
 
@@ -224,21 +241,27 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 		/// <summary>Ajoute la piste audio au lecteur</summary>
 		/// <param name="track" type="String">L'url de la piste audio</param>
 
+		var audioplay = document.getElementById('audioplayer');
+
 		if (playerType === 'html') {
 
-			var audioplay = document.getElementById('audioplayer');
+			//var audioplay = document.getElementById('audioplayer');
 			audioplay.src = track;
 
 			audioplay.load();
 
 		}
 		else if (playerType === 'dewp' || playerType === 'dewp-mini') {
-
+			/*
 			var dewParams = document.getElementsByName('flashvars');
 
 			var flashvars = 'mp3=' + track + '&amp;';
 			flashvars += dewParams[0].getAttribute('value');
 			dewParams[0].setAttribute('value', flashvars);
+			*/
+
+
+			audioplay.dewset(track);
 		}
 	};
 
@@ -311,12 +334,14 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 			}
 		}
 
-		player.onloadstart = function() {
+		if (playerType === 'html') {
 
-			console.log('loadstart');
-			loadingTimer = setInterval(updateLoading, 40);
-		};
+			player.onloadstart = function() {
 
+				console.log('loadstart');
+				loadingTimer = setInterval(updateLoading, 40);
+			};
+		}
 
 		/*
 		player.onabort = function() {
@@ -393,10 +418,10 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 	
 	this.startPlaying = function() {
 
-		//if (document.getElementById('audioplayer') !== null) {
+		if (document.getElementById('audioplayer') !== null) {
 
 			this.play();
-		//}
+		}
 	};
 
 

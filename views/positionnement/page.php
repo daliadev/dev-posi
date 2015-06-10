@@ -349,14 +349,15 @@
 			var playerType = null;
 			var playerURL = null;
 			var audioContainer = document.getElementById('audio');
-			var audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename
+			var audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
-			if (navAgent.isAudioEnabled()) {
+			// if (navAgent.isAudioEnabled()) {
 
-				playerType = 'html';
-				playerURL = null;
-			}
-			else if (FlashDetect.installed) {
+			// 	playerType = 'html';
+			// 	playerURL = null;
+			// }
+			// else 
+			if (FlashDetect.installed) {
 
 				playerType = 'dewp-mini';
 				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
@@ -395,7 +396,7 @@
 			function onAudioLoading(percent) {
 
 				var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
-				//$('#speaker-loader').css('stroke-dashoffset', offset.toString());
+				$('#speaker-loader').css('stroke-dashoffset', offset.toString());
 
 				if (percent == 100) {
 
@@ -412,14 +413,8 @@
 
 			function onAudioProgress(percent) {
 
-
 				var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
-				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * -percent;
-				//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) - 1;
 				$('#speaker-progress').css('stroke-dashoffset', offset.toString());
-
-				//var rotation = Math.round(360 / 100 * percent - 90);
-				//$('#speaker-progress').attr('transform', 'translate(23, 23) rotate(' + rotation.toString() + ')');
 
 				if (percent == 100) {
 
@@ -441,28 +436,6 @@
 					}
 				}
 			}
-
-			//function onAudioCompleted() {
-				/*
-				//console.log('audioCompleted');
-				playerComplete = true;
-
-				var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
-				$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
-
-				if ($('.reponse-qcm') !== null) {
-
-					$(".reponse-qcm").prop("disabled", false);
-				}
-
-				if ($('#reponse-champ') !== null) {
-
-					$('#reponse-champ').removeProp('disabled');
-					$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
-					$('#reponse-champ').focus();
-				}
-				*/
-			//}
 
 
 

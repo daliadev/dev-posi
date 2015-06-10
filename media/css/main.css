@@ -755,7 +755,7 @@ body {
 				/*width: 100px;*/
 				/*height: 45px;*/
 				bottom: 24px;
-				right: 24px;
+				right: 28px;
 				/*padding: 0;
 				margin: 0;*/
 				/*text-align: center;*/
@@ -771,8 +771,8 @@ body {
 				*/
 				#posi-page .media-display #btn-suite input {
 					/*display: inline-block;*/
-					width: 100px;
-					height: 45px;
+					width: 80px;
+					/*height: 45px;*/
 					padding: 0;
 					margin: 0;
 					/*vertical-align: middle;*/

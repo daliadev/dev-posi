@@ -351,6 +351,12 @@
 			var audioContainer = document.getElementById('audio');
 			var audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
 
+			// Controleur audio (contrôle via le bouton speaker)
+			var audioControls = [{
+				action: 'play',
+				item: document.getElementById('speaker-button')
+			}];
+
 			// if (navAgent.isAudioEnabled()) {
 
 			// 	playerType = 'html';
@@ -383,7 +389,7 @@
 				if (audioActive) {
 
 					//createAudioPlayer();
-					audioPlayer.setTrack(audioTrack);
+					//audioPlayer.setTrack(audioTrack);
 				}
 				else {
 
@@ -391,6 +397,12 @@
 				}
 			}
 
+
+			function onAudioCreated() {
+
+				console.log('created');
+				audioPlayer.setTrack(audioTrack);
+			}
 
 
 			function onAudioLoading(percent) {
@@ -444,16 +456,10 @@
 			imageLoader.startLoading(imageUrl, 500, onImageLoaded);
 
 
-			// Création du controleur audio (contrôle via le bouton speaker)
-			var audioControls = [{
-				action: 'play',
-				item: document.getElementById('speaker-button')
-			}];
-
-			audioPlayer.init(audioControls, onAudioLoading, onAudioProgress);
+			// Initialisation du lecteur audio
+			audioPlayer.init(audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
 
 			audioPlayer.enableControls(false);
-
 			
 			
 

@@ -27,9 +27,7 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 		progress: null
 	};
 
-	//var audioSources = null;
-
-	var isCreated = false;
+	
 	var isPlaying = false;
 	var isEnded = false;
 
@@ -37,8 +35,10 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 	var loadingTimer = null;
 	var progressTimer = null;
 
+	var createdCallback = null
 	var loadCallBack = null;
 	var progressCallBack = null;
+
 
 
 
@@ -102,7 +102,7 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 			*/
 		}
 		
-		createTimer = setInterval(waitingForCreation, 100);
+		
 	}
 	else {
 
@@ -147,20 +147,116 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 
 
-	var waitingForCreation = function() {
+	var attachEvents = function() {
 
-		console.log(isCreated);
+		if (player !== null) {
+
+			player.onloadstart = function() {
+
+				console.log('loadstart');
+				loadingTimer = setInterval(updateLoading, 40);
+			};
+
+			/*
+			player.onabort = function() {
+
+				console.log('abort');
+			};
+
+			player.oncanplay = function() {
+
+				console.log("canplay");
+			};
+
+			player.oncanplaythrough = function() {
+
+				console.log("canplaythrough");
+			};
+
+			player.ondurationchange = function() {
+
+				console.log("durationchange");
+			};
+
+			player.onerror = function() {
+
+				console.log("error");
+			};
+
+			player.onloadeddata = function() {
+
+				console.log("loadeddata");
+			};
+
+			player.onloadedmetadata = function() {
+
+				console.log("loadedmetadata ");
+			};
+
+			player.onsuspend = function() {
+
+				console.log("suspend");
+			};
+
+			player.onstalled = function() {
+
+				console.log("stalled");
+			};
+
+			player.onwaiting = function() {
+
+				console.log("waiting");
+			};
+
+			player.onemptied = function() {
+
+				console.log("emptied");
+			};
+
+			player.onloadeddata = function() {
+				
+				console.log("loadeddata");
+			};
+			*/
+		}
+	};
+
+	
+	var createProgress = function() {
+
+		// Si l'id du player existe, c'est qu'il a été créé.
 		if (document.getElementById('audioplayer') !== null && document.getElementById('audioplayer') !== undefined) {
 
-			isCreated = true;
-		}
-
-		if (isCreated) {
-
+			// On stoppe le timer.
 			clearInterval(createTimer);
-			console.log('created');
+
+			// On assigne le player html ou flash.
+			player = document.getElementById('audioplayer');
+
+			// Création d'un paramètre dans la balise <object>, manquante par défaut dans Dewplayer.
+			if (playerType === 'dewp' || playerType === 'dewp-mini') {
+
+				var url = player.getAttribute('data');
+				var movieParam = document.createElement('param');
+				movieParam.setAttribute('name', 'movie');
+				movieParam.setAttribute('value', url);
+				player.appendChild(movieParam);
+
+				// On signale que le player a été créé avec un petit décalage pour éviter les problèmes d'appels aux fonctions Dewplayer.
+				setTimeout(function() { createdCallback.call(); }, 1000);
+			}
+
+			// On attache les évènements on player html (chargement, lecture...).
+			if (playerType === 'html') {
+
+				attachEvents();
+
+				// On signale que le player a été créé.
+				createdCallback.call();
+			}
 		}
 	}
+
 
 	var updateLoading = function() {
 
@@ -172,8 +268,12 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 			var percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
 			console.log('percentLoaded :' + percentLoaded);
 
-			if (loadCallBack !== null) {
+			if (playerType === 'dewp' || playerType === 'dewp-mini') {
+				percentLoaded = 100;
+			}
 
+			if (loadCallBack !== null) {
+	
 				loadCallBack.call(this, percentLoaded);
 			}
 
@@ -241,14 +341,14 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 		/// <summary>Ajoute la piste audio au lecteur</summary>
 		/// <param name="track" type="String">L'url de la piste audio</param>
 
-		var audioplay = document.getElementById('audioplayer');
+		//var audioplay = document.getElementById('audioplayer');
 
 		if (playerType === 'html') {
 
 			//var audioplay = document.getElementById('audioplayer');
-			audioplay.src = track;
+			player.src = track;
 
-			audioplay.load();
+			player.load();
 
 		}
 		else if (playerType === 'dewp' || playerType === 'dewp-mini') {
@@ -260,21 +360,31 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 			dewParams[0].setAttribute('value', flashvars);
 			*/
 
+			//console.log(player);
 
-			audioplay.dewset(track);
+			player.dewset(track);
 		}
 	};
 
 
 	
-	this.init = function(controls, onLoadCallback, onProgressCallback) {
+	this.init = function(controls, onCreatedCallback, onLoadCallback, onProgressCallback) {
 
+		
+		createdCallback = onCreatedCallback;
 		loadCallBack = onLoadCallback;
 		progressCallBack = onProgressCallback;
 
-		player = document.getElementById('audioplayer');
+		createTimer = setInterval(createProgress, 100);
+		/*
+		if (playerType === 'html') {
 
-		if (player !== null && player !== undefined) {
+			player = document.getElementById('audioplayer');
+		}
+		*/
+		//console.log(player);
+
+		//if (player !== null && player !== undefined) {
 
 			if (typeof controls === 'object') {
 
@@ -322,7 +432,7 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 			}
 			else if (typeof controls === 'string' && controls == 'on') {
-
+				/*
 				if (playerType === 'html') {
 
 					player.setAttribute('controls', true);
@@ -331,94 +441,25 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 		  			
 				}
+				*/
 			}
-		}
-
-		if (playerType === 'html') {
-
-			player.onloadstart = function() {
-
-				console.log('loadstart');
-				loadingTimer = setInterval(updateLoading, 40);
-			};
-		}
-
-		/*
-		player.onabort = function() {
-
-			console.log('abort');
-		};
-
-		player.oncanplay = function() {
-
-			console.log("canplay");
-		};
-
-		player.oncanplaythrough = function() {
-
-			console.log("canplaythrough");
-		};
-
-		player.ondurationchange = function() {
-
-			console.log("durationchange");
-		};
-
-		player.onerror = function() {
-
-			console.log("error");
-		};
-
-		player.onloadeddata = function() {
-
-			console.log("loadeddata");
-		};
-
-		player.onloadedmetadata = function() {
-
-			console.log("loadedmetadata ");
-		};
-
-		player.onsuspend = function() {
-
-			console.log("suspend");
-		};
-
-		player.onstalled = function() {
-
-			console.log("stalled");
-		};
-
-		player.onwaiting = function() {
-
-			console.log("waiting");
-		};
-
-		player.onemptied = function() {
-
-			console.log("emptied");
-		};
-
-		player.onloadeddata = function() {
-			
-			console.log("loadeddata");
-		};
-		*/
+		//}
+		
 	};
 
 
 	this.reload = function() {
 
-		if (document.getElementById('audioplayer') !== null) {
+		if (player !== null) {
 
-			document.getElementById('audioplayer').load();
+			player.load();
 		}
 	};
 
 	
 	this.startPlaying = function() {
 
-		if (document.getElementById('audioplayer') !== null) {
+		if (player !== null) {
 
 			this.play();
 		}

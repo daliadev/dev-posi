@@ -246,7 +246,7 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 				setTimeout(function() { createdCallback.call(); }, 1000);
 			}
 
-			// On attache les évènements on player html (chargement, lecture...).
+			// On attache les évènements au player html (chargement, lecture...).
 			if (playerType === 'html') {
 
 				attachEvents();
@@ -262,21 +262,36 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 		if (player !== null) {
 
-			var duration = player.duration;
-			console.log('duration :' + duration);
-			var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
-			var percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
-			console.log('percentLoaded :' + percentLoaded);
+			// Par défaut le pourcentage du chargement est à 0.
+			var percentLoaded = 0;
 
-			if (playerType === 'dewp' || playerType === 'dewp-mini') {
-				percentLoaded = 100;
+			// Pour le player HTML
+			if (playerType === 'html') {
+
+				var duration = player.duration;
+				console.log('duration :' + duration);
+				// On récupére le tableau 'buffered' qui contient les infos sur le statut actuel du lecteur
+				var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
+				// Le pourcentage de chargement est la division du temps chargé par la durée totale (x 100%)
+				var percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
+				console.log('percentLoaded :' + percentLoaded);
+			}
+			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
+
+				// Pour Dewplayer, si la position de lecture est à 0, la lecture peut démarrer (streaming)
+				if (player.dewgetpos() == 0) {
+
+					percentLoaded = 100;
+				}
 			}
 
+			// On appelle la fonction callback durant le chargement
 			if (loadCallBack !== null) {
-	
+		
 				loadCallBack.call(this, percentLoaded);
 			}
 
+			// Si le chargement est à 100%, on stoppe le timer.
 			if (percentLoaded == 100) {
 
 				clearInterval(loadingTimer);
@@ -515,6 +530,8 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 	
 	this.play = function() {
 
+		console.log('play');
+
 		if (player !== null && !isPlaying) {
 
 			if (playerType === 'html') {
@@ -560,6 +577,8 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 
 	this.stop = function() {
+
+		console.log('stop');
 
 		if (player !== null && isPlaying) {
 

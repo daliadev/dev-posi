@@ -293,23 +293,33 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 
 		if (player !== null) {
 
-			var duration = player.duration; // Duree totale
-			var currenttime = player.currentTime; // Temps écoulé
-			
-			var percent = (currenttime / duration) * 100;
-			console.log('percent :' + percent);
+			if (playerType === 'html') {
 
-			if (progressCallBack !== null) {
-
-				progressCallBack.call(this, percent);
-			}
-
-			if (player.ended || percent == 100) {
-
-				clearInterval(progressTimer);
+				var duration = player.duration; // Duree totale
+				var currenttime = player.currentTime; // Temps écoulé
 				
-				isPlaying = false;
+				var percent = (currenttime / duration) * 100;
+				console.log('percent :' + percent);
+
+				if (progressCallBack !== null) {
+
+					progressCallBack.call(this, percent);
+				}
+
+				if (player.ended || percent == 100) {
+
+					clearInterval(progressTimer);
+					
+					isPlaying = false;
+				}
+
 			}
+			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
+
+
+
+			}
+			
 		}
 	};
 
@@ -363,6 +373,9 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 			//console.log(player);
 
 			player.dewset(track);
+
+			console.log('loadstart');
+			loadingTimer = setInterval(updateLoading, 1000);
 		}
 	};
 
@@ -516,7 +529,7 @@ var AudioPlayer = function(playertype, playerContainer, playerURL, width, height
 				progressTimer = setInterval(updateProgress, 100);
 			}
 			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
-
+				
 	  			player.dewplay();
 			}
 

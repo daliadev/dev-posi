@@ -37,7 +37,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 	var loadingTimer = null;
 	var progressTimer = null;
 
-	var createdCallback = null
+	var createdCallback = null;
 	var loadCallBack = null;
 	var progressCallBack = null;
 
@@ -266,7 +266,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				setTimeout(function() { createdCallback.call(); }, 1000);
 			}
 		}
-	}
+	};
 
 
 	var updateLoading = function() {
@@ -291,7 +291,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 				// Pour Dewplayer, si la position de lecture est à 0, la lecture peut démarrer (streaming)
 				if (player.dewgetpos() == 0) {
-
+					
 					percentLoaded = 100;
 				}
 			}
@@ -310,7 +310,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 		}
 		else {
 
-			console.log('Player not found or not ready')
+			console.log('Player not found or not ready');
 		}
 	};
 
@@ -319,31 +319,40 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 		if (player !== null) {
 
+			var percent = 0;
+			//console.log('percent :' + percent);
+
 			if (playerType === 'html') {
 
 				var duration = player.duration; // Duree totale
 				var currenttime = player.currentTime; // Temps écoulé
 				
-				var percent = (currenttime / duration) * 100;
-				console.log('percent :' + percent);
-
-				if (progressCallBack !== null) {
-
-					progressCallBack.call(this, percent);
-				}
+				percent = (currenttime / duration) * 100;
+				//console.log('percent :' + percent);
 
 				if (player.ended || percent == 100) {
 
 					clearInterval(progressTimer);
-					
 					isPlaying = false;
 				}
 
 			}
 			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
 
+				if (player.dewgetpos() === 0) {
+					
+					percent = 100;
+					//if (percent == 100) {
 
+						clearInterval(progressTimer);
+						isPlaying = false;
+					//}
+				}
+			}
 
+			if (progressCallBack !== null) {
+
+				progressCallBack.call(this, percent);
 			}
 			
 		}
@@ -352,10 +361,6 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 
 	
-
-
-
-
 
 
 	/*** Public methods ***/
@@ -670,12 +675,14 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 				player.play();
 
-				progressTimer = setInterval(updateProgress, 100);
+				//progressTimer = setInterval(updateProgress, 100);
 			}
 			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
 				
 				player.dewplay();
 			}
+
+			progressTimer = setInterval(updateProgress, 100);
 
 			isPlaying = true;
 		}

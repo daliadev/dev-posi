@@ -373,7 +373,7 @@
 				alert('Ce navigateur ne prend pas en charge les médias audio.');
 			}
 
-			var audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+			audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
 
 
 			
@@ -425,6 +425,7 @@
 
 			function onAudioProgress(percent) {
 
+				console.log(percent);
 				var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
 				$('#speaker-progress').css('stroke-dashoffset', offset.toString());
 

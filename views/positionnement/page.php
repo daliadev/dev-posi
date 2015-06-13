@@ -457,7 +457,7 @@
 
 
 			// Initialisation du lecteur audio
-			audioPlayer.init(audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+			audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
 
 			audioPlayer.enableControls(false);
 			

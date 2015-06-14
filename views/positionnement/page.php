@@ -425,11 +425,11 @@
 
 			function onAudioProgress(percent) {
 
-				console.log(percent);
+				//console.log(percent);
 				var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
 				$('#speaker-progress').css('stroke-dashoffset', offset.toString());
 
-				if (percent == 100) {
+				if (percent === 100) {
 
 					playerComplete = true;
 

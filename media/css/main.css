@@ -30,39 +30,77 @@ body {
 		width: 100%;
 		height: 40px;
 		background-color: #009688;
+
+		/* ajout */
+		max-width: 364px;
+		margin: 0 auto;
+		/*padding: 24px;*/
 	}
 		
 		.header .header-wrapper {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			margin: 0 auto;
-			padding: 0 24px;
+			/*margin: 0 24px;*/
+			/*padding: 24px;*/
 		}
 
 		#posi-inscript .header .header-wrapper {
-			max-width: 412px;
+			/*width: 100%;*/ /* old */
+			/*max-width: 412px;*/
 		}
 
 			.header .logo {
+				display: none; /* ajout */
+				/*
 				position: absolute;
 				width: 40px;
 				height: 40px;
 				background: url(../images/logo-40x40.png) no-repeat 50% 50%;
 				background-color: #fff;
+				*/
 			}
 				
 				/*.main-small .header .logo img {
 					width: 100%;
 				}*/
+/*
+#posi-inscript.main {
+	max-width: 680px;
+	margin: 40px auto 0 auto;
+}
 
+#posi-inscript .header {
+		float: left;
+		max-width: 240px;
+		height: auto;
+		margin-left: 24px;
+	}
+  
+		#posi-inscript .header .header-wrapper {
+			position: static;
+			max-width: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+			#posi-inscript .header .logo {
+				position: static;
+				width: 240px;
+				height: 200px;
+				background: url(../images/logo-240x200.png) no-repeat 50% 50%;
+				background-color: #fff;
+			}
+			*/
+	
 
 			.header .header-title {
-				position: absolute;
-				left: 40px;
-				height: 40px;
-				padding: 10px 40px;
-				line-height: 1em;
+				/*position: absolute;*/ /*old */
+				/*left: 40px;*/ /*old */
+				/*height: 40px;*/ /*old */
+				padding: 10px 24px;
+				/*padding: 10px 40px;*/ /* old */
+				/*line-height: 1em;*/ /*old */
 			}
 				
 				.header .header-title i {
@@ -73,11 +111,11 @@ body {
 				}
 
 				.header .header-title h1 {
-					display: inline;
+					/*display: inline;*/ /*old */
 					margin: 0;
-					color: #b3e0db;
+					color: #fff;
 					font-size: 0.75em;
-					font-weight: 600;
+					font-weight: 400;
 				}
 		
 
@@ -141,7 +179,7 @@ body {
 		max-width: 412px;
 		height: auto;
 		margin: 0 auto;
-		padding: 0 24px 24px 24px;
+		padding: 24px;
 	}
 		
 			
@@ -939,6 +977,7 @@ body {
 		}
 
 			#posi-inscript .header .logo {
+				display: block;
 				position: static;
 				width: 240px;
 				height: 200px;

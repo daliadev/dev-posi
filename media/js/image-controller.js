@@ -1,5 +1,5 @@
 
-var ImageLoader = function(container, loader) {
+var ImageController = function(container, loader) {
 
 	var self = this;
 	var container = container;
@@ -30,16 +30,15 @@ var ImageLoader = function(container, loader) {
 	};
 
 
+	this.display = function(duration) {
+
+		$(imageBox).fadeIn(duration);
+	}
+
+
 	this.fadeToBlack = function(element, duration) {
 
-		//if ($('#black-bg') === null) {
-
-			console.log(typeof $('#black-bg'));
-		//}
-		
-		//this.container.children().last().before('<div id="black-bg"></div>');
 		element.append('<div id="black-bg"></div>');
-		//this.container.prepend('<div id="black-bg"></div>');
 		this.blackBg = $('#black-bg');
 		this.blackBg.hide();
 		this.blackBg.fadeIn(duration);

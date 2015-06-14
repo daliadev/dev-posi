@@ -32,8 +32,8 @@ body {
 		background-color: #009688;
 
 		/* ajout */
-		max-width: 364px;
-		margin: 0 auto;
+		/*max-width: 364px;*/
+		/*margin: 0 auto;*/
 		/*padding: 24px;*/
 	}
 		
@@ -44,7 +44,13 @@ body {
 			/*margin: 0 24px;*/
 			/*padding: 24px;*/
 		}
-
+	
+	/*
+	#posi-inscript .header {
+		max-width: 364px;
+		margin: 0 auto;
+	}
+	*/
 		#posi-inscript .header .header-wrapper {
 			/*width: 100%;*/ /* old */
 			/*max-width: 412px;*/
@@ -64,6 +70,7 @@ body {
 				/*.main-small .header .logo img {
 					width: 100%;
 				}*/
+				
 /*
 #posi-inscript.main {
 	max-width: 680px;
@@ -1097,7 +1104,14 @@ body {
 			
 
 	/*-----  Header page ------*/
-	
+	#posi-page .header {
+		
+		width: 100%;
+		/*height: 100%;*/
+		max-width: 798px;
+	}
+
+
 		#posi-page .header .header-wrapper {
 			/*max-width: 100%;*/
 			/*padding: 0 24px;*/

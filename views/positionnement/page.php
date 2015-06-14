@@ -200,7 +200,7 @@
 	<!-- Medias -->
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script>
-	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-loader.js"></script>
+	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-controller.js"></script>
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/audio-player.js"></script>
 	<!--<script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
 	
@@ -210,7 +210,7 @@
 
 		$(function() {
 			
-			"use strict";
+			'use strict';
 
 			/**
 				Etats :
@@ -339,8 +339,11 @@
 			/* Création / Gestion des médias */
 
 			// Création de l'image
+
 			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
-			var imageLoader = new ImageLoader($('#visuel'), $('#loader'));
+			var imageController = new ImageController($('#visuel'), $('#loader'));
+			//var imageUrl = null;
+			//var imageController = null;
 
 
 			// Création du player audio
@@ -377,12 +380,12 @@
 
 
 			
-			// Fonction appelée par l'objet ImageLoader lorsque l'image est chargée.
+			// Fonction appelée par l'objet imageController lorsque l'image est chargée.
 
 			function onImageLoaded() {
 
-				$('#visuel img').fadeIn(1500);
-
+				//$('#visuel img').fadeIn(1500);
+				imageController.display(1500);
 				//this.fadeToBlack($('body').children().first(), 5000);
 
 				// Creation du lecteur audio s'il y a une source
@@ -454,7 +457,7 @@
 
 
 			// Paramétrage et chargement de l'image
-			imageLoader.startLoading(imageUrl, 500, onImageLoaded);
+			imageController.startLoading(imageUrl, 500, onImageLoaded);
 
 
 			// Initialisation du lecteur audio
@@ -472,8 +475,8 @@
 				
 				if (playerComplete) {
 					
-					//imageLoader.fadeToBlank($('#media-question'), 0);
-					//imageLoader.fadeToBlack($('#media-question'), 1500);
+					//imageController.fadeToBlank($('#media-question'), 0);
+					//imageController.fadeToBlack($('#media-question'), 1500);
 					$('#media-question').append($suite);
 					$("#submit-suite").hide().fadeIn(1000);
 					$("#submit-suite").prop("disabled", false);
@@ -723,14 +726,19 @@
 
 					//displayImage(imageUrl);
 				} 
-				*/              
+				*/ 
+
+
+				//création de l'image 
+				//imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+				//imageController = new imageController($('#visuel'), $('#loader'));          
 			}
 
 
 			
 			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
 			if (videoActive) {
-				/*
+				
 				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
 				var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
 
@@ -825,7 +833,7 @@
 						
 					}
 				);
-				*/
+				
 			}
 			
 

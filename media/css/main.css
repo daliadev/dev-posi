@@ -29,31 +29,39 @@ body {
 	.header {
 		width: 100%;
 		height: 40px;
-		background-color: #009688;
-
+		
+	
 		/* ajout */
-		/*max-width: 364px;*/
-		/*margin: 0 auto;*/
-		/*padding: 24px;*/
+		/*max-width: 702px;*/
+		margin: 0 auto;
+		padding: 0 24px;
+		
 	}
 		
 		.header .header-wrapper {
 			position: relative;
 			width: 100%;
+			max-width: 654px;
 			height: 100%;
 			/*margin: 0 24px;*/
-			/*padding: 24px;*/
+			
+			background-color: #009688;
 		}
 	
-	/*
+	
 	#posi-inscript .header {
-		max-width: 364px;
-		margin: 0 auto;
+		/*max-width: 364px;*/
+		/*margin: 0 auto;*/
+		/*padding: 0 24px;*/
 	}
-	*/
+
+	
 		#posi-inscript .header .header-wrapper {
 			/*width: 100%;*/ /* old */
 			/*max-width: 412px;*/
+			max-width: 364px;
+			margin: 0 24px;
+			/*margin: 0;*/
 		}
 
 			.header .logo {
@@ -106,8 +114,12 @@ body {
 				/*left: 40px;*/ /*old */
 				/*height: 40px;*/ /*old */
 				padding: 10px 24px;
+				max-width: 750px; /* ajout */
+
+				margin: 0 24px;
 				/*padding: 10px 40px;*/ /* old */
 				/*line-height: 1em;*/ /*old */
+
 			}
 				
 				.header .header-title i {
@@ -121,7 +133,7 @@ body {
 					/*display: inline;*/ /*old */
 					margin: 0;
 					color: #fff;
-					font-size: 0.75em;
+					font-size: 0.825em;
 					font-weight: 400;
 				}
 		

@@ -251,6 +251,39 @@ $form_url = $response['url'];
 
         					</div>
 
+
+
+                            <div class="stats-detail">
+
+                                <p><strong>Taux de validation des acquis</strong></p>
+
+                                <hr>
+
+                                <div class="progressbars" style="width:580px;">
+
+                                    <?php for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) : ?>
+
+                                        <div class="progressbar">
+                                            <div class="progressbar-title" title="<?php echo $response['stats']['global']['acquis'][$i]['desc']; ?>">
+                                                <?php echo $response['stats']['global']['acquis'][$i]['name']; ?> : <strong><?php echo $response['stats']['global']['acquis'][$i]['count']; ?></strong> positionnement(s) validé(s)
+                                                <!-- <div class="progressbar-bg">
+                                                    <span class="bg-<?php //echo getColor($response['stats']['global']['categories'][$i]['pourcent']); ?>" style="width:<?php //echo $response['stats']['global']['categories'][$i]['pourcent']; ?>%;"></span>
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                    <?php endfor; ?>
+
+                                    <p><strong><?php echo $response['stats']['global']['non_valid_count']; ?></strong> positionnements n'ont pas encore été validé.</p>
+                                        
+                                </div>
+                                
+                                <input type="submit" value="Export validations"  title="Export des taux de validation des acquis" name="export_valid_acquis" style="float:right; margin:0 3px 0 0; width:150px;">
+
+                                <div style="clear:both;"></div>
+
+                            </div>
+
                         </fieldset>
                     </div>
                 </div>

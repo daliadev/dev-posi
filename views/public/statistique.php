@@ -274,11 +274,11 @@ $form_url = $response['url'];
 
                                     <?php endfor; ?>
 
-                                    <p><strong><?php echo $response['stats']['global']['non_valid_count']; ?></strong> positionnements n'ont pas encore été validé.</p>
+                                    <p><strong><?php echo $response['stats']['global']['non_valid_count']; ?></strong> positionnement(s) non validé(s).</p>
                                         
                                 </div>
                                 
-                                <input type="submit" value="Export validations"  title="Export des taux de validation des acquis" name="export_valid_acquis" style="float:right; margin:0 3px 0 0; width:150px;">
+                                <input type="submit" value="Export validations"  title="Export des taux de validation des acquis" name="export_acquis" style="float:right; margin:0 3px 0 0; width:150px;">
 
                                 <div style="clear:both;"></div>
 

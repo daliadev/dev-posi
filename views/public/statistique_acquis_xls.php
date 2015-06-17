@@ -70,7 +70,7 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 	
 		$content .= "\n";
 		$content .= '"';
-		$content .= $acquis['name'].'";"';
+		$content .= utf8_decode($acquis['name'] = preg_replace("`&#39;`","'", $acquis['name']).'";"');
 		$content .= $acquis['count'].'";"';
 		$content .= '";"';
 		$content .= '"';

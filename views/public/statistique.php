@@ -265,7 +265,7 @@ $form_url = $response['url'];
 
                                         <div class="progressbar">
                                             <div class="progressbar-title" title="<?php echo $response['stats']['global']['acquis'][$i]['desc']; ?>">
-                                                <?php echo $response['stats']['global']['acquis'][$i]['name']; ?> : <strong><?php echo $response['stats']['global']['acquis'][$i]['count']; ?></strong> positionnement(s) validé(s)
+                                                <strong><?php echo $response['stats']['global']['acquis'][$i]['name']; ?></strong> : <?php echo $response['stats']['global']['acquis'][$i]['count']; ?> positionnement(s) validé(s)
                                                 <!-- <div class="progressbar-bg">
                                                     <span class="bg-<?php //echo getColor($response['stats']['global']['categories'][$i]['pourcent']); ?>" style="width:<?php //echo $response['stats']['global']['categories'][$i]['pourcent']; ?>%;"></span>
                                                 </div> -->

@@ -76,6 +76,11 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 		$content .= '"';
 	
 	}
-		echo $content;
+
+
+	$nonValid = "\n" . $response['stats']['global']['non_valid_count'] . ' positionnement(s) non validé(s)';
+	$content .= utf8_decode($nonValid = preg_replace("`&#39;`","'", $nonValid));
+		
+	echo $content;
 		
 	

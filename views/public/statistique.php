@@ -255,30 +255,43 @@ $form_url = $response['url'];
 
                             <div class="stats-detail">
 
-                                <p><strong>Taux de validation des acquis</strong></p>
+                                <p><strong>Répartition (des positionnements) par degré</strong></p>
 
                                 <hr>
 
                                 <div class="progressbars" style="width:580px;">
-
-                                    <?php for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) : ?>
-
-                                        <div class="progressbar">
-                                            <div class="progressbar-title" title="<?php echo $response['stats']['global']['acquis'][$i]['desc']; ?>">
-                                                <strong><?php echo $response['stats']['global']['acquis'][$i]['name']; ?></strong> : <?php echo $response['stats']['global']['acquis'][$i]['count']; ?> positionnement(s) validé(s)
-                                                <!-- <div class="progressbar-bg">
-                                                    <span class="bg-<?php //echo getColor($response['stats']['global']['categories'][$i]['pourcent']); ?>" style="width:<?php //echo $response['stats']['global']['categories'][$i]['pourcent']; ?>%;"></span>
-                                                </div> -->
+                                    <?php  ?>
+                                    <div class="progressbar">
+                                       <!--  <div class="progressbar-title" title="<?php //echo $response['stats']['global']['acquis'][$i]['desc']; ?>"> -->
+                                            <div class="progressbar-bg">
+                                            <?php for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) : ?>
+                                                
+                                                <?php $percent = round($response['stats']['global']['acquis'][$i]['count'] / $response['stats']['global']['nbre_sessions'] * 100); // Calcul du pourcentage de l'item ?>
+                                                    
+                                                    <?php $color = "grey"; if ($i == 0) $color="rouge"; if ($i == 1) $color="orange2"; if ($i == 2) $color="jaune"; if ($i == 3) $color="vert";?>
+                                                    <span class="bg-<?php echo $color; ?>" style="width:<?php echo $percent; ?>%;"></span>
+                                                
+                    
+                                            <?php endfor; ?>
                                             </div>
                                         </div>
+                                    </div>
 
-                                    <?php endfor; ?>
+                                    <?php //for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) : ?>
+
+                                        <!-- <div class="progressbar">
+                                            <div class="progressbar-title" title="<?php //echo $response['stats']['global']['acquis'][$i]['desc']; ?>">
+                                                <strong><?php //echo $response['stats']['global']['acquis'][$i]['name']; ?></strong> : <?php //echo $response['stats']['global']['acquis'][$i]['count']; ?> positionnement(s) validé(s)
+                                            </div>
+                                        </div> -->
+
+                                    <?php //endfor; ?>
 
                                     <p><strong><?php echo $response['stats']['global']['non_valid_count']; ?></strong> positionnement(s) non validé(s).</p>
                                         
                                 </div>
                                 
-                                <input type="submit" value="Export validations"  title="Export des taux de validation des acquis" name="export_acquis" style="float:right; margin:0 3px 0 0; width:150px;">
+                                <input type="submit" value="Export répartition degré"  title="Export des répartition des degrés." name="export_acquis" style="float:right; margin:0 3px 0 0; width:150px;">
 
                                 <div style="clear:both;"></div>
 

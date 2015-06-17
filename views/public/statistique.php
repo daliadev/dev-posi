@@ -291,7 +291,7 @@ $form_url = $response['url'];
 								<div class="progressbars" style="width:580px;">
 
 									<div class="progressbar">
-									<!-- <div class="progressbar-title" title="<?php //echo $response['stats']['global']['acquis'][$i]['desc']; ?>"> -->
+
 										<p style="margin-bottom: 10px;">
 										<?php 
 

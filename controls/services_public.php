@@ -628,7 +628,7 @@ class ServicesPublic extends Main
         }
         else if (isset($_POST['export_acquis']) && !empty($_POST['export_acquis']))
         {
-            $this->render("statistique_acquis_xls");
+            $this->render("statistique_repartition_degre_xls");
         }
         
         else

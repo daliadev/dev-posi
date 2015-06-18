@@ -7,11 +7,11 @@ if (!empty($date_debut) && !empty($date_fin) )
 {
 	if(count($response['stats']['global']['organismes'])>1)
 	{
-		$file = 'Du_'.$date_debut.'_au_'.$date_fin."_validations_des_acquis.csv";
+		$file = 'Du_'.$date_debut.'_au_'.$date_fin."_répartition_des_degrés.csv";
 	}
 	else
 	{
-		$file = 'Du_'.$date_debut.'_au_'.$date_fin."_validations_des_acquis__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
+		$file = 'Du_'.$date_debut.'_au_'.$date_fin."_répartition_des_degrés__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
 	}
 	
 }
@@ -20,11 +20,11 @@ else if (empty($date_debut) && empty($date_fin) )
 	
 	if(count($response['stats']['global']['organismes'])>1)
 	{
-		$file = date("d/m/Y")."_validations_des_acquis.csv";
+		$file = date("d/m/Y")."_répartition_des_degrés.csv";
 	}
 	else
 	{
-		$file = date("d/m/Y")."_validations_des_acquis__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
+		$file = date("d/m/Y")."_répartition_des_degrés__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
 	}
 	
 
@@ -34,11 +34,11 @@ else if (!empty($date_debut) && empty($date_fin) )
 	  
 	if(count($response['stats']['global']['organismes'])>1)
 	{
-		$file = 'Du_'.$date_debut.'_au_'.date("d/m/Y")."_validations_des_acquis.csv";
+		$file = 'Du_'.$date_debut.'_au_'.date("d/m/Y")."_répartition_des_degrés.csv";
 	}
 	else
 	{
-		$file = 'Du_'.$date_debut.'_au_'.date("d/m/Y")."_validations_des_acquis__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
+		$file = 'Du_'.$date_debut.'_au_'.date("d/m/Y")."_répartition_des_degrés__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
 	}
 	
 }
@@ -47,11 +47,11 @@ else if (empty($date_debut) && !empty($date_fin) )
 	
 	if(count($response['stats']['global']['organismes'])>1)
 	{
-		$file = 'Du_'.date("d/m/Y").'_au_'.$date_fin."_validations_des_acquis.csv";
+		$file = 'Du_'.date("d/m/Y").'_au_'.$date_fin."_répartition_des_degrés.csv";
 	}
 	else
 	{
-		$file = 'Du_'.date("d/m/Y").'_au_'.$date_fin."_validations_des_acquis_".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
+		$file = 'Du_'.date("d/m/Y").'_au_'.$date_fin."_répartition_des_degrés__".$response['stats']['global']['organismes'][0]['nom_organ'].".csv";
 	}
 	
 	

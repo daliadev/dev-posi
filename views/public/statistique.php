@@ -216,7 +216,7 @@ $form_url = $response['url'];
 									<div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['age_moyen']; ?> ans</strong></div>
 								</div>
 								
-								<input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:150px;">
+								<input type="submit" value="Export global par organisme"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:200px;">
 								
 								<div style="clear:both;"></div>
 
@@ -245,7 +245,7 @@ $form_url = $response['url'];
 										
 								</div>
 								
-								<input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau" name="export_niveau_nombre" style="float:right; margin: 0 3px 0 0; width:150px;">
+								<input type="submit" value="Export par niveau"  title="Export nombre de candidats répartis par niveau" name="export_niveau_nombre" style="float:right; margin: 0 3px 0 0; width:200px;">
 								   
 								<div style="clear:both;"></div>
 
@@ -274,7 +274,7 @@ $form_url = $response['url'];
 										
 								</div>
 								
-								<input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_score_competences" style="float:right; margin:0 3px 0 0; width:150px;">
+								<input type="submit" value="Export par score moyen"  title="Export score moyen par compétences" name="export_score_competences" style="float:right; margin:0 3px 0 0; width:200px;">
 
 								<div style="clear:both;"></div>
 
@@ -296,6 +296,7 @@ $form_url = $response['url'];
 										<?php 
 
 										 // Calcul du pourcentage de l'item
+                                        $bloc = 
 										$percent = array();
 										$nonvalid = 100;
 
@@ -331,11 +332,11 @@ $form_url = $response['url'];
 											$percent[$i] = round($response['stats']['global']['acquis'][$i]['count'] / $response['stats']['global']['nbre_sessions'] * 100);
 											$nonvalid -= $percent[$i];
 
-											echo $response['stats']['global']['acquis'][$i]['name'] . '/<strong class="'. $colors[$i] .'-txt">' . $percent[$i] . '%</strong> - ';
+											echo '<div class="progress-square ' . $colors[$i] . '"></div> <strong>' . $percent[$i] . '%</strong> ' . $response['stats']['global']['acquis'][$i]['name'] . '&nbsp; - &nbsp;';
 										}
 										?>
 										<?php if ($response['stats']['global']['non_valid_count'] > 0) : ?>
-											<strong> <?php echo $nonvalid; //$response['stats']['global']['non_valid_count']; ?>%</strong> non validé(s)
+											<div class="progress-square default"></div> <strong> <?php echo $nonvalid; //$response['stats']['global']['non_valid_count']; ?>%</strong> non validé(s)
 										<?php endif; ?>
 										</p>
 
@@ -343,7 +344,7 @@ $form_url = $response['url'];
 
 										<?php  for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) : ?>
 										
-											<div class="progress-bar progress-bar-<?php echo $colors[$i]; ?>" style="width: <?php echo $percent[$i]; ?>%;"></div>                       
+											<div class="progress-bar <?php echo $colors[$i]; ?>" style="width: <?php echo $percent[$i]; ?>%;"></div>                       
 
 										<?php endfor; ?>
 
@@ -352,7 +353,7 @@ $form_url = $response['url'];
 										
 								</div>
 								
-								<input type="submit" value="Export répartition degré"  title="Export des répartition des degrés." name="export_acquis" style="float:right; margin:0 3px 0 0; width:200px;">
+								<input type="submit" value="Export répartition par degrés"  title="Export des répartition des degrés." name="export_acquis" style="float:right; margin:0 3px 0 0; width:200px;">
 
 								<div style="clear:both;"></div>
 

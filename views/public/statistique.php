@@ -289,69 +289,107 @@ $form_url = $response['url'];
 								<hr>
 
 								<div class="progressbars" style="width:580px;">
+								
+									<!-- <div class="progressbar"> -->
 
-									<div class="progressbar">
+										<!-- <p style="margin-bottom: 10px;"> -->
+									<?php 
 
-										<p style="margin-bottom: 10px;">
-										<?php 
+									 // Calcul du pourcentage de l'item
+									$percent = array();
+									$nonvalid = 100;
+									$nonvalidIndex = 0;
 
-										 // Calcul du pourcentage de l'item
-                                        $bloc = 
-										$percent = array();
-										$nonvalid = 100;
+									// $colors = array();
+									// $color = "default";
 
-										$colors = array();
-										$color = "default";
+									for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) :
 
-										for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++)
-										{
-											switch($i) {
-												case 0 :
-													$colors[$i] = "primary";
-													break;
-												case 1 :
-													$colors[$i] = "secondary";
-													break;
-												case 2 :
-													$colors[$i] = "warning";
-													break;
-												case 3 :
-													$colors[$i] = "danger";
-													break;
-												case 4 :
-													$colors[$i] = "success";
-													break;
-												case 5 :
-													$colors[$i] = "info";
-													break;
-												default :
-													$colors[$i] = "default";
-													break;
-											}
-
-											$percent[$i] = round($response['stats']['global']['acquis'][$i]['count'] / $response['stats']['global']['nbre_sessions'] * 100);
-											$nonvalid -= $percent[$i];
-
-											echo '<div class="progress-square ' . $colors[$i] . '"></div> <strong>' . $percent[$i] . '%</strong> ' . $response['stats']['global']['acquis'][$i]['name'] . '&nbsp; - &nbsp;';
+										$percent[$i] = round($response['stats']['global']['acquis'][$i]['count'] / $response['stats']['global']['nbre_sessions'] * 100);
+										$nonvalid -= $percent[$i];
+										$nonvalidIndex = $i + 1;
+										
+										switch($i) {
+											case 0 :
+												$colors[$i] = "primary";
+												break;
+											case 1 :
+												$colors[$i] = "secondary";
+												break;
+											case 2 :
+												$colors[$i] = "warning";
+												break;
+											case 3 :
+												$colors[$i] = "danger";
+												break;
+											case 4 :
+												$colors[$i] = "success";
+												break;
+											case 5 :
+												$colors[$i] = "info";
+												break;
+											default :
+												$colors[$i] = "default";
+												break;
 										}
+
+										
+										
+										/*
+										$margin += ($i - 1 >= 0) ? $percent[($i - 1)] : 0;
+										*/
 										?>
-										<?php if ($response['stats']['global']['non_valid_count'] > 0) : ?>
-											<div class="progress-square default"></div> <strong> <?php echo $nonvalid; //$response['stats']['global']['non_valid_count']; ?>%</strong> non validé(s)
-										<?php endif; ?>
-										</p>
-
-										<div class="progress">
-
-										<?php  for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) : ?>
 										
-											<div class="progress-bar <?php echo $colors[$i]; ?>" style="width: <?php echo $percent[$i]; ?>%;"></div>                       
+										<!-- <div class="progressbar">
 
-										<?php endfor; ?>
+											<p style="margin-bottom: 10px;">
+												
+												<?php //echo $response['stats']['global']['acquis'][$i]['name']; ?> : <strong><?php //echo $percent[$i]; ?>%</strong>
 
+											</p>
+
+											<div class="progress" style="padding-left: <?php //echo $margin; ?>%; width: <?php //echo $percent[$i]; ?>%;">
+									
+												<div class="progress-bar <?php //echo $colors[$i]; ?>" style="width: 100%;"></div>
+
+											</div>
+										
+										</div> -->
+
+
+
+
+										<div class="progressbar">
+											<div class="progressbar-title" title="<?php echo $response['stats']['global']['acquis'][$i]['desc']; ?>">
+
+												<?php echo $response['stats']['global']['acquis'][$i]['name']; ?> / <strong><?php echo $percent[$i]; ?>%</strong>
+												
+												<div class="progressbar-bg">
+													<span class="<?php echo $colors[$i]; ?>" style="width:<?php echo $percent[$i]; ?>%;"></span>
+												</div>
+
+											</div>
 										</div>
-									</div>
+
+									<?php endfor; ?>
+
+									<?php if ($response['stats']['global']['non_valid_count'] > 0) : ?>
 										
-								</div>
+										<div class="progressbar">
+											<!-- <div class="progressbar-title" title="<?php //echo $response['stats']['global']['acquis'][$i]['desc']; ?>"> -->
+
+												Non validé(s) / <strong><?php echo $nonvalid; ?>%</strong>
+												
+												<div class="progressbar-bg">
+													<span class="default" style="width:<?php echo $nonvalid; ?>%;"></span>
+												</div>
+
+											</div>
+										</div>
+
+									<?php endif; ?>
+										
+									</div>
 								
 								<input type="submit" value="Export répartition par degrés"  title="Export des répartition des degrés." name="export_acquis" style="float:right; margin:0 3px 0 0; width:200px;">
 

@@ -1,9 +1,9 @@
 
-var ImageController = function(container, loader) {
+var ImageController = function(containerEl, loaderEl) {
 
 	var self = this;
-	var container = container;
-	var loader = loader;
+	var container = containerEl;
+	var loader = loaderEl;
 	//var onLoadFunction = null;
 	var imageBox = new Image();
 	var blackBg = null; //$('#black-bg');
@@ -22,28 +22,32 @@ var ImageController = function(container, loader) {
 
 	var loaderFadeIn = function() {
 		
-		var opacity = loader.style.opacity;
+		var opacity = parseFloat(loader.style.opacity);
 		opacity += (1000 / loaderInterval) / loaderFadeDuration;
-
-		if (opacity >= 1) {
+		
+		if (opacity >= 1.0) {
 
 			clearInterval(loadTimer);
-			loader.style.opacity = 1;
-			loaderCallback.call(this, 'fadeIn');
+			loader.style.opacity = '1';
+			//loaderCallback.call(this, 'fadeIn');
+		}
+		else {
+
+			loader.style.opacity = opacity.toString();
 		}
 	};
 
 	var loaderFadeOut = function() {
 
-		var opacity = loader.style.opacity;
+		var opacity = parseFloat(loader.style.opacity);
 		opacity -= (1000 / loaderInterval) / loaderFadeDuration;
 
-		if (opacity <= 0) {
+		if (opacity <= 0.0) {
 
 			clearInterval(loadTimer);
 			loader.style.display = 'none';
-			loader.style.opacity = 1;
-			loaderCallback.call(this, 'fadeOut');
+			loader.style.opacity = '1';
+			loaderCallback.call(this);
 		}
 	}
 
@@ -51,7 +55,7 @@ var ImageController = function(container, loader) {
 	var onDisplay = function() {
 
 		var opacity = imageBox.style.opacity;
-		opacity += (1000 / displayInterval) / displayFadeDuration;
+		opacity += (1000 / displayInterval) / displayFadeDuration;    
 
 		if (opacity >= 1) {
 
@@ -75,11 +79,13 @@ var ImageController = function(container, loader) {
 
 		imageBox.onload = function() {
 			
+			console.log('image loaded');
+			clearInterval(loadTimer);
 			loader.style.opacity = 1;
 			loader.style.display = 'block';
-			displayTimer = setInterval(onDisplay, displayInterval);
+			loadTimer = setInterval(loaderFadeOut, loaderInterval);
 
-			imageBox.style.display = 'none';
+			//imageBox.style.display = 'block';
 			//container.prepend(imageBox);
 			//self.container.css('height', 'auto');
 			//self.container.css('padding-bottom', '0px');
@@ -92,11 +98,11 @@ var ImageController = function(container, loader) {
 		//loader.fadeIn(loaderFadeDuration);
 	};
 
-	this.setLoaderInterval(duration) {
+	this.setLoaderInterval = function(duration) {
 
 		loaderInterval = duration;
 	};
-	this.getLoaderInterval() {
+	this.getLoaderInterval = function() {
 
 		return loaderInterval;
 	};
@@ -112,11 +118,11 @@ var ImageController = function(container, loader) {
 		displayTimer = setInterval(onDisplay, displayInterval);
 	};
 
-	this.setDisplayInterval(duration) {
+	this.setDisplayInterval = function(duration) {
 
 		displayInterval = duration;
 	};
-	this.getDisplayInterval() {
+	this.getDisplayInterval = function() {
 
 		return displayInterval;
 	};

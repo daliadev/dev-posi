@@ -339,9 +339,10 @@
 			/* Création / Gestion des médias */
 
 			// Création de l'image
-
+			var imageContainer = document.getElementById('visuel');
+			var loader = document.getElementById('loader');
 			var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
-			var imageController = new ImageController($('#visuel'), $('#loader'));
+			var imageController = new ImageController(imageContainer, loader);
 			//var imageUrl = null;
 			//var imageController = null;
 
@@ -381,11 +382,18 @@
 
 			
 			// Fonction appelée par l'objet imageController lorsque l'image est chargée.
+			function onImageDisplayed() {
+
+				console.log('image displayed');
+			}
+
 
 			function onImageLoaded() {
 
+				console.log('loader fade out');
+				//imageController.display(1500, onImageDisplayed);
+
 				//$('#visuel img').fadeIn(1500);
-				imageController.display(1500);
 				//this.fadeToBlack($('body').children().first(), 5000);
 
 				// Creation du lecteur audio s'il y a une source
@@ -404,7 +412,7 @@
 			function onAudioCreated() {
 
 				console.log('created');
-				audioPlayer.setTrack(audioTrack);
+				//audioPlayer.setTrack(audioTrack);
 			}
 
 
@@ -455,9 +463,8 @@
 
 
 
-
 			// Paramétrage et chargement de l'image
-			imageController.startLoading(imageUrl, 500, onImageLoaded);
+			imageController.startLoading(imageUrl, 1500, onImageLoaded);
 
 
 			// Initialisation du lecteur audio

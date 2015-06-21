@@ -204,13 +204,13 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				// On récupére le tableau 'buffered' qui contient les infos sur le statut actuel du lecteur
 				var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
 				// Le pourcentage de chargement est la division du temps chargé par la durée totale (x 100%)
-				var percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
+				percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
 				console.log('percentLoaded :' + percentLoaded);
 			}
 			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
 
 				// Pour Dewplayer, si la position de lecture est à 0, la lecture peut démarrer (streaming)
-				if (player.dewgetpos() == 0) {
+				if (player.dewgetpos() === 0) {
 
 					percentLoaded = 100;
 				}
@@ -240,11 +240,12 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 		if (player !== null) {
 
 			var percent = 0;
+			var currenttime = 0;
 
 			if (playerType === 'html') {
 
 				duration = player.duration; // Duree totale
-				var currenttime = player.currentTime; // Temps écoulé
+				currenttime = player.currentTime; // Temps écoulé
 				
 				percent = (currenttime / duration) * 100;
 				console.log('percent :' + percent);
@@ -265,7 +266,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 					player.dewsetpos(0);
 				}
 
-				var currenttime = player.dewgetpos(); // Temps écoulé
+				currenttime = player.dewgetpos(); // Temps écoulé
 				
 				percent = (currenttime / duration) * 100;
 				console.log('percent :' + percent);

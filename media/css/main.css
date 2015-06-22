@@ -28,14 +28,14 @@ body {
 
 	.header {
 		width: 100%;
-		height: 40px;
+		/*height: 12px;*/
 		background-color: #009688;
 	}
 		
 		.header .header-wrapper {
 			position: relative;
 			width: 100%;
-			height: 100%;
+			height: 32px;
 			margin: 0 auto;
 			padding: 10px 24px;
 		}
@@ -43,40 +43,63 @@ body {
 	#posi-inscript .header {
 		/*width: 100%;*/
 		max-width: 364px;
-		/*height: auto;*/
+		height: 100%;
 		margin: 0 auto;
 		/*padding: 0 24px;*/
 
 	}
 
 		#posi-inscript .header .header-wrapper {
-			max-width: 412px;
-			/*padding: 0;*/
+			/*max-width: 364px;*/ /*412px;*/
 			margin: 0;
 			/*padding: 0 24px;*/
 		}
 
 			.header .logo {
 				display: none;
-				/*position: absolute;
-				width: 40px;
-				height: 40px;
-				background: url(../images/logo-40x40.png) no-repeat 50% 50%;
-				background-color: #fff;*/
 			}
 				
 				/*.main-small .header .logo img {
 					width: 100%;
 				}*/
+				
+				.header .header-title {
+					/*position: absolute;*/
+					/*float: left;*/
+					width: 80%;
+					height: 100%;
+					padding: 0;
+					line-height: 0.5em;
+					text-align: left;
+				}
 
+
+/*
+@media only screen and (max-width: 412px) {
+
+	#posi-inscript .header {
+		width: 100%;
+		max-width: 364px;
+		height: 40px;
+		margin: 0 auto;
+		background-color: #009688;
+	}
+
+		#posi-inscript .header .header-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			margin: 0 auto;
+			padding: 10px 24px;
+		}
 
 			.header .header-title {
-				/*position: absolute;*/
-				left: 40px;
-				height: 40px;
 				padding: 0;
-				/*line-height: 2em;*/
+				text-align: right;
 			}
+
+}*/
+			
 				
 				.header .header-title i {
 					padding-right: 0.25em;
@@ -88,31 +111,35 @@ body {
 				.header .header-title h1 {
 					display: inline;
 					margin: 0;
-					color: #b3e0db;
+					color: #ffffff; /*b3e0db;*/
 					font-size: 0.75em;
-					font-weight: 600;
+					/*font-size: 0.8125em;*/
+					font-weight: 400;
+					/*line-height: 24px;*/
 				}
 		
 
 			.header .header-menu {
 				position: absolute;
+				/*float: right;*/
 				right: 24px;
-				height: 40px;
-				width: 256px;
-				z-index: 999;
+				top: 4px;
+				height: 32px;
+				/*width: 256px;*/
+				z-index: 992;
 			}
 				
 				.header-menu .menu-btn {
-					float: right;                   
+					                   
 					display: block;
-					width: 40px;
-					height: 40px;
+					width: 24px;
+					height: 24px;
 					background-color: #009688;
 					border: none;
 					color: #b3e0db;
-					font-size: 24px; /*1.25em;*/
+					font-size: 1.5em; /*1.25em;*/
 					text-align: center;
-					line-height: 40px;
+					/*line-height: 2em;*/
 					text-decoration: none;
 				}
 
@@ -932,12 +959,35 @@ body {
 				background: url(../images/logo-dalia_40x40.png) no-repeat 50% 50%;
 				background-color: #fff;
 			}*/
+	/*
+	.header {
+		background-color: #009688;
+	}
+		
+		.header .header-wrapper {
+			position: relative;
+			width: 100%;
+			height: 32px;
+			margin: 0 auto;
+			padding: 10px 24px;
+		}
+	
+	#posi-inscript .header {
+		max-width: 364px;
+		height: 100%;
+		margin: 0 auto;
+	}
+
+		#posi-inscript .header .header-wrapper {
+			margin: 0;
+		}
+	*/
 
 
 	#posi-inscript .header {
 		float: left;
 		max-width: 240px;
-		height: auto;
+		height: 100%;
 		margin-left: 24px;
 		/*background-color: #009688;*/
 	}
@@ -945,6 +995,7 @@ body {
 		#posi-inscript .header .header-wrapper {
 			position: static;
 			max-width: 100%;
+			height: 100%;
 			margin: 0;
 			padding: 0;
 		}
@@ -958,41 +1009,14 @@ body {
 				background-color: #fff;
 			}
 
-				/*.main-small .header .logo img {
-					display: none;
-				}*/
 	
-
-
-			/*.header .header-title {
-				position: absolute;
-				left: 40px;
-				height: 40px;
-				padding: 10px 40px;
-				line-height: 1em;
-			}
-				
-				.header .header-title i {
-					padding-right: 0.25em;
-					color: #b3e0db;
-					font-size: 0.875em;
-					display: none;
-				}
-
-				.header .header-title h1 {
-					display: inline;
-					margin: 0;
-					color: #b3e0db;
-					font-size: 0.75em;
-					font-weight: 600;
-				}*/
-
-
 			#posi-inscript .header .header-title {
 				position: static;
+				width: 100%;
 				height: 64px;
 				padding: 20px 20px;
 				/*line-height: 24px;*/
+				text-align: center;
 			}
 
 				#posi-inscript .header .header-title i {
@@ -1003,7 +1027,7 @@ body {
 					/*display: inline;*/
 					/*padding: 0 0 5px 0;*/ /*0.5em 0;*/
 					/*margin: 0;*/
-					color: #fff;
+					color: #ffffff;
 					font-size: 0.8125em;
 					font-weight: 400;
 					text-align: center;

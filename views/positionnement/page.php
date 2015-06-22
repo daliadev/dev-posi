@@ -300,6 +300,35 @@
 
 
 
+			/*** Initialisation des variables / instanciation des objets ***/
+			
+
+
+
+
+			/*** Fonctions de contrôle des interactions ***/
+
+
+			// Désactivation du système de réponses
+
+			// Activation du système de réponses
+
+			// Affichage/activation du bouton 'speaker'
+
+			// Masquage/désactivation du bouton 'speaker'
+
+			// Affichage/activation du bouton 'suite'
+
+			// Masquage/désactivation du bouton 'suite'
+
+
+
+
+
+
+
+
+
 			/*** fonctions de contrôle des médias ***/
 
 
@@ -311,6 +340,11 @@
 			var onImageCreated = function() {
 
 				console.log('onImageCreated');
+				
+				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+				//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
 			};
 
 
@@ -326,7 +360,7 @@
 				//this.fadeToBlack($('body').children().first(), 5000);
 
 				// Creation du lecteur audio s'il y a une source
-				if (audioActive) {
+				if (isAudioActive) {
 
 					//createAudioPlayer();
 					//audioPlayer.setTrack(audioTrack);
@@ -446,8 +480,8 @@
 
 			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
 			isImageActive = imageFilename !== '' ? true : false;
-			videoActive = videoFilename !== '' ? true : false;
-			audioActive = audioFilename !== '' ? true : false;
+			isVideoActive = videoFilename !== '' ? true : false;
+			isAudioActive = audioFilename !== '' ? true : false;
 
 
 			/*
@@ -484,8 +518,8 @@
 			imageContainer = $('#visuel');
 			imageLoader = $('#loader');
 
-			// Instanciation de l'objet ImageController que gére le chargement et l'affichage de l'image
-			imageController = new ImageController(imageContainer, imageLoader);
+			// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
+			imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
 
 
 			// Contrôle du son
@@ -520,7 +554,7 @@
 
 			// Instanciation de l'objet AudioPlayer que gére et contrôle le son
 			// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-			audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+			//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
 
 			// Initialisation du lecteur audio
 			audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
@@ -925,7 +959,7 @@
 
 			// Chargement de l'image (si il n'y a pas de vidéo)
 			
-			if (imageActive) {
+			if (isImageActive) {
 				/*
 				var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 				
@@ -944,8 +978,8 @@
 
 			
 			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
-			if (videoActive) {
-				
+			if (isVideoActive) {
+				/*
 				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
 				//imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
 
@@ -1040,13 +1074,13 @@
 						
 					}
 				);
-				
+				*/
 			}
 			
 
 			// Sinon, on créé le lecteur audio
 			
-			else if (audioActive) {
+			else if (isAudioActive) {
 
 				/*
 				var audioHtml = '';

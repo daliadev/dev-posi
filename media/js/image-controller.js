@@ -1,5 +1,5 @@
 
-var ImageController = function(container, loader) {
+var ImageController = function(container, loader, onCreateCallback) {
 
 	var $self = $(this);
 	var $container = container;
@@ -12,8 +12,15 @@ var ImageController = function(container, loader) {
 
 	var isImageLoaded = false;
 
+	var createCallback = onCreateCallback;
 	var loadCallback = null;
 	var displayCallback = null;
+
+
+	var onCreate = function() {
+
+		createCallback.call(this);
+	};
 
 
 	var loaderFadeIn = function() {
@@ -171,5 +178,8 @@ var ImageController = function(container, loader) {
 			this.blackBg.remove();
 		}
 	};
+
+
+	onCreate();
 
 };

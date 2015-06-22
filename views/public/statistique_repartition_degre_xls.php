@@ -61,7 +61,7 @@ header('Content-Type: text/csv;');
 header('Content-Disposition: attachment; filename="'.$file.'"');
 
 
-?>"Nom";"Taux"<?php
+?>"Nom";"Nombre de positionnements";"Taux (%)"<?php
 
 	$content = "";
 
@@ -71,15 +71,29 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
 		$content .= "\n";
 		$content .= '"';
 		$content .= utf8_decode($acquis['name'] = preg_replace("`&#39;`","'", $acquis['name']).'";"');
-		$content .= $acquis['count'].'";"';
+		$content .= $acquis['count'] .'";"';
+		$content .= round(($acquis['count'] / $response['stats']['global']['nbre_sessions']) * 100) .'%";"';
 		$content .= '";"';
 		$content .= '"';
-	
 	}
 
-
-	$nonValid = "\n" . $response['stats']['global']['non_valid_count'] . ' positionnement(s) non validé(s)';
+	/*
+	$nonValid = "\n" . 'Positionnement(s) non validé(s) : '. $response['stats']['global']['non_valid_count'];
+	$nonValidPercent = " soit " . round($response['stats']['global']['non_valid_count'] / $response['stats']['global']['nbre_sessions'] * 100) . "%";
 	$content .= utf8_decode($nonValid = preg_replace("`&#39;`","'", $nonValid));
+	$content .= utf8_decode($nonValidPercent = preg_replace("`&#39;`","'", $nonValidPercent));
+	*/
+
+	$nonValid = $response['stats']['global']['non_valid_count'];
+	$nonValidPercent = round($response['stats']['global']['non_valid_count'] / $response['stats']['global']['nbre_sessions'] * 100);
+
+	$content .= "\n";
+	$content .= '"';
+	$content .= utf8_decode(preg_replace("`&#39;`","'", 'Positionnement(s) non validé(s) : ').'";"');
+	$content .= $nonValid .'";"';
+	$content .= $nonValidPercent.'%";"';
+	$content .= '";"';
+	$content .= '"';
 		
 	echo $content;
 		

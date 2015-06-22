@@ -79,8 +79,9 @@ $form_url = $response['url'];
 			</div>
 
 		</div>
-
-
+		
+		<!-- <div class="clear"></div> -->
+	
 		<div class="content">
 			
 			<div class="form-header">

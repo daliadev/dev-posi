@@ -29,53 +29,103 @@ body {
 	.header {
 		width: 100%;
 		height: 40px;
-		background-color: #009688;
+		
+	
+		/* ajout */
+		/*max-width: 702px;*/
+		margin: 0 auto;
+		padding: 0 24px;
+		max-width: 412px;
+
+		
 	}
 		
 		.header .header-wrapper {
 			position: relative;
 			width: 100%;
+			max-width: 654px;
 			height: 100%;
-			margin: 0 auto;
-			padding: 10px 24px;
+			/*margin: 0 24px;*/
+			
+			background-color: #009688;
+
+			margin: 0;
+			/*padding: 10px 24px;*/
 		}
 	
+	
 	#posi-inscript .header {
-		/*width: 100%;*/
-		max-width: 364px;
-		/*height: auto;*/
-		margin: 0 auto;
-		/*padding: 0 24px;*/
-
+		width: 100%;
+		height: 40px;
+		background-color: #009688;
 	}
+		
+		#posi-inscript .header .header-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			margin: 0 auto;
+			padding: 0 24px;
+		}
 
 		#posi-inscript .header .header-wrapper {
 			max-width: 412px;
-			/*padding: 0;*/
-			margin: 0;
-			/*padding: 0 24px;*/
 		}
 
 			.header .logo {
 				display: none;
-				/*position: absolute;
+				position: absolute;
 				width: 40px;
 				height: 40px;
 				background: url(../images/logo-40x40.png) no-repeat 50% 50%;
-				background-color: #fff;*/
+				background-color: #fff;
 			}
 				
 				/*.main-small .header .logo img {
 					width: 100%;
 				}*/
+				
+/*
+#posi-inscript.main {
+	max-width: 680px;
+	margin: 40px auto 0 auto;
+}
 
+	#posi-inscript .header {
+		float: left;
+		max-width: 240px;
+		height: auto;
+		margin-left: 24px;
+	}
+  
+		#posi-inscript .header .header-wrapper {
+			position: static;
+			max-width: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+			#posi-inscript .header .logo {
+				position: static;
+				width: 240px;
+				height: 200px;
+				background: url(../images/logo-240x200.png) no-repeat 50% 50%;
+				background-color: #fff;
+			}
+			*/
+	
 
 			.header .header-title {
-				/*position: absolute;*/
-				left: 40px;
-				height: 40px;
-				padding: 0;
-				/*line-height: 2em;*/
+				/*position: absolute;*/ /*old */
+				/*left: 40px;*/ /*old */
+				/*height: 40px;*/ /*old */
+				padding: 10px 24px;
+				max-width: 750px; /* ajout */
+
+				/*margin: 0 24px;*/
+				/*padding: 10px 40px;*/ /* old */
+				line-height: 2.5em; /*old */
+
 			}
 				
 				.header .header-title i {
@@ -86,11 +136,12 @@ body {
 				}
 
 				.header .header-title h1 {
-					display: inline;
+					/*display: inline;*/ /*old */
 					margin: 0;
-					color: #b3e0db;
-					font-size: 0.75em;
-					font-weight: 600;
+					color: #fff;
+					font-size: 0.825em;
+					font-weight: 400;
+					li
 				}
 		
 
@@ -154,7 +205,7 @@ body {
 		max-width: 412px;
 		height: auto;
 		margin: 0 auto;
-		padding: 0 24px 24px 24px;
+		padding: 24px;
 	}
 		
 			
@@ -807,6 +858,8 @@ body {
 		}
 		*/
 
+			
+
 
 
 		#posi-page .question {
@@ -894,46 +947,7 @@ body {
 @media only screen and (min-width: 680px) {
 
 	
-#posi-inscript.main {
-	max-width: 680px;
-	margin: 40px auto 0 auto;
-}
-/*
-#posi-page.main {
-	max-width: 100%;
-	margin: 40px auto 0 auto;
-}
-*/
-
-	/*-----  Header inscription------*/
-	/*
-	.header {
-		width: 100%;
-		height: 40px;
-		background-color: #009688;
-	}*/
-		
-		/*.header .header-wrapper {
-			position: relative;
-			width: 100%;
-			height: 100%;
-			margin: 0 auto;
-			padding: 0 24px;
-		}
-
-		#posi-inscript .header .header-wrapper {
-			max-width: 412px;
-		}*/
-
-			/*.header .logo {
-				position: absolute;
-				width: 40px;
-				height: 40px;
-				background: url(../images/logo-dalia_40x40.png) no-repeat 50% 50%;
-				background-color: #fff;
-			}*/
-
-
+	
 	#posi-inscript .header {
 		float: left;
 		max-width: 240px;
@@ -950,19 +964,12 @@ body {
 		}
 
 			#posi-inscript .header .logo {
-				display: block;
 				position: static;
 				width: 240px;
 				height: 200px;
 				background: url(../images/logo-240x200.png) no-repeat 50% 50%;
 				background-color: #fff;
 			}
-
-				/*.main-small .header .logo img {
-					display: none;
-				}*/
-	
-
 
 			/*.header .header-title {
 				position: absolute;
@@ -1070,8 +1077,8 @@ body {
 			
 
 	/*-----  Header page ------*/
-
 	#posi-page .header {
+		
 		width: 100%;
 		/*height: 100%;*/
 		max-width: 798px;
@@ -1088,6 +1095,7 @@ body {
 			/*margin: 0 auto;
 			padding: 0 24px;*/
 		}
+
 
 
 	/*-----  Content Inscription  ------*/

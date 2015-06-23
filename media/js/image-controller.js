@@ -1,6 +1,6 @@
 
 var ImageController = function(container, loader, onCreateCallback) {
-
+	console.log('construct');
 	var $self = $(this);
 	var $container = container;
 	var $loader = loader;

@@ -296,12 +296,91 @@
 
 
 			// Variables état/statut des médias
+			/*
+			// Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
+			var isVideoComplete = false;
 
+			// Etat du chargement de l'image
+			var isImageLoaded = false;
+
+			// Etat du chargement du lecteur audio
+			var isAudioLoaded = false;
+
+			// Etat de lecture du lecteur audio
+			var audioIsPlaying = false;
+
+
+			// Timer du chargement de l'image
+			var timerImage = null;
+
+			// Timer de selection automatique du champ de saisie
+			var timerPlayerComplete = null;
+
+			var playerComplete = false;
+			*/
 
 
 
 			/*** Initialisation des variables / instanciation des objets ***/
+
+
+			// Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
+			imageFilename = $('#image-filename').val();
+			audioFilename = $('#audio-filename').val();
+			videoFilename = $('#video-filename').val();
+
+
+			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
+			isImageActive = imageFilename !== '' ? true : false;
+			isVideoActive = videoFilename !== '' ? true : false;
+			isAudioActive = audioFilename !== '' ? true : false;
+
+
+			// Contrôle de l'image
+
+			// URL complète de l'image
+			imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
+
+			// Conteneur et icône animée de chargement de l'image
+			imageContainer = $('#visuel');
+			imageLoader = $('#loader');
+
 			
+
+			//audioPlayer.enableControls(false);
+
+			// Contrôle du son
+
+			// Le type et l'URL du lecteur audio dépendent du navigateur
+			// if (navAgent.isAudioEnabled()) {
+			// 	playerType = 'html';
+			// 	playerURL = null;
+			// }
+			// else 
+			if (FlashDetect.installed) {
+
+				playerType = 'dewp-mini';
+				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
+			}
+			else {
+
+				alert('Ce navigateur ne prend pas en charge les médias audio.');
+			}
+
+			// URL complète de la piste audio
+			audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
+
+			// Conteneur du lecteur audio (caché)
+			audioContainer = document.getElementById('audio');
+			
+			// Tableau des éléments de contrôle de l'audio (contrôle via le bouton speaker)
+			audioControls = [{
+				action: 'play',
+				item: document.getElementById('speaker-button')
+			}];
+
+
+
 
 
 
@@ -324,7 +403,7 @@
 
 
 
-
+			
 
 
 
@@ -333,19 +412,6 @@
 
 
 			// Fonctions contrôle de l'image
-
-
-			// Sur création de l'image
-
-			var onImageCreated = function() {
-
-				console.log('onImageCreated');
-				
-				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-				//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-			};
 
 
 			// Sur chargement terminé de l'image
@@ -372,6 +438,40 @@
 			};
 
 
+			// Sur création de l'image
+
+			var onImageCreated = function() {
+
+				console.log('onImageCreated');
+				
+				if (isImageActive && !isAudioActive) {
+
+					//Création de l'image seule
+				}
+				else if (isAudioActive) {
+
+					// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+					// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+					//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+					// Initialisation du lecteur audio
+					//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+
+					//audioPlayer.enableControls(false);
+				}
+				
+				// Paramétrage et chargement de l'image
+				imageController.startLoading(imageUrl, 500, onImageLoaded);
+			};
+
+			//Création de l'image seule
+			if (isImageActive && !isVideoActive) {
+
+				// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
+				imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
+			}
+
+
 			// Sur affichage terminé de l'image
 
 			var onImageDisplayed = function() {
@@ -391,9 +491,6 @@
 				console.log('onAudioCreated');
 
 				//audioPlayer.setTrack(audioTrack);
-
-				// Paramétrage et chargement de l'image
-				imageController.startLoading(imageUrl, 500, onImageLoaded);
 			};
 
 
@@ -467,100 +564,34 @@
 			};
 
 
-
-
-
-			/*** Initialisation des variables / instanciation des objets ***/
-
-
-			// Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
-			imageFilename = $('#image-filename').val();
-			audioFilename = $('#audio-filename').val();
-			videoFilename = $('#video-filename').val();
-
-			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
-			isImageActive = imageFilename !== '' ? true : false;
-			isVideoActive = videoFilename !== '' ? true : false;
-			isAudioActive = audioFilename !== '' ? true : false;
-
-
-			/*
-			// Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
-			var isVideoComplete = false;
-
-			// Etat du chargement de l'image
-			var isImageLoaded = false;
-
-			// Etat du chargement du lecteur audio
-			var isAudioLoaded = false;
-
-			// Etat de lecture du lecteur audio
-			var audioIsPlaying = false;
-
-
-			// Timer du chargement de l'image
-			var timerImage = null;
-
-			// Timer de selection automatique du champ de saisie
-			var timerPlayerComplete = null;
-
-			var playerComplete = false;
-			*/
-
-
-
-			// Contrôle de l'image
-
-			// URL complète de l'image'
-			imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
-
-			// Conteneur et icône animée de chargement de l'image
-			imageContainer = $('#visuel');
-			imageLoader = $('#loader');
-
 			// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
-			imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
+			//imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
 
-
-			// Contrôle du son
-
-			// Le type et l'URL du lecteur audio dépendent du navigateur
-			// if (navAgent.isAudioEnabled()) {
-			// 	playerType = 'html';
-			// 	playerURL = null;
-			// }
-			// else 
-			if (FlashDetect.installed) {
-
-				playerType = 'dewp-mini';
-				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
-			}
-			else {
-
-				alert('Ce navigateur ne prend pas en charge les médias audio.');
-			}
-
-			// URL complète de la piste audio
-			audioTrack = '<?php echo SERVER_URL.AUDIO_PATH; ?>' + audioFilename;
-
-			// Conteneur du lecteur audio (caché)
-			audioContainer = document.getElementById('audio');
-			
-			// Tableau des éléments de contrôle de l'audio (contrôle via le bouton speaker)
-			audioControls = [{
-				action: 'play',
-				item: document.getElementById('speaker-button')
-			}];
 
 			// Instanciation de l'objet AudioPlayer que gére et contrôle le son
 			// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
 			//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
 
 			// Initialisation du lecteur audio
-			audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+			//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
 
-			audioPlayer.enableControls(false);
+			//Création de l'image seule
+			if (isImageActive && !isVideoActive) {
 
+				// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
+				imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
+			}
+			if (isAudioActive) {
+
+				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+				//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+				// Initialisation du lecteur audio
+				//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+
+				//audioPlayer.enableControls(false);
+			}
 
 			
 
@@ -761,7 +792,6 @@
 
 					if ($(this).val().length > 1) {
 
-						
 						$("#submit-suite").show(500);
 						$("#submit-suite").prop("disabled", false);
 					}

@@ -344,6 +344,7 @@
 			// Conteneur et icône animée de chargement de l'image
 			imageContainer = $('#visuel');
 			imageLoader = $('#loader');
+			// imageLoader.hide();
 
 			
 
@@ -410,74 +411,76 @@
 
 			/*** fonctions de contrôle des médias ***/
 
-
 			// Fonctions contrôle de l'image
 
-
-			// Sur chargement terminé de l'image
-
-			var onImageLoaded = function() {
-
-				console.log('onImageLoaded');
-
-				imageController.display(1500, onImageDisplayed);
-
-				//$('#visuel img').fadeIn(1500);
-				//this.fadeToBlack($('body').children().first(), 5000);
-
-				// Creation du lecteur audio s'il y a une source
-				if (isAudioActive) {
-
-					//createAudioPlayer();
-					//audioPlayer.setTrack(audioTrack);
-				}
-				else {
-
-					//$(".reponse-qcm").prop("disabled", false);
-				}
-			};
-
-
-			// Sur création de l'image
-
-			var onImageCreated = function() {
-
-				console.log('onImageCreated');
-				
-				if (isImageActive && !isAudioActive) {
-
-					//Création de l'image seule
-				}
-				else if (isAudioActive) {
-
-					// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-					// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-					//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-					// Initialisation du lecteur audio
-					//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-
-					//audioPlayer.enableControls(false);
-				}
-				
-				// Paramétrage et chargement de l'image
-				imageController.startLoading(imageUrl, 500, onImageLoaded);
-			};
-
-			//Création de l'image seule
 			if (isImageActive && !isVideoActive) {
 
+				// Sur affichage terminé de l'image
+
+				var onImageDisplayed = function() {
+
+					console.log('onImageDisplayed');
+				};
+
+
+				// Sur chargement terminé de l'image
+
+				var onImageLoaded = function() {
+
+					console.log('onImageLoaded');
+
+					imageController.display(1500, onImageDisplayed);
+
+					// Creation du lecteur audio s'il y a une source
+					if (isAudioActive) {
+
+						//createAudioPlayer();
+						//audioPlayer.setTrack(audioTrack);
+					}
+					else {
+
+						//$(".reponse-qcm").prop("disabled", false);
+					}
+				};
+
+
+				// Sur création de l'image
+				/*
+				var onImageCreated = function() {
+
+					console.log('onImageCreated');
+					
+					if (isImageActive && !isAudioActive) {
+
+						//Création de l'image seule
+					}
+					else if (isAudioActive) {
+
+						// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+						// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+						//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+						// Initialisation du lecteur audio
+						//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+
+						//audioPlayer.enableControls(false);
+					}
+					
+					// Paramétrage et chargement de l'image
+					//imageController.startLoading(imageUrl, 500, onImageLoaded);
+				};
+				*/
+				
+				//Création de l'image seule
+			
+
 				// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
-				imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
+
+				imageController = new ImageController(imageContainer, imageLoader, null);
+				imageController.startLoading(imageUrl, 1000, onImageLoaded);
+
 			}
-
-
-			// Sur affichage terminé de l'image
-
-			var onImageDisplayed = function() {
-
-				console.log('onImageDisplayed');
-			};
+			
 
 
 
@@ -574,7 +577,7 @@
 
 			// Initialisation du lecteur audio
 			//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-
+			/*
 			//Création de l'image seule
 			if (isImageActive && !isVideoActive) {
 
@@ -592,7 +595,7 @@
 
 				//audioPlayer.enableControls(false);
 			}
-
+			*/
 			
 
 
@@ -606,7 +609,7 @@
 			$("#btn-suite").remove();
 
 
-			$('#loader').hide();
+			//$('#loader').hide();
 			// Le barre du lecteur audio est cachée.
 			//$("#audio").hide();
 

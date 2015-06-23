@@ -1,14 +1,19 @@
 
 var ImageController = function(container, loader, onCreateCallback) {
-	console.log('construct');
+
+	
 	var $self = $(this);
 	var $container = container;
 	var $loader = loader;
+	$loader.hide();
 	var imageBox = new Image();
-	var $blackBg = null; //$('#black-bg');
+	// var $blackBg = null;
 
 	var loadTimer = null;
+	var timerInterval = 100;
+	var timerTime = 0;
 	var loaderFadeDuration = 0;
+
 
 	var isImageLoaded = false;
 
@@ -17,74 +22,19 @@ var ImageController = function(container, loader, onCreateCallback) {
 	var displayCallback = null;
 
 
-	var onCreate = function() {
-
-		createCallback.call(this);
-	};
-
 
 	var loaderFadeIn = function() {
 
-		if (isImageLoaded) {
+		timerTime += timerInterval;
+
+		if (isImageLoaded && timerTime >= loaderFadeDuration) {
 
 			clearInterval(loadTimer);
-			//loadTimer = setInterval(loaderFadeOut, loaderInterval);
-			$(loader).fadeOut(loaderFadeDuration);
-		}
-		
-
-
-		/*
-		var opacity = parseFloat(loader.style.opacity);
-
-		if (opacity >= 1.0) {
-
-			loader.style.opacity = 1;
-
-			
-		}
-		else {
-
-			opacity += (1000 / loaderInterval) / loaderFadeDuration;
-			loader.style.opacity = opacity;
-		}
-		*/
-	};
-
-	/*
-	var onLoaderFadeIn = function() {
-
-		
-		if (hasJQuery) {
-
-			$(loader).fadeOut(loaderFadeDuration);
-		}
-		else{
-
-			clearInterval(loadTimer);
-			loadTimer = setInterval(loaderFadeOut, loaderInterval);
+			loadCallback.call($self);
+			$loader.fadeOut(loaderFadeDuration);
 		}
 	};
-	*/
 
-	/*
-	var loaderFadeOut = function() {
-
-
-		var opacity = parseFloat(loader.style.opacity);
-		opacity -= (1000 / loaderInterval) / loaderFadeDuration;
-		loader.style.opacity = opacity;
-
-		if (opacity <= 0.0) {
-
-			
-			loader.style.display = 'none';
-			loader.style.opacity = '1';
-		}
-
-		clearInterval(loadTimer);
-	};
-	*/
 
 
 	var onDisplay = function() {
@@ -101,7 +51,8 @@ var ImageController = function(container, loader, onCreateCallback) {
 		loaderFadeDuration = loaderDuration;
 		loadCallback = onLoadCallback;
 
-		loadTimer = setInterval(loaderFadeIn, 100);
+		timerTime = 0;
+		loadTimer = setInterval(loaderFadeIn, timerInterval);
 		$loader.fadeIn(loaderFadeDuration);
 
 		imageBox.onload = function() {
@@ -110,7 +61,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 			$container.append($(this));
 
 			isImageLoaded = true;
-			loadCallback.call($self);
+			//loadCallback.call($self);
 			//console.log('image loaded');
 
 			//clearInterval(loadTimer);
@@ -127,16 +78,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 
 		imageBox.src = imgSrc;
 	};
-	/*
-	this.setLoaderInterval = function(duration) {
 
-		loaderInterval = duration;
-	};
-	this.getLoaderInterval = function() {
-
-		return loaderInterval;
-	};
-	*/
 
 
 
@@ -149,19 +91,10 @@ var ImageController = function(container, loader, onCreateCallback) {
 		$(imageBox).fadeIn(duration);
 		setTimeout(onDisplay, duration);
 	};
+
+
+
 	/*
-	this.setDisplayInterval = function(duration) {
-
-		displayInterval = duration;
-	};
-	this.getDisplayInterval = function() {
-
-		return displayInterval;
-	};
-	*/
-
-
-
 	this.fadeToBlack = function(element, duration) {
 
 		element.append('<div id="black-bg"></div>');
@@ -178,8 +111,6 @@ var ImageController = function(container, loader, onCreateCallback) {
 			this.blackBg.remove();
 		}
 	};
-
-
-	onCreate();
+	*/
 
 };

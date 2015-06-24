@@ -38,7 +38,8 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 	var progressTimer = null;
 
 	var createdCallback = null;
-	var loadCallBack = null;
+	var loadingCallBack = null;
+	var loadedCallBack = null;
 	var progressCallBack = null;
 
 
@@ -87,7 +88,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 			player.onloadstart = function() {
 
-				console.log('loadstart');
+				//console.log('loadstart');
 				loadingTimer = setInterval(updateLoading, 40);
 			};
 
@@ -205,7 +206,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
 				// Le pourcentage de chargement est la division du temps chargé par la durée totale (x 100%)
 				percentLoaded = bufferedEnd !== 0 ? (bufferedEnd / duration) * 100 : 100;
-				console.log('percentLoaded :' + percentLoaded);
+				//console.log('percentLoaded :' + percentLoaded);
 			}
 			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
 
@@ -217,14 +218,15 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 			}
 
 			// On appelle la fonction callback durant le chargement
-			if (loadCallBack !== null) {
+			if (loadingCallBack !== null) {
 		
-				loadCallBack.call(this, percentLoaded);
+				loadingCallBack.call(this, percentLoaded);
 			}
 
 			// Si le chargement est à 100%, on stoppe le timer.
 			if (percentLoaded == 100) {
 
+				loadedCallBack.call(this);
 				clearInterval(loadingTimer);
 			}
 		}
@@ -248,7 +250,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				currenttime = player.currentTime; // Temps écoulé
 				
 				percent = (currenttime / duration) * 100;
-				console.log('percent :' + percent);
+				//console.log('percent :' + percent);
 
 				if (player.ended || percent === 100) {
 
@@ -304,6 +306,8 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 		return (playerType);
 	};
 
+	
+
 
 	this.setTrack = function(track) {
 
@@ -352,10 +356,10 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 
 	
-	this.init = function(track, controls, onCreatedCallback, onLoadCallback, onProgressCallback) {
+	this.init = function(track, controls, onCreatedCallback, onloadingCallBack, onProgressCallback) {
 		
 		createdCallback = onCreatedCallback;
-		loadCallBack = onLoadCallback;
+		loadingCallBack = onloadingCallBack;
 		progressCallBack = onProgressCallback;
 
 		if (typeof controls === 'object') {
@@ -535,6 +539,14 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 		}
 
 	};
+
+
+	this.startLoading = function(onLoadedCallBack) {
+
+		loadedCallBack = onLoadedCallBack;
+		loadingTimer = setInterval(updateLoading, 1000);
+
+	}
 
 
 	this.reload = function() {

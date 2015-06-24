@@ -30,7 +30,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 		if (isImageLoaded && timerTime >= loaderFadeDuration) {
 
 			clearInterval(loadTimer);
-			loadCallback.call($self);
+			loadCallback.call(this);
 			$loader.fadeOut(loaderFadeDuration);
 		}
 	};

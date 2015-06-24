@@ -201,7 +201,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 			if (playerType === 'html') {
 
 				duration = player.duration;
-				console.log('duration :' + duration);
+				//console.log('duration :' + duration);
 				// On récupére le tableau 'buffered' qui contient les infos sur le statut actuel du lecteur
 				var bufferedEnd = player.buffered.length > 0 ? player.buffered.end(0) : 0;
 				// Le pourcentage de chargement est la division du temps chargé par la durée totale (x 100%)
@@ -271,7 +271,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				currenttime = player.dewgetpos(); // Temps écoulé
 				
 				percent = (currenttime / duration) * 100;
-				console.log('percent :' + percent);
+				//console.log('percent :' + percent);
 
 				if (Math.ceil(percent) === 100) {
 					
@@ -558,11 +558,12 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 	};
 
 	
-	this.startPlaying = function() {
+	this.startPlaying = function(onStartCallBack) {
 
 		if (player !== null) {
 
 			this.play();
+			onStartCallBack.call(this);
 		}
 	};
 

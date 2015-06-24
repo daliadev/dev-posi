@@ -5,9 +5,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 	var $self = $(this);
 	var $container = container;
 	var $loader = loader;
-	$loader.hide();
 	var imageBox = new Image();
-	// var $blackBg = null;
 
 	var loadTimer = null;
 	var timerInterval = 100;
@@ -37,10 +35,10 @@ var ImageController = function(container, loader, onCreateCallback) {
 
 
 
-	var onDisplay = function() {
+	var onDisplayed = function() {
 
 		//clearInterval(displayTimer);
-		displayCallback.call(this);
+		displayedCallback.call(this);
 	};
 
 
@@ -64,11 +62,6 @@ var ImageController = function(container, loader, onCreateCallback) {
 			//loadCallback.call($self);
 			//console.log('image loaded');
 
-			//clearInterval(loadTimer);
-			//loader.style.opacity = 1;
-			//loader.style.display = 'block';
-			//loadTimer = setInterval(loaderFadeOut, loaderInterval);
-
 			//imageBox.style.display = 'block';
 			//container.prepend(imageBox);
 			//self.container.css('height', 'auto');
@@ -82,14 +75,12 @@ var ImageController = function(container, loader, onCreateCallback) {
 
 
 
-	this.display = function(duration, onDisplayCallback) {
+	this.display = function(duration, onDisplayedCallback) {
 
-		//displayFadeDuration = duration;
-		displayCallback = onDisplayCallback;
+		displayedCallback = onDisplayedCallback;
 
-		//displayTimer = setInterval(onDisplay, displayInterval);
 		$(imageBox).fadeIn(duration);
-		setTimeout(onDisplay, duration);
+		setTimeout(onDisplayed, duration);
 	};
 
 

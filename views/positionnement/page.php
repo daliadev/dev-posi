@@ -344,11 +344,8 @@
 			// Conteneur et icône animée de chargement de l'image
 			imageContainer = $('#visuel');
 			imageLoader = $('#loader');
-			// imageLoader.hide();
+			imageLoader.hide();
 
-			
-
-			//audioPlayer.enableControls(false);
 
 			// Contrôle du son
 
@@ -403,25 +400,243 @@
 
 
 
+			/*** fonctions de gestion de l'image ***/
+
+			var createImage = function() {
+				
+				console.log('createImage');
+
+				imageController = new ImageController(imageContainer, imageLoader, null);
+
+				if (isAudioActive) {
+
+					createAudio();
+				}
+				else {
+
+					imageController.startLoading(imageUrl, 500, onImageLoaded);
+				}
+				
+			}
+
+
+				/* Evénements liés à l'image */
+
+
+				// 1 : L'image est en cours de chargement
+
+				var onImageLoading = function() {
+
+					console.log('onImageLoading');
+				}
+
+
+				// 2 : L'image est chargée
+
+				var onImageLoaded = function() {
+
+					console.log('onImageLoaded');
+
+					// Creation du lecteur audio s'il y a une source
+					if (isAudioActive) {
+
+						//audioPlayer.setTrack(audioTrack);
+						audioPlayer.startLoading(onAudioLoaded);
+					}
+					else {
+
+						//$(".reponse-qcm").prop("disabled", false);
+					}
+
+					// Demande d'affichage de l'image
+					displayImage(1500);
+				};
+
+
+				// 3 : Affichage de l'image
+
+				var displayImage = function(duration) {
+
+					console.log('displayImage');
+
+					imageController.display(duration, onImageDisplayed);
+				}
+
+
+				// 4 : Affichage de l'image terminé
+
+				var onImageDisplayed = function() {
+
+					console.log('onImageDisplayed');
+
+				};
+				
+
+
+			/*** fonctions de gestion de l'audio ***/
+
+			var createAudio = function() {
+
+				console.log('createAudio');
+
+				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+				audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+				// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
+				audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+				audioPlayer.enableControls(false);
+			}
+
+
+				/* Evénements liés à l'audio */
+
+
+				// 1 : Le lecteur audio a été créé
+
+				var onAudioCreated = function() {
+
+					console.log('onAudioCreated');
+
+					imageController.startLoading(imageUrl, 1000, onImageLoaded);
+
+					//audioPlayer.setTrack(audioTrack);
+				};
+
+
+				// 2 : La piste audio est en chargement
+
+				var onAudioLoading = function(percent) {
+
+					console.log('onAudioLoading : ' + percent);
+
+					var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
+					$('#speaker-loader').css('stroke-dashoffset', offset.toString());
+
+					if (percent == 100) {
+
+						isAudioLoaded = true;
+
+						var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
+						$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
+
+						//audioPlayer.enableControls(true);
+						setTimeout(function() { 
+							audioPlayer.startPlaying(onAudioStart); 
+						}, 2000);
+					}
+				};
+
+
+				// 3 : La piste audio est chargée
+
+				var onAudioLoaded = function() {
+
+					console.log('onAudioLoaded');
+					// Demande d'affichage de l'image
+					//displayImage(1500);
+				};
+
+
+				// 4 : La lecture de la piste audio démarre
+
+				var onAudioStart = function() {
+
+					console.log('onAudioStart');
+					audioPlayer.enableControls(true);
+				};
+
+
+				// 5 : La piste audio est en cours de lecture
+
+				var onAudioProgress = function(percent) {
+
+					console.log('onAudioProgress : ' + percent);
+
+					var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
+					$('#speaker-progress').css('stroke-dashoffset', offset.toString());
+
+					if (percent === 100) {
+
+						playerComplete = true;
+
+						var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
+						$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
+
+						if ($('.reponse-qcm') !== null) {
+
+							$(".reponse-qcm").prop("disabled", false);
+						}
+
+						if ($('#reponse-champ') !== null) {
+
+							$('#reponse-champ').removeProp('disabled');
+							$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+							$('#reponse-champ').focus();
+						}
+					}
+				};
+
+
+				// 6 : La lecture de la piste audio est terminée
+
+				var onAudioEnded = function() {
+
+					console.log('onAudioEnded');
+				};
+
+
+
+			/*** fonctions de gestion de la vidéo  ***/
+
+			var createVideo = function() {
+				
+				console.log('createVideo');
+				
+			}
+
+				/* Evénements liés à la vidéo */
+			
+
+
+
+
+			/*** Détection du(des) média(s) à afficher ***/
+
+			if (isImageActive) {
+
+				createImage();
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 			/*** fonctions de contrôle des médias ***/
 
 
-			// Fonctions contrôle du son
 
-
-			// Sur fin lecture de la piste audio
-
+			// Etape 9 : Lecture de la piste audio terminée
+			/*
 			var onAudioEnded = function() {
 
 				console.log('onAudioEnded');
 			};
+			*/
 
-
-			// Durant la lecture de la piste audio
-
+			// Etape 8 : En cours de lecture de la piste audio
+			/*
 			var onAudioProgress = function(percent) {
 
 				console.log('onAudioProgress : ' + percent);
@@ -449,40 +664,38 @@
 					}
 				}
 			};
+			*/
 
-
-
-
-			// Sur affichage terminé de l'image
-
+			// Etape 7 : Affichage de l'image terminé
+			/*
 			var onImageDisplayed = function() {
 
 				console.log('onImageDisplayed');
 			};
+			*/
 
-
-			// Affichage de l'image
-
+			// Etape 6 : Affichage de l'image
+			/*
 			var displayImage = function() {
 
 				console.log('displayImage');
 
 				imageController.display(1500, onImageDisplayed);
 			}
+			*/
 
-
-			// Sur chargement de l'audio
-
+			// Etape 5 : Chargement de la piste audio terminée
+			/*
 			var onAudioLoaded = function() {
 
 				console.log('onAudioLoaded');
 				displayImage();
 
 			};
+			*/
 
-
-			// Durant le chargement de l'audio
-
+			// Etape 4 : En cours de chargement de la piste audio
+			/*
 			var onAudioLoading = function(percent) {
 
 				console.log('onAudioLoading : ' + percent);
@@ -499,13 +712,12 @@
 
 					audioPlayer.enableControls(true);
 					setTimeout(function() { audioPlayer.startPlaying(); }, 2000);
-					//audioPlayer.startPlaying();
 				}
 			};
+			*/
 
-
-			// Sur chargement terminé de l'image
-
+			// Etape 3 : Chargement de l'image terminée
+			/*
 			var onImageLoaded = function() {
 
 				console.log('onImageLoaded');
@@ -515,7 +727,6 @@
 				// Creation du lecteur audio s'il y a une source
 				if (isAudioActive) {
 
-					//createAudioPlayer();
 					//audioPlayer.setTrack(audioTrack);
 					audioPlayer.startLoading(onAudioLoaded);
 				}
@@ -524,10 +735,10 @@
 					//$(".reponse-qcm").prop("disabled", false);
 				}
 			};
+			*/
 
-
-			// Sur création de l'audio
-			
+			// Etape 2 : Création du lecteur audio terminée
+			/*
 			var onAudioCreated = function() {
 
 				console.log('onAudioCreated');
@@ -536,141 +747,10 @@
 
 				//audioPlayer.setTrack(audioTrack);
 			};
-
-
-			// Création du lecteur audio
-
-			var createAudio = function() {
-
-				console.log('createAudio');
-
-				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-				audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-				// Initialisation du lecteur audio
-				audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-				audioPlayer.enableControls(false)
-			}
-
-
-			
-
-
-			// Sur création de l'image
-			/*
-			var onImageCreated = function() {
-
-				console.log('onImageCreated');
-				
-				if (isImageActive && !isAudioActive) {
-
-					//Création de l'image seule
-				}
-				else if (isAudioActive) {
-
-					// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-					// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-					//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-					// Initialisation du lecteur audio
-					//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-
-					//audioPlayer.enableControls(false);
-				}
-				
-				// Paramétrage et chargement de l'image
-				//imageController.startLoading(imageUrl, 500, onImageLoaded);
-			};
-			*/
-			
-			//Création de l'image seule
-		
-
-			// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
-
-			var createImage = function() {
-				
-				console.log('createImage');
-
-				imageController = new ImageController(imageContainer, imageLoader, null);
-				//imageController.startLoading(imageUrl, 1000, onImageLoaded);
-
-				if (isAudioActive) {
-
-					createAudio();
-				}
-				else {
-
-					imageController.startLoading(imageUrl, 1000, onImageLoaded);
-				}
-				
-			}
-			
-
-		//}
-			
-			/*
-			this.createImage = function() {
-
-				// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
-
-				imageController = new ImageController(imageContainer, imageLoader, null);
-				imageController.startLoading(imageUrl, 1000, onImageLoaded);
-			};
-
-			this.createAudio = function() {
-
-			};
-
-			this.createVideo = function() {
-
-			};
 			*/
 
 
-			if (isImageActive) {
 
-				createImage();
-			}
-			/*
-			else if () {
-
-			}
-			*/
-
-			
-
-
-			// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
-			//imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
-
-
-			// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-			// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-			//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-			// Initialisation du lecteur audio
-			//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-			/*
-			//Création de l'image seule
-			if (isImageActive && !isVideoActive) {
-
-				// Instanciation de l'objet ImageController qui gére le chargement et l'affichage de l'image
-				imageController = new ImageController(imageContainer, imageLoader, onImageCreated);
-			}
-			if (isAudioActive) {
-
-				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-				//audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-				// Initialisation du lecteur audio
-				//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-
-				//audioPlayer.enableControls(false);
-			}
-			*/
 			
 
 

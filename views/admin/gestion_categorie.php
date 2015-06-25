@@ -59,19 +59,16 @@ $form_url = WEBROOT."admin/categorie/";
 						<input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
 						<input type="hidden" name="code" value="<?php echo $formData['code_cat']; ?>" />
 						
-						<div class="input" style="height: 300px; overflow: auto;">
+
+						<label><strong>Ajouter une catégorie :</strong></label>
+
+						<!-- <div class="input" style="height: 300px; overflow: auto;">
 							<ul id="sortable" style="padding: 0;">
 							<?php
-
+							/*
 							foreach($response['categorie'] as $categorie)
 							{	
-								/*
-								$selected = "";
-								if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
-								{
-									$selected = "selected";
-								}
-								*/
+								
 								$prefix = '';
 								$textSize = 14;
 								$weight = 'normal';
@@ -113,67 +110,15 @@ $form_url = WEBROOT."admin/categorie/";
 								{
 									echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
 								}
-								*/
+								
 								echo '<li class="ui-state-default" style="padding: 2px; margin: 2px; background: #eeeeee;"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><span style="'.$style.'">'.$prefix.'- '.$categorie->getNom().'</span></li>';
 							}
-
+							*/
 							?>
 							</ul>
 							
-							<!-- <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
-							<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
-							<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 4</li>
-							<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
-							<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
-							<li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li> -->
-							
-						</div>
-						
-						<!-- <div class="input">
-							<label for="code_cat_cbox">Liste des catégories :</label>
-
-							<select name="code_cat_cbox" id="ref_organ_cbox">
-								<option value="select_cbox">---</option>
-								<?php
-								/*
-								foreach($response['categorie'] as $categorie)
-								{
-									$selected = "";
-									if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
-									{
-										$selected = "selected";
-									}
-									
-									$length = strlen($categorie->getCode()) - 2;
-									
-									if ($length < 0)
-									{
-										$length = 0;
-									}
-
-									$style = "padding-left:".($length * 10)."px;";
-
-									if ($length <= 0)
-									{
-										echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-									}
-									else
-									{
-										echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
-									}
-								}
-								*/
-								?>
-							</select>
-
-						</div>
-
-						<div id="submit">
-							<input type="submit" name="selection" value="Sélectionner" />
 						</div> -->
-
-
-						<hr/>
+						
 
 
 						<?php
@@ -220,13 +165,57 @@ $form_url = WEBROOT."admin/categorie/";
 						</div>
 						
 						<div class="input">
+							<label for="parent_cat_cbox">Catégorie parente *</label>
+
+							<select name="parent_cat_cbox" id="ref_parent_cbox">
+								<option value="select_cbox">---</option>
+								<?php
+								
+								foreach($response['categorie'] as $categorie)
+								{
+									$selected = "";
+									if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
+									{
+										$selected = "selected";
+									}
+									
+									$length = strlen($categorie->getCode()) - 2;
+									
+									if ($length < 0)
+									{
+										$length = 0;
+									}
+
+									$style = "padding-left:".($length * 10)."px;";
+
+									if ($length <= 0)
+									{
+										echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+									}
+									else
+									{
+										echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
+									}
+								}
+								
+								?>
+							</select>
+						</div>
+		
+						<!-- <div id="submit">
+							<input type="submit" name="selection" value="Sélectionner" />
+						</div> -->
+
+						<div class="input">
 							<label for="descript_cat">Description</label>
 							<textarea name="descript_cat" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_cat']; ?></textarea>
 						</div>
 								
 						<div class="input">
-							<label for="type_lien_cat">Type de categorie *</label><br/>
 
+							<label for="type_lien_cat">Gestion des scores</label><br/>
+							
+							<p>Chaque réponse de l'apprenant est liée à une catégorie. Ce score peut dépendre de la catégorie active ou de celle de ses enfants.</p> 
 							<?php
 							
 							$checked = "";
@@ -235,20 +224,86 @@ $form_url = WEBROOT."admin/categorie/";
 								$checked = "checked";
 							}
 							?>
-
-							<input type="checkbox" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
-							<p class="descript">Si la case est cochée, cette categorie héritera des scores de ses sous-catégories et ne pourra pas posséder de score propre.</p>   
 							
+							<p>
+								<input type="radio" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
+								<label>La catégorie possède son propre score.</label>
+							</p>
+							
+							<p>
+								<input type="radio" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
+								<label>Cette catégorie héritera des scores de ses catégories enfants ainsi que de son propre score.</label> 
+							</p>
+
+							<p>
+								<input type="radio" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
+								<label>Cette catégorie héritera uniquement des scores de ses catégories enfants.</label> 
+							</p>
+
+							<p>
+								<input type="radio" name="type_lien_cat" id="type_lien_cat" style="float:left;" value="<?php $formData['type_lien_cat']; ?>" <?php echo $checked; ?> <?php echo $formData['disabled']; ?> /> 
+								<label>Cette categorie ne possède pas de score.</label> 
+							</p>
+
 						</div>
 
+						<div id="submit">
+							<input type="submit" class="add" name="add" value="Ajouter" <?php echo $formData['add_disabled']; ?> />
+						</div>
 
-						<hr/>
+						<hr />
+
+						<div class="input">
+							<label><strong>Liste des catégories :</strong></label>
+
+							<select name="code_cat_cbox" id="ref_organ_cbox">
+								<option value="select_cbox">---</option>
+								<?php
+								
+								foreach($response['categorie'] as $categorie)
+								{
+									$selected = "";
+									if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
+									{
+										$selected = "selected";
+									}
+									
+									$length = strlen($categorie->getCode()) - 2;
+									
+									if ($length < 0)
+									{
+										$length = 0;
+									}
+
+									$style = "padding-left:".($length * 10)."px;";
+
+									if ($length <= 0)
+									{
+										echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+									}
+									else
+									{
+										echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
+									}
+								}
+								
+								?>
+							</select>
+
+						</div>
+						<!-- 
+						<div id="submit">
+							<input type="submit" name="selection" value="Sélectionner" />
+						</div>
+						 -->
+						<!-- <hr/> -->
 
 						<!-- Boutons de gestion des catégories -->
 
 						<div id="buttons">
 								<input type="hidden" name="delete" value="false" />
-								<input type="submit" class="add" name="add" style="float:left;" value="Ajouter" <?php echo $formData['add_disabled']; ?> />
+								<input type="submit" name="selection" value="Sélectionner" style="float:left;"/>
+								<!-- <input type="submit" class="add" name="add" style="float:left;" value="Ajouter" <?php //echo $formData['add_disabled']; ?> /> -->
 								<input type="submit" class="edit" name="edit" style="float:right;" value="Modifier" <?php echo $formData['edit_disabled']; ?> />
 								<input type="submit" class="save" name="save" style="float:left;" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
 								<input type="submit" class="del" name="del" style="float:right;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />      
@@ -276,7 +331,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
 
-	<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui.sort.min.js" type="text/javascript"></script>
+	<!--<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui.sort.min.js" type="text/javascript"></script>-->
 
 	<script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js"></script>
 

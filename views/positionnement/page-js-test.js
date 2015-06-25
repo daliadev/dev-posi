@@ -1,5 +1,6 @@
-<script type="text/javascript">
 
+
+<script type="text/javascript">
 
 		$(function() {
 			
@@ -89,161 +90,7 @@
 
 
 			// Variables état/statut des médias
-
-
-
-
-			/*** fonctions de contrôle des médias ***/
-
-
-			// Fonctions contrôle de l'image
-
-
-			// Sur création de l'image
-
-			var onImageCreated = function() {
-
-				console.log('onImageCreated');
-			};
-
-
-			// Sur chargement terminé de l'image
-
-			var onImageLoaded = function() {
-
-				console.log('onImageLoaded');
-
-				imageController.display(1500, onImageDisplayed);
-
-				//$('#visuel img').fadeIn(1500);
-				//this.fadeToBlack($('body').children().first(), 5000);
-
-				// Creation du lecteur audio s'il y a une source
-				if (audioActive) {
-
-					//createAudioPlayer();
-					//audioPlayer.setTrack(audioTrack);
-				}
-				else {
-
-					//$(".reponse-qcm").prop("disabled", false);
-				}
-			};
-
-
-			// Sur affichage terminé de l'image
-
-			var onImageDisplayed = function() {
-
-				console.log('onImageDisplayed');
-			};
-
-
-
-			// Fonctions contrôle du son
-
-
-			// Sur création de l'audio
-
-			var onAudioCreated = function() {
-
-				console.log('onAudioCreated');
-
-				//audioPlayer.setTrack(audioTrack);
-
-				// Paramétrage et chargement de l'image
-				imageController.startLoading(imageUrl, 500, onImageLoaded);
-			};
-
-
-			// Durant le chargement de l'audio
-
-			var onAudioLoading = function(percent) {
-
-				console.log('onAudioLoading : ' + percent);
-
-				var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
-				$('#speaker-loader').css('stroke-dashoffset', offset.toString());
-
-				if (percent == 100) {
-
-					isAudioLoaded = true;
-
-					var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
-					$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
-
-					audioPlayer.enableControls(true);
-					setTimeout(function() { audioPlayer.startPlaying(); }, 2000);
-					//audioPlayer.startPlaying();
-				}
-			};
-
-
-			// Sur chargement de l'audio
-
-			var onAudioLoaded = function() {
-
-				console.log('onAudioLoaded');
-			};
-
-
-			// Durant la lecture de la piste audio
-
-			var onAudioProgress = function(percent) {
-
-				console.log('onAudioProgress : ' + percent);
-
-				var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
-				$('#speaker-progress').css('stroke-dashoffset', offset.toString());
-
-				if (percent === 100) {
-
-					playerComplete = true;
-
-					var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
-					$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
-
-					if ($('.reponse-qcm') !== null) {
-
-						$(".reponse-qcm").prop("disabled", false);
-					}
-
-					if ($('#reponse-champ') !== null) {
-
-						$('#reponse-champ').removeProp('disabled');
-						$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
-						$('#reponse-champ').focus();
-					}
-				}
-			};
-
-
-			// Sur fin lecture de la piste audio
-
-			var onAudioEnded = function() {
-
-				console.log('onAudioEnded');
-			};
-
-
-
-
-
-			/*** Initialisation des variables / instanciation des objets ***/
-
-
-			// Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
-			imageFilename = $('#image-filename').val();
-			audioFilename = $('#audio-filename').val();
-			videoFilename = $('#video-filename').val();
-
-			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
-			isImageActive = imageFilename !== '' ? true : false;
-			videoActive = videoFilename !== '' ? true : false;
-			audioActive = audioFilename !== '' ? true : false;
-
-
-			/*
+			
 			// Création d'une variable permettant de savoir si le lecteur video a terminé la lecture du média.
 			var isVideoComplete = false;
 
@@ -264,21 +111,35 @@
 			var timerPlayerComplete = null;
 
 			var playerComplete = false;
-			*/
+			
 
+
+
+			/*** Initialisation des variables / instanciation des objets ***/
+
+
+			// Récupération des noms des différents médias dans les valeurs assignées aux champs cachés du formulaire.
+			imageFilename = $('#image-filename').val();
+			audioFilename = $('#audio-filename').val();
+			videoFilename = $('#video-filename').val();
+
+
+			// Si le média possède un nom, une variable correspondant à ce média contient la valeur "vraie".
+			isImageActive = imageFilename !== '' ? true : false;
+			isAudioActive = audioFilename !== '' ? true : false;
+			isVideoActive = videoFilename !== '' ? true : false;
+			
 
 
 			// Contrôle de l'image
 
-			// URL complète de l'image'
+			// URL complète de l'image
 			imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 
 			// Conteneur et icône animée de chargement de l'image
 			imageContainer = $('#visuel');
 			imageLoader = $('#loader');
-
-			// Instanciation de l'objet ImageController que gére le chargement et l'affichage de l'image
-			imageController = new ImageController(imageContainer, imageLoader);
+			imageLoader.hide();
 
 
 			// Contrôle du son
@@ -311,17 +172,426 @@
 				item: document.getElementById('speaker-button')
 			}];
 
-			// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-			// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-			audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-			// Initialisation du lecteur audio
-			audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-
-			audioPlayer.enableControls(false);
 
 
+
+
+
+
+			/*** Fonctions de contrôle des interactions ***/
+
+
+			// Désactivation du système de réponses
+
+			// Activation du système de réponses
+
+			// Affichage/activation du bouton 'speaker'
+
+			// Masquage/désactivation du bouton 'speaker'
+
+			// Affichage/activation du bouton 'suite'
+
+			// Masquage/désactivation du bouton 'suite'
+
+
+
+			/*** fonctions de gestion de l'image ***/
+
+			var createImage = function() {
+				
+				console.log('createImage');
+
+				imageController = new ImageController(imageContainer, imageLoader, null);
+
+				if (isAudioActive) {
+
+					createAudio();
+				}
+				else {
+
+					imageController.startLoading(imageUrl, 500, onImageLoaded);
+				}
+				
+			}
+
+
+				/* Evénements liés à l'image */
+
+
+				// 1 : L'image est en cours de chargement
+
+				var onImageLoading = function() {
+
+					console.log('onImageLoading');
+				}
+
+
+				// 2 : L'image est chargée
+
+				var onImageLoaded = function() {
+
+					console.log('onImageLoaded');
+
+					// Creation du lecteur audio s'il y a une source
+					if (isAudioActive) {
+
+						//audioPlayer.setTrack(audioTrack);
+						audioPlayer.startLoading(onAudioLoaded);
+					}
+					else {
+
+						//$(".reponse-qcm").prop("disabled", false);
+					}
+
+					// Demande d'affichage de l'image
+					displayImage(1500);
+				};
+
+
+			// 3 : Affichage de l'image
+
+			var displayImage = function(duration) {
+
+				console.log('displayImage');
+
+				imageController.display(duration, onImageDisplayed);
+			}
+
+
+				// 4 : Affichage de l'image terminé
+
+				var onImageDisplayed = function() {
+
+					console.log('onImageDisplayed');
+
+				};
+				
+
+
+			/*** fonctions de gestion de l'audio ***/
+
+			var createAudio = function() {
+
+				console.log('createAudio');
+
+				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+				audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+				// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
+				audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+				audioPlayer.enableControls(false);
+			}
+
+
+				/* Evénements liés à l'audio */
+
+
+				// 1 : Le lecteur audio a été créé
+
+				var onAudioCreated = function() {
+
+					console.log('onAudioCreated');
+
+					imageController.startLoading(imageUrl, 1000, onImageLoaded);
+
+					//audioPlayer.setTrack(audioTrack);
+				};
+
+
+				// 2 : La piste audio est en chargement
+
+				var onAudioLoading = function(percent) {
+
+					console.log('onAudioLoading : ' + percent);
+
+					var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
+					$('#speaker-loader').css('stroke-dashoffset', offset.toString());
+
+					if (percent == 100) {
+
+						isAudioLoaded = true;
+
+						var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
+						$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
+
+						//audioPlayer.enableControls(true);
+						setTimeout(function() { 
+							audioPlayer.startPlaying(onAudioStart); 
+						}, 1000);
+					}
+				};
+
+
+				// 3 : La piste audio est chargée
+
+				var onAudioLoaded = function() {
+
+					console.log('onAudioLoaded');
+					// Demande d'affichage de l'image
+					//displayImage(1500);
+				};
+
+
+				// 4 : La lecture de la piste audio démarre
+
+				var onAudioStart = function() {
+
+					console.log('onAudioStart');
+					audioPlayer.enableControls(true);
+				};
+
+
+				// 5 : La piste audio est en cours de lecture
+
+				var onAudioProgress = function(percent) {
+
+					console.log('onAudioProgress : ' + percent);
+
+					var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
+					$('#speaker-progress').css('stroke-dashoffset', offset.toString());
+
+					if (percent === 100) {
+
+						playerComplete = true;
+
+						var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
+						$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
+
+						if ($('.reponse-qcm') !== null) {
+
+							$(".reponse-qcm").prop("disabled", false);
+						}
+
+						if ($('#reponse-champ') !== null) {
+
+							$('#reponse-champ').removeProp('disabled');
+							$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+							$('#reponse-champ').focus();
+						}
+					}
+				};
+
+
+				// 6 : La lecture de la piste audio est terminée
+
+				var onAudioEnded = function() {
+
+					console.log('onAudioEnded');
+				};
+
+
+
+			/*** fonctions de gestion de la vidéo  ***/
+
+			var createVideo = function() {
+				
+				console.log('createVideo');
+
+				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+				//videoPlayer = new VideoPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+				// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
+				//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+				//audioPlayer.enableControls(false);
+
+				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
+				var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
+
+				// Puis l'adresse absolue de la vidéo.
+				var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
+
+				// On génére le lecteur vidéo et on le configure.
+				projekktor('#lecteurvideo', {
+
+						poster: imageUrl,
+						title: 'Lecteur vidéo',
+						playerFlashMP4: videoPlayerUrl,
+						playerFlashMP3: videoPlayerUrl,
+						width: 750,
+						height: 420,
+						controls: true,
+						enableFullscreen: false,
+						autoplay: true,
+						playlist: [{
+							0: {src: videoUrl, type: "video/mp4"}
+						}],
+						plugins: ['display', 'controlbar'],
+						messages: {
+							0: 'Une erreur s\'est produite.',
+							1: 'Vous avez interrompu la lecture de la vidéo.',
+							2: 'La vidéo n\'a pas pu être chargée.',
+							3: 'La vidéo a été interrompue en raison d\'un problème d\'encodage.',
+							4: 'Le média n\'a pas pu être chargé en raison d\'un problème avec le serveur.',
+							5: 'Désolé, le format de la vidéo n\'est pas supporté par votre navigateur.',
+							6: 'Vous devez disposer de la version %{flashver} ou plus du lecteur Flash.',
+							7: 'Aucun média n\'a été trouvé.',
+							8: 'La configuration du média est incompatible !',
+							9: 'Le fichier (%{file}) n\'a pas été trouvé.',
+							10: 'Les paramètres de qualité sont invalide pour %{title}.',
+							11: 'Les paramètres de streaming sont invalides ou incompatible avec %{title}.',
+							12: 'Le paramètrage de la qualité est incompatible pour %{title}.',
+							80: 'Le média requis n\'existe pas ou son contenu est invalide.',
+							97: 'Aucun média n\'a été prévu.',
+							98: 'Les données de la playlist sont invalides !',
+							99: 'Cliquez sur le média pour continuer.',
+							100: 'Espace réservé.'
+						} 
+
+					}, function(player) {
+
+						// on player ready
+						
+						var stateListener = function(state) {
+
+							switch(state) {
+									
+								case 'PLAYING':
+									break;
+
+								case 'PAUSED':
+
+									$('.ppstart').removeClass('inactive');
+									$('.ppstart').addClass('active');
+									break;
+
+								case 'STOPPED':
+								case 'IDLE':
+								case 'COMPLETED':
+
+									$(".reponse-qcm").prop("disabled", false);
+									
+									isVideoComplete = true;
+
+									//checkPlayerComplete();
+									break;
+							}
+						};
+
+						player.addListener('state', stateListener);
+
+						
+						var playerError =  function(data) { 
+
+							isVideoComplete = true; 
+
+							$('#lecteurvideo').html('');
+
+							if (imageActive) {
+
+								//displayImage(imageUrl);
+							}                 
+						};
+						player.addListener('error', playerError);
+						
+					}
+				);
+				
+			};
+
+				/* Evénements liés à la vidéo */
+
+
+				// 1 : Le lecteur vidéo a été créé
+
+				var onVideoCreated = function() {
+
+					console.log('onAudioCreated');
+				};
+				
+
+				// ? : -
+
+				var onVideoLoading = function() {
+
+					console.log('onVideoLoading');
+				};
+
+
+				// ? : -
+
+				var onVideoLoaded = function() {
+
+					console.log('onVideoLoaded');
+				};
+
+
+			// ? : -
+
+			var displayVideo = function() {
+
+				console.log('displayVideo');
+			};
+
+
+				// ? : -
+
+				var onVideoDisplayed = function() {
+
+					console.log('onVideoDisplayed');
+				};
+
+
+				// ? : -
+
+				var onVideoDisplayed = function() {
+
+					console.log('onVideoDisplayed');
+				};
+
+
+			// ? : -
+
+			var startVideo = function() {
+
+				console.log('startVideo');
+			};
+
+
+				// ? : -
+
+				var onVideoStarted = function() {
+
+					console.log('onVideoStarted');
+				};
+
+
+				// ? : -
+
+				var onVideoPlaying = function() {
+
+					console.log('onVideoPlaying');
+				};
+
+
+				// ? : -
+
+				var onVideoEnded = function() {
+
+					console.log('onVideoEnded');
+				};
+
+
+
+
+
+			/**********************************************
+			*    Détection du(des) média(s) à afficher    *
+			**********************************************/
 			
+			if (isImageActive && !isVideoActive) {
+
+				createImage();
+			}
+			else if (isVideoActive) {
+
+				createVideo();
+			}
+
+
+
+
 
 
 
@@ -334,7 +604,7 @@
 			$("#btn-suite").remove();
 
 
-			$('#loader').hide();
+			//$('#loader').hide();
 			// Le barre du lecteur audio est cachée.
 			//$("#audio").hide();
 
@@ -520,7 +790,6 @@
 
 					if ($(this).val().length > 1) {
 
-						
 						$("#submit-suite").show(500);
 						$("#submit-suite").prop("disabled", false);
 					}
@@ -718,7 +987,7 @@
 
 			// Chargement de l'image (si il n'y a pas de vidéo)
 			
-			if (imageActive) {
+			if (isImageActive) {
 				/*
 				var imageUrl = '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename;
 				
@@ -737,11 +1006,11 @@
 
 			
 			// S'il existe une video on créé le lecteur vidéo, le lecteur audio ne doit pas être créé.
-			if (videoActive) {
+			if (isVideoActive) {
 				
 				// L'image, si elle existe, sert alors de "poster" pour la vidéo.
-				var imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
-
+				//imageUrl = imageFilename ? '<?php echo SERVER_URL.IMG_PATH; ?>' + imageFilename : '';
+				/*
 				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
 				var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
 
@@ -833,13 +1102,13 @@
 						
 					}
 				);
-				
+				*/
 			}
 			
 
 			// Sinon, on créé le lecteur audio
 			
-			else if (audioActive) {
+			else if (isAudioActive) {
 
 				/*
 				var audioHtml = '';
@@ -968,6 +1237,4 @@
 			
 		});
 
-
-
-	</script>
+</script>

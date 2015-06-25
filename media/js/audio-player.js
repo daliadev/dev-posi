@@ -183,7 +183,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				// On signale que le player a été créé avec un petit décalage pour éviter les problèmes d'appels aux fonctions Dewplayer.
 				setTimeout(function() { 
 					createdCallback.call();
-					container.style.display = 'block';
+					//container.style.display = 'block';
 				}, 1000);
 			}
 		}

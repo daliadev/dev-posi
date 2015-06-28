@@ -211,7 +211,11 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 			else if (playerType === 'dewp' || playerType === 'dewp-mini') {
 
 				// Pour Dewplayer, si la position de lecture est à 0, la lecture peut démarrer (streaming)
-				if (player.dewgetpos() === 0) {
+				if (typeof(player.dewgetpos) !== 'function') {
+					percentLoaded = 0;
+				}
+				// Pour Dewplayer, si la position de lecture est à 0, la lecture peut démarrer (streaming)
+				else if (player.dewgetpos() === 0) {
 
 					percentLoaded = 100;
 				}

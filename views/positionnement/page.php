@@ -47,16 +47,16 @@
 
 
 				<!-- Image ou vidéo -->
-				<?php if (!empty($videoFile)) : ?>
-
+				<?php //if (!empty($videoFile)) : ?>
+<!-- 
 					<div class="media-display" id="media-question">
 						<div id="lecteurvideo" class="projekktor"></div>
 						<div class="btn-suite">
 							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
 						</div>
-					</div>
+					</div> -->
 					
-				<?php elseif (empty($videoFile) && !empty($imageFile)) : ?>
+				<?php if (!empty($videoFile) || !empty($imageFile)) : ?>
 
 					<div class="media-display" id="media-question">
 						
@@ -240,6 +240,10 @@
 
 
 			// Variables controleur vidéo
+			var videoPlayerUrl, videoUrl;
+			var videoPlayer = null;
+
+
 
 
 			// Variables état/statut des médias
@@ -293,7 +297,7 @@
 			// Conteneur et icône animée de chargement de l'image
 			imageContainer = $('#visuel');
 			imageLoader = $('#loader');
-			imageLoader.hide();
+			imageLoader.hide(); // Le loader est caché par défaut
 
 
 			// Contrôle du son
@@ -328,7 +332,13 @@
 
 
 
+			// Contrôle de la vidéo
 
+			// L'URL du lecteur vidéo alternatif flash (si balise <video> non supportée)
+			videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
+
+			// URL complète de la vidéo
+			videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
 
 
 
@@ -516,7 +526,8 @@
 
 				var onAudioProgress = function(percent) {
 
-					console.log('onAudioProgress : ' + percent);
+					//console.log('onAudioProgress : ' + percent);
+					//console.log(typeof(percent));
 
 					var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
 					$('#speaker-progress').css('stroke-dashoffset', offset.toString());
@@ -570,13 +581,13 @@
 				//audioPlayer.enableControls(false);
 
 				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
-				var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
+				//var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
 
 				// Puis l'adresse absolue de la vidéo.
-				var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
+				//var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
 
 				// On génére le lecteur vidéo et on le configure.
-				projekktor('#lecteurvideo', {
+				videoPlayer = projekktor('#visuel', {
 
 						poster: imageUrl,
 						title: 'Lecteur vidéo',
@@ -664,6 +675,8 @@
 				);
 				
 			};
+
+			console.log(videoPlayer);
 
 				/* Evénements liés à la vidéo */
 
@@ -762,13 +775,21 @@
 			/**********************************************
 			*    Détection du(des) média(s) à afficher    *
 			**********************************************/
-			
+
+			console.log(isImageActive, isAudioActive, isVideoActive);
+
 			if (isImageActive && !isVideoActive) {
 
 				createImage();
 			}
 			else if (isVideoActive) {
 
+				if (!isAudioActive) {
+
+					$('speaker').hide();
+				}
+				
+				$('#visuel').addClass('projekktor')
 				createVideo();
 			}
 

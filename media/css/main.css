@@ -573,15 +573,17 @@ body {
 				
 			}
 
-				#posi-page .media-display img {
+				#posi-page .media-display img, #posi-page .media-display #video {
 					position: absolute;
 					width: 100%;
 					max-width: 100%;
-					/*height: 0%;
-					padding-bottom: 56%;
-					margin: 0;*/
 					z-index: 99;
 				}
+				/*
+				.projekktor {
+					margin: -1px 0;
+				}*/
+				
 
 			#posi-page .media-display #loader {
 				/*display: none;*/

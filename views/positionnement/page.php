@@ -62,7 +62,15 @@
 						
 						<div id="audio"></div>
 
-						<div id="visuel"></div>
+						<div id="visuel">
+
+							<?php if (!empty($videoFile)) : ?>
+
+								<div id="video"></div>
+
+							<?php endif; ?>
+
+						</div>
 
 						<div id="loader" class="image-loader"></div>
 
@@ -214,7 +222,7 @@
 
 
 			/**********************************************
-			*          Création des variables             *
+			*         Déclaration des variables           *
 			**********************************************/
 
 
@@ -242,6 +250,7 @@
 			// Variables controleur vidéo
 			var videoPlayerUrl, videoUrl;
 			var videoPlayer = null;
+			var videoCreateTimer;
 
 
 
@@ -569,16 +578,8 @@
 			**********************************************/
 
 			var createVideo = function() {
-				
-				console.log('createVideo');
 
-				// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-				// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-				//videoPlayer = new VideoPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-				// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
-				//audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
-				//audioPlayer.enableControls(false);
+				videoCreateTimer = setInterval(onVideoCreateProgress, 100);
 
 				// On récupère l'adresse absolue du lecteur vidéo Flash (pour les navigateurs qui ne supportent pas le HTML5).
 				//var videoPlayerUrl = '<?php echo SERVER_URL; ?>media/projekktor/swf/StrobeMediaPlayback/StrobeMediaPlayback.swf';
@@ -586,8 +587,18 @@
 				// Puis l'adresse absolue de la vidéo.
 				//var videoUrl = '<?php echo SERVER_URL.VIDEO_PATH; ?>' + videoFilename;
 
+
+				// Prise en compte des évnements par tous les navigateurs
+				//var addEvent =  window.attachEvent || window.addEventListener;
+				/*	
+				var event = window.attachEvent ? 'onclick' : 'click';
+				addEvent(event, function(){
+				    alert('Hello!')
+				});
+				*/
+
 				// On génére le lecteur vidéo et on le configure.
-				videoPlayer = projekktor('#visuel', {
+				videoPlayer = projekktor('#video', {
 
 						poster: imageUrl,
 						title: 'Lecteur vidéo',
@@ -597,9 +608,10 @@
 						height: 420,
 						controls: true,
 						enableFullscreen: false,
-						autoplay: true,
+						autoplay: false, //true,
 						playlist: [{
 							0: {src: videoUrl, type: "video/mp4"}
+							//0: {src: "../media/projekktor/media/intro.mp4", type: "video/mp4"}
 						}],
 						plugins: ['display', 'controlbar'],
 						messages: {
@@ -623,69 +635,135 @@
 							100: 'Espace réservé.'
 						} 
 
-					}, function(player) {
+					}, 
 
-						onVideoCreated();
+					function(player) {
 
 						var stateListener = function(state) {
 
+							console.log('statelistener called');
+
 							switch(state) {
-									
+								
+								case 'IDLE':
+									console.log('IDLE');
+									break;
+
+								case 'AWAKENING' :
+									console.log('AWAKENING');
+									break;
+
+								case 'STARTING':
+									console.log('STARTING');
+									break;
+
 								case 'PLAYING':
-									onVideoPlaying();
+									console.log('PLAYING');
+									//onVideoPlaying();
 									break;
 
 								case 'PAUSED':
-									onVideoPaused();
-									$('.ppstart').removeClass('inactive');
-									$('.ppstart').addClass('active');
+									console.log('PAUSED');
+									//onVideoPaused();
+									//$('.ppstart').removeClass('inactive');
+									//$('.ppstart').addClass('active');
 									break;
 
 								case 'STOPPED':
-								case 'IDLE':
-								case 'COMPLETED':
+									console.log('STOPPED');
+									break;
 
-									onVideoEnded();
-									$(".reponse-qcm").prop("disabled", false);
+								case 'COMPLETED':
+									console.log('COMPLETED');
+									//onVideoEnded();
+									//$(".reponse-qcm").prop("disabled", false);
 									
-									isVideoComplete = true;
+									//isVideoComplete = true;
 
 									//checkPlayerComplete();
 									break;
+
+								case 'ERROR' :
+									console.log('ERROR');
+									break;
+
+								case 'DESTROYING' :
+									console.log('DESTROYING');
+									break;
+
 							}
 						};
-
 						player.addListener('state', stateListener);
 
 						
-						var playerError =  function(data) { 
+						var errorListener =  function(data) { 
 
-							isVideoComplete = true; 
+							console.log(data);
+							//isVideoComplete = true; 
 
-							$('#lecteurvideo').html('');
+							//$('#lecteurvideo').html('');
 
 							if (imageActive) {
 
 								//displayImage(imageUrl);
 							}                 
 						};
-						player.addListener('error', playerError);
+						player.addListener('error', errorListener);
+
+
+						// Temps de chargement
+						var progressListener =  function(progress) { 
+
+							console.log('progress : ' + progress);               
+						};
+						player.addListener('progress', progressListener);
 						
+
+						// Temps de lecture
+						var timeListener =  function(time) { 
+
+							console.log('time : ' + time);  
+						};
+						player.addListener('time', timeListener);
+
+						
+						// Affichage de l'image ou de la vidéo (si autostart)
+						var displayListener =  function(time) { 
+
+							console.log('displayReady');
+						};
+						player.addListener('displayReady', displayListener);
 					}
 				);
-				
 			};
 
-			console.log(videoPlayer);
 
 				/* Evénements liés à la vidéo */
 
 
-				// 1 : Le lecteur vidéo a été créé
+				// ? : Le lecteur vidéo est en création
+
+				var onVideoCreateProgress = function() {
+
+					// Si l'id du player existe, c'est qu'il a été créé.
+					if (videoPlayer !== null && videoPlayer !== undefined) {
+
+						// On stoppe le timer.
+						clearInterval(videoCreateTimer);
+						onVideoCreated();
+					}
+				};
+
+
+				// ? : Le lecteur vidéo a été créé
 
 				var onVideoCreated = function() {
 
-					console.log('onAudioCreated');
+					//console.log(videoPlayer);
+					console.log('onVideoCreated');
+					//$('.projekktor').css('background-color', '#999999');
+					//$('.ppdisplay').css('background-color', '#ffffff');
+					videoPlayer.setPlay();
 				};
 				
 
@@ -715,9 +793,9 @@
 
 				// ? : -
 
-				var onVideoDisplayed = function() {
+				var onVideoDisplaying = function() {
 
-					console.log('onVideoDisplayed');
+					console.log('onVideoDisplaying');
 				};
 
 
@@ -757,7 +835,7 @@
 
 				var onVideoPaused = function() {
 
-					console.log('onVideoPlaying');
+					console.log('onVideoPaused');
 				};
 
 
@@ -776,7 +854,7 @@
 			*    Détection du(des) média(s) à afficher    *
 			**********************************************/
 
-			console.log(isImageActive, isAudioActive, isVideoActive);
+			//console.log(isImageActive, isAudioActive, isVideoActive);
 
 			if (isImageActive && !isVideoActive) {
 

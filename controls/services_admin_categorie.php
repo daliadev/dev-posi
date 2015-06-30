@@ -9,356 +9,460 @@ require_once(ROOT.'models/dao/question_cat_dao.php');
 
 class ServicesAdminCategorie extends Main
 {
-    
-    private $categorieDAO = null;
-    private $questionCatDAO = null;
-    
-    
-    
-    public function __construct() 
-    {
+	
+	private $categorieDAO = null;
+	private $questionCatDAO = null;
+	
+	
+	
+	public function __construct() 
+	{
 
-        $this->controllerName = "adminCategorie";
+		$this->controllerName = "adminCategorie";
 
-        $this->categorieDAO = new CategorieDAO();
-        $this->questionCatDAO = new QuestionCategorieDAO();
-    }
+		$this->categorieDAO = new CategorieDAO();
+		$this->questionCatDAO = new QuestionCategorieDAO();
+	}
 
-    
-    
-    
-    public function getCategories()
-    {
-        $resultset = $this->categorieDAO->selectAll();
-        
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-            { 
-                $categorie = $resultset['response']['categorie'];
-                $resultset['response']['categorie'] = array($categorie);
-            }
+	
+	
+	
+	public function getCategories()
+	{
+		$resultset = $this->categorieDAO->selectAll();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultset['response']['categorie'];
+				$resultset['response']['categorie'] = array($categorie);
+			}
 
-            return $resultset;
-        }
-        
-        return false;
-    }
-    
-    
+			return $resultset;
+		}
+		
+		return false;
+	}
+	
+	
 
-    public function getCategorie($codeCat)
-    {
-        $resultset = $this->categorieDAO->selectByCode($codeCat);
+	public function getCategorie($codeCat)
+	{
+		$resultset = $this->categorieDAO->selectByCode($codeCat);
 
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-            { 
-                $categorie = $resultset['response']['categorie'];
-                $resultset['response']['categorie'] = array($categorie);
-            }
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultset['response']['categorie'];
+				$resultset['response']['categorie'] = array($categorie);
+			}
 
-            return $resultset;
-        }
+			return $resultset;
+		}
 
-        return false;
-    }
-
-
-
-    public function getCategorieDetails($codeCat)
-    {
-        $catDetails = array();
-        
-        $catDetails['code_cat'] = "";
-        $catDetails['nom_cat'] = "";
-        $catDetails['descript_cat'] = "";
-        $catDetails['type_lien_cat'] = "";
-
-        
-        $resultset = $this->categorieDAO->selectByCode($codeCat);
-        
-        // Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']))
-        {
-            $catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
-            $catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
-            $catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
-            $catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
-        }
-
-        return $catDetails;
-    }
+		return false;
+	}
 
 
 
-    public function filterCategorieData(&$formData, $postData)
-    {
+	public function getCategorieDetails($codeCat)
+	{
+		$catDetails = array();
+		
+		$catDetails['code_cat'] = "";
+		$catDetails['nom_cat'] = "";
+		$catDetails['descript_cat'] = "";
+		$catDetails['type_lien_cat'] = "";
 
-        $dataCategorie = array();
+		
+		$resultset = $this->categorieDAO->selectByCode($codeCat);
+		
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			$catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
+			$catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
+			$catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
+			$catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
+		}
 
-        // Formatage du code catégorie
-        $formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
-        $dataCategorie['code_cat'] = $formData['code_cat'];
-        
-        // Il faut vérifier si le code est au bon format et si il n'existe pas déjà
-        if (!empty($formData['code_cat']))
-        {
-            if (strlen($formData['code_cat']) % 2 != 0)
-            {
-                $this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir schéma explicatif).");
-            }
-            
-            $resultsetCode = $this->getCategorie($formData['code_cat']);
-
-            if (!empty($resultsetCode['response']) && $resultsetCode !== false)
-            {
-                $this->registerError("form_valid", "Le code de la catégorie existe déjà.");
-            }
-        }
-
-
-        // Formatage du nom de la catégorie
-        $formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
-        $dataCategorie['nom_cat'] = $formData['nom_cat'];
-        
-        // Formatage de l'intitule de la catégorie 
-        $formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
-        $dataCategorie['descript_cat'] = $formData['descript_cat'];
-        
-
-        // Formatage du type de lien de la catégorie
-        if (isset($_POST['type_lien_cat']))
-        {
-            $formData['type_lien_cat'] = "dynamic";
-            $dataCategorie['type_lien_cat'] = "dynamic";
-        }
-        else 
-        {
-            $formData['type_lien_cat'] = "static";
-            $dataCategorie['type_lien_cat'] = "static";
-        }
-
-        return $dataCategorie;
-    }
+		return $catDetails;
+	}
 
 
 
+	/* Gestion du code catégorie */
 
-    public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
-    {
+	public function getParentCode($code = null) 
+	{	
+		$parentCode = null;
 
-        if ($previousMode == "new")
-        {
-            // Insertion de la catégorie dans la bdd
-            $resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
+		if ($code !== null) {
 
-            // Traitement des erreurs de la requête
-            if ($resultsetCategorie['response'])
-            {
-                $this->registerSuccess("La catégorie a été enregistrée.");
-            }
-            else 
-            {
-                $this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
-            }
-        }
-        else if ($previousMode == "edit"  || $previousMode == "save")
-        {
-            if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
-            {
-                $formData['code_cat'] = $dataCategorie['code_cat'];
+			$parentCodeLength = strlen($code) - 2;
 
-                // Mise à jour de la catégorie
-                $resultsetCategorie = $this->setCategorie("update", $dataCategorie);
+			if ($parentCodeLength > 2) {
 
-                // Traitement des erreurs de la requête
-                if ($resultsetCategorie['response'])
-                {
-                    $this->registerSuccess("La catégorie a été mise à jour.");
-                }
-                else
-                {
-                    $this->registerError("form_valid", "La mise à jour de la catégorie a échoué.");
-                }
-            }
-        }
-        else
-        {
-            header("Location: ".SERVER_URL."erreur/page404");
-            exit();
-        }
-    }
+				$parentCode = substr($code, 0, $parentCodeLength);
+			}
+		}
+
+		return $parentCode;
+	}
+
+
+	private function generateKey($parent, $level) {
+
+		$key = null;
 
 
 
-    public function setCategorie($modeCategorie, $dataCategorie)
-    {
+		return $key;
+	}
 
-        if (!empty($dataCategorie) && is_array($dataCategorie))
-        {
-            if (!empty($dataCategorie['code_cat']) && !empty($dataCategorie['nom_cat']))
-            {
-                if ($modeCategorie == "insert")
-                {
-                    $resultset = $this->categorieDAO->insert($dataCategorie);
+	public function generateCategorieCode($code = null, $parentCode = null, $order = null) 
+	{
 
-                    // Traitement des erreurs de la requête
-                    if (!$this->filterDataErrors($resultset['response']))
-                    {
-                        return $resultset;
-                    }
-                    else 
-                    {
-                        $this->registerError("form_request", "La catégorie n'a pu être insérée.");
-                    }
-                    
-                }
-                else if ($modeCategorie == "update")
-                { 
-                    $resultset = $this->categorieDAO->update($dataCategorie);
+		$generatedCode = null;
+		$previousCode = null;
+		$nextCode = null;
 
-                    // Traitement des erreurs de la requête
-                    if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['categorie']['row_count']) && !empty($resultset['response']['categorie']['row_count']))
-                    {
-                        return $resultset;
-                    } 
-                    else 
-                    {
-                        $this->registerError("form_request", "La catégorie n'a pu être mise à jour.");
-                    }
-                }
-                
-            }
-            else 
-            {
-                $this->registerError("form_request", "Le code ou le nom de la catégorie sont manquants.");
-            }
-        }
-        else 
-        {
-            $this->registerError("form_request", "Insertion de la catégorie non autorisée");
-        }
-            
-        return false;
-    }
-    
-    
-    
-    
-    public function deleteCategorie($codeCat)
-    {
-        // On commence par sélectionner les réponses associèes à la question
-        $resultsetSelect = $this->categorieDAO->selectByCode($codeCat);
-        
-        if (!$this->filterDataErrors($resultsetSelect['response']))
-        { 
-            $resultsetDelete = $this->categorieDAO->delete($codeCat);
-        
-            if (!$this->filterDataErrors($resultsetDelete['response']))
-            {
-                return true;
-            }
-            else 
-            {
-                $this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
-            }
-        }
-        else
-        {
-           $this->registerError("form_request", "Cette catégorie n'existe pas."); 
-        }
+		// Mode edit
+		if ($code !== null) {
 
-        return false;
-    }
-    
+			$level = strlen($code / 2);
+			$currentCode = $this->categorieDAO->selectByCode($parentCode, $level);
+
+			if ($parentCode !== null)
+			{
+				$parentLevel = strlen($code / 2);
+				$level = strlen($code / 2) + 1;
+				$nextCode = $this->categorieDAO->selectByCode($parentCode, $level);
+				//$code = $this->servicesCategorie->generateCategorieCode($code, $parentCode);
+			}
+			else
+			{
+				$level = 1;
+				$parentCode = $this->getParentCode($code);
+				//$code = $this->servicesCategorie->generateCategorieCode($code);
+			}
+		}
+		// Mode new
+		else
+		{
+			if ($parentCode !== null) 
+			{
+				$level = strlen($parentCode / 2) + 1;
+
+				$resultset = $this->categorieDAO->findCategorieCode($parentCode, $level, $order);
+
+				
+
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+					{ 
+						$categorie = $resultset['response']['categorie'];
+						$resultset['response']['categorie'] = array($categorie);
+					}
+
+					$codes = $resultset['response']['categorie'];
+
+					echo 'mode new - parentcode = '.$parentCode.' - child codes = ';
+					var_dump($codes);
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				$level = 1;
+				$codes = $this->categorieDAO->findCategorieCode(null, $level);
+
+				echo 'mode new - level one codes = ';
+				var_dump($codes);
+				//$codes = $this->generateKey(null, 1);
+				//$code = $this->servicesCategorie->generateCategorieCode();
+			}
+		}
+
+		exit();
+	}
+
+ 
 
 
 
-    
-    public function getQuestionCategorie($refQuestion)
-    {
-        $resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-        
-        // Traitement des erreurs de la requête
-        $this->filterDataErrors($resultset['response']);
-        
-        return $resultset;
-    }
-    
-    
-    
-    public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
-    {
-        if (!empty($refQuestion) && !empty($codeCat))
-        {
-            if ($modeCategorie == "insert")
-            {
-                $resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-                
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']))
-                {
-                    return $resultset;
-                }
-                else 
-                {
-                    $this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
-                }
-            }
-            else if ($modeCategorie == "update")
-            { 
-                $resultset = $this->questionCatDAO->update(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+	public function filterCategorieData(&$formData, $postData)
+	{
 
-                // Traitement des erreurs de la requête
-                if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
-                {
-                    return $resultset;
-                } 
-                else 
-                {
-                    $this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
-                }
-            }
-        }
-        else 
-        {
-            $this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
-        }
+		$dataCategorie = array();
 
-        return false;
-    }
-    
-    
-    
-    
-    public function deleteQuestionCategorie($refQuestion)
-    {
-        // On commence par sélectionner les réponses associèes à la question
-        $resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-        
-        if (!$this->filterDataErrors($resultsetSelect['response']))
-        { 
-            $resultsetDelete = $this->questionCatDAO->delete($refQuestion);
-        
-            if (!$this->filterDataErrors($resultsetDelete['response']))
-            {
-                return true;
-            }
-            else 
-            {
-                $this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
-            }
-        }
-        else
-        {
-           $this->registerError("form_request", "Cette catégorie n'existe pas."); 
-        }
+		// Formatage du code catégorie
+		$formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+		$dataCategorie['code_cat'] = $formData['code_cat'];
+		
+		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
+		if (!empty($formData['code_cat']))
+		{
+			if (strlen($formData['code_cat']) % 2 != 0)
+			{
+				$this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir schéma explicatif).");
+			}
+			
+			$resultsetCode = $this->getCategorie($formData['code_cat']);
 
-        return false;
-    }
-    
+			if (!empty($resultsetCode['response']) && $resultsetCode !== false)
+			{
+				$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
+			}
+		}
+
+
+		// Formatage du nom de la catégorie
+		$formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
+		$dataCategorie['nom_cat'] = $formData['nom_cat'];
+		
+		// Formatage de l'intitule de la catégorie 
+		$formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
+		$dataCategorie['descript_cat'] = $formData['descript_cat'];
+		
+
+		// Formatage du type de lien de la catégorie
+		if (isset($_POST['type_lien_cat']))
+		{
+			$formData['type_lien_cat'] = "dynamic";
+			$dataCategorie['type_lien_cat'] = "dynamic";
+		}
+		else 
+		{
+			$formData['type_lien_cat'] = "static";
+			$dataCategorie['type_lien_cat'] = "static";
+		}
+
+		return $dataCategorie;
+	}
+
+
+
+
+	public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
+	{
+
+		if ($previousMode == "new")
+		{
+			// Insertion de la catégorie dans la bdd
+			$resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
+
+			// Traitement des erreurs de la requête
+			if ($resultsetCategorie['response'])
+			{
+				$this->registerSuccess("La catégorie a été enregistrée.");
+			}
+			else 
+			{
+				$this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
+			}
+		}
+		else if ($previousMode == "edit"  || $previousMode == "save")
+		{
+			if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
+			{
+				$formData['code_cat'] = $dataCategorie['code_cat'];
+
+				// Mise à jour de la catégorie
+				$resultsetCategorie = $this->setCategorie("update", $dataCategorie);
+
+				// Traitement des erreurs de la requête
+				if ($resultsetCategorie['response'])
+				{
+					$this->registerSuccess("La catégorie a été mise à jour.");
+				}
+				else
+				{
+					$this->registerError("form_valid", "La mise à jour de la catégorie a échoué.");
+				}
+			}
+		}
+		else
+		{
+			header("Location: ".SERVER_URL."erreur/page404");
+			exit();
+		}
+	}
+
+
+
+	public function setCategorie($modeCategorie, $dataCategorie)
+	{
+
+		if (!empty($dataCategorie) && is_array($dataCategorie))
+		{
+			if (!empty($dataCategorie['code_cat']) && !empty($dataCategorie['nom_cat']))
+			{
+				if ($modeCategorie == "insert")
+				{
+					$resultset = $this->categorieDAO->insert($dataCategorie);
+
+					// Traitement des erreurs de la requête
+					if (!$this->filterDataErrors($resultset['response']))
+					{
+						return $resultset;
+					}
+					else 
+					{
+						$this->registerError("form_request", "La catégorie n'a pu être insérée.");
+					}
+					
+				}
+				else if ($modeCategorie == "update")
+				{ 
+					$resultset = $this->categorieDAO->update($dataCategorie);
+
+					// Traitement des erreurs de la requête
+					if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['categorie']['row_count']) && !empty($resultset['response']['categorie']['row_count']))
+					{
+						return $resultset;
+					} 
+					else 
+					{
+						$this->registerError("form_request", "La catégorie n'a pu être mise à jour.");
+					}
+				}
+				
+			}
+			else 
+			{
+				$this->registerError("form_request", "Le code ou le nom de la catégorie sont manquants.");
+			}
+		}
+		else 
+		{
+			$this->registerError("form_request", "Insertion de la catégorie non autorisée");
+		}
+			
+		return false;
+	}
+	
+	
+	
+	
+	public function deleteCategorie($codeCat)
+	{
+		// On commence par sélectionner les réponses associèes à la question
+		$resultsetSelect = $this->categorieDAO->selectByCode($codeCat);
+		
+		if (!$this->filterDataErrors($resultsetSelect['response']))
+		{ 
+			$resultsetDelete = $this->categorieDAO->delete($codeCat);
+		
+			if (!$this->filterDataErrors($resultsetDelete['response']))
+			{
+				return true;
+			}
+			else 
+			{
+				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
+			}
+		}
+		else
+		{
+		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
+		}
+
+		return false;
+	}
+	
+
+
+
+	
+	public function getQuestionCategorie($refQuestion)
+	{
+		$resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		
+		// Traitement des erreurs de la requête
+		$this->filterDataErrors($resultset['response']);
+		
+		return $resultset;
+	}
+	
+	
+	
+	public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
+	{
+		if (!empty($refQuestion) && !empty($codeCat))
+		{
+			if ($modeCategorie == "insert")
+			{
+				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+				
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					return $resultset;
+				}
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
+				}
+			}
+			else if ($modeCategorie == "update")
+			{ 
+				$resultset = $this->questionCatDAO->update(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
+				{
+					return $resultset;
+				} 
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
+				}
+			}
+		}
+		else 
+		{
+			$this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
+		}
+
+		return false;
+	}
+	
+	
+	
+	
+	public function deleteQuestionCategorie($refQuestion)
+	{
+		// On commence par sélectionner les réponses associèes à la question
+		$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		
+		if (!$this->filterDataErrors($resultsetSelect['response']))
+		{ 
+			$resultsetDelete = $this->questionCatDAO->delete($refQuestion);
+		
+			if (!$this->filterDataErrors($resultsetDelete['response']))
+			{
+				return true;
+			}
+			else 
+			{
+				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
+			}
+		}
+		else
+		{
+		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
+		}
+
+		return false;
+	}
+	
 }
 
 

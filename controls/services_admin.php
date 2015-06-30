@@ -499,14 +499,23 @@ class ServicesAdmin extends Main
 		/*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
 		
 		$initializedData = array(
-			// "code_cat_cbox" => "select",
-			//"code_cat"      => "text", 
-			"nom"           => "text", 
-			"descript_cat"  => "text", 
+			"nom"           => "text",
+			"parent_cat_cbox" => "select",
+			"ordre"  		=> "text",
+			"descript_cat"  => "text",
 			"actif"         => "text"
 		);
+
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
 		
+
+
+		/*** Récupération du code parent et de l'ordre ***/
+
+		$parentCode = $this->formData['parent_cat_cbox'] != 'aucun' ? $this->formData['parent_cat_cbox'] : null;
+
+		$ordre = $this->formData['ordre'];
+
 
 		/*** Récupération du code de la catégorie par la méthode GET ***/
 		
@@ -523,6 +532,9 @@ class ServicesAdmin extends Main
 		{
 			$this->formData['code_cat'] = null;
 		}
+
+		$code = $this->formData['code_cat'];
+
 
 	   
 		/*** Initialisation des boutons ***/
@@ -552,13 +564,8 @@ class ServicesAdmin extends Main
 					$this->formData['delete_disabled'] = "disabled";
 				}
 				
-				
-
 				$catDetails = array();
 				$catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['code_cat']);
-
-				//var_dump($catDetails);
-				//exit();
 				
 				$this->formData = array_merge($this->formData, $catDetails);
 			}
@@ -591,20 +598,12 @@ class ServicesAdmin extends Main
 			$this->servicesGestion->switchFormButtons($this->formData, "save");
 
 
-			// Génération du code catégorie
-
-
-
-			// Récupèration de l'ordre ou assignement automatique
-
-
-
-			// Le core est toujours attaché à une catégorie
+			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
 
 			$this->formData['type_lien_cat'] = "dynamic";
 
 
-			// Récupèration de l'id de la question s'il y en a une.
+			// Récupèration du code de la catégorie s'il y en a un.
 			if (!empty($this->formData['code_cat']))
 			{
 				if ($previousMode == "edit")
@@ -612,6 +611,42 @@ class ServicesAdmin extends Main
 					$dataCategorie['code_cat'] = $this->formData['code_cat'];
 				}
 			}
+
+
+			// Génération du code catégorie
+			
+			// Mode new
+			if (empty($code) || $code === null) 
+			{
+				if (!empty($parentCode) && $parentCode !== null) 
+				{
+					$code = $this->servicesCategorie->generateCategorieCode(null, $parentCode);
+				}
+				else
+				{
+					$code = $this->servicesCategorie->generateCategorieCode();
+				}
+			}
+			// Mode edit
+			else
+			{
+				if (!empty($parentCode) && $parentCode !== null)
+				{
+					$code = $this->servicesCategorie->generateCategorieCode($code, $parentCode);
+				}
+				else
+				{
+					$code = $this->servicesCategorie->generateCategorieCode($code);
+				}
+			}
+			
+			$this->formData['code_cat'] = 
+			$dataCategorie['code_cat'] = $this->formData['code_cat'];
+
+
+			// Récupèration de l'ordre ou assignement automatique
+
+
 
 			// Traitement des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);

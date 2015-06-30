@@ -29,6 +29,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
+var_dump($formData['code_cat']);
 
 ?>
 
@@ -43,7 +44,6 @@ $form_url = WEBROOT."admin/categorie/";
 		<!-- Header -->
 		<div id="titre-admin-h2">Gestion des catégories</div>
 
-
 		
 		<div id="main-form">
 
@@ -51,6 +51,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
 				<input type="hidden" id="code" name="code_cat" value="<?php echo $formData['code_cat']; ?>" />
+				<input type="hidden" id="ordre" name="level" value="" />
 				
 				
 				<?php
@@ -134,7 +135,8 @@ $form_url = WEBROOT."admin/categorie/";
 										}
 										
 										$code = $categorie->getCode();
-										$name = $prefix . '- ' . $categorie->getNom();
+										//$name = $prefix . '- ' . $categorie->getNom();
+										$name = $categorie->getNom();
 										$length = strlen($categorie->getCode()) - 2;
 										
 										if ($length < 0)
@@ -204,7 +206,7 @@ $form_url = WEBROOT."admin/categorie/";
 										<label for="parent_cat_cbox">Catégorie parente *</label>
 
 										<select name="parent_cat_cbox" id="ref_parent_cbox" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>>
-											<option value="select_cbox">---</option>
+											<option value="select_cbox">Aucun</option>
 											<?php
 											
 											foreach($response['categorie'] as $categorie)
@@ -222,16 +224,16 @@ $form_url = WEBROOT."admin/categorie/";
 													$length = 0;
 												}
 
-												$style = "padding-left:".($length * 10)."px;";
+												$style = "padding-left:".(($length * 10) + 5)."px;";
 
-												if ($length <= 0)
-												{
-													echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-												}
-												else
-												{
+												//if ($length <= 0)
+												//{
+													//echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+												//}
+												//else
+												//{
 													echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
-												}
+												//}
 											}
 											
 											?>
@@ -397,6 +399,8 @@ $form_url = WEBROOT."admin/categorie/";
 		
 
 		$(function() {
+
+			/*  Système de sélection de la liste des catégories à gauche */
 
 			var $selected = null;
 

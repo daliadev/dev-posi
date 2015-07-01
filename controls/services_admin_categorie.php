@@ -321,8 +321,12 @@ class ServicesAdminCategorie extends Main
 		$dataCategorie = array();
 
 		// Formatage du code catégorie
-		$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+		if (!isset($formData['code_cat']) || empty($formData['code_cat']) || $formData['code_cat'] === null) {
+			$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+		}
+
 		$dataCategorie['code_cat'] = $formData['code_cat'];
+
 		
 		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
 		if (!empty($formData['code_cat']))

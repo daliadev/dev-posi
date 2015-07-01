@@ -531,14 +531,14 @@ class ServicesAdmin extends Main
 		}
 		else if ($_POST['code_cat'] !== null)
 		{
-			$this->formData['ref_cat'] = $_POST['code_cat'];
+			$this->formData['code_cat'] = $_POST['code_cat'];
 		}
 		else
 		{
-			$this->formData['ref_cat'] = null;
+			$this->formData['code_cat'] = null;
 		}
 
-		$code = $this->formData['ref_cat'];
+		$code = $this->formData['code_cat'];
 
 
 	   
@@ -560,7 +560,7 @@ class ServicesAdmin extends Main
 			$this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
 
 			// Avec la référence, on va chercher toutes les infos sur la question 
-			if (!empty($this->formData['ref_cat']))
+			if (!empty($this->formData['code_cat']))
 			{
 				if ($this->formData['mode'] == "view")
 				{
@@ -570,7 +570,7 @@ class ServicesAdmin extends Main
 				}
 				
 				$catDetails = array();
-				$catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['ref_cat']);
+				$catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['code_cat']);
 				
 				$this->formData = array_merge($this->formData, $catDetails);
 			}
@@ -588,7 +588,7 @@ class ServicesAdmin extends Main
 			// Verrouillage des boutons.
 			$this->servicesGestion->switchFormButtons($this->formData, "new");
 
-			$this->formData['ref_cat'] = null;
+			$this->formData['code_cat'] = null;
 			$this->formData['nom_cat'] = null;
 			$this->formData['descript_cat'] = null;
 			$this->formData['type_lien_cat'] = "dynamic";
@@ -604,24 +604,12 @@ class ServicesAdmin extends Main
 
 
 			// Récupèration du code de la catégorie s'il y en a un.
-			/*
-			if (!empty($this->formData['code_cat']))
+
+			if (!empty($this->formData['ref_cat']))
 			{
 				if ($previousMode == "edit")
 				{
-					$dataCategorie['code_cat'] = $this->formData['code_cat'];
-				}
-			}
-			*/
-
-
-			/*** Récupèration de l'id de la question ***/
-
-			if (!empty($this->formData['ref_degre']))
-			{
-				if ($previousMode == "edit")
-				{
-					$dataDegre['ref_degre'] = $this->formData['ref_degre'];
+					$dataCategorie['code_cat'] = $this->formData['ref_cat'];
 				}
 			}
 
@@ -662,7 +650,7 @@ class ServicesAdmin extends Main
 			else
 			{
 				$this->formData['code_cat'] = $code;
-				$_POST['code_cat'] = $this->formData['code_cat'];
+				//$_POST['code_cat'] = $this->formData['code_cat'];
 				//$dataCategorie['code_cat'] = $this->formData['code_cat'];
 			}
 

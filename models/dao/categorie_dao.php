@@ -81,9 +81,7 @@ class CategorieDAO extends ModelDAO
 				$searchCode = $code;
 			}
 
-			var_dump($searchCode);
-
-			$request = "SELECT * FROM categorie WHERE code_cat LIKE '".$searchCode."' AND LENGTH(code_cat) = ".$length." ORDER BY code_cat ASC";
+			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$searchCode."' AND LENGTH(code_cat) = ".$length." ORDER BY code_cat ASC";
 
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 		}

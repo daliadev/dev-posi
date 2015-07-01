@@ -514,7 +514,12 @@ class ServicesAdmin extends Main
 
 		$parentCode = $this->formData['parent_cat_cbox'] != 'aucun' ? $this->formData['parent_cat_cbox'] : null;
 
-		$ordre = $this->formData['ordre'];
+		$ordre = null;
+
+		if (isset($this->formData['ordre']) && !empty($this->formData['ordre']) && is_numeric($this->formData['ordre']))
+		{
+			$ordre = $this->formData['ordre'];
+		}
 
 
 		/*** Récupération du code de la catégorie par la méthode GET ***/
@@ -522,18 +527,18 @@ class ServicesAdmin extends Main
 		if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
 		{
 		   // $this->formData['code_cat_cbox'] = $requestParams[0];
-			$this->formData['code_cat'] = $requestParams[0];
+			$code = $requestParams[0];
 		}
 		else if ($_POST['code_cat'] !== null)
 		{
-			$this->formData['code_cat'] = $_POST['code_cat'];
+			$this->formData['ref_cat'] = $_POST['code_cat'];
 		}
 		else
 		{
-			$this->formData['code_cat'] = null;
+			$this->formData['ref_cat'] = null;
 		}
 
-		$code = $this->formData['code_cat'];
+		$code = $this->formData['ref_cat'];
 
 
 	   
@@ -555,7 +560,7 @@ class ServicesAdmin extends Main
 			$this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
 
 			// Avec la référence, on va chercher toutes les infos sur la question 
-			if (!empty($this->formData['code_cat']))
+			if (!empty($this->formData['ref_cat']))
 			{
 				if ($this->formData['mode'] == "view")
 				{
@@ -565,7 +570,7 @@ class ServicesAdmin extends Main
 				}
 				
 				$catDetails = array();
-				$catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['code_cat']);
+				$catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['ref_cat']);
 				
 				$this->formData = array_merge($this->formData, $catDetails);
 			}
@@ -576,14 +581,14 @@ class ServicesAdmin extends Main
 		}
 
 
-		/*** Mode "nouvelle question" ***/
+		/*** Mode new ***/
 		
 		else if ($this->formData['mode'] == "new")
 		{      
 			// Verrouillage des boutons.
 			$this->servicesGestion->switchFormButtons($this->formData, "new");
 
-			$this->formData['code_cat'] = null;
+			$this->formData['ref_cat'] = null;
 			$this->formData['nom_cat'] = null;
 			$this->formData['descript_cat'] = null;
 			$this->formData['type_lien_cat'] = "dynamic";
@@ -598,12 +603,8 @@ class ServicesAdmin extends Main
 			$this->servicesGestion->switchFormButtons($this->formData, "save");
 
 
-			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
-
-			$this->formData['type_lien_cat'] = "dynamic";
-
-
 			// Récupèration du code de la catégorie s'il y en a un.
+			/*
 			if (!empty($this->formData['code_cat']))
 			{
 				if ($previousMode == "edit")
@@ -611,20 +612,34 @@ class ServicesAdmin extends Main
 					$dataCategorie['code_cat'] = $this->formData['code_cat'];
 				}
 			}
+			*/
+
+
+			/*** Récupèration de l'id de la question ***/
+
+			if (!empty($this->formData['ref_degre']))
+			{
+				if ($previousMode == "edit")
+				{
+					$dataDegre['ref_degre'] = $this->formData['ref_degre'];
+				}
+			}
+
+
 
 
 			// Génération du code catégorie
-			
+
 			// Mode new
 			if (empty($code) || $code === null) 
 			{
 				if (!empty($parentCode) && $parentCode !== null) 
 				{
-					$code = $this->servicesCategorie->generateCategorieCode(null, $parentCode);
+					$code = $this->servicesCategorie->generateCategorieCode(null, $parentCode, $ordre);
 				}
 				else
 				{
-					$code = $this->servicesCategorie->generateCategorieCode();
+					$code = $this->servicesCategorie->generateCategorieCode(null, null, $ordre);
 				}
 			}
 			// Mode edit
@@ -632,25 +647,34 @@ class ServicesAdmin extends Main
 			{
 				if (!empty($parentCode) && $parentCode !== null)
 				{
-					$code = $this->servicesCategorie->generateCategorieCode($code, $parentCode);
+					$code = $this->servicesCategorie->generateCategorieCode($code, $parentCode, $ordre);
 				}
 				else
 				{
-					$code = $this->servicesCategorie->generateCategorieCode($code);
+					$code = $this->servicesCategorie->generateCategorieCode($code, null, $ordre);
 				}
 			}
 			
-			$this->formData['code_cat'] = 
-			$dataCategorie['code_cat'] = $this->formData['code_cat'];
+			if (!$code)
+			{   
+				$this->registerError("Le code de la catégorie n'a pas pu être généré.");
+			}
+			else
+			{
+				$this->formData['code_cat'] = $code;
+				$_POST['code_cat'] = $this->formData['code_cat'];
+				//$dataCategorie['code_cat'] = $this->formData['code_cat'];
+			}
 
-
-			// Récupèration de l'ordre ou assignement automatique
+			
 
 
 
 			// Traitement des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
+			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
+			$dataCategorie['type_lien_cat'] = "dynamic";
 
 			// Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors)) 

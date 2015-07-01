@@ -158,7 +158,83 @@ class ServicesAdminCategorie extends Main
 
 				$resultset = $this->categorieDAO->findCategorieCode($parentCode, $level, $order);
 
-				
+				//var_dump($resultset);
+				//exit();
+
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+					{ 
+						$categorie = $resultset['response']['categorie'];
+						$resultset['response']['categorie'] = array($categorie);
+					}
+					else if (!isset($resultset['response']['categorie']) || empty($resultset['response']['categorie'])) {
+
+						$code = $parentCode . '10';
+						return $code;
+					}
+
+					$codes = $resultset['response']['categorie'];
+
+					//echo 'mode new - parentcode = '.$parentCode.' - child codes = ';
+					//var_dump($codes);
+
+					if ($order === null) 
+					{
+						$lastCodeIndex = count($codes) - 1;
+						$code = $codes[$lastCodeIndex]->getCode();
+						$previousCode = $codes[($lastCodeIndex - 1)]->getCode();
+
+						$last_num = substr($code, -2, 2);
+						$last_num_previous = substr($previousCode, -2, 2);
+						$increment = 10;
+
+						if ($last_num_previous >= 0 && $last_num >= 50) {
+
+							$increment = $last_num - $last_num_previous;
+						}
+
+						if ($last_num + $increment >= 100 - $increment || floor($increment / 2) <= 0)
+						{
+							$this->registerError("form_valid", "Le nombre de catégories a atteint son maximum dans ce niveau hiérarchique.");
+						}
+						else
+						{
+							$increment = $increment > 10 ? 10 : $increment;
+							$code += floor($increment / 2);
+						}
+					}
+					else 
+					{
+						/*
+						$ordres = array();
+
+						for ($i = 0; $i < count($codes); $i++) 
+						{ 
+							if ($i == $order) 
+							{
+								++
+							}
+
+							if ($codes[$i] ) 
+							{
+
+							}
+
+							$ordres[$i] = $i;
+						}
+						*/
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				$level = 1;
+				$resultset = $this->categorieDAO->findCategorieCode(null, $level);
 
 				if (!$this->filterDataErrors($resultset['response']))
 				{
@@ -170,25 +246,67 @@ class ServicesAdminCategorie extends Main
 
 					$codes = $resultset['response']['categorie'];
 
-					echo 'mode new - parentcode = '.$parentCode.' - child codes = ';
-					var_dump($codes);
+					//echo 'mode new - level one codes = ';
+					//var_dump($codes);
+					//$codes = $this->generateKey(null, 1);
+					//$code = $this->servicesCategorie->generateCategorieCode();
+
+					if ($order === null) 
+					{
+						$lastCodeIndex = count($codes) - 1;
+						$code = $codes[$lastCodeIndex]->getCode();
+
+						$previousCode = $codes[($lastCodeIndex - 1)]->getCode();
+
+						$last_num = substr($code, -2, 2);
+						$last_num_previous = substr($previousCode, -2, 2);
+						$increment = 10;
+
+						if ($last_num_previous >= 0 && $last_num >= 50) {
+
+							$increment = $last_num - $last_num_previous;
+						}
+
+						if ($last_num + $increment >= 100 - $increment || floor($increment / 2) <= 0)
+						{
+							$this->registerError("form_valid", "Le nombre de catégories a atteint son maximum dans ce niveau hiérarchique.");
+						}
+						else
+						{
+							$increment = $increment > 10 ? 10 : $increment;
+							$code += floor($increment / 2);
+						}
+					}
+					else 
+					{
+						/*
+						$ordres = array();
+
+						for ($i = 0; $i < count($codes); $i++) 
+						{ 
+							if ($i == $order) 
+							{
+								++
+							}
+
+							if ($codes[$i]) 
+							{
+
+							}
+
+							$ordres[$i] = $i;
+						}
+						*/
+					}
 				}
 				else
 				{
 					return false;
 				}
 			}
-			else
-			{
-				$level = 1;
-				$codes = $this->categorieDAO->findCategorieCode(null, $level);
-
-				echo 'mode new - level one codes = ';
-				var_dump($codes);
-				//$codes = $this->generateKey(null, 1);
-				//$code = $this->servicesCategorie->generateCategorieCode();
-			}
 		}
+
+		var_dump($code);
 
 		exit();
 	}
@@ -203,7 +321,7 @@ class ServicesAdminCategorie extends Main
 		$dataCategorie = array();
 
 		// Formatage du code catégorie
-		$formData['code_cat'] = $this->validatePostData($_POST['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+		$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
 		$dataCategorie['code_cat'] = $formData['code_cat'];
 		
 		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
@@ -233,6 +351,7 @@ class ServicesAdminCategorie extends Main
 		
 
 		// Formatage du type de lien de la catégorie
+		/*
 		if (isset($_POST['type_lien_cat']))
 		{
 			$formData['type_lien_cat'] = "dynamic";
@@ -243,6 +362,7 @@ class ServicesAdminCategorie extends Main
 			$formData['type_lien_cat'] = "static";
 			$dataCategorie['type_lien_cat'] = "static";
 		}
+		*/
 
 		return $dataCategorie;
 	}

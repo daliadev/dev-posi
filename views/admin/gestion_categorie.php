@@ -99,7 +99,7 @@ var_dump($formData['code_cat']);
 
 							<fieldset>
 								
-								<legend>Liste des catégories</legend>
+								<legend>Liste des catégories (sélection)</legend>
 								
 								<div id="liste-cat">
 									

@@ -122,9 +122,10 @@ class ServicesAdminCategorie extends Main
 		return $key;
 	}
 
+
+
 	public function generateCategorieCode($code = null, $parentCode = null, $order = null) 
 	{
-
 		$generatedCode = null;
 		$previousCode = null;
 		$nextCode = null;
@@ -149,6 +150,7 @@ class ServicesAdminCategorie extends Main
 				//$code = $this->servicesCategorie->generateCategorieCode($code);
 			}
 		}
+
 		// Mode new
 		else
 		{
@@ -194,15 +196,17 @@ class ServicesAdminCategorie extends Main
 							$increment = $last_num - $last_num_previous;
 						}
 
+
 						if (($last_num + $increment) >= (100 - $increment) || floor($increment / 2) <= 0)
 						{
 							$this->registerError("form_valid", "Le nombre de catégories a atteint son maximum dans ce niveau hiérarchique.");
 						}
 						else
 						{
-							$increment = $increment > 10 ? 10 : $increment;
-							$code += floor($increment / 2);
+							$increment = $increment >= 10 ? 10 : floor($increment / 2);
+							$code += $increment;
 						}
+						
 					}
 					else 
 					{
@@ -262,11 +266,11 @@ class ServicesAdminCategorie extends Main
 						$last_num_previous = strlen($previousCode) >= 2 ? substr($previousCode, -2, 2) : -1;
 						$increment = 10;
 
-
-						if ($last_num_previous >= 0 && $last_num >= 50) {
-
+						if ($last_num_previous >= 0 && $last_num >= 75) 
+						{
 							$increment = $last_num - $last_num_previous;
 						}
+
 
 						if ($last_num + $increment >= 100 - $increment || floor($increment / 2) <= 0)
 						{
@@ -274,9 +278,10 @@ class ServicesAdminCategorie extends Main
 						}
 						else
 						{
-							$increment = $increment > 10 ? 10 : $increment;
-							$code += floor($increment / 2);
+							$increment = $increment >= 10 ? 10 : floor($increment / 2);
+							$code += $increment;
 						}
+
 					}
 					else 
 					{
@@ -390,8 +395,12 @@ class ServicesAdminCategorie extends Main
 
 		if ($previousMode == "new")
 		{
+			
 			// Insertion de la catégorie dans la bdd
 			$resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
+
+			//var_dump($resultsetCategorie);
+			//exit();
 
 			// Traitement des erreurs de la requête
 			if ($resultsetCategorie['response'])
@@ -442,6 +451,7 @@ class ServicesAdminCategorie extends Main
 				if ($modeCategorie == "insert")
 				{
 					$resultset = $this->categorieDAO->insert($dataCategorie);
+					//var_dump($resultset);
 
 					// Traitement des erreurs de la requête
 					if (!$this->filterDataErrors($resultset['response']))

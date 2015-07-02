@@ -527,7 +527,7 @@ class ServicesAdmin extends Main
 		if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
 		{
 		   // $this->formData['code_cat_cbox'] = $requestParams[0];
-			$code = $requestParams[0];
+			$this->formData['code_cat'] = $requestParams[0];
 		}
 		else if ($_POST['code_cat'] !== null)
 		{

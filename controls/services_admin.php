@@ -605,15 +605,13 @@ class ServicesAdmin extends Main
 
 			// Récupèration du code de la catégorie s'il y en a un.
 
-			if (!empty($this->formData['ref_cat']))
+			if (!empty($this->formData['code_cat']))
 			{
 				if ($previousMode == "edit")
 				{
-					$dataCategorie['code_cat'] = $this->formData['ref_cat'];
+					$dataCategorie['code_cat'] = $this->formData['code_cat'];
 				}
 			}
-
-
 
 
 			// Génération du code catégorie
@@ -643,7 +641,7 @@ class ServicesAdmin extends Main
 				}
 			}
 			
-			if (!$code)
+			if (!$code || $code === null)
 			{   
 				$this->registerError("Le code de la catégorie n'a pas pu être généré.");
 			}
@@ -656,13 +654,14 @@ class ServicesAdmin extends Main
 
 			
 
+			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
+			$this->formData['type_lien_cat'] = "dynamic";
+			$dataCategorie['type_lien_cat'] = $this->formData['type_lien_cat'];
 
 
 			// Traitement des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
-			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
-			$dataCategorie['type_lien_cat'] = "dynamic";
 
 			// Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors)) 

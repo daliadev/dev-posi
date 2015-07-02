@@ -168,8 +168,8 @@ class ServicesAdminCategorie extends Main
 						$categorie = $resultset['response']['categorie'];
 						$resultset['response']['categorie'] = array($categorie);
 					}
-					else if (!isset($resultset['response']['categorie']) || empty($resultset['response']['categorie'])) {
-
+					else if (!isset($resultset['response']['categorie']) || empty($resultset['response']['categorie'])) 
+					{
 						$code = $parentCode . '10';
 						return $code;
 					}
@@ -183,10 +183,10 @@ class ServicesAdminCategorie extends Main
 					{
 						$lastCodeIndex = count($codes) - 1;
 						$code = $codes[$lastCodeIndex]->getCode();
-						$previousCode = $codes[($lastCodeIndex - 1)]->getCode();
+						$previousCode = ($lastCodeIndex - 1) >= 0 ? $codes[($lastCodeIndex - 1)]->getCode() : -1;
 
 						$last_num = substr($code, -2, 2);
-						$last_num_previous = substr($previousCode, -2, 2);
+						$last_num_previous = strlen($previousCode) >= 2 ? substr($previousCode, -2, 2) : -1;
 						$increment = 10;
 
 						if ($last_num_previous >= 0 && $last_num >= 50) {
@@ -194,7 +194,7 @@ class ServicesAdminCategorie extends Main
 							$increment = $last_num - $last_num_previous;
 						}
 
-						if ($last_num + $increment >= 100 - $increment || floor($increment / 2) <= 0)
+						if (($last_num + $increment) >= (100 - $increment) || floor($increment / 2) <= 0)
 						{
 							$this->registerError("form_valid", "Le nombre de catégories a atteint son maximum dans ce niveau hiérarchique.");
 						}
@@ -253,14 +253,15 @@ class ServicesAdminCategorie extends Main
 
 					if ($order === null) 
 					{
+
 						$lastCodeIndex = count($codes) - 1;
 						$code = $codes[$lastCodeIndex]->getCode();
-
-						$previousCode = $codes[($lastCodeIndex - 1)]->getCode();
+						$previousCode = ($lastCodeIndex - 1) >= 0 ? $codes[($lastCodeIndex - 1)]->getCode() : -1;
 
 						$last_num = substr($code, -2, 2);
-						$last_num_previous = substr($previousCode, -2, 2);
+						$last_num_previous = strlen($previousCode) >= 2 ? substr($previousCode, -2, 2) : -1;
 						$increment = 10;
+
 
 						if ($last_num_previous >= 0 && $last_num >= 50) {
 
@@ -306,9 +307,11 @@ class ServicesAdminCategorie extends Main
 			}
 		}
 
-		var_dump($code);
+		//var_dump($code);
 
-		exit();
+		//exit();
+
+		return $code;
 	}
 
  
@@ -321,7 +324,8 @@ class ServicesAdminCategorie extends Main
 		$dataCategorie = array();
 
 		// Formatage du code catégorie
-		if (!isset($formData['code_cat']) || empty($formData['code_cat']) || $formData['code_cat'] === null) {
+		if (!isset($formData['code_cat']) || empty($formData['code_cat']) || $formData['code_cat'] === null) 
+		{
 			$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
 		}
 
@@ -353,6 +357,13 @@ class ServicesAdminCategorie extends Main
 		$formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
 		$dataCategorie['descript_cat'] = $formData['descript_cat'];
 		
+		// Formatage du code catégorie
+		if (!isset($formData['type_lien_cat']) || empty($formData['type_lien_cat']) || $formData['type_lien_cat'] === null) 
+		{
+			$formData['type_lien_cat'] = $this->validatePostData($postData['type_lien_cat'], "type_lien_cat", "integer", true, "Aucun type d'héritage des scores n'a été sélectionné.", "Le type d'héritage des scores n'est pas correctement saisi.");
+		}
+
+		$dataCategorie['type_lien_cat'] = $formData['type_lien_cat'];
 
 		// Formatage du type de lien de la catégorie
 		/*

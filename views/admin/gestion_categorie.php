@@ -49,7 +49,7 @@ var_dump($formData['code_cat']);
 
 			<form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
 
-				<input type="hidden" name="mode" value="<?php echo $formData['mode']; ?>" />
+				<input type="hidden" id="mode" name="mode" value="<?php echo $formData['mode']; ?>" />
 				<input type="hidden" id="code" name="code_cat" value="<?php echo $formData['code_cat']; ?>" />
 				<input type="hidden" id="ordre" name="level" value="" />
 				
@@ -242,14 +242,14 @@ var_dump($formData['code_cat']);
 					
 									
 									<div id="ordre-cat" class="block">
-										<label for="ordre">Ordre (pour l'organisation des catégories de même niveau)</label>
-										<input type="text" name="ordre" id="ordre" value="<?php //echo $formData['ordre']; ?>" <?php echo $formData['disabled']; ?> style="width: 80px !important;" />
+										<label for="ordre_cat">Ordre (pour l'organisation des catégories de même niveau)</label>
+										<input type="text" name="ordre_cat" id="ordre_cat" value="<?php echo $formData['ordre_cat']; ?>" <?php echo $formData['disabled']; ?> style="width: 80px !important;" />
 									</div>
 
 
 									<div id="descript-cat" class="block">
 										<label for="descript_cat">Description</label>
-										<textarea name="descript_cat" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_cat']; ?></textarea>
+										<textarea name="descript_cat" id="descript_cat" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_cat']; ?></textarea>
 									</div>
 										
 									<!-- <div id="score-cat" class="block">
@@ -373,7 +373,7 @@ var_dump($formData['code_cat']);
 						</div>
 						<div class="buttons-block">
 							<input type="submit" id="save" name="save" class="bt-admin-menu-enreg" value="Enregistrer" <?php echo $formData['save_disabled']; ?> />
-							<input type="submit" id="del" name="del" class="bt-admin-menu-sup" style="margin-left:118px;" value="Supprimer" <?php echo $formData['delete_disabled']; ?> />
+							<input type="submit" id="del" name="del" class="bt-admin-menu-sup" style="margin-left:118px;" value="<?php echo $formData['delete_label']; ?>" <?php echo $formData['delete_disabled']; ?> />
 						</div>
 
 					</div>
@@ -399,6 +399,21 @@ var_dump($formData['code_cat']);
 		
 
 		$(function() {
+
+			var mode = $('#mode').val();
+
+
+			/* Vide le formulaire */
+
+			var resetFields = function() {
+
+				$('#nom_cat').val('');
+				$('#ref_parent_cbox').val('select_cbox');
+				$('#ordre_cat').val('');
+				$('#descript_cat').val('');
+			};
+
+
 
 			/*  Système de sélection de la liste des catégories à gauche */
 
@@ -427,21 +442,43 @@ var_dump($formData['code_cat']);
 				var $code = $(this).find('.cat-item-code').html();
 				$('#code').val($code);
 				$('#edit').removeProp('disabled');
-				
+				//$('#add').removeProp('disabled');
 			});
 
+			/*
+			$('#add').click(function(event) {
+
+				//$('#del').val('Annuler');
+			});
+
+			$('#edit').click(function(event) {
+
+				//$('#del').val('Annuler');
+			});
+			*/
 
 			/*** Gestion de la demande de suppression ***/
 
-			$('#del').click(function(event) {
-
+			$('#del').click(function(event) 
+			{
 				event.preventDefault();
 
-				if (confirm("Voulez-vous réellement supprimer cette catégorie ?"))
+				if (mode == 'view') 
 				{
-					$('input[name="delete"]').val("true");
-					$('#form-posi').submit();
+					if (confirm("Voulez-vous réellement supprimer cette catégorie ?"))
+					{
+						$('input[name="delete"]').val("true");
+						$('#form-posi').submit();
+					}
 				}
+				else if (mode == 'new')
+				{
+					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?"))
+					{
+						resetFields();
+					}
+				}
+				
 			});
 			
 

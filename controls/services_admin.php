@@ -465,7 +465,6 @@ class ServicesAdmin extends Main
 
 		// Authentification
 		ServicesAuth::checkAuthentication("admin");
-
 		
 		$this->initialize();
 		
@@ -501,7 +500,7 @@ class ServicesAdmin extends Main
 		$initializedData = array(
 			"nom"           => "text",
 			"parent_cat_cbox" => "select",
-			"ordre"  		=> "text",
+			"ordre_cat"  		=> "text",
 			"descript_cat"  => "text",
 			"actif"         => "text"
 		);
@@ -516,9 +515,9 @@ class ServicesAdmin extends Main
 
 		$ordre = null;
 
-		if (isset($this->formData['ordre']) && !empty($this->formData['ordre']) && is_numeric($this->formData['ordre']))
+		if (isset($this->formData['ordre_cat']) && !empty($this->formData['ordre_cat']) && is_numeric($this->formData['ordre_cat']))
 		{
-			$ordre = $this->formData['ordre'];
+			$ordre = $this->formData['ordre_cat'];
 		}
 
 
@@ -552,7 +551,11 @@ class ServicesAdmin extends Main
 		/*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
 		
 
+		$this->formData['delete_label'] = 'Supprimer';
+
+
 		/*** Mode "visualisation" et "édition" ***/
+		
 
 		if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
 		{
@@ -567,6 +570,10 @@ class ServicesAdmin extends Main
 					// Déverrouillage des boutons "modifier" et "supprimer"
 					$this->formData['edit_disabled'] = "";
 					$this->formData['delete_disabled'] = "disabled";
+				}
+				else
+				{
+					$this->formData['delete_label'] = 'Annuler';
 				}
 				
 				$catDetails = array();
@@ -592,6 +599,8 @@ class ServicesAdmin extends Main
 			$this->formData['nom_cat'] = null;
 			$this->formData['descript_cat'] = null;
 			$this->formData['type_lien_cat'] = "dynamic";
+
+			$this->formData['delete_label'] = 'Effacer';
 		}
 
 

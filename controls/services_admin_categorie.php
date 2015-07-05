@@ -250,8 +250,9 @@ class ServicesAdminCategorie extends Main
 
 					$codes = $resultset['response']['categorie'];
 
-					//echo 'mode new - level one codes = ';
+					echo 'mode new - level one codes = ';
 					//var_dump($codes);
+					//exit();
 					//$codes = $this->generateKey(null, 1);
 					//$code = $this->servicesCategorie->generateCategorieCode();
 
@@ -285,14 +286,46 @@ class ServicesAdminCategorie extends Main
 					}
 					else 
 					{
+
 						/*
+						
+							TODO:
+							- $ordre : compris entre 0 et 50
+							SI $ordre vaut 0 ALORS
+								$code compris entre 0 et premier code
+							SINONSI  $ordre > longueur tab $codes ALORS
+								$code compris entre dernier $code et dernier $code + $incrément
+							SINON
+								$code compris dernier $code + $incrément
+							FINSI
+							
+						
+						*/
+
+						$code = 10;
+
+						if ($order > count($codes)) 
+						{
+							$order = count($codes) + 1;
+							$code = count($codes);
+						}
+						else
+						{	
+
+						}
+
 						$ordres = array();
 
 						for ($i = 0; $i < count($codes); $i++) 
-						{ 
+						{
+							$ordres[$i] = $i;
+
 							if ($i == $order) 
 							{
-								++
+								$orderCode = $codes[$i];
+								$previous = $codes[($i - 1)];
+								$next = $codes[($i + 1)];
+								//++
 							}
 
 							if ($codes[$i]) 
@@ -300,9 +333,7 @@ class ServicesAdminCategorie extends Main
 
 							}
 
-							$ordres[$i] = $i;
 						}
-						*/
 					}
 				}
 				else

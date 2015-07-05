@@ -104,7 +104,7 @@ class ServicesAdminGestion extends Main
                 $formData['disabled'] = "";
                 $formData['save_disabled'] = "";
                 $formData['edit_disabled'] = "disabled";
-                $formData['delete_disabled'] = "disabled";
+                $formData['delete_disabled'] = "";
                 $formData['add_disabled'] = "disabled";
                 break;
             

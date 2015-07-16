@@ -600,6 +600,8 @@
 				// On génére le lecteur vidéo et on le configure.
 				videoPlayer = projekktor('#video', {
 
+						fixedVolume: true,
+						volume: 1,
 						poster: imageUrl,
 						title: 'Lecteur vidéo',
 						playerFlashMP4: videoPlayerUrl,
@@ -763,6 +765,7 @@
 					console.log('onVideoCreated');
 					//$('.projekktor').css('background-color', '#999999');
 					//$('.ppdisplay').css('background-color', '#ffffff');
+					//videoPlayer.setVolume(0);
 					videoPlayer.setPlay();
 				};
 				

@@ -113,7 +113,7 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-	private function generateKey($parent, $level) {
+	private function generateKey($parent, $level, $type) {
 
 		$key = null;
 
@@ -129,6 +129,7 @@ class ServicesAdminCategorie extends Main
 		$generatedCode = null;
 		$previousCode = null;
 		$nextCode = null;
+		$level = 0;
 
 		// Mode edit
 		if ($code !== null) {
@@ -191,8 +192,8 @@ class ServicesAdminCategorie extends Main
 						$last_num_previous = strlen($previousCode) >= 2 ? substr($previousCode, -2, 2) : -1;
 						$increment = 10;
 
-						if ($last_num_previous >= 0 && $last_num >= 50) {
-
+						if ($last_num_previous >= 0 && $last_num >= 50) 
+						{
 							$increment = $last_num - $last_num_previous;
 						}
 
@@ -210,6 +211,39 @@ class ServicesAdminCategorie extends Main
 					}
 					else 
 					{
+						/**
+						*
+						*	TODO:
+						*	- les ordres correspondent à chaque code (code1 = ordre1, code2 = ordre2, ..., $codemax = ordre_n). 
+						*	- L'ajout/insertion d'une catégorie entre deux autres incrémente les codes d'une position en augmentant l'ordre de chaque codes
+						* 	- La suppression d'une catégorie réduit l'ordre d'un cran vers le bas
+						*	- Les ordres doivent s'afficher selon l'ordre et le nombre de code + 1
+						* 	- ATTENTION : Le code doit rester identique pour une même catégorie 
+						**/
+						
+						$nextCode = $codes[$order] <= count($codes) - 1 ? $codes[count($codes) - 1] : null;
+						//$code = $codes[$lastCodeIndex]->getCode();
+						$previousCode = ($order - 2) >= 0 ? $codes[($order - 2)] : null;
+
+						$increment = 10;
+
+
+						if ($previousCode === null || $nextCode === null) 
+						{
+							if ($previousCode === null)
+							{
+								$index = 0;
+							}
+						}
+
+
+						$range = $nextcode - $previousCode;
+
+						$increment = $range >= 10 ? 10 : $range / 2;
+
+
+
+
 						/*
 						$ordres = array();
 
@@ -288,7 +322,6 @@ class ServicesAdminCategorie extends Main
 					{
 
 						/*
-						
 							TODO:
 							- $ordre : compris entre 0 et 50
 							SI $ordre vaut 0 ALORS
@@ -298,8 +331,6 @@ class ServicesAdminCategorie extends Main
 							SINON
 								$code compris dernier $code + $incrément
 							FINSI
-							
-						
 						*/
 
 						$code = 10;

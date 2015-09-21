@@ -899,8 +899,132 @@ body {
 		.footer .txt-footer {
 			color: #999999;
 		}
+	
 
 
+
+	/*-----  Boite de dialogue modale  ------*/
+
+	#modal-message 
+	{
+		/*position: absolute;
+		background: #fff;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;*/
+	}
+
+
+	.message-box
+	{
+		position: absolute;
+		width: 100%;
+		max-width: 412px;
+		height: auto;
+		/*max-height: 300px;*/
+		min-height: 175px;
+		/*margin: 0 auto;*/
+		/*padding: 0 24px 24px 24px;*/
+		/*top: 0px;
+		left: 0px;*/
+		/*width: 400px;*/
+		/* padding-top: 30px; */
+		text-align: left;
+		background-color: #ffffff;
+		font-family: inherit;
+		font-size: 0.875em;
+		color: #000000;
+		/*-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		border-radius: 5px;*/
+	}
+
+		.message-box-info, .message-box-warning, .message-box-alert, .message-box-valid, .message-box-none
+		{
+			float: left;
+			width: 75px;
+			height: 75px;
+			/*width: ;*/
+			margin: 25px;
+			/* background-color: #ffffff; */
+		}
+		
+		.message-box-alert
+		{
+			background: url('../images/icon-alert.png') no-repeat;
+		}
+
+		.message-box-info
+		{
+			background: url('../images/icon-info.png') no-repeat;
+		}
+		
+		.message-box-warning
+		{
+			background: url('../images/icon-warning.png') no-repeat;
+		}
+		
+		.message-box-valid
+		{
+			background: url('../images/icon-valid.png') no-repeat;
+		}
+		
+		.message-box-none
+		{
+			
+		}
+		
+		
+		.message-box-text
+		{
+			float: right;
+			width: 100%;
+			/*width: 275px;*/
+			max-width: 287px;
+			/*min-height: 75px;*/
+			margin: 0px;
+			padding: 25px 25px 25px 0px;
+			/*margin-bottom: 10px;*/
+			/*font-size: inherit;*/
+		}
+		
+		.message-box-buttons
+		{
+			clear: both;
+			text-align: right;
+			width: 100%;
+			height: 50px;
+			background: #f0f0f0;
+			/*border-top: 1px solid #ccc;*/
+			padding: 5px 20px 5px 25px;
+			/*-webkit-border-radius: 0px 0px 5px 5px;
+			-moz-border-radius: 0px 0px 5px 5px;
+			border-radius: 0px 0px 5px 5px;*/
+		}
+			.message-box-buttons button
+			{
+				width: 50%;
+			}
+			/*
+			.message-box-buttons input
+			{
+				/*height: 30px;
+				background: #fff;
+				border: 1px solid #ccc;
+				margin: 5px;
+				text-align: center;
+				cursor: pointer;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+			}
+			
+			.message-box-buttons input:focus
+			{
+				border: 1px solid #aaa;
+			}
+			*/
 
 
 

@@ -48,7 +48,8 @@
 
 				<!-- Image ou vidéo -->
 				<?php //if (!empty($videoFile)) : ?>
-<!-- 
+				
+				<!-- 
 					<div class="media-display" id="media-question">
 						<div id="lecteurvideo" class="projekktor"></div>
 						<div class="btn-suite">
@@ -568,6 +569,9 @@
 				var onAudioEnded = function() {
 
 					console.log('onAudioEnded');
+
+					//if (isVideoActive) {
+					//createVideo();
 				};
 
 
@@ -615,7 +619,8 @@
 							0: {src: videoUrl, type: "video/mp4"}
 							//0: {src: "../media/projekktor/media/intro.mp4", type: "video/mp4"}
 						}],
-						plugins: ['display', 'controlbar'],
+						//plugins: ['display', 'controlbar'],
+						plugins: ['display'],
 						messages: {
 							0: 'Une erreur s\'est produite.',
 							1: 'Vous avez interrompu la lecture de la vidéo.',
@@ -865,13 +870,16 @@
 			}
 			else if (isVideoActive) {
 
+				createImage();
+
+				$('#visuel').addClass('projekktor');
+
 				if (!isAudioActive) {
 
 					$('speaker').hide();
-				}
-				
-				$('#visuel').addClass('projekktor')
-				createVideo();
+
+					createVideo();
+				}	
 			}
 
 

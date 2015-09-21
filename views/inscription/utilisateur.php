@@ -296,8 +296,10 @@ $form_url = $response['url'];
 
 	</div>
 
+	
 
-
+	<!-- Inclusion message d'erreur modal si erreur de doublon sur le nom et la date de naissance de l'utilisateur -->
+	<div id="modal-message"></div>
 
 
 
@@ -638,20 +640,32 @@ $form_url = $response['url'];
 
 			if ($("#name-validation").val() === "false") {
 
-				$.message('Une personne portant le même nom a déjà effectuée un positionnement. S\'il s\'agit bien de vous, cliquez sur "Continuer".<br>Sinon, cliquez sur "Annuler" pour corriger la saisie de vos nom, prénom et date de naissance.', {
-					icon: 'info', 
-					buttons: ['Continuer', 'Annuler'], 
+				var messageString = 'Une personne portant le même nom a déjà effectuée un positionnement. S\'il s\'agit bien de vous, cliquez sur "Continuer".<br>Sinon, cliquez sur "Annuler" pour corriger la saisie de vos nom, prénom et date de naissance.';
+				
+				$.message(messageString, {
+					icon: 'alert', 
+					buttons: [
+						{
+							'btnvalue': 'Annuler', 
+							'btnclass': 'button-default'
+						},
+						{
+							'btnvalue': 'Continuer', 
+							'btnclass': 'button-primary'
+						}
+					], 
 					callback: function(buttonText) {
 						if (buttonText === 'Continuer') {
-							$("#name-validation").val("true");
-							$("#form-posi").submit();
+							$('#name-validation').val('true');
+							$('#form-posi').submit();
 						}
 						else
 						{
-							$("#name-validation").val("false");
+							$('#name-validation').val('false');
 						}
 					}
-				}, "body");
+				}, '#modal-message');
+
 			}
 
 

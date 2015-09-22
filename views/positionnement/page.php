@@ -18,7 +18,7 @@
 					<!-- <img src="images/logo-dalia_40x40.png" alt="Positionnement Dalia"> -->
 				</div>
 				<div class="header-title">
-					<i class="fa fa-file-text-o"></i>
+					<!-- <i class="fa fa-file-text-o"></i> -->
 					<h1>Test de positionnement</h1>
 				</div>
 				<div class="clear"></div>
@@ -298,7 +298,6 @@
 			isVideoActive = videoFilename !== '' ? true : false;
 			
 
-
 			// Contrôle de l'image
 
 			// URL complète de l'image
@@ -313,12 +312,11 @@
 			// Contrôle du son
 
 			// Le type et l'URL du lecteur audio dépendent du navigateur
-			// if (navAgent.isAudioEnabled()) {
-			// 	playerType = 'html';
-			// 	playerURL = null;
-			// }
-			// else 
-			if (FlashDetect.installed) {
+			if (navAgent.isAudioEnabled()) {
+			 	playerType = 'html';
+			 	playerURL = null;
+			}
+			else if (FlashDetect.installed) {
 
 				playerType = 'dewp-mini';
 				playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
@@ -383,11 +381,11 @@
 
 				if (isAudioActive) {
 
-					createAudio();
+					//createAudio();
 				}
 				else {
 
-					imageController.startLoading(imageUrl, 500, onImageLoaded);
+					imageController.startLoading(imageUrl, 1000, onImageLoaded);
 				}
 				
 			}
@@ -415,7 +413,14 @@
 
 						//audioPlayer.setTrack(audioTrack);
 						//audioContainer.style.display = 'block';
-						audioPlayer.startLoading(onAudioLoaded);
+
+						
+						//audioPlayer.startLoading(onAudioLoaded);
+					}
+					// Sinon si vidéo -> load vidéo
+					else if (isVideoActive) {
+
+						//loadVideo();
 					}
 					else {
 
@@ -426,19 +431,19 @@
 				};
 
 
-			// 3 : Affichage de l'image
+				// 3 : Affichage de l'image
 
-			var displayImage = function(duration) {
+				var displayImage = function(duration) {
 
-				console.log('displayImage');
-				/*
-				if (isAudioActive) {
+					console.log('displayImage');
+					/*
+					if (isAudioActive) {
 
-					$(audioContainer).fadeIn(duration);
+						$(audioContainer).fadeIn(duration);
+					}
+					*/
+					imageController.display(duration, onImageDisplayed);
 				}
-				*/
-				imageController.display(duration, onImageDisplayed);
-			}
 
 
 				// 4 : Affichage de l'image terminé
@@ -483,7 +488,7 @@
 
 					console.log('onAudioCreated');
 
-					imageController.startLoading(imageUrl, 1000, onImageLoaded);
+					//imageController.startLoading(imageUrl, 1000, onImageLoaded);
 
 					//audioPlayer.setTrack(audioTrack);
 				};
@@ -771,7 +776,7 @@
 					//$('.projekktor').css('background-color', '#999999');
 					//$('.ppdisplay').css('background-color', '#ffffff');
 					//videoPlayer.setVolume(0);
-					videoPlayer.setPlay();
+					//videoPlayer.setPlay();
 				};
 				
 
@@ -858,12 +863,12 @@
 
 
 
-			/**********************************************
-			*    Détection du(des) média(s) à afficher    *
-			**********************************************/
+			/***********************************************************
+			*    Dispatcher : Détection du(des) média(s) à afficher    *
+			***********************************************************/
 
 			//console.log(isImageActive, isAudioActive, isVideoActive);
-
+			/*
 			if (isImageActive && !isVideoActive) {
 
 				createImage();
@@ -880,6 +885,49 @@
 
 					createVideo();
 				}	
+			}
+			else {
+
+				if (isImageActive && !isVideoActive) {
+
+					createImage();
+				}
+			}
+			*/
+
+			/*** Dispacher ***/
+
+			if (isImageActive) 
+			{
+				createImage();
+
+				if (isAudioActive && !isVideoActive) 
+				{   
+					createAudio();
+				}
+				else if (!isAudioActive && isVideoActive) 
+				{
+					//$('speaker').hide();
+					createVideo();
+				}
+				else if (isAudioActive && isVideoActive) 
+				{
+					createAudio();
+					createVideo();
+				}
+			}
+			else if (isAudioActive)
+			{
+				createAudio();
+
+				if (isVideoActive) 
+				{
+					createVideo();
+				}
+			}
+			else if (isVideoActive) 
+			{
+				createVideo();
 			}
 
 
@@ -996,7 +1044,7 @@
 
 				var mediaPlayer = null;
 
-				if (videoActive) {
+				if (isVideoActive) {
 
 					if (isVideoComplete) {
 
@@ -1004,7 +1052,7 @@
 					}
 
 				}
-				else if (audioActive) {
+				else if (isAudioActive) {
 
 					if (FlashDetect.installed) {
 
@@ -1099,7 +1147,7 @@
 
 					clearInterval(timerImage);
 
-					if (audioActive) {
+					if (isAudioActive) {
 
 						createAudioPlayer();
 					}

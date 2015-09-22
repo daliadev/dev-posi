@@ -440,6 +440,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 			playerHTML.setAttribute('name', 'audioplayer');
 			playerHTML.setAttribute('preload', 'auto');
 			playerHTML.setAttribute('volume', 1);
+			playerHTML.src = track;
 			
 			container.appendChild(playerHTML);
 		}
@@ -566,7 +567,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 		if (player !== null) {
 
-			this.play();
+			//this.play();
 			onStartCallBack.call(this);
 		}
 	};

@@ -59,7 +59,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 			$container.append($(this));
 
 			isImageLoaded = true;
-			//loadCallback.call($self);
+			loadCallback.call($self);
 			//console.log('image loaded');
 
 			//imageBox.style.display = 'block';

@@ -907,12 +907,19 @@ body {
 
 	#modal-message 
 	{
-		/*position: absolute;
-		background: #fff;
+		
+	}
+
+
+	.message-bg
+	{
+		position: absolute;
+		background: #000;
 		top: 0px;
 		left: 0px;
 		width: 100%;
-		height: 100%;*/
+		height: 100%;
+
 	}
 
 
@@ -922,19 +929,17 @@ body {
 		width: 100%;
 		max-width: 412px;
 		height: auto;
-		/*max-height: 300px;*/
-		min-height: 175px;
-		/*margin: 0 auto;*/
+		/*min-height: 175px;*/
+		margin: 24px;
 		/*padding: 0 24px 24px 24px;*/
 		/*top: 0px;
 		left: 0px;*/
-		/*width: 400px;*/
-		/* padding-top: 30px; */
-		text-align: left;
+		
 		background-color: #ffffff;
 		font-family: inherit;
 		font-size: 0.875em;
 		color: #000000;
+		text-align: left;
 		/*-webkit-border-radius: 5px;
 		-moz-border-radius: 5px;
 		border-radius: 5px;*/
@@ -994,17 +999,23 @@ body {
 			clear: both;
 			text-align: right;
 			width: 100%;
-			height: 50px;
+			height: auto;
 			background: #f0f0f0;
 			/*border-top: 1px solid #ccc;*/
-			padding: 5px 20px 5px 25px;
+			padding: 8px 24px 8px 24px;
+
 			/*-webkit-border-radius: 0px 0px 5px 5px;
 			-moz-border-radius: 0px 0px 5px 5px;
 			border-radius: 0px 0px 5px 5px;*/
 		}
 			.message-box-buttons button
 			{
-				width: 50%;
+				width: 35%;
+			}
+
+			.message-box-buttons button:first-child
+			{
+				margin-right: 24px;
 			}
 			/*
 			.message-box-buttons input
@@ -1208,11 +1219,42 @@ body {
 			
 
 	/*-----  Header page ------*/
+	/*
+	#posi-page .content {
+		width: 100%;
+		max-width: 798px;
+		height: auto;
+		margin: 0 auto;
+		padding: 0 24px 24px 24px;
+	}
+
+
+		#posi-page .media-display {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			margin: 0 auto;
+			background-color: #fff;
+		}
+			
+			#posi-page .media-display #visuel {
+				position: relative;
+				width: 100%;
+				max-width: 750px;
+				height: 0%;
+				max-height: 420px;
+				padding-bottom: 56%;
+				
+			}
+			*/
 
 	#posi-page .header {
 		width: 100%;
-		/*height: 100%;*/
-		max-width: 798px;
+		max-width: 750px;
+		height: auto;
+		margin: 0 auto;
+		/*padding: 0 24px;*/
+
 	}
 
 
@@ -1220,11 +1262,11 @@ body {
 			/*max-width: 100%;*/
 			/*padding: 0 24px;*/
 
-			width: 100%;
+			/*width: 100%;*/
 			/*height: 100%;*/
-			max-width: 798px;
-			/*margin: 0 auto;
-			padding: 0 24px;*/
+			/*max-width: 798px;*/
+			/*margin: 0 24px;*/
+			/*padding: 0 24px;*/
 		}
 
 

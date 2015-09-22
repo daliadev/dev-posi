@@ -655,17 +655,18 @@ $form_url = $response['url'];
 						}
 					], 
 					callback: function(buttonText) {
+						
 						if (buttonText === 'Continuer') {
+
 							$('#name-validation').val('true');
-							$('#form-posi').submit();
+							$('#form-inscription').submit();
+							console.log('submit');
 						}
-						else
-						{
+						else {
 							$('#name-validation').val('false');
 						}
 					}
 				}, '#modal-message');
-
 			}
 
 

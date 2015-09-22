@@ -5,11 +5,13 @@
 	var MessageBox = {
 
 		self: this,
-		link: "#",
-		bgOpacity: 0.5,
-		animDuration: 500,
-		container: null;
-
+		text: '',
+		container: null,
+		bg: null,
+		el: null,
+		bgOpacity: 0.35,
+		animDuration: 1000,
+		
 		windowWidth: function() {
 			return window.innerWidth;
 		},
@@ -25,37 +27,10 @@
 		},
 
 		initialize: function(text, settings, attachement) {
-			/*
-			PopBox.posx = (PopBox.windowWidth() - PopBox.w) / 2;
-			PopBox.posy = (PopBox.windowHeight() - PopBox.h) / 2;
-
-			$(window).resize(PopBox.resize);
-			
-			var innerHtml = ['<div id="popbox">',
-				'<div id="popbox-fill"></div>',
-				'<div id="popbox-loader"></div>',
-				'<div id="popbox-container">',
-				'<div id="popbox-inner">',
-				'<div id="popbox-close"></div>',
-				'<div id="popbox-content"></div>',
-				'</div></div></div>'].join('');
-			$("body").append(innerHtml);
-			// $("#popbox-close").hide();
-			//$("#popbox-container").hide();
-			$("#popbox-loader").hide().fadeIn();
-			$("#popbox-fill").hide().fadeTo(PopBox.animDuration, this.bgOpacity);
-			//$("#popbox-content").hide();
-			$("#popbox-close").click(PopBox.close);
-			$("#popbox-fill").click(PopBox.close);
-			
-			PopBox.img = new Image();
-			PopBox.img.src = this.link;
-
-			PopBox.timer = setInterval(PopBox.load, 100);
-			*/
 
 			this.text = text;
 			this.container = attachement;
+			this.bg = $('<div>', {'class': 'message-bg', 'style': 'display:none'});
 			this.el = $('<div>', {'class': 'message-box', 'style': 'display:none'});
 			
 			this.settings = $.extend({}, $.message.defaults, settings);
@@ -64,6 +39,7 @@
 
 			this.events();
 
+			this.bg.appendTo(this.container);
 			this.el.appendTo(this.container);
 			
 			return this;
@@ -77,7 +53,7 @@
 
 		events: function() {
 			var self = this;
-			this.el.find('input').on('click', function() {
+			this.el.find('button').on('click', function() {
 				self.close();
 				if (typeof self.settings.callback === 'function') {
 					self.settings.callback.call(self, $(this).val());
@@ -89,7 +65,16 @@
 			this.el.animate({
 				//top: $(window).height() / 2 - this.el.outerHeight() / 2, 
 				opacity: 'hide'}, 
-				250,
+				500,
+				function() {
+					$(this).remove();
+				}
+			);
+
+			this.bg.animate({
+				//top: $(window).height() / 2 - this.el.outerHeight() / 2, 
+				opacity: 'hide'}, 
+				1000,
 				function() {
 					$(this).remove();
 				}
@@ -103,7 +88,7 @@
 			this.el.css('left', posX).css('top', posY);
 			
 			this.el.animate({top: Math.round($(window).height() / 3 - this.el.outerHeight(true) / 2), opacity: 'show'}, 500);
-			this.container.hide().fadeTo(this.animDuration, this.bgOpacity);
+			this.bg.fadeTo(this.animDuration, this.bgOpacity);
 		}
 	};
 

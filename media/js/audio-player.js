@@ -41,6 +41,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 	var loadingCallBack = null;
 	var loadedCallBack = null;
 	var progressCallBack = null;
+	var endedCallBack = null;
 
 
 	var duration = null;
@@ -260,6 +261,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 					clearInterval(progressTimer);
 					isPlaying = false;
+					endedCallBack.call(this);
 				}
 
 			}
@@ -281,10 +283,11 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 					
 					clearInterval(progressTimer);
 					isPlaying = false;
+					endedCallBack.call(this);
 				}
 			}
 
-			if (progressCallBack !== null) {
+			if (progressCallBack !== null && isPlaying) {
 
 				progressCallBack.call(this, Math.ceil(percent));
 			}
@@ -360,11 +363,12 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 
 
 	
-	this.init = function(track, controls, onCreatedCallback, onloadingCallBack, onProgressCallback) {
+	this.init = function(track, controls, onCreatedCallback, onloadingCallBack, onProgressCallback, onEndedCallback) {
 		
 		createdCallback = onCreatedCallback;
 		loadingCallBack = onloadingCallBack;
 		progressCallBack = onProgressCallback;
+		endedCallBack = onEndedCallback;
 
 		if (typeof controls === 'object') {
 
@@ -565,9 +569,10 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 	
 	this.startPlaying = function(onStartCallBack) {
 
+		console.log('startPlaying');
 		if (player !== null) {
 
-			//this.play();
+			this.play();
 			onStartCallBack.call(this);
 		}
 	};

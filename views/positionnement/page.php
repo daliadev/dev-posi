@@ -47,16 +47,26 @@
 
 
 				<!-- Image ou vidéo -->
-				<?php //if (!empty($videoFile)) : ?>
 				
+				<!-- Old -->
 				<!-- 
-					<div class="media-display" id="media-question">
-						<div id="lecteurvideo" class="projekktor"></div>
-						<div class="btn-suite">
-							<input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" />
-						</div>
-					</div> -->
+				<div id="image-content-appli">
+
+				<?php if (!empty($videoFile)) : ?>
+
+					<div id="lecteurvideo" class="projekktor"></div>
+
+				<?php endif; ?>
+				
+				<?php if (!empty($imageFile)) : ?>
 					
+					<div class="image-loader"></div>
+
+				<?php endif; ?>
+				
+				</div> -->
+
+
 				<?php if (!empty($videoFile) || !empty($imageFile)) : ?>
 
 					<div class="media-display" id="media-question">
@@ -379,15 +389,7 @@
 
 				imageController = new ImageController(imageContainer, imageLoader, null);
 
-				if (isAudioActive) {
-
-					//createAudio();
-				}
-				else {
-
-					imageController.startLoading(imageUrl, 1000, onImageLoaded);
-				}
-				
+				imageController.startLoading(imageUrl, 1000, onImageLoaded);
 			}
 
 
@@ -395,12 +397,12 @@
 
 
 				// 1 : L'image est en cours de chargement
-
+				
 				var onImageLoading = function() {
 
-					console.log('onImageLoading');
+					//console.log('onImageLoading');
 				}
-
+				
 
 				// 2 : L'image est chargée
 
@@ -415,7 +417,7 @@
 						//audioContainer.style.display = 'block';
 
 						
-						//audioPlayer.startLoading(onAudioLoaded);
+						audioPlayer.startLoading(onAudioLoaded);
 					}
 					// Sinon si vidéo -> load vidéo
 					else if (isVideoActive) {
@@ -456,6 +458,11 @@
 
 						audioContainer.style.display = 'block';
 					}
+
+					if (!isAudioActive && !isVideoActive) {
+
+						enableUserResponse();
+					}
 				};
 				
 
@@ -474,7 +481,7 @@
 				audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
 
 				// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
-				audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress);
+				audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress, onAudioEnded);
 				audioPlayer.enableControls(false);
 			}
 
@@ -486,11 +493,15 @@
 
 				var onAudioCreated = function() {
 
+
 					console.log('onAudioCreated');
 
-					//imageController.startLoading(imageUrl, 1000, onImageLoaded);
-
 					//audioPlayer.setTrack(audioTrack);
+
+					if (!isImageActive) {
+
+						audioPlayer.startLoading(onAudioLoaded);
+					}
 				};
 
 
@@ -502,7 +513,7 @@
 
 					var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
 					$('#speaker-loader').css('stroke-dashoffset', offset.toString());
-
+					/*
 					if (percent == 100) {
 
 						isAudioLoaded = true;
@@ -515,6 +526,7 @@
 							audioPlayer.startPlaying(onAudioStart); 
 						}, 1000);
 					}
+					*/
 				};
 
 
@@ -525,6 +537,16 @@
 					console.log('onAudioLoaded');
 					// Demande d'affichage de l'image
 					//displayImage(1500);
+
+					isAudioLoaded = true;
+
+					var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
+					$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
+
+					//audioPlayer.enableControls(true);
+					setTimeout(function() { 
+						audioPlayer.startPlaying(onAudioStart); 
+					}, 1000);
 				};
 
 
@@ -541,7 +563,7 @@
 
 				var onAudioProgress = function(percent) {
 
-					//console.log('onAudioProgress : ' + percent);
+					console.log('onAudioProgress : ' + percent);
 					//console.log(typeof(percent));
 
 					var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
@@ -553,7 +575,7 @@
 
 						var dasharrayValue = parseInt($('#speaker-progress').css('stroke-dasharray'));
 						$('#speaker-progress').css('stroke-dashoffset', dasharrayValue);
-
+						/*
 						if ($('.reponse-qcm') !== null) {
 
 							$(".reponse-qcm").prop("disabled", false);
@@ -565,6 +587,7 @@
 							$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
 							$('#reponse-champ').focus();
 						}
+						*/
 					}
 				};
 
@@ -575,8 +598,14 @@
 
 					console.log('onAudioEnded');
 
-					//if (isVideoActive) {
-					//createVideo();
+					if (isVideoActive) {
+
+						//loadVideo
+					}
+					else {
+
+						enableUserResponse();
+					}
 				};
 
 
@@ -861,6 +890,28 @@
 
 
 
+			/**********************************************************
+			*      Fonction d'autorisation de saisie utilisateur      *
+			**********************************************************/
+
+			var enableUserResponse = function() {
+
+				console.log('enableUserResponse');
+
+				if ($('.radio-group') !== null) 
+				{
+					$(".reponse-qcm").prop("disabled", false);
+				}
+
+				if ($('.reponse-champ') != null) 
+				{
+					$('.reponse-champ').removeProp('disabled');
+					$('.reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+					$('.reponse-champ').focus();
+				}
+			}
+
+
 
 
 			/***********************************************************
@@ -933,12 +984,24 @@
 
 
 
+			/*
+			if ($('.radio_posi') !== null) 
+			{
+				$(".radio_posi").prop("disabled", false);
+			}
+
+			if ($('#reponse_champ') != null) 
+			{
+				$('#reponse_champ').removeProp('disabled');
+				$('#reponse_champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
+				$('#reponse_champ').focus();
+			}
+			*/
 
 
 
-
-
-			// Le bouton suite est desactiver par défaut.
+			
+			// Le bouton suite est desactivé et masqué par défaut.
 			$("#submit-suite").prop("disabled", true);
 			$("#submit-suite").hide();
 			var $suite = $("#btn-suite");
@@ -962,16 +1025,17 @@
 
 			if ($('#reponse-champ') !== null) {
 
-				// S'il y a une champ de réponse, on le désactive et on met un placeholder.
+				// S'il y a un champ de réponse, on le désactive et on met un placeholder.
 				$("#reponse-champ").prop("disabled", true);
 				$("#reponse-champ").attr("placeholder", "Veuillez attendre que le son se termine...");
 			}
 
-
 			
 
 
 			
+
+
 			
 			
 
@@ -981,37 +1045,38 @@
 			// Sur click d'un des boutons radio
 			$(".reponse-qcm").on("click", function(e) {
 				
-				if (playerComplete) {
+				//if (playerComplete) {
 					
 					//imageController.fadeToBlank($('#media-question'), 0);
 					//imageController.fadeToBlack($('#media-question'), 1500);
+
 					$('#media-question').append($suite);
 					$("#submit-suite").hide().fadeIn(1000);
 					$("#submit-suite").prop("disabled", false);
-				}
-				else {
+				//}
+				//else {
 					
-					$(this).attr("checked", false);
-				}
+					//$(this).attr("checked", false);
+				//}
 			});
 			
 
 			// Sur click dans le champ de réponse s'il existe.
 			$("#reponse-champ").on("click", function(e) {
 
-				if (playerComplete) {
+				//if (playerComplete) {
 
-					// $('#media-question').append($suite);
-					// $("#submit-suite").show(500);
-					// $("#submit-suite").prop("disabled", false);
+					$('#media-question').append($suite);
+					$("#submit-suite").show(500);
+					$("#submit-suite").prop("disabled", false);
 
 					//$(this).removeProp("readonly");
 					//$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
-				}
-				else {
+				//}
+				//else {
 
-					$(this).blur();
-				}
+					//$(this).blur();
+				//}
 			});
 			
 
@@ -1038,281 +1103,6 @@
 				}
 			});
 
-
-			/*
-			function getPlayerComplete() {
-
-				var mediaPlayer = null;
-
-				if (isVideoActive) {
-
-					if (isVideoComplete) {
-
-						return true;
-					}
-
-				}
-				else if (isAudioActive) {
-
-					if (FlashDetect.installed) {
-
-						mediaPlayer = document.getElementById('dewplayer');
-
-						if (mediaPlayer != null) {
-							
-							if (mediaPlayer.dewgetpos() == 0 && isAudioLoaded)
-							{
-								return true;
-							}
-						}
-					}
-					else {
-
-						mediaPlayer = document.getElementById('audioplayer');
-
-						if (mediaPlayer != null) {
-
-							if ((mediaPlayer.duration - mediaPlayer.currentTime) == 0 && isAudioLoaded) {
-
-								return true;
-							}
-						}
-					}
-				}
-
-				return false;
-			}
-			*/
-			
-			/*
-			function checkPlayerComplete() {
-
-
-				if (getPlayerComplete()) {
-
-					clearInterval(timerPlayerComplete);
-					audioIsPlaying = false;
-
-					if ($('.reponse-qcm') != null) {
-
-						$(".reponse-qcm").prop("disabled", false);
-					}
-
-					if ($('#reponse-champ') != null) {
-
-						$('#reponse-champ').removeProp('disabled');
-						$('#reponse-champ').attr("placeholder", "Vous pouvez écrire votre réponse.");
-						$('#reponse-champ').focus();
-					}
-				}
-			}
-			*/
-
-			
-			/*
-			function onAudioPlayerLoaded() {
-				
-				var dewp = document.getElementById('dewplayer');
-				var $playerHtml = $('#audioplayer');
-				
-				if (dewp != null) {
-
-					dewp.style.display = 'block';
-					//dewp.dewplay();
-					$(".speaker").prop('disabled', false);
-					//audioIsPlaying = true;
-				}
-				else if ($playerHtml != null) {
-					
-					$playerHtml.css('display', 'block');
-					$playerHtml.prop('disabled', false);
-					//audioIsPlaying = true;
-				}
-				else {
-					alert('player not found');
-				}
-				
-
-				isAudioLoaded = true;
-
-
-				timerPlayerComplete = setInterval(checkPlayerComplete, 500);
-			}
-			*/
-
-			/*
-			function checkImageLoaded() {
-
-				if (isImageLoaded) {
-
-					clearInterval(timerImage);
-
-					if (isAudioActive) {
-
-						createAudioPlayer();
-					}
-					else {
-
-						$(".reponse-qcm").prop("disabled", false);
-					}
-				} 
-			}
-
-			function displayImage(link) {
-				
-				var imageBox = new Image();
-
-				imageBox.onload = function() {
-
-					$('.media-display').css('height', 'auto').css('padding-bottom', '0');
-					$('.image-loader').fadeOut(250);
-					$('#media-question').prepend(imageBox);
-					$('#media-question img').hide().fadeIn(1000);
-					isImageLoaded = true;
-				};
-
-				imageBox.src = link;
-				$('.image-loader').fadeIn(250);
-			}
-			*/
-
-			/*
-			function audioPlay() {
-
-				if (!audioIsPlaying) {
-
-					var dewp = document.getElementById('dewplayer');
-					var playerHtml = document.getElementById('audioplayer');
-					
-					if (dewp != null) {
-
-						dewp.dewplay();
-						audioIsPlaying = true;
-					}
-					else if (playerHtml != null) {
-						
-						playerHtml.play();
-						audioIsPlaying = true;
-					}
-				}
-			}
-			*/
-
-			/*
-			function audioPause() {
-
-				if (audioIsPlaying) {
-
-					var dewp = document.getElementById('dewplayer');
-					var playerHtml = document.getElementById('audioplayer');
-					
-					if (dewp != null) {
-
-						dewp.dewpause();
-						audioIsPlaying = false;
-					}
-					else if (playerHtml != null) {
-						
-						playerHtml.pause();
-						audioIsPlaying = false;
-					}
-				}
-			}
-			*/
-
-
-
-			/****   Evenements  *****/
-
-
-
-			// Sur click du haut-parleur
-			/*
-			$(".speaker").on("click", function(e) {
-
-				if (isAudioLoaded) {
-
-					if (!audioIsPlaying) {
-
-						audioPlay();
-					}
-					else {
-
-						audioPause();
-					}
-				}
-			});
-			*/
-
-			
-			/*
-			// Sur click d'un des boutons radio
-			$(".reponse-qcm").on("click", function(e) {
-
-				if (getPlayerComplete()) {
-
-					$("#submit-suite").removeProp("disabled");
-					$("#submit-suite").show(250);
-				}
-				else {
-
-					$(this).attr("checked", false);
-				}
-			});
-			
-
-			// Sur click dans le champ de réponse s'il existe.
-			$("#reponse-champ").on("click", function(e) {
-
-				if (getPlayerComplete()) {
-
-					//$(this).removeProp("readonly");
-					//$(this).prop("placeholder", "Vous pouvez écrire votre réponse.");
-				}
-				else {
-
-					$(this).blur();
-				}
-			});
-			
-
-			// Lorsque l'utilisateur effectue une saisie dans le champ de réponse.
-
-			$("#reponse-champ").on("keydown", function(e) {
-
-				// On s'assure que la vidéo ou le son sont terminés
-				// et que l'utilisateur a saisi au moins 2 caractères.
-				if (getPlayerComplete()) {
-
-					$(this).attr("placeholder", "");
-					
-					if ($(this).val().length > 1) {
-
-						$("#submit-suite").removeProp("disabled");
-						$("#submit-suite").show(250);
-					}
-					else if ($(this).val().length <= 1) {
-
-						$("#submit-suite").prop("disabled", true);
-					}
-				}
-			});
-			*/
-
-			/*
-			$("#submit-suite").on("click", function(e) {
-
-				var innerHtml = '<div id="popbox-fill"></div>';
-				$("body").append(innerHtml);
-
-				$("#popbox-fill").hide().fadeTo(250, 0.7);
-				$("#popbox-fill").on('click', function(event) {
-					$(this).fadeOut(PopBox.animDuration, function() {
-						$(this).remove();
-					});
-				});
-			});
-			*/
 
 			
 		});

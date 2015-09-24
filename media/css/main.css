@@ -765,6 +765,7 @@ body {
 
 	
 			/*#posi-page .media-display */
+			/*
 			#black-bg {
 				position: absolute;
 				top: 0;
@@ -778,7 +779,7 @@ body {
 				filter: alpha(opacity=50);
 				z-index: 799;
 			}
-			
+			*/
 
 			#posi-page .media-display #btn-suite {
 				position: absolute;

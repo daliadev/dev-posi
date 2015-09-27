@@ -1,0 +1,217 @@
+
+/*** reset ***/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video 
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section 
+{
+	display: block;
+}
+body 
+{
+	line-height: 1;
+}
+ol, ul 
+{
+	list-style: none;
+}
+blockquote, q 
+{
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after 
+{
+	content: '';
+	content: none;
+}
+table 
+{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/*** Styles de base ***/
+
+body
+{
+	/*margin: 20px;*/
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 100%;
+	line-height: 1.5em;
+	color: #555555;
+}
+
+
+a
+{
+	color: #df4b3d;
+	text-decoration: none;
+}
+
+p, ul, ol, blockquote
+{
+	/*margin-bottom: 1.5em;*/
+}
+
+h1, h2, h3, h4, h5, h6
+{
+	font-family: "Ubuntu", Helvetica, Arial, sans-serif;
+	color: #333333;
+	/*margin-bottom: 21px;*/
+}
+
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.25em; }
+h3 { font-size: 1.125em; }
+h4 { font-size: 1.06em; }
+h5, h6 { font-size: 1em; }
+
+ul, ol { /*margin-left: 40px;*/ }
+ul { /*list-style: disc;*/ }
+ol { /*list-style: decimal;*/ }
+
+strong
+{
+	color: #555;
+	font-weight: bold;
+}
+
+blockquote
+{
+	margin: 0 60px 0 45px;
+	border-left: 5px solid #df4b3d;
+	padding-left: 15px;
+	font-style: italic;
+}
+
+blockquote em
+{
+	display: block;
+	text-align: right;
+	font-style: normal;
+}
+
+blockquote em:before
+{
+	content: "— ";
+}
+
+
+
+
+.section {
+	background-color: #16a085;
+	height: 500px;
+	line-height: 500px;
+	text-align: center;
+}
+
+.section h1 {
+	display: inline-block;
+	font-size: 2em;
+	color: #fff;
+	vertical-align: middle;	
+}
+
+
+/* Commun a tous les loaders */
+
+.loader {
+	position: relative;
+	width: 50px;
+	height: 50px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+
+
+/*** Loader quart de cercle ***/
+
+.section-quarter {
+	background-color: #16a085;
+}
+
+.loader-quarter {
+	border-radius: 50px;
+	border: 6px solid rgba(255, 255, 255, 0.5);
+}
+
+	.loader-quarter:after {
+		position: absolute;
+		top: -6px; left: -6px;
+		bottom: -6px; right: -6px;
+		content: '';
+		/*width: 50px;
+		height: 50px;*/
+		border-radius: 50px;
+		border: 6px solid transparent;
+		border-top-color: #fff;
+
+		-webkit-animation: spin 1s linear 0s infinite;
+		animation: spin 1s linear 0s infinite;
+	}
+
+	/*** Animation (rotation) ***/
+
+	@-webkit-keyframes spin {
+		0%{ -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+		100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+	}
+
+	@keyframes spin {
+		0%{ -webkit-transform: rotate(0deg); transform: rotate(0deg); }
+		100%{ -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+	}
+
+
+/*** Loader quart de cercle ***/
+
+.section-posi {
+	background-color: #e67e22;
+}
+
+.loader-posi {
+	border-radius: 50px;
+	border: 6px solid rgba(255, 255, 255, 0.5);
+}
+
+	.inner-loader {
+		position: absolute;
+		top: -6px; left: -6px;
+		bottom: -6px; right: -6px;
+		/*width: 50px;
+		height: 50px;*/
+		-webkit-border-radius: 50px;
+		border-radius: 50px;
+		border: 6px solid transparent;
+		border-top-color: #fff;
+
+		/*-webkit-animation: spin 1s linear 0s infinite;
+		animation: spin 1s linear 0s infinite;*/
+	}

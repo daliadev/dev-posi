@@ -229,7 +229,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 			}
 
 			// Si le chargement est à 100%, on stoppe le timer.
-			if (percentLoaded == 100) {
+			if (Math.round(percentLoaded) === 100) {
 
 				loadedCallBack.call(this);
 				clearInterval(loadingTimer);

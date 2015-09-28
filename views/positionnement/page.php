@@ -360,7 +360,7 @@
 
 			if (navAgent.isCSSAnimateSupported()) {
 				
-				$('.image-loader').css('display', 'none');
+				$('.image-loader').hide();
 				loader = $('.custom-loader');
 			}
 			else
@@ -369,7 +369,7 @@
 				loader = $('.image-loader');
 			}
 			//loader = $('#loader');
-			loader.hide(); // Le loader est caché par défaut
+			
 
 
 			// Contrôle du son
@@ -565,7 +565,7 @@
 
 					if (!isImageActive) {
 
-						audioPlayer.startLoading(onAudioLoaded);
+						//audioPlayer.startLoading(onAudioLoaded);
 					}
 				};
 
@@ -1027,14 +1027,15 @@
 			var $suite = $("#btn-suite");
 			$("#btn-suite").remove();
 
-			//$('#loader').hide();
+			loader.hide(); // Le loader est caché par défaut
+
 			// Le barre du lecteur audio est cachée.
 			//$("#audio").hide();
 
 			// Le haut-parleur est également caché le temps du chargement du son
 			//$(".speaker").prop('disabled', true);
-
-			$('#controls-bg').hide();
+			
+			//$('#controls-bg').hide();
 		
 			
 

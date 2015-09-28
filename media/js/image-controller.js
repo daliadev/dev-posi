@@ -10,7 +10,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 	var loadTimer = null;
 	var timerInterval = 100;
 	var timerTime = 0;
-	var loaderFadeDuration = 0;
+	//var loaderFadeDuration = 0;
 
 
 	var isImageLoaded = false;
@@ -20,7 +20,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 	var displayCallback = null;
 
 
-
+	/*
 	var loaderFadeIn = function() {
 
 		timerTime += timerInterval;
@@ -40,18 +40,18 @@ var ImageController = function(container, loader, onCreateCallback) {
 		//clearInterval(displayTimer);
 		displayedCallback.call(this);
 	};
-
+	*/
 
 
 
 	this.startLoading = function(imgSrc, loaderDuration, onLoadCallback) {
 
-		loaderFadeDuration = loaderDuration;
+		//loaderFadeDuration = loaderDuration;
 		loadCallback = onLoadCallback;
 
 		timerTime = 0;
-		loadTimer = setInterval(loaderFadeIn, timerInterval);
-		$loader.fadeIn(loaderFadeDuration);
+		//loadTimer = setInterval(loaderFadeIn, timerInterval);
+		//$loader.fadeIn(loaderFadeDuration);
 
 		imageBox.onload = function() {
 

@@ -82,8 +82,14 @@
 						<?php endif; ?>
 
 					</div>
+					
+					<div id="loader">
+						<div class="image-loader"></div>
+						<div class="custom-loader">
+							<!-- <div class="inner-loader"></div> -->
+						</div>
+					</div>
 
-					<div id="loader" class="image-loader"></div>
 
 					
 						<?php if (!empty($audioFile)) : ?>
@@ -92,7 +98,7 @@
 						<button type="button" id="speaker">
 							<i class="fa fa-volume-up"></i>
 						</button> -->
-						<div id="controls-bg"></div>
+						<!-- <div id="controls-bg"></div> -->
 
 
 						<div id="speaker">
@@ -419,6 +425,7 @@
 			var createImage = function() {
 				
 				console.log('createImage');
+				imageLoader.fadeIn(1000);
 
 				imageController = new ImageController(imageContainer, imageLoader, null);
 
@@ -443,6 +450,8 @@
 
 					console.log('onImageLoaded');
 
+					
+
 					// Creation du lecteur audio s'il y a une source
 					if (isAudioActive) {
 
@@ -460,6 +469,8 @@
 
 						//$(".reponse-qcm").prop("disabled", false);
 					}
+
+					imageLoader.fadeOut(1000);
 
 					displayImage(1500);
 				};

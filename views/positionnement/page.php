@@ -85,9 +85,12 @@
 					
 					<div id="loader">
 						<div class="image-loader"></div>
-						<div class="custom-loader">
-							<!-- <div class="inner-loader"></div> -->
-						</div>
+						<div class="custom-loader"></div>
+
+						<!-- <svg id="svg-loader" version="1.1" viewBox="0 0 50 50" preserveAspectRatio="xMinYMin meet"> -->
+							<!-- <circle id="loader-bg" r="25" transform="translate(25, 25) rotate(-90)"></circle> -->
+							<!-- <circle id="loader-bg" r="24" transform="translate(26.5, 26) rotate(-90)"></circle> -->
+						<!-- </svg> -->
 					</div>
 
 
@@ -284,7 +287,7 @@
 
 			// Variables controleur image
 			var imageUrl; // Type string
-			var imageContainer, imageLoader; // Type JQuery element
+			var imageContainer, loader; // Type JQuery element
 			var imageController = null; // Type ImageController
 
 
@@ -353,8 +356,20 @@
 
 			// Conteneur et icône animée de chargement de l'image
 			imageContainer = $('#visuel');
-			imageLoader = $('#loader');
-			imageLoader.hide(); // Le loader est caché par défaut
+
+
+			if (navAgent.isCSSAnimateSupported()) {
+				
+				$('.image-loader').css('display', 'none');
+				loader = $('.custom-loader');
+			}
+			else
+			{
+				$('.custom-loader').hide();
+				loader = $('.image-loader');
+			}
+			//loader = $('#loader');
+			loader.hide(); // Le loader est caché par défaut
 
 
 			// Contrôle du son
@@ -425,9 +440,9 @@
 			var createImage = function() {
 				
 				console.log('createImage');
-				imageLoader.fadeIn(1000);
+				loader.fadeIn(1000);
 
-				imageController = new ImageController(imageContainer, imageLoader, null);
+				imageController = new ImageController(imageContainer, loader, null);
 
 				imageController.startLoading(imageUrl, 1000, onImageLoaded);
 			}
@@ -470,7 +485,7 @@
 						//$(".reponse-qcm").prop("disabled", false);
 					}
 
-					imageLoader.fadeOut(1000);
+					loader.fadeOut(1000);
 
 					displayImage(1500);
 				};

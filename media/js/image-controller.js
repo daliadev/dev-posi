@@ -80,7 +80,7 @@ var ImageController = function(container, loader, onCreateCallback) {
 		displayedCallback = onDisplayedCallback;
 
 		$(imageBox).fadeIn(duration);
-		setTimeout(onDisplayed, duration);
+		//setTimeout(onDisplayed, duration);
 	};
 
 

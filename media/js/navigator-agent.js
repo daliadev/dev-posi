@@ -168,10 +168,33 @@ var NavigatorAgent = function() {
 	};
 
 
-	this.isPngEnable = function() {
+	this.isPNGSupported = function() {
 
 		return null;
 	};
+
+	this.isSVGSupported = function() {
+
+		return null;
+	}
+
+	this.isCSSAnimateSupported = function(animationType) {
+
+		if ((this.agentName == 'ie' && this.agentVersion >= 10) || 
+			(this.agentName == 'chrome' && this.agentVersion >= 4) || 
+			(this.agentName == 'firefox' && this.agentVersion >= 5) || 
+			(this.agentName == 'safari' && this.agentVersion >= 4) || 
+			(this.agentName == 'opera' && this.agentVersion > 12)) {
+
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+
 	
 }
 

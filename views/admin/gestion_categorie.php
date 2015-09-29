@@ -29,7 +29,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
-//var_dump($formData['code_cat']);
 
 ?>
 
@@ -48,7 +47,7 @@ $form_url = WEBROOT."admin/categorie/";
 		<div id="main-form">
 
 			<form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
-z
+
 				<input type="hidden" id="mode" name="mode" value="<?php echo $formData['mode']; ?>" />
 				<input type="hidden" id="code" name="code_cat" value="<?php echo $formData['code_cat']; ?>" />
 				<input type="hidden" id="ordre" name="level" value="" />
@@ -105,71 +104,67 @@ z
 									
 
 									<ul>
-									<?php
-									
-									foreach($response['categorie'] as $categorie)
-									{   
+										<?php
 										
-										$prefix = '';
-										$textSize = 14;
-										$weight = 'normal';
+										foreach($response['categorie'] as $categorie)
+										{   
+											
+											$prefix = '';
+											$textSize = 14;
+											$weight = 'normal';
 
-										if (strlen($categorie->getCode()) <= 2) {
+											if (strlen($categorie->getCode()) <= 2) {
 
-											$prefix = substr($categorie->getCode(), 0, 1);
-											$textSize = 13;
-											$weight = 'bold';
-										}
-										else if (strlen($categorie->getCode()) <= 4) {
+												$prefix = substr($categorie->getCode(), 0, 1);
+												$textSize = 13;
+												$weight = 'bold';
+											}
+											else if (strlen($categorie->getCode()) <= 4) {
 
-											$prefix = substr($categorie->getCode(), 0, 1);
-											$prefix .= '.'.substr($categorie->getCode(), 2, 1);
-											$textSize = 13;
-										}
-										else
-										{
-											$prefix = substr($categorie->getCode(), 0, 1);
-											$prefix .= '.'.substr($categorie->getCode(), 2, 1);
-											$prefix .= '.'.substr($categorie->getCode(), 4, 1);
-											$textSize = 12;
-										}
-										
-										$code = $categorie->getCode();
-										//$name = $prefix . '- ' . $categorie->getNom();
-										$name = $categorie->getNom();
-										$length = strlen($categorie->getCode()) - 2;
-										
-										if ($length < 0)
-										{
-											$length = 0;
-										}
-										
-										$styleMargin = 'margin-left:'.($length * 10).'px;';
-										$style = 'font-size: '.$textSize.'px; font-weight: '.$weight.';';
+												$prefix = substr($categorie->getCode(), 0, 1);
+												$prefix .= '.'.substr($categorie->getCode(), 2, 1);
+												$textSize = 13;
+											}
+											else
+											{
+												$prefix = substr($categorie->getCode(), 0, 1);
+												$prefix .= '.'.substr($categorie->getCode(), 2, 1);
+												$prefix .= '.'.substr($categorie->getCode(), 4, 1);
+												$textSize = 12;
+											}
+											
+											$code = $categorie->getCode();
+											//$name = $prefix . '- ' . $categorie->getNom();
+											$name = $categorie->getNom();
+											$length = strlen($categorie->getCode()) - 2;
+											
+											if ($length < 0)
+											{
+												$length = 0;
+											}
+											
+											$styleMargin = 'margin-left:'.($length * 10).'px;';
+											$style = 'font-size: '.$textSize.'px; font-weight: '.$weight.';';
 
-										$selected = '';
-										if ($formData['code_cat'] == $code) {
+											$selected = '';
+											if ($formData['code_cat'] == $code) {
 
-											$selected = 'selected';
-										}
+												$selected = 'selected';
+											}
 
 										?>
 
 										<li style="<?php echo $styleMargin; ?>">
 											<!-- <div class="cat-item-block"> -->
 												<a class="cat-item-link <?php echo $selected; ?>" href="#">
-													<!-- <span class="ui-icon ui-icon-arrowthick-2-n-s"></span> -->
 													<span class="cat-item-code" style="display: none;"><?php echo $code; ?></span>
 													<span style="<?php echo $style; ?>"><?php echo $name; ?></span>
 												</a>
 											<!-- </div> -->
 										</li>
 
-										<?php
-										//echo '<li class="ui-state-default" style="padding: 2px; margin: 2px; '.$styleMargin.'"><a class="cat-item" href="#"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span><span style="'.$style.'">'.$prefix.'- '.$categorie->getNom().'</span></a></li>';
-									}
-									
-									?>
+										<?php } ?>
+
 									</ul>
 									
 								</div>
@@ -413,13 +408,23 @@ z
 
 			/* Vide le formulaire */
 
-			var resetFields = function() {
+			var resetFieldsValues = function() {
 
 				$('#nom_cat').val('');
 				$('#ref_parent_cbox').val('select_cbox');
 				$('#ordre_cat').val('');
 				$('#descript_cat').val('');
 			};
+
+
+			var setFieldsValues = function(name, parentCode, order, descript) {
+
+				$('#nom_cat').val(name);
+				$('#ref_parent_cbox').val(parentCode);
+				$('#ordre_cat').val(order);
+				$('#descript_cat').val(descript);
+
+			}
 
 
 
@@ -454,50 +459,23 @@ z
 
 				<?php if (Config::ALLOW_AJAX) : ?>
 
-                	//console.log(code);
+					console.log(mode);
 
-                	$.post('<?php echo $form_url; ?>', {"ref_cat":code}, function(data) {
+					if (mode === 'view') {
 
-                		console.log(data);
+						$.post('<?php echo $form_url; ?>', {"ref_cat":code}, function(data) {
 
-                		/*
-                		if (data.error) {
+							if (data.error) {
 
-                            alert(data.error);
-                        }
-                        else {
+								alert(data.error);
+							}
+							else {
 
-                            $(target).parents('.filter-item').show();
-                            var $target = $(target).get(0);
-                            $target.options.length = 1;
-                            
-                            if (data.results.utilisateur) {
-                                
-                                var i = 1;
-                                for (var prop in data.results.utilisateur) {
-                                
-                                    var result = data.results.utilisateur[prop];
-
-                                    $target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
-
-                                    i++;
-                                }
-                            }
-                            else if (data.results.session) {
-
-                                var i = 1;
-                                for (var prop in data.results.session) {
-                                
-                                    var result = data.results.session[prop];
-
-                                    $target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
-
-                                    i++;
-                                }
-                            }
-                        }
-                        */
-                    }, 'json');
+								setFieldsValues(data.results.nom_cat, null, 0, data.results.descript_cat)
+							}
+							
+						}, 'json');
+					}
 
 				<?php endif; ?>
 			});
@@ -532,7 +510,7 @@ z
 				{
 					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?"))
 					{
-						resetFields();
+						resetFieldsValues();
 					}
 				}
 				

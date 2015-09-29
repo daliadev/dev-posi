@@ -474,6 +474,32 @@ class ServicesAdmin extends Main
 		$dataCategorie = array();
 
 
+
+
+		/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
+
+        if (Config::ALLOW_AJAX)
+        {
+        	if (isset($_POST['ref_cat']) && !empty($_POST['ref_cat']))
+			{
+				$catDetails = $this->servicesCategorie->getCategorieDetails($_POST['ref_cat']);
+
+				if ($catDetails)
+                {
+					$response = array('error' => false, 'results' => $catDetails);
+				}
+				else
+				{
+					 $response = array('error' => "Cette catégorie n'existe pas.");
+				}
+				
+				echo json_encode($response);
+                exit();
+			}
+        }
+
+
+
 		/*** Définition du mode précédent du formulaire (permet de connaître l'action précédemment choisie par l'utilisateur) ***/
 
 		if (isset($_POST['mode']) && !empty($_POST['mode']))

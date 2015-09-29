@@ -29,7 +29,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
-var_dump($formData['code_cat']);
+//var_dump($formData['code_cat']);
 
 ?>
 
@@ -48,7 +48,7 @@ var_dump($formData['code_cat']);
 		<div id="main-form">
 
 			<form id="form-posi" action="<?php echo $form_url; ?>" method="post" enctype="multipart/form-data">
-
+z
 				<input type="hidden" id="mode" name="mode" value="<?php echo $formData['mode']; ?>" />
 				<input type="hidden" id="code" name="code_cat" value="<?php echo $formData['code_cat']; ?>" />
 				<input type="hidden" id="ordre" name="level" value="" />
@@ -156,13 +156,13 @@ var_dump($formData['code_cat']);
 										?>
 
 										<li style="<?php echo $styleMargin; ?>">
-											<div class="cat-item-block">
-												<a class="<?php echo $selected; ?>" href="#">
+											<!-- <div class="cat-item-block"> -->
+												<a class="cat-item-link <?php echo $selected; ?>" href="#">
 													<!-- <span class="ui-icon ui-icon-arrowthick-2-n-s"></span> -->
 													<span class="cat-item-code" style="display: none;"><?php echo $code; ?></span>
 													<span style="<?php echo $style; ?>"><?php echo $name; ?></span>
 												</a>
-											</div>
+											<!-- </div> -->
 										</li>
 
 										<?php
@@ -191,10 +191,18 @@ var_dump($formData['code_cat']);
 
 							<div id="detail">
 								
-								<fieldset>
+								<fieldset id="edit-cat">
 								
 									<legend>Ajout / détail d'une catégorie</legend>
 										
+									<?php if(isset($formData['code_cat'])) : ?>
+
+									<div id="num-cat" class="num-indicator">
+										N°<?php echo $formData['code_cat']; ?>
+									</div>
+
+									<?php endif; ?>
+
 									<div id="nom-cat" class="block">
 										<p>
 										<label for="nom_cat">Nom *</label>
@@ -419,7 +427,7 @@ var_dump($formData['code_cat']);
 
 			var $selected = null;
 
-			$('.cat-item-block > a').each(function() {
+			$('.cat-item-link').each(function() {
 
 				if ($(this).hasClass('selected')) {
 					$selected = $(this);
@@ -427,7 +435,7 @@ var_dump($formData['code_cat']);
 			});
 				
 
-			$('.cat-item-block > a').click(function(event) {
+			$('.cat-item-link').on('click', function(event) {
 
 				event.preventDefault();
 
@@ -439,10 +447,59 @@ var_dump($formData['code_cat']);
 				$(this).addClass('selected');
 				$selected = $(this);
 
-				var $code = $(this).find('.cat-item-code').html();
-				$('#code').val($code);
+				var code = $(this).find('.cat-item-code').html();
+				$('#code').val(code);
 				$('#edit').removeProp('disabled');
 				//$('#add').removeProp('disabled');
+
+				<?php if (Config::ALLOW_AJAX) : ?>
+
+                	//console.log(code);
+
+                	$.post('<?php echo $form_url; ?>', {"ref_cat":code}, function(data) {
+
+                		console.log(data);
+
+                		/*
+                		if (data.error) {
+
+                            alert(data.error);
+                        }
+                        else {
+
+                            $(target).parents('.filter-item').show();
+                            var $target = $(target).get(0);
+                            $target.options.length = 1;
+                            
+                            if (data.results.utilisateur) {
+                                
+                                var i = 1;
+                                for (var prop in data.results.utilisateur) {
+                                
+                                    var result = data.results.utilisateur[prop];
+
+                                    $target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
+
+                                    i++;
+                                }
+                            }
+                            else if (data.results.session) {
+
+                                var i = 1;
+                                for (var prop in data.results.session) {
+                                
+                                    var result = data.results.session[prop];
+
+                                    $target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
+
+                                    i++;
+                                }
+                            }
+                        }
+                        */
+                    }, 'json');
+
+				<?php endif; ?>
 			});
 
 			/*
@@ -459,7 +516,7 @@ var_dump($formData['code_cat']);
 
 			/*** Gestion de la demande de suppression ***/
 
-			$('#del').click(function(event) 
+			$('#del').on('click', function(event) 
 			{
 				event.preventDefault();
 
@@ -481,14 +538,6 @@ var_dump($formData['code_cat']);
 				
 			});
 			
-
-			/* Envoi du formulaire avec affichage d'un loader le temps de la sauvegarde */
-			/*
-			$('#save').click(function(event) {
-				
-				$.loader();
-			});
-			*/
 		});
 
 	</script>

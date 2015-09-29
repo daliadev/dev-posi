@@ -1266,6 +1266,20 @@ select {
 	background: url(../images/ico-key.png) 0 0 no-repeat;
 } 
 
+/*   Ajout 10/2015 */
+
+#detail fieldset#edit-cat {
+	position: relative;
+}
+
+#detail .num-indicator {
+	position: absolute;
+	top: 4px; right: 0px;
+	width: 50px;
+	height: 10px;
+	font-size: 10px;
+	font-weight: bold;
+}
 
 /*   Ajout 06/2015 */
 
@@ -1293,19 +1307,18 @@ fieldset .block input {
 
 fieldset #liste-cat ul {
 	height: 295px; 
-	padding: 10px 5px; 
+	padding: 10px 20px 10px 5px; 
 	margin-bottom: 5px; 
 	background-color: #f0f0f0; 
 	overflow: auto;
 }
 
 
-fieldset #liste-cat .cat-item-block {
+/*fieldset #liste-cat .cat-item-block {*/
 	/*background-color: #f0f0f0;*/
-	
-}
+/*}*/
 
-fieldset #liste-cat .cat-item-block a {
+fieldset #liste-cat a {
 	display: block;
 	color: #666060;
 	/*background-color: #f0f0f0;*/

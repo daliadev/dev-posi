@@ -122,7 +122,7 @@ class Config
             ),
             array(
                 'code_menu' => "20",
-                'label_menu' => "Catégories / Compétences",
+                'label_menu' => "Compétences / catégories",
                 'url_menu' => "categorie",
                 'display' => true,
                 'droits' => "admin"

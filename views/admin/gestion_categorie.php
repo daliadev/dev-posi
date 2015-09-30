@@ -41,7 +41,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 		
 		<!-- Header -->
-		<div id="titre-admin-h2">Gestion des catégories</div>
+		<div id="titre-admin-h2">Gestion des compétences</div>
 
 		
 		<div id="main-form">
@@ -88,7 +88,7 @@ $form_url = WEBROOT."admin/categorie/";
 				?>
 
 				
-				<!-- Partie gauche : Listing des catégories sélectionnables -->
+				<!-- Partie gauche : Listing des compétences sélectionnables -->
 				
 				<div style="float:left;">
 
@@ -98,7 +98,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 							<fieldset>
 								
-								<legend>Liste des catégories (sélection)</legend>
+								<legend>Liste des compétences (sélection)</legend>
 								
 								<div id="liste-cat">
 									
@@ -176,7 +176,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 
 
-				<!-- Partie droite : Affichage / détail de la catégorie -->
+				<!-- Partie droite : Affichage / détail de la compétence -->
 
 				<div style="float:right;">
 
@@ -188,7 +188,7 @@ $form_url = WEBROOT."admin/categorie/";
 								
 								<fieldset id="edit-cat">
 								
-									<legend>Ajout / détail d'une catégorie</legend>
+									<legend>Ajout / détail d'une compétence</legend>
 										
 									<?php if(isset($formData['code_cat'])) : ?>
 
@@ -206,7 +206,7 @@ $form_url = WEBROOT."admin/categorie/";
 									</div>
 									
 									<div id="parent-cat" class="block">
-										<label for="parent_cat_cbox">Catégorie parente *</label>
+										<label for="parent_cat_cbox">Compétence parente *</label>
 
 										<select name="parent_cat_cbox" id="ref_parent_cbox" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>>
 											<option value="select_cbox">Aucun</option>
@@ -245,7 +245,7 @@ $form_url = WEBROOT."admin/categorie/";
 					
 									
 									<div id="ordre-cat" class="block">
-										<label for="ordre_cat">Ordre (pour l'organisation des catégories de même niveau)</label>
+										<label for="ordre_cat">Ordre (pour l'organisation des compétences de même niveau)</label>
 										<input type="text" name="ordre_cat" id="ordre_cat" value="<?php echo $formData['ordre_cat']; ?>" <?php echo $formData['disabled']; ?> style="width: 80px !important;" />
 									</div>
 
@@ -403,12 +403,13 @@ $form_url = WEBROOT."admin/categorie/";
 
 		$(function() {
 
+			var self = this;
 			var mode = $('#mode').val();
 
 
 			/* Vide le formulaire */
 
-			var resetFieldsValues = function() {
+			this.resetFieldsValues = function() {
 
 				$('#nom_cat').val('');
 				$('#ref_parent_cbox').val('select_cbox');
@@ -417,7 +418,9 @@ $form_url = WEBROOT."admin/categorie/";
 			};
 
 
-			var setFieldsValues = function(name, parentCode, order, descript) {
+			/* Rempli le formulaire avec les valeurs en paramètres */
+
+			this.setFieldsValues = function(name, parentCode, order, descript) {
 
 				$('#nom_cat').val(name);
 				$('#ref_parent_cbox').val(parentCode);
@@ -425,6 +428,28 @@ $form_url = WEBROOT."admin/categorie/";
 				$('#descript_cat').val(descript);
 
 			}
+
+
+			/* Trouve la catégorie parente */
+
+			this.getParentCode = function(code) {
+
+				var parentCode = null;
+
+				code = code.toString();
+
+				var parentCodeLength = code.length - 2;
+
+				if (parentCodeLength > 0) {
+
+					parentCode = code.substring(0, parentCodeLength);
+					return parentCode;
+				}
+
+				return false;
+			}
+
+
 
 
 
@@ -471,7 +496,10 @@ $form_url = WEBROOT."admin/categorie/";
 							}
 							else {
 
-								setFieldsValues(data.results.nom_cat, null, 0, data.results.descript_cat)
+								var parentCode = self.getParentCode(code);
+								console.log(parentCode);
+
+								self.setFieldsValues(data.results.nom_cat, parentCode, 0, data.results.descript_cat)
 							}
 							
 						}, 'json');
@@ -500,7 +528,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 				if (mode == 'view') 
 				{
-					if (confirm("Voulez-vous réellement supprimer cette catégorie ?"))
+					if (confirm("Voulez-vous réellement supprimer cette compétence ?"))
 					{
 						$('input[name="delete"]').val("true");
 						$('#form-posi').submit();

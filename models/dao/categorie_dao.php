@@ -58,6 +58,44 @@ class CategorieDAO extends ModelDAO
 
 
 
+	public function findCodesByLevel($parentCode, $level)
+	{
+		$this->initialize();
+		
+		$search = '';
+
+		if (!empty($parentCode))
+		{   
+
+		}
+		else
+		{
+			$level = 0;
+		}
+
+		if (empty($level) || empty($level))
+		{
+
+		}
+
+		$search .= $hasParent.$parentCode.$hasChildren;
+
+		if (!empty($parentCode))
+		{   
+			$request = "SELECT * FROM categorie WHERE code_cat = ".$codeCat." ORDER BY code_cat ASC";
+
+			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
+		}
+		else
+		{
+			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour la catégorie recherchée.");
+		}
+		
+		return $this->resultset;
+	}
+
+
+
 	/**
 	 * selectByCode - Récupère la catégorie correspondant au code.
 	 * 
@@ -94,6 +132,8 @@ class CategorieDAO extends ModelDAO
 		
 		return $this->resultset;
 	}
+
+
 	
 	
 	

@@ -93,6 +93,75 @@ class ServicesAdminCategorie extends Main
 
 
 
+
+	public function filterCategorieData(&$formData, $postData)
+	{
+
+		$dataCategorie = array();
+
+		// Formatage du code catégorie
+		if (!isset($formData['code_cat']) || empty($formData['code_cat']) || $formData['code_cat'] === null) 
+		{
+			$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
+		}
+
+		$dataCategorie['code_cat'] = $formData['code_cat'];
+
+		
+		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
+		if (!empty($formData['code_cat']))
+		{
+			if (strlen($formData['code_cat']) % 2 != 0)
+			{
+				$this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir schéma explicatif).");
+			}
+			
+			$resultsetCode = $this->getCategorie($formData['code_cat']);
+
+			if (!empty($resultsetCode['response']) && $resultsetCode !== false)
+			{
+				$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
+			}
+		}
+
+
+		// Formatage du nom de la catégorie
+		$formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
+		$dataCategorie['nom_cat'] = $formData['nom_cat'];
+		
+		// Formatage de l'intitule de la catégorie 
+		$formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
+		$dataCategorie['descript_cat'] = $formData['descript_cat'];
+		
+		// Formatage du code catégorie
+		if (!isset($formData['type_lien_cat']) || empty($formData['type_lien_cat']) || $formData['type_lien_cat'] === null) 
+		{
+			$formData['type_lien_cat'] = $this->validatePostData($postData['type_lien_cat'], "type_lien_cat", "integer", true, "Aucun type d'héritage des scores n'a été sélectionné.", "Le type d'héritage des scores n'est pas correctement saisi.");
+		}
+
+		$dataCategorie['type_lien_cat'] = $formData['type_lien_cat'];
+
+		// Formatage du type de lien de la catégorie
+		/*
+		if (isset($_POST['type_lien_cat']))
+		{
+			$formData['type_lien_cat'] = "dynamic";
+			$dataCategorie['type_lien_cat'] = "dynamic";
+		}
+		else 
+		{
+			$formData['type_lien_cat'] = "static";
+			$dataCategorie['type_lien_cat'] = "static";
+		}
+		*/
+
+		return $dataCategorie;
+	}
+
+
+
+
+
 	/* Gestion du code catégorie */
 
 	public function getParentCode($code = null) 
@@ -106,14 +175,16 @@ class ServicesAdminCategorie extends Main
 			if ($parentCodeLength > 2) {
 
 				$parentCode = substr($code, 0, $parentCodeLength);
+
+				return $parentCode;
 			}
 		}
 
-		return $parentCode;
+		return false;
 	}
 
 
-	private function generateKey($parent, $level, $type) {
+	private function generateCode($parent, $level, $order) {
 
 		$key = null;
 
@@ -381,73 +452,61 @@ class ServicesAdminCategorie extends Main
 		return $code;
 	}
 
- 
 
 
+	public function createCodesArray($code = null, $parentCode = null, $order = null) {
 
-	public function filterCategorieData(&$formData, $postData)
-	{
-
-		$dataCategorie = array();
-
-		// Formatage du code catégorie
-		if (!isset($formData['code_cat']) || empty($formData['code_cat']) || $formData['code_cat'] === null) 
-		{
-			$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
-		}
-
-		$dataCategorie['code_cat'] = $formData['code_cat'];
-
+		$selectedCode = null;
+		$levelCodesArray = array();
+		$allCodesArray = array();
 		
-		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
-		if (!empty($formData['code_cat']))
-		{
-			if (strlen($formData['code_cat']) % 2 != 0)
+
+		// Récupération du code parent (si existant)
+
+		if ($code !== null)
+		{	
+			// Stockage du code sélectionné
+			$selectedCode = $code;
+
+			if ($parentCode === null)
 			{
-				$this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir schéma explicatif).");
+				$parentCode = $this->getParentCode($code);
 			}
-			
-			$resultsetCode = $this->getCategorie($formData['code_cat']);
 
-			if (!empty($resultsetCode['response']) && $resultsetCode !== false)
-			{
-				$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
-			}
+			//$parentCode = $this->getParentCode($code);
 		}
-
-
-		// Formatage du nom de la catégorie
-		$formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
-		$dataCategorie['nom_cat'] = $formData['nom_cat'];
-		
-		// Formatage de l'intitule de la catégorie 
-		$formData['descript_cat'] = $this->validatePostData($_POST['descript_cat'], "descript_cat", "string", false, "Aucune description n'a été saisi", "La description n'a été correctement saisi.");
-		$dataCategorie['descript_cat'] = $formData['descript_cat'];
-		
-		// Formatage du code catégorie
-		if (!isset($formData['type_lien_cat']) || empty($formData['type_lien_cat']) || $formData['type_lien_cat'] === null) 
+		else
 		{
-			$formData['type_lien_cat'] = $this->validatePostData($postData['type_lien_cat'], "type_lien_cat", "integer", true, "Aucun type d'héritage des scores n'a été sélectionné.", "Le type d'héritage des scores n'est pas correctement saisi.");
+			//erreur
+			$parentCode = null;
 		}
+		
 
-		$dataCategorie['type_lien_cat'] = $formData['type_lien_cat'];
-
-		// Formatage du type de lien de la catégorie
-		/*
-		if (isset($_POST['type_lien_cat']))
+		// Détermination du niveau hiérarchique dans lequel doit être inséré l'element
+		if ($parentCode !== false && $parentCode !== null)
 		{
-			$formData['type_lien_cat'] = "dynamic";
-			$dataCategorie['type_lien_cat'] = "dynamic";
+			$level = $this->getLevel($parentCode);
 		}
 		else 
 		{
-			$formData['type_lien_cat'] = "static";
-			$dataCategorie['type_lien_cat'] = "static";
+			$level = 0;
 		}
-		*/
 
-		return $dataCategorie;
+
+		// Gestion de l'ordre et des codes de même niveau
+
+		// Création d'un tableau comportant la liste des codes du niveau
+		$levelCodesArray = $this->createLevelCodes($parentCode, $level, $order);
+
+		// Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
+		$allCodesArray = $this->generateCodes($levelCodesArray, $selectedCode);
+
+		return $allCodesArray;
 	}
+
+	
+
+ 
 
 
 

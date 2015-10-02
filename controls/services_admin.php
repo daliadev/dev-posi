@@ -624,7 +624,7 @@ class ServicesAdmin extends Main
 			$this->formData['code_cat'] = null;
 			$this->formData['nom_cat'] = null;
 			$this->formData['descript_cat'] = null;
-			$this->formData['type_lien_cat'] = "dynamic";
+			//$this->formData['type_lien_cat'] = "dynamic";
 
 			$this->formData['delete_label'] = 'Effacer';
 		}
@@ -647,10 +647,110 @@ class ServicesAdmin extends Main
 					$dataCategorie['code_cat'] = $this->formData['code_cat'];
 				}
 			}
+			else 
+			{
+				$this->formData['code_cat'] = null;
+			}
 
 
-			// Génération du code catégorie
+			// Traitement/vérification des infos saisies.
+			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
+
+			/**
+			 * TODO: 
+			 *   - Récupération du code parent (si existant)
+			 *   - Détermination du niveau hiérarchique dans lequel doit être inséré l'element
+			 * 	 - Création d'un tableau comportant la liste des codes du niveau
+			 *   - Génération des nouveaux codes du niveau
+			 *   - Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
+			 *   - Stockage du code sélectionné ou nouvellement créé
+			 *   - Boucle sur tableau :
+			 * 		- Test ancien code existant (Mise à jour)
+			 * 			-> Si oui, test nouveau code = code existant
+			 * 				-> Si oui, pas de modification
+			 * 				-> Si non, mise à jour bdd
+			 * 			-> Si non, insertion bdd
+			 * 		- Réussite requête
+			 * 			-> Si oui, la boucle continue
+			 * 			-> Si non, arrêt de la boucle
+			 *   - Résultat final comporte une erreur
+			 *   	-> Si oui, test code sélection
+			 * 			-> Si existant, écran édit avec message erreur
+			 * 			-> Si non, écran view avec message erreur
+			 *   	-> Si non, test code sélection
+			 * 			-> Si existant, écran édit avec message succès
+			 * 			-> Si non, écran view avec message succès
+			 */
+
+
+			// Récupération du tableau des nouveau codes
+			$codesArray = $this->servicesCategorie->createCodesArray($this->formData['code_cat'], $dataCategorie['parent_cat'], $dataCategorie['ordre_cat']);
+
+			// Injection des données de chaque catégories
+			$dataCategories = $this->servicesCategorie->getChangedCategories($codesArray, $dataCategorie);
+			
+			$requestError = false;
+
+			foreach ($dataCategories as $categorieData)
+			{
+				if ($categorieData['new_code'] !== null) 
+				{
+					if ($categorieData['old_code'] !== null)
+					{
+						if ($categorieData['new_code'] != $categorieData['old_code'])
+						{
+							//update($categorieData['old_code'], $categorieData);
+							//$this->servicesCategorie->setCategorieProperties('update', $dataCategorie);
+							//if $result ? $error = false : true;
+						}
+						/*
+						else
+						{
+							$error = true;
+							break;
+						}
+						*/
+					}
+					else
+					{
+						//insert($categorieData);
+						//$this->servicesCategorie->setCategorieProperties('insert', $dataCategorie);
+						//if $result ? $error = false : true;
+					}
+				}
+			}
+
+
+			// Résultat final
+			if ($error)
+			{
+				// error message
+			}
+			else
+			{
+				if ($selectedCode !== null)
+				{
+					//$categorieDetails = $this->servicesCategorie->getCategorie($selectedCode);
+					//form_data[''] = $categorieDetails[''];
+					//$this->formData['mode'] = 'edit';
+				}
+
+				//succes message
+			}
+
+
+			if ($selectedCode !== null)
+			{
+				$this->formData['mode'] = 'edit';
+			}
+			else 
+			{
+				$this->formData['mode'] = 'new';
+			}
+
+
+			/*
 			// Mode new
 			if (empty($code) || $code === null) 
 			{
@@ -686,16 +786,19 @@ class ServicesAdmin extends Main
 				//$_POST['code_cat'] = $this->formData['code_cat'];
 				//$dataCategorie['code_cat'] = $this->formData['code_cat'];
 			}
-
+			*/
 			
 
+
+
+
 			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
-			$this->formData['type_lien_cat'] = "dynamic";
-			$dataCategorie['type_lien_cat'] = $this->formData['type_lien_cat'];
+			//$this->formData['type_lien_cat'] = "dynamic";
+			//$dataCategorie['type_lien_cat'] = $this->formData['type_lien_cat'];
 
 
 			// Traitement des infos saisies.
-			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
+			//$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
 
 			// Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).

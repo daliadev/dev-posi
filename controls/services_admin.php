@@ -687,6 +687,9 @@ class ServicesAdmin extends Main
 			// Récupération du tableau des nouveau codes
 			$codesArray = $this->servicesCategorie->createCodesArray($this->formData['code_cat'], $dataCategorie['parent_cat'], $dataCategorie['ordre_cat']);
 
+			var_dump($codesArray);
+			exit();
+			/*
 			// Injection des données de chaque catégories
 			$dataCategories = $this->servicesCategorie->getChangedCategories($codesArray, $dataCategorie);
 			
@@ -704,13 +707,6 @@ class ServicesAdmin extends Main
 							//$this->servicesCategorie->setCategorieProperties('update', $dataCategorie);
 							//if $result ? $error = false : true;
 						}
-						/*
-						else
-						{
-							$error = true;
-							break;
-						}
-						*/
 					}
 					else
 					{
@@ -748,6 +744,8 @@ class ServicesAdmin extends Main
 			{
 				$this->formData['mode'] = 'new';
 			}
+			*/
+
 
 
 			/*

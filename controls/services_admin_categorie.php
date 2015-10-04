@@ -44,6 +44,15 @@ class ServicesAdminCategorie extends Main
 		
 		return false;
 	}
+
+
+
+	public function getCategoriesByLevel($code, $level)
+	{
+		$levelCodes = $this->categorieDAO->findCodesByLevel($code, $level);
+
+		return $levelCodes['response'];
+	}
 	
 	
 
@@ -184,6 +193,20 @@ class ServicesAdminCategorie extends Main
 	}
 
 
+	private function getLevel($code) {
+
+		$level;
+
+		return $level;
+	}
+
+
+	private function createLevelCode($parentCode, $level, $order)
+	{
+
+	}
+
+
 	private function generateCode($parent, $level, $order) {
 
 		$key = null;
@@ -192,6 +215,81 @@ class ServicesAdminCategorie extends Main
 
 		return $key;
 	}
+
+
+
+	public function createCodesArray($code = null, $parentCode = null, $orderInput = null) {
+
+		$selectedCode = null;
+		$levelCodesArray = array();
+		$allCodesArray = array();
+		
+
+		// Récupération du code parent (si existant)
+
+		if ($code !== null)
+		{	
+			// Stockage du code sélectionné
+			$selectedCode = $code;
+
+			if ($parentCode === null)
+			{
+				$parentCode = $this->getParentCode($code);
+			}
+
+			//$parentCode = $this->getParentCode($code);
+		}
+		else
+		{
+			//erreur
+			$parentCode = null;
+		}
+		
+
+		// Détermination du niveau hiérarchique dans lequel doit être inséré l'element
+		if ($parentCode !== false && $parentCode !== null)
+		{
+			$level = $this->getLevel($parentCode);
+		}
+		else 
+		{
+			$level = 0;
+		}
+
+
+		// Gestion de l'ordre et des codes de même niveau
+		if ($orderInput !== null) 
+		{
+			$order = $orderInput;
+		}
+
+		//$this
+
+
+		// Création d'un tableau comportant la liste des codes du niveau
+		$levelCodesArray = array();
+
+		while ($i < $level)
+		{
+			$levelCodes = findLevelCodes($code, $level);
+			//$newLevelCodes = $this->createLevelCodes($parentCode, $level, $order);
+			
+			foreach($levelCodes['categorie'] as $categorie)
+			{
+				$levelCodesArray[$i] = $categorie->getCode();
+			}
+			
+			$i++;
+		}
+		
+
+		// Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
+		$allCodesArray = $this->generateCodes($levelCodesArray, $selectedCode);
+
+		return $allCodesArray;
+	}
+
+
 
 
 
@@ -454,55 +552,7 @@ class ServicesAdminCategorie extends Main
 
 
 
-	public function createCodesArray($code = null, $parentCode = null, $order = null) {
-
-		$selectedCode = null;
-		$levelCodesArray = array();
-		$allCodesArray = array();
-		
-
-		// Récupération du code parent (si existant)
-
-		if ($code !== null)
-		{	
-			// Stockage du code sélectionné
-			$selectedCode = $code;
-
-			if ($parentCode === null)
-			{
-				$parentCode = $this->getParentCode($code);
-			}
-
-			//$parentCode = $this->getParentCode($code);
-		}
-		else
-		{
-			//erreur
-			$parentCode = null;
-		}
-		
-
-		// Détermination du niveau hiérarchique dans lequel doit être inséré l'element
-		if ($parentCode !== false && $parentCode !== null)
-		{
-			$level = $this->getLevel($parentCode);
-		}
-		else 
-		{
-			$level = 0;
-		}
-
-
-		// Gestion de l'ordre et des codes de même niveau
-
-		// Création d'un tableau comportant la liste des codes du niveau
-		$levelCodesArray = $this->createLevelCodes($parentCode, $level, $order);
-
-		// Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
-		$allCodesArray = $this->generateCodes($levelCodesArray, $selectedCode);
-
-		return $allCodesArray;
-	}
+	
 
 	
 

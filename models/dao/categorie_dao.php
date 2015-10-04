@@ -58,31 +58,44 @@ class CategorieDAO extends ModelDAO
 
 
 
-	public function findCodesByLevel($parentCode, $level)
+	public function findLevelCodes($code, $level)
 	{
 		$this->initialize();
 		
 		$search = '';
 
-		if (!empty($parentCode))
+		if (!empty($code))
 		{   
-
+			if (($level * 2) <= strlen($code)) 
+			{
+				$search .= substr($code, 0, $level * 2);
+				$underscoresNum = strlen(substr($code, strlen($code), $level * 2));
+				for ($i = 0; $i < $underscoresNum; $i++) 
+				{ 
+					$search .= '_';
+				}
+				
+			}
+			else 
+			{
+				$error = true;
+			}
 		}
 		else
 		{
 			$level = 0;
 		}
-
+		/*
 		if (empty($level) || empty($level))
 		{
 
 		}
-
-		$search .= $hasParent.$parentCode.$hasChildren;
+		*/
+		//$search .= $hasChildren;
 
 		if (!empty($parentCode))
 		{   
-			$request = "SELECT * FROM categorie WHERE code_cat = ".$codeCat." ORDER BY code_cat ASC";
+			$request = 'SELECT code_cat FROM categorie WHERE code_cat LIKE '.$search.' ORDER BY code_cat ASC';
 
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 		}

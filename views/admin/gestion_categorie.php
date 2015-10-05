@@ -50,7 +50,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<input type="hidden" id="mode" name="mode" value="<?php echo $formData['mode']; ?>" />
 				<input type="hidden" id="code" name="code_cat" value="<?php echo $formData['code_cat']; ?>" />
-				<input type="hidden" id="ordre" name="level" value="" />
+				<!-- <input type="hidden" id="ordre" name="level" value="" /> -->
 				
 				
 				<?php
@@ -215,7 +215,7 @@ $form_url = WEBROOT."admin/categorie/";
 											foreach($response['categorie'] as $categorie)
 											{
 												$selected = "";
-												if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
+												if (!empty($formData['parent_code_cat']) && $formData['parent_code_cat'] == $categorie->getCode())
 												{
 													$selected = "selected";
 												}

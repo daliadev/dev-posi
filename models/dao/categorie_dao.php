@@ -58,23 +58,40 @@ class CategorieDAO extends ModelDAO
 
 
 
-	public function findLevelCodes($code, $level)
+	public function findCodesByLevel($code, $level = null)
 	{
 		$this->initialize();
-		
+
 		$search = '';
+		$error = false;
+
+		if (!empty($level) && $level !== null && $level >= 1)
+		{
+			$parentLevel = $level -1;
+		}
+		else
+		{
+			$parentLevel = 0;
+		}
+
+		//var_dump($code, $parentLevel);
+		//$parentLevel = $level - 1;
 
 		if (!empty($code))
 		{   
-			if (($level * 2) <= strlen($code)) 
+			if (($parentLevel * 2) <= strlen($code)) 
 			{
-				$search .= substr($code, 0, $level * 2);
-				$underscoresNum = strlen(substr($code, strlen($code), $level * 2));
+				// + les sous-catégories
+				//$search .= substr($code, 0, $parentLevel * 2) .'%'; 
+
+				// sans les sous-catégories
+				$search .= substr($code, 0, $parentLevel * 2); 
+				$underscoresNum = strlen($code) - strlen($search);
+				
 				for ($i = 0; $i < $underscoresNum; $i++) 
 				{ 
 					$search .= '_';
 				}
-				
 			}
 			else 
 			{
@@ -83,21 +100,26 @@ class CategorieDAO extends ModelDAO
 		}
 		else
 		{
-			$level = 0;
+			$search = '10';
 		}
+
+
+		//var_dump($code, $search);
 		/*
 		if (empty($level) || empty($level))
 		{
 
 		}
 		*/
-		//$search .= $hasChildren;
+		
 
-		if (!empty($parentCode))
+		if (!empty($search) && !$error)
 		{   
-			$request = 'SELECT code_cat FROM categorie WHERE code_cat LIKE '.$search.' ORDER BY code_cat ASC';
-
+			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."'"; //." ORDER BY 'code_cat' ASC";
+			var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
+			var_dump($this->resultset['response']);
+			exit();
 		}
 		else
 		{

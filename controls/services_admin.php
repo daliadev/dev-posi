@@ -685,7 +685,7 @@ class ServicesAdmin extends Main
 
 
 			// Récupération du tableau des nouveau codes
-			$codesArray = $this->servicesCategorie->createCodesArray($this->formData['code_cat'], $dataCategorie['parent_cat'], $dataCategorie['ordre_cat']);
+			$codesArray = $this->servicesCategorie->createCodesArray($this->formData['code_cat'], $this->formData['parent_code_cat'], $this->formData['ordre_cat']);
 
 			var_dump($codesArray);
 			exit();
@@ -799,10 +799,15 @@ class ServicesAdmin extends Main
 			//$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
 
+
+
+
+
+
 			// Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors)) 
 			{
-				$this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
+				//$this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
 			}
 
 			
@@ -810,7 +815,7 @@ class ServicesAdmin extends Main
 			if (empty($this->servicesCategorie->errors) && empty($this->errors))
 			{
 				// On recharge la page en mode visualisation.
-				header("Location: ".$this->url.$this->formData['code_cat']);
+				//header("Location: ".$this->url.$this->formData['code_cat']);
 			}
 			else 
 			{

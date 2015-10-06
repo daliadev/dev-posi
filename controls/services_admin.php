@@ -554,7 +554,7 @@ class ServicesAdmin extends Main
 		   // $this->formData['code_cat_cbox'] = $requestParams[0];
 			$this->formData['code_cat'] = $requestParams[0];
 		}
-		else if ($_POST['code_cat'] !== null)
+		else if (isset($_POST['code_cat']) && !empty($_POST['code_cat']))
 		{
 			$this->formData['code_cat'] = $_POST['code_cat'];
 		}
@@ -653,9 +653,15 @@ class ServicesAdmin extends Main
 			}
 
 
+
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
+
+			$test = $this->servicesCategorie->createCodesArray('1030', '10', 0);
+
+			var_dump($test);
+			exit();
 
 			/**
 			 * TODO: 
@@ -685,10 +691,10 @@ class ServicesAdmin extends Main
 
 
 			// Récupération du tableau des nouveau codes
-			$codesArray = $this->servicesCategorie->createCodesArray($this->formData['code_cat'], $this->formData['parent_code_cat'], $this->formData['ordre_cat']);
+			//$codesArray = $this->servicesCategorie->createCodesArray($this->formData['code_cat'], $this->formData['parent_code_cat'], $this->formData['ordre_cat']);
 
-			var_dump($codesArray);
-			exit();
+			//var_dump($codesArray);
+			//exit();
 			/*
 			// Injection des données de chaque catégories
 			$dataCategories = $this->servicesCategorie->getChangedCategories($codesArray, $dataCategorie);

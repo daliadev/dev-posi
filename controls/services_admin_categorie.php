@@ -196,6 +196,8 @@ class ServicesAdminCategorie extends Main
 	=============================================*/
 
 
+	
+
 	public function getParentCode($code = null) 
 	{	
 		$parentCode = null;
@@ -238,18 +240,87 @@ class ServicesAdminCategorie extends Main
 
 
 
+	/*
+	private function generateCode($previousCode, $nextCode, $increment) 
+	{
+		return null;
+	}
+	*/
 
-	private function generateCode($previousCode, $nextCode = null) {
+	private function generateNewCodesArray($previousIndex, $nextIndex, $codes)
+	{
+		//$codePrefix = strlen($codes[0]) - 2;
+		$newCode = null;
+		$increment = 10;
+		$previousCodeSuffix = null;
+		$nextCodeSuffix = null;
 
-		$code = null;
+		// Morceaux de code précédent le niveau de hiérarchie correspondant au code à insérer (le même pour tous les codes du niveau)
+		$codePrefix = substr($codes[0], 0, strlen($codes[0]));
 
 
+		if ($previousIndex !== null) 
+		{
+			$previousCodeSuffix = substr($codes[$previousIndex], 0, strlen($codes[$previousIndex]));
+		}
+		else
+		{
+			// Tout est décalé d'un cran à partir du début
+			//$newCode = 0;
+		}
 
-		return $code;
+
+		if ($nextCode !== null) 
+		{
+			// Ajout du code à la fin
+			$nextCodeSuffix = substr($codes[$nextIndex], 0, strlen($codes[$nextIndex]));
+		}
+		else
+		{
+			// $nextCode = (int) $codes[$nextIndex]
+		}
+
+		$increment = (int) $nextCodeSuffix - (int) $previousCodeSuffix;
+
+		if ($increment >= 15) 
+		{
+			$increment = 10;
+		}
+		else if ($increment >= 10)
+		{
+			$increment = 5;
+		}
+		else if ($increment <= 0) 
+		{
+			// error
+		}
+
+		$newCodeSuffix = (int) $codes[$previousIndex] + $increment;
+		$newCode = $codePrefix . $newCodeSuffix; 
+
+		var_dump($newCode);
+		//exit();
+		if ($newCode !== null)
+		{
+			for ($i = 0; $i < count($codes); $i++) 
+			{ 
+				$currenCode = (int) $codes[$i];
+
+
+				if ($newCode > $codes[$i])
+				{
+
+				}
+			}
+		}
+		
+
+
+		return $newCode;
 	}
 
 
-	private function sortCodesByOrder($oldCodes, $insertOrder)
+	private function sortCodesByOrder($oldCodes, $parentCode, $insertOrder)
 	{
 		/**
 		 *
@@ -259,26 +330,77 @@ class ServicesAdminCategorie extends Main
 		 * 	Pour chaque clé du tableau
 		 *  	Trouver la clé précédent l'ordre
 		 * 		Trouver la clé correspondant ou suivant l'ordre
-		 * 		Calculer l'écart entre les codes précédents et suivants
-		 * 		Si écart est plus grand ou égal à 10
-		 * 			Générer un code compris entre le code précédent et le suivant
-		 * 		Sinon
-		 * 			Calculer incrément idéal
-		 * 			Décaler tous les codes suivants en ajoutant l'incrément
-		 * 		FinSi
-		 * 
-		 * 		Faire tableau contenant les nouveauw codes, les anciens codes et l'ordre correspondant
 		 * 	FinPour
+		 * 
+		 * 	Calculer l'écart entre les codes précédents et suivants
+		 * 	Si écart est plus grand ou égal à 10
+		 * 		Générer un code compris entre le code précédent et le suivant
+		 * 	Sinon
+		 * 		Calculer incrément idéal
+		 * 		Décaler tous les codes suivants en ajoutant l'incrément
+		 * 	FinSi
+		 * 
+		 * 	Faire tableau contenant les nouveau codes, les anciens codes et l'ordre correspondant (clé du tableau)
 		 */
+		var_dump('sort');
 		
+		$previousIndex = null;
+		$nextIndex = null;
+		$previousCode = null;
+		$nextCode = null;
+		$newOrderedCodes = array();
+		$finalCodes = array();
+
+		for ($i = 0; $i < count($oldCodes); $i++) 
+		{
+			if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
+			{
+				$previousIndex = $i;
+			}
+			else if ($insertOrder == $i) 
+			{
+				$nextIndex = $i;
+			}
+		}
+		/*
+		if ($previousIndex !== null)
+		{
+			//$previousIndex = 0;
+			$previousCode = $oldCodes[$previousIndex];
+		}
+
+		if ($nextIndex !== null)
+		{
+			//$nextIndex = count($oldCodes);
+			$nextCode = $oldCodes[$nextIndex];
+		}
+		*/
+		//$previousCode = $oldCodes[$previousIndex];
+		//$nextCode = $oldCodes[$nextIndex];
+
+		$newCode = $this->generateNewCodesArray($previousIndex, $nextIndex, $oldCodes);
+		/*
+		for ($i = $previousCode; $i < $oldCodes; $i++) 
+		{
+			if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
+			{
+				$previousIndex = $i;
+			}
+			else if ($insertOrder == $i) 
+			{
+				$nextIndex = $i;
+			}
+		}
+		*/
 	}
+
 
 
 	public function createCodesArray($code = null, $parentCode = null, $orderInput = null) {
 
 		$selectedCode = null;
 		$levelCodesArray = array();
-		$allCodesArray = array();
+		//$allCodesArray = array();
 		
 
 		// Récupération du code parent (si existant)
@@ -288,7 +410,10 @@ class ServicesAdminCategorie extends Main
 			// Stockage du code sélectionné
 			$selectedCode = $code;
 
-			$parentCode = $this->getParentCode($code);
+			if ($parentCode === null) 
+			{
+				$parentCode = $this->getParentCode($code);
+			}
 		}
 		else
 		{
@@ -313,7 +438,7 @@ class ServicesAdminCategorie extends Main
 			$level = 0;
 		}
 
-		var_dump($parentCode, $level);
+		//var_dump($parentCode, $level);
 
 
 		// Gestion de l'ordre et des codes de même niveau
@@ -321,8 +446,6 @@ class ServicesAdminCategorie extends Main
 		{
 			$order = $orderInput;
 		}
-
-		//$this
 
 
 		// Création d'un tableau comportant la liste des codes du niveau
@@ -333,25 +456,27 @@ class ServicesAdminCategorie extends Main
 		//$newLevelCodes = $this->createLevelCodes($parentCode, $level, $order);
 
 		
-
-		
-		foreach($levelCodes['categorie'] as $categorie)
+		foreach($levelCodes['response']['categorie'] as $categorie)
 		{
 			$codesArray[] = $categorie->getCode();
 		}
+		var_dump($codesArray, $orderInput);
 		
-		$this->sortCodesByOrder($codesArray, $orderInput);
+		$this->sortCodesByOrder($codesArray, $parentCode, $orderInput);
 
-		//var_dump($levelCodes);
+		
 
 		// Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
 		//$allCodesArray = $this->generateCodes($levelCodesArray, $selectedCode);
 
-		return $allCodesArray;
+		return null; //$allCodesArray;
 	}
 
 
+	public function getCategorieOrder($code) 
+	{
 
+	}
 
 
 	public function generateCategorieCode($code = null, $parentCode = null, $order = null) 

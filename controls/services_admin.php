@@ -658,11 +658,7 @@ class ServicesAdmin extends Main
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
 
-			$test = $this->servicesCategorie->createCodesArray('1030', '10', 0);
-
-			var_dump($test);
-			exit();
-
+			
 			/**
 			 * TODO: 
 			 *   - Récupération du code parent (si existant)
@@ -688,6 +684,22 @@ class ServicesAdmin extends Main
 			 * 			-> Si existant, écran édit avec message succès
 			 * 			-> Si non, écran view avec message succès
 			 */
+
+
+			// Jeux tests unitaires
+			$test1 = $this->servicesCategorie->createCodes('1030', '10', 0);
+			$test2 = $this->servicesCategorie->createCodes('30', null, 0);
+			$test3 = $this->servicesCategorie->createCodes(null, null, 0);
+			$test4 = $this->servicesCategorie->createCodes('1030', '20', 0);
+			//$test5 = $this->servicesCategorie->createCodes('103010', '20', 0);
+
+			//var_dump($test1);
+			//var_dump($test2);
+			//var_dump($test3);
+			//var_dump($test4);
+			//var_dump($test5);
+			exit();
+
 
 
 			// Récupération du tableau des nouveau codes

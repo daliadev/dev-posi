@@ -116,7 +116,10 @@ class ServicesAdminCategorie extends Main
 
 		$dataCategorie['code_cat'] = $formData['code_cat'];
 
-		
+
+
+		/* !!!! A vérifier !!! */
+
 		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
 		if (!empty($formData['code_cat']))
 		{
@@ -133,9 +136,8 @@ class ServicesAdminCategorie extends Main
 			}
 		}
 
-		// Test catégorie parente existante
 
-		
+		// Test catégorie parente existante
 
         if (!empty($postData['parent_cat_cbox']) && $postData['parent_cat_cbox'] != 'aucun')
         {
@@ -210,11 +212,11 @@ class ServicesAdminCategorie extends Main
 
 				$parentCode = substr($code, 0, $parentCodeLength);
 
-				return $parentCode;
+				//return $parentCode;
 			}
 		}
 
-		return false;
+		return $parentCode;
 	}
 
 
@@ -224,18 +226,16 @@ class ServicesAdminCategorie extends Main
 
 		$codeLength = strlen($code);
 
-		if ($codeLength === 0) {
-
-			$level = 0;
-			return $level;
+		if ($codeLength === 0) 
+		{
+			$level = 1;
 		}
 		else if ($codeLength % 2 === 0) 
 		{
 			$level = $codeLength / 2;
-			return $level;
 		}
 
-		return false;
+		return $level;
 	}
 
 
@@ -346,8 +346,8 @@ class ServicesAdminCategorie extends Main
 		
 		$previousIndex = null;
 		$nextIndex = null;
-		$previousCode = null;
-		$nextCode = null;
+		//$previousCode = null;
+		//$nextCode = null;
 		$newOrderedCodes = array();
 		$finalCodes = array();
 
@@ -396,7 +396,7 @@ class ServicesAdminCategorie extends Main
 
 
 
-	public function createCodesArray($code = null, $parentCode = null, $orderInput = null) {
+	public function createCodes($currentCode = null, $parentCode = null, $orderInput = null) {
 
 		$selectedCode = null;
 		$levelCodesArray = array();
@@ -405,14 +405,14 @@ class ServicesAdminCategorie extends Main
 
 		// Récupération du code parent (si existant)
 
-		if ($code !== null)
+		if ($currentCode !== null)
 		{	
 			// Stockage du code sélectionné
-			$selectedCode = $code;
+			$selectedCode = $currentCode;
 
 			if ($parentCode === null) 
 			{
-				$parentCode = $this->getParentCode($code);
+				$parentCode = $this->getParentCode($currentCode);
 			}
 		}
 		else
@@ -422,20 +422,20 @@ class ServicesAdminCategorie extends Main
 		}
 		
 
-		// Détermination du niveau hiérarchique dans lequel doit être inséré l'element
-		if ($code !== false && $code !== null)
+		// Détermination du niveau hiérarchique dans lequel doit être inséré l'élément
+		if ($currentCode !== false && $currentCode !== null)
 		{
-			$level = $this->getLevel($code);
+			$level = $this->getLevel($currentCode);
 
-			if (!$level)
+			if ($level === null)
 			{
-				$this->registerError("form_valid", "Le code de la catégorie parente est érronée.");
+				$this->registerError("form_valid", "Le code de la catégorie est érroné.");
 			}
 		}
 		else 
 		{
 			$parentCode = null;
-			$level = 0;
+			$level = 1;
 		}
 
 		//var_dump($parentCode, $level);
@@ -450,19 +450,20 @@ class ServicesAdminCategorie extends Main
 
 		// Création d'un tableau comportant la liste des codes du niveau
 		$levelCodes = array();
-		$codesArray = array();
+		$oldCodes = array();
 
-		$levelCodes = $this->categorieDAO->findCodesByLevel($code, $level);
-		//$newLevelCodes = $this->createLevelCodes($parentCode, $level, $order);
+		$levelCodes = $this->categorieDAO->findCodesByLevel($currentCode, $level); // $parentCode à la place de $currentCode
 
 		
 		foreach($levelCodes['response']['categorie'] as $categorie)
 		{
-			$codesArray[] = $categorie->getCode();
+			$oldCodes[] = $categorie->getCode();
 		}
-		var_dump($codesArray, $orderInput);
+
+		var_dump($currentCode, $parentCode, $oldCodes, $level);
+		//exit();
 		
-		$this->sortCodesByOrder($codesArray, $parentCode, $orderInput);
+		//$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
 
 		
 

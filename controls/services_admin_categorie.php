@@ -400,7 +400,7 @@ class ServicesAdminCategorie extends Main
 	public function createCodes($currentCode = null, $parentCode = null, $orderInput = null) {
 
 		$selectedCode = null;
-		$levelCodesArray = array();
+		//$levelCodes = array();
 		//$allCodesArray = array();
 		$level = 1;
 		
@@ -465,20 +465,30 @@ class ServicesAdminCategorie extends Main
 
 		$levelCodes = $this->categorieDAO->findCodesByLevel($parentCode, $level); // $parentCode à la place de $currentCode
 
-		//var_dump($levelCodes);
 		//var_dump($currentCode, $parentCode, $level, $levelCodes);
 		//exit();
+
 		if (isset($levelCodes['response']['errors']) && count($levelCodes['response']['errors']) > 0)
 		{
+			$this->filterDataErrors($levelCodes['response']);
+			/*
 			foreach ($levelCodes['response']['errors'] as $key => $value) {
 
 				$this->registerError($levelCodes['response']['errors'][$key]['type'], $levelCodes['response']['errors'][$key]['message']);
 			}
+			*/
 		}
-		else if (count($levelCodes['response']) > 0)
+		else if (!empty($levelCodes['response']['categorie']) && count($levelCodes['response']['categorie']) > 0)
 		{
-			foreach($levelCodes['response']['categorie'] as $categorie)
+	        if (count($levelCodes['response']['categorie']) == 1)
+	        { 
+	            $categorie = $levelCodes['response']['categorie'];
+	            $levelCodes['response']['categorie'] = array($categorie);
+	        }
+
+			foreach ($levelCodes['response']['categorie'] as $categorie)
 			{
+				//var_dump($categorie);
 				$oldCodes[] = $categorie->getCode();
 			}
 		}
@@ -487,10 +497,10 @@ class ServicesAdminCategorie extends Main
 			$this->registerError("form_valid", "La catégorie n'existe pas.");
 		}
 
-		//var_dump($currentCode, $parentCode, $oldCodes, $level);
-		//exit();
+		var_dump($currentCode, $parentCode, $oldCodes, $level);
+		exit();
 		
-		$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
+		//$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
 
 		
 

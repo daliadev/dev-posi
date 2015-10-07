@@ -62,6 +62,7 @@ class CategorieDAO extends ModelDAO
 	{
 		$this->initialize();
 
+		$parentLevel = null;
 		$search = '';
 		$error = false;
 
@@ -84,24 +85,25 @@ class CategorieDAO extends ModelDAO
 		}
 		//var_dump($parentLevel);
 
-		if ($parentLevel * 2 == strlen($parentCode)) 
+		if ($parentLevel !== null && !$error) 
 		{
 			$searchLevel = $parentLevel + 1;
 
 			// + les sous-catégories enfants
-			$search .= $parentCode; 
+			$search .= $parentCode.'%';;
 
 			// sans les sous-catégories enfants
 			//$search .= substr($parentCode, 0, $searchLevel * 2);
 			//$search .= $parentCode;
 			
+			/*
 			$underscoresNum = $searchLevel * 2 - strlen($parentCode);
 			
 			for ($i = 0; $i < $underscoresNum; $i++) 
 			{ 
 				$search .= '_';
 			}
-			
+			*/
 		}
 		else
 		{
@@ -114,7 +116,7 @@ class CategorieDAO extends ModelDAO
 			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."' ORDER BY code_cat ASC";
 			var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
-			var_dump($this->resultset['response']);
+			//var_dump($this->resultset['response']);
 			//exit();
 		}
 		else

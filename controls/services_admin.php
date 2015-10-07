@@ -687,11 +687,13 @@ class ServicesAdmin extends Main
 
 
 			// Jeux tests unitaires
-			$test1 = $this->servicesCategorie->createCodes('1030', '10', 0);
-			$test2 = $this->servicesCategorie->createCodes('30', null, 0);
-			$test3 = $this->servicesCategorie->createCodes(null, null, 0);
-			$test4 = $this->servicesCategorie->createCodes('1030', '20', 0);
-			//$test5 = $this->servicesCategorie->createCodes('103010', '20', 0);
+			//$test1 = $this->servicesCategorie->createCodes('1030', '10', 0); // Situation classique
+			//$test2 = $this->servicesCategorie->createCodes('30', null, 0); // Code parent nul
+			//$test2b = $this->servicesCategorie->createCodes(null, '3010', 0); // Code nul
+			//$test3 = $this->servicesCategorie->createCodes(null, null, 0); // Code et code parent nuls
+			//$test4 = $this->servicesCategorie->createCodes('1030', '20', 0); // Code parent différent de code
+			//$test5 = $this->servicesCategorie->createCodes('103010', '10', 0); // Code qui n'existe pas, un peu plus loin dans la hiérarchie 
+			//$test6 = $this->servicesCategorie->createCodes('103010', '20', 0); // Code qui n'existe pas avec code parent différent de code
 
 			//var_dump($test1);
 			//var_dump($test2);

@@ -58,7 +58,7 @@ class CategorieDAO extends ModelDAO
 
 
 
-	public function findCodesByLevel($code, $level = null)
+	public function findCodesByLevel($parentCode, $level = null)
 	{
 		$this->initialize();
 
@@ -72,42 +72,49 @@ class CategorieDAO extends ModelDAO
 		}
 		else
 		{
-			$parentLevel = 0;
-		}
-
-		if (!empty($code) && $code !== null)
-		{   
-			if (($parentLevel * 2) <= strlen($code)) 
+			if ($parentCode !== null && strlen($parentCode) >= 2)
 			{
-				// + les sous-catégories enfants
-				//$search .= substr($code, 0, $parentLevel * 2) .'%'; 
-
-				// sans les sous-catégories enfants
-				$search .= substr($code, 0, $parentLevel * 2); 
-				$underscoresNum = strlen($code) - strlen($search);
-				
-				for ($i = 0; $i < $underscoresNum; $i++) 
-				{ 
-					$search .= '_';
-				}
+				$parentLevel = strlen($parentCode) % 2 === 0 ? strlen($parentCode) / 2 : null;
 			}
-			else 
+			else
 			{
 				$error = true;
+				//$parentLevel = 0;
 			}
+		}
+		//var_dump($parentLevel);
+
+		if ($parentLevel * 2 == strlen($parentCode)) 
+		{
+			$searchLevel = $parentLevel + 1;
+
+			// + les sous-catégories enfants
+			$search .= $parentCode; 
+
+			// sans les sous-catégories enfants
+			//$search .= substr($parentCode, 0, $searchLevel * 2);
+			//$search .= $parentCode;
+			
+			$underscoresNum = $searchLevel * 2 - strlen($parentCode);
+			
+			for ($i = 0; $i < $underscoresNum; $i++) 
+			{ 
+				$search .= '_';
+			}
+			
 		}
 		else
 		{
-			//$search = '10';
-			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour effectuer la recherche.");
+			//$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour effectuer la recherche.");
+			$error = true;
 		}
 		
 		if (!empty($search) && !$error)
 		{   
 			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."' ORDER BY code_cat ASC";
-			//var_dump($request);
+			var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
-			//var_dump($this->resultset['response']);
+			var_dump($this->resultset['response']);
 			//exit();
 		}
 		else

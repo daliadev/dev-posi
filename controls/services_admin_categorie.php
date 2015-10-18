@@ -342,12 +342,12 @@ class ServicesAdminCategorie extends Main
 		 * 
 		 * 	Faire tableau contenant les nouveau codes, les anciens codes et l'ordre correspondant (clé du tableau)
 		 */
-		var_dump('sort');
+		var_dump('sort', $insertOrder);
 		
 		$previousIndex = null;
 		$nextIndex = null;
-		//$previousCode = null;
-		//$nextCode = null;
+		$previousCode = null;
+		$nextCode = null;
 		$newOrderedCodes = array();
 		$finalCodes = array();
 
@@ -363,7 +363,7 @@ class ServicesAdminCategorie extends Main
 			}
 		}
 		
-		/*
+		
 		if ($previousIndex !== null)
 		{
 			//$previousIndex = 0;
@@ -375,11 +375,12 @@ class ServicesAdminCategorie extends Main
 			//$nextIndex = count($oldCodes);
 			$nextCode = $oldCodes[$nextIndex];
 		}
-		*/
+		
 		//$previousCode = $oldCodes[$previousIndex];
 		//$nextCode = $oldCodes[$nextIndex];
 
-		$newCode = $this->generateNewCodes($previousIndex, $nextIndex, $oldCodes);
+		var_dump($previousIndex, $nextIndex, $previousCode, $nextCode);
+		//$newCode = $this->generateNewCodes($previousIndex, $nextIndex, $oldCodes);
 		/*
 		for ($i = $previousCode; $i < $oldCodes; $i++) 
 		{
@@ -488,8 +489,14 @@ class ServicesAdminCategorie extends Main
 
 			foreach ($levelCodes['response']['categorie'] as $categorie)
 			{
-				//var_dump($categorie);
-				$oldCodes[] = $categorie->getCode();
+				$code = substr($categorie->getCode(), strlen($parentCode), strlen($categorie->getCode()));
+
+				if (strlen($code) !== 0) 
+				{
+					$oldCodes[] = $code;
+				}
+
+				//$oldCodes[] = $categorie->getCode();
 			}
 		}
 		else
@@ -498,11 +505,11 @@ class ServicesAdminCategorie extends Main
 		}
 
 		var_dump($currentCode, $parentCode, $oldCodes, $level);
-		exit();
 		
-		//$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
+		
+		$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
 
-		
+		exit();
 
 		// Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
 		//$allCodesArray = $this->generateCodes($levelCodesArray, $selectedCode);

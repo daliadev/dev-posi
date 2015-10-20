@@ -359,18 +359,21 @@ class ServicesAdminCategorie extends Main
 		$nextCode = null;
 		//$newOrderedCodes = array();
 		//$finalCodes = array();
-		$count = 0;
+		
+		$count = 1;
 
 		for ($i = 0; $i < count($oldCodes); $i++) 
 		{
-			if (strlen($oldCodes[$i]) == 2)
+			$code = substr($oldCodes[$i], strlen($parentCode));
+
+			if (strlen($code) == 2)
 			{
-				var_dump($count);
-				if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
+				//var_dump($count);
+				if (($insertOrder - 1) >= 0 && $count == ($insertOrder - 1)) 
 				{
 					$previousIndex = $i;
 				}
-				else if ($insertOrder == $i) 
+				else if ($insertOrder == $count) 
 				{
 					$nextIndex = $i;
 				}
@@ -505,14 +508,16 @@ class ServicesAdminCategorie extends Main
 
 			foreach ($levelCodes['response']['categorie'] as $categorie)
 			{
+				/*
 				$code = substr($categorie->getCode(), strlen($parentCode), strlen($categorie->getCode()));
 
 				if (strlen($code) !== 0) 
 				{
 					$oldCodes[] = $code;
 				}
+				*/
 
-				//$oldCodes[] = $categorie->getCode();
+				$oldCodes[] = $categorie->getCode();
 			}
 		}
 		else

@@ -277,30 +277,62 @@ $form_url = $response['url'];
                                         <?php endif; ?>
                                             
                                         <br/>
-                                        
+                                        <!-- 
                                         <div class="stats gradiant_pic">
                                             <ul>
 
-                                            <?php foreach ($stats['categories'] as $statCategorie) : ?>
+                                            <?php //foreach ($stats['categories'] as $statCategorie) : ?>
 
-                                                <?php if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
+                                                <?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
 
                                                 <li>
 
-                                                    <p><?php echo $statCategorie['nom_categorie']; ?> :
-                                                        <strong><?php echo $statCategorie['percent']; ?>%</strong> (<strong><?php echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
-                                                        <?php $width = $statCategorie['percent']; ?>
-                                                        <span class="percent" style="width:<?php echo $width; ?>%" title="<?php echo $statCategorie['descript_categorie']; ?>"></span>
+                                                    <p><?php //echo $statCategorie['nom_categorie']; ?> :
+                                                        <strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
+                                                        <?php //$width = $statCategorie['percent']; ?>
+                                                        <span class="percent" style="width:<?php //echo $width; ?>%" title="<?php //echo $statCategorie['descript_categorie']; ?>"></span>
                                                     </p>
 
                                                 </li>
 
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
+                                                <?php //endif; ?>
+                                            <?php //endforeach; ?>
 
                                             </ul>
 
+                                        </div> -->
+
+                                        <div id="categories-list categories-score">
+                                            
+                                            <?php echo $stats['categories']; ?>
+                                            <!-- <ul> -->
+                                            
+                                            <?php //foreach ($stats['categories'] as $statCategorie) : ?>
+                                                
+
+                                                
+                                                <?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
+
+                                                <!-- <li>
+
+                                                    <p><?php //echo $statCategorie['nom_categorie']; ?> :
+                                                        <strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php //echo $statCategorie['total']; ?></strong> questions)
+                                                        <?php //$width = $statCategorie['percent']; ?>
+                                                        <span class="percent" style="width:<?php //echo $width; ?>%" title="<?php// echo $statCategorie['descript_categorie']; ?>"></span>
+                                                    </p>
+
+                                                </li> -->
+
+                                                <?php //endif; ?>
+                                                
+
+                                            <?php //endforeach; ?>
+
+                                            <!-- <ul> -->
+
                                         </div>
+
+
                                     <?php else : ?>
 
                                         <div class="info">Aucun positionnement n'est sélectionné.</div>

@@ -90,13 +90,14 @@ class CategorieDAO extends ModelDAO
 			$searchLevel = $parentLevel + 1;
 
 			// + les sous-catégories enfants
-			$search .= $parentCode.'%';;
+			$search .= $parentCode.'%';
 
 			// sans les sous-catégories enfants
-			//$search .= substr($parentCode, 0, $searchLevel * 2);
-			//$search .= $parentCode;
-			
 			/*
+			//$search .= substr($parentCode, 0, $searchLevel * 2);
+			$search .= $parentCode;
+			
+			
 			$underscoresNum = $searchLevel * 2 - strlen($parentCode);
 			
 			for ($i = 0; $i < $underscoresNum; $i++) 
@@ -104,6 +105,7 @@ class CategorieDAO extends ModelDAO
 				$search .= '_';
 			}
 			*/
+			
 		}
 		else
 		{

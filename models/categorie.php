@@ -30,6 +30,20 @@ class Categorie
     {
         return $this->type_lien_cat;
     }
+
+    public function getParent()
+    {
+        $parentCode = 0;
+        $parentLength = 0;
+
+        if ($this->code_cat !== null)
+        {
+            $parentLength = (strlen($this->code_cat) - 2 > 0) ? strlen($this->code_cat) : 0;
+            $parentCode = substr($this->code_cat, 0, $parentLength);
+        }
+
+        return $parentCode;
+    }
 }
 
 ?>

@@ -45,6 +45,13 @@ class ServicesAdminCategorie extends Main
 		return false;
 	}
 
+	/*
+	public function getCategoriesHierarchy()
+	{
+
+		
+	}
+	*/
 
 
 	public function getCategoriesByLevel($code, $level)
@@ -343,23 +350,32 @@ class ServicesAdminCategorie extends Main
 		 * 	Faire tableau contenant les nouveau codes, les anciens codes et l'ordre correspondant (clé du tableau)
 		 */
 		var_dump('sort', $insertOrder);
+		//var_dump($oldCodes);
+		//var_dump($parentCode);
 		
 		$previousIndex = null;
 		$nextIndex = null;
 		$previousCode = null;
 		$nextCode = null;
-		$newOrderedCodes = array();
-		$finalCodes = array();
+		//$newOrderedCodes = array();
+		//$finalCodes = array();
+		$count = 0;
 
 		for ($i = 0; $i < count($oldCodes); $i++) 
 		{
-			if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
+			if (strlen($oldCodes[$i]) == 2)
 			{
-				$previousIndex = $i;
-			}
-			else if ($insertOrder == $i) 
-			{
-				$nextIndex = $i;
+				var_dump($count);
+				if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
+				{
+					$previousIndex = $i;
+				}
+				else if ($insertOrder == $i) 
+				{
+					$nextIndex = $i;
+				}
+
+				$count++;
 			}
 		}
 		
@@ -379,7 +395,7 @@ class ServicesAdminCategorie extends Main
 		//$previousCode = $oldCodes[$previousIndex];
 		//$nextCode = $oldCodes[$nextIndex];
 
-		var_dump($previousIndex, $nextIndex, $previousCode, $nextCode);
+		var_dump("prevIndex = ", $previousIndex, "nextIndex = ", $nextIndex, "prevCode = ", $previousCode, "nextCode = ", $nextCode);
 		//$newCode = $this->generateNewCodes($previousIndex, $nextIndex, $oldCodes);
 		/*
 		for ($i = $previousCode; $i < $oldCodes; $i++) 

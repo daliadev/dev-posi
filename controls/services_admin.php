@@ -695,7 +695,7 @@ class ServicesAdmin extends Main
 			//$test5 = $this->servicesCategorie->createCodes('103010', '10', 0); // Code qui n'existe pas, un peu plus loin dans la hiérarchie 
 			//$test6 = $this->servicesCategorie->createCodes('103010', '20', 0); // Code qui n'existe pas avec code parent différent de code
 
-			$test1 = $this->servicesCategorie->createCodes('1030', '10', 6); // Situation classique
+			$test1 = $this->servicesCategorie->createCodes('1030', '10', 3); // Situation classique
 
 			//var_dump($test1);
 			//var_dump($test2);

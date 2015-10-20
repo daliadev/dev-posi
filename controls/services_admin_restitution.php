@@ -14,6 +14,8 @@ require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/valid_acquis_dao.php');
 
+//require_once(ROOT.'controls/services_admin_categorie.php');
+
 
 
 class ServicesAdminRestitution extends Main
@@ -31,6 +33,8 @@ class ServicesAdminRestitution extends Main
     private $questionCatDAO = null;
     private $categorieDAO = null;
     private $validAcquisDAO = null;
+
+   // private $servicesCategories = null;
     
     
     
@@ -51,6 +55,8 @@ class ServicesAdminRestitution extends Main
         $this->questionCatDAO = new QuestionCategorieDAO();
         $this->categorieDAO = new CategorieDAO();
         $this->validAcquisDAO = new ValidAcquisDAO();
+
+        //$this->servicesCategories = new ServicesAdminCategorie()
     }
 
     
@@ -288,12 +294,13 @@ class ServicesAdminRestitution extends Main
         
 
         $posiStats['percent_global'] = null;
-        $posiStats['categories'] = array();
+        //$posiStats['categories'] = array();
         
         
         /*** On récupère la liste des categories ***/
         
         $resultsetcategories = $this->getCategories();
+        //$resultsetcategories = $this->servicesCategories->getCategoriesHierarchy();
         $categoriesList = $resultsetcategories['response']['categorie'];
         
         
@@ -316,7 +323,7 @@ class ServicesAdminRestitution extends Main
             $tabStats[$j]['code_cat'] = $codeCat;
             $tabStats[$j]['nom'] = $categorie->getNom();
             $tabStats[$j]['description'] = $categorie->getDescription();
-            $tabStats[$j]['type_lien'] = $categorie->getTypeLien();
+            //$tabStats[$j]['type_lien'] = $categorie->getTypeLien();
             $tabStats[$j]['total'] = 0;
             $tabStats[$j]['total_correct'] = 0;
             
@@ -355,7 +362,7 @@ class ServicesAdminRestitution extends Main
         
         
         /*** Intégration du système d'héritage des résultats ***/
-        
+        /*
         for ($i = 0; $i < count($tabStats); $i++)
         {
             // On détermine si c'est une categorie principale ou une sous-categorie
@@ -395,10 +402,10 @@ class ServicesAdminRestitution extends Main
             }
 
         }
-        
+        */
         
         /*** Données envoyées à la page de résultat ***/
-
+        /*
         $posiStats['categories'] = array();
         $k = 0;
         
@@ -422,7 +429,7 @@ class ServicesAdminRestitution extends Main
             
             $k++;
         }
-        
+        */
         
         /*** Stats globales ***/
         

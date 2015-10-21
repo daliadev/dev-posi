@@ -246,14 +246,7 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-
 	/*
-	private function generateCode($previousCode, $nextCode, $increment) 
-	{
-		return null;
-	}
-	*/
-
 	private function generateNewCodes($previousIndex, $nextIndex, $codes)
 	{
 		//$codePrefix = strlen($codes[0]) - 2;
@@ -325,9 +318,17 @@ class ServicesAdminCategorie extends Main
 
 		return $newCode;
 	}
+	*/
 
 
-	private function sortCodesByOrder($oldCodes, $parentCode, $insertOrder)
+
+	private function decayOldCodes($oldCodes, $index, $increment) {
+
+	}
+
+
+
+	private function sortCodesByOrder($oldCodes, $parentCode, $insertOrder = null)
 	{
 		/**
 		 *
@@ -363,14 +364,15 @@ class ServicesAdminCategorie extends Main
 
 		for ($i = 0; $i < count($oldCodes); $i++) 
 		{
-			if (strlen($oldCodes[$i]) == 2)
+			$code = substr($oldCodes[$i], strlen($parentCode));
+
+			if (strlen($code) == 2)
 			{
-				var_dump($count);
-				if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
+				if (($insertOrder - 1) >= 0 && $count == ($insertOrder - 1)) 
 				{
 					$previousIndex = $i;
 				}
-				else if ($insertOrder == $i) 
+				else if ($insertOrder == $count) 
 				{
 					$nextIndex = $i;
 				}
@@ -382,34 +384,36 @@ class ServicesAdminCategorie extends Main
 		
 		if ($previousIndex !== null)
 		{
-			//$previousIndex = 0;
 			$previousCode = $oldCodes[$previousIndex];
 		}
 
 		if ($nextIndex !== null)
 		{
-			//$nextIndex = count($oldCodes);
 			$nextCode = $oldCodes[$nextIndex];
 		}
 		
-		//$previousCode = $oldCodes[$previousIndex];
-		//$nextCode = $oldCodes[$nextIndex];
+		$decay = false;
+
+		$increment = round(($nextCode - $previousCode) / 2);
+
+		if ($increment < 2)
+		{
+			$decay = true;
+		}
 
 		var_dump("prevIndex = ", $previousIndex, "nextIndex = ", $nextIndex, "prevCode = ", $previousCode, "nextCode = ", $nextCode);
-		//$newCode = $this->generateNewCodes($previousIndex, $nextIndex, $oldCodes);
-		/*
-		for ($i = $previousCode; $i < $oldCodes; $i++) 
+
+		if ($decay)
 		{
-			if (($insertOrder - 1) >= 0 && $i == ($insertOrder - 1)) 
-			{
-				$previousIndex = $i;
-			}
-			else if ($insertOrder == $i) 
-			{
-				$nextIndex = $i;
-			}
+
 		}
-		*/
+		else
+		{
+			$newCode = $previousCode + $increment;
+			var_dump("newCode = ", $newCode);
+		}
+
+		//$newCode = $this->generateCode($previousIndex, $nextIndex, $oldCodes);
 	}
 
 
@@ -505,14 +509,16 @@ class ServicesAdminCategorie extends Main
 
 			foreach ($levelCodes['response']['categorie'] as $categorie)
 			{
+				/*
 				$code = substr($categorie->getCode(), strlen($parentCode), strlen($categorie->getCode()));
 
 				if (strlen($code) !== 0) 
 				{
 					$oldCodes[] = $code;
 				}
+				*/
 
-				//$oldCodes[] = $categorie->getCode();
+				$oldCodes[] = $categorie->getCode();
 			}
 		}
 		else

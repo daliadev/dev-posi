@@ -360,7 +360,8 @@ class ServicesAdminCategorie extends Main
 		$nextCode = null;
 		//$newOrderedCodes = array();
 		//$finalCodes = array();
-		$count = 0;
+		
+		$count = 1;
 
 		for ($i = 0; $i < count($oldCodes); $i++) 
 		{

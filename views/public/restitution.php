@@ -336,7 +336,49 @@ $form_url = $response['url'];
 
 												return $html;
 												
+												/*
+												$animaux = array(
+													array('id' => 10, 'parent' => 0, 'nom' => 'Félins'), 
+													array('id' => 20, 'parent' => 0, 'nom' => 'Canins'),
+													array('id' => 1010, 'parent' => 1, 'nom' => 'Lion'),
+													array('id' => 1020, 'parent' => 1, 'nom' => 'Chat'),
+													array('id' => 2010, 'parent' => 2, 'nom' => 'Chien'),
+													array('id' => 102010, 'parent' => 4, 'nom' => 'Chat de gouttière'),
+													array('id' => 102020, 'parent' => 4, 'nom' => 'Chat siamois'),
+													array('id' => 201010, 'parent' => 5, 'nom' => 'Berger allemand'),
+													array('id' => 201020, 'parent' => 5, 'nom' => 'Caniche')
+												);
 
+
+												function afficher($parent, $depth, $datas) {
+
+													$text = '';
+
+													foreach ($datas as $node) {
+														
+														$parentNode = substr($node['id'], 0, -2);
+
+														//var_dump($parent, $parentNode);
+														
+														if ($parent == $parentNode) {
+
+															for ($i = 0; $i < $depth; $i++) {
+
+																$text .= '-';
+															}
+
+															$text .= ' '.$node['nom'].'<br/>';
+															$text .= afficher($node['id'], ($depth + 1), $datas);
+														}
+														
+													}
+
+													return $text;
+												}
+
+
+												echo afficher(0, 0, $animaux);
+												*/
 											?>
 
 											<?php //foreach ($stats['categories'] as $statCategorie) : ?>

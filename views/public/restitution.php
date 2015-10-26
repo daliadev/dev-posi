@@ -1,5 +1,8 @@
 <?php
 
+require_once(ROOT.'utils/array_sort.php');
+
+
 
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
@@ -301,108 +304,103 @@ $form_url = $response['url'];
 											</ul>
 
 										</div> -->
+										
 
 										<div id="categories-list categories-score">
 											
-											<?php 
+											<div class="progressbars" style="width:580px;">
+												
+												<?php
+													$sortedCat = ArraySort::recursiveList(null, 0, $stats['categories']);
+													//echo $sortedCat;
+													//exit();
+												?>
 
-												$html = '';
-												$level = 0;
-												$previousLevel = 0;
-												$parentCode = 0;
-												$codes = null;
+												<?php
 
-												while (true)
-												{
-													foreach ($stats['categories'] as $categorie) {
+													$htmlList = '';
 
-														if ($parentCode == $categorie->getParent()) 
+													$firstLevel = preg_split('/(<ul>)/', $sortedCat);
+
+													//$firstLevelArray = explode('<ul>', $matches);
+
+													var_dump($firstLevel);
+													//var_dump($firstLevelArray);
+													exit();
+													/*
+													while (strlen($htmlList) < strlen(sortedCat))
+													{
+
+
+													}
+													*/
+
+													/*
+													$list = '';
+													$parent = null;
+													$level = 0;
+													$datas = $stats['categories'];
+													$currentNode = 0;
+													var_dump(count($datas));
+
+													while ($currentNode <= count($datas))
+													{
+														$previous_level = 0;
+
+														if ($level == 0) 
 														{
-															$code = $categorie->getCode();
+															$list .= '<ul>';
+														}
 
-															for ($i = 0; $i < $level; $i++) 
+														foreach ($datas as $node) 
+														{
+															if (isset($node['parent']) && $parent == $node['parent']) 
 															{
-																$html .= '-';
+																if ($previous_level < $level) 
+																{
+																	$list .= '<ul>';
+																}
+
+																$list .= '<li>'.$node['nom'].'</li>';
+																$previous_level = $level;
+
+																$level++;
+																$parent = $node['id'];
+																//$list .= self::recursiveList($node['id'], ($level + 1), $datas);
+
+																$currentNode++;
 															}
-
-															$html .= ' '.$categorie->getNom().'<br/>';
-															//$html .= afficher($categorie->getCode(), ($level + 1), $datas);
-
-															$level + 1;
 														}
-													}
-													break;
-												}
 
-												return $html;
-												
-												/*
-												$animaux = array(
-													array('id' => 10, 'parent' => 0, 'nom' => 'Félins'), 
-													array('id' => 20, 'parent' => 0, 'nom' => 'Canins'),
-													array('id' => 1010, 'parent' => 1, 'nom' => 'Lion'),
-													array('id' => 1020, 'parent' => 1, 'nom' => 'Chat'),
-													array('id' => 2010, 'parent' => 2, 'nom' => 'Chien'),
-													array('id' => 102010, 'parent' => 4, 'nom' => 'Chat de gouttière'),
-													array('id' => 102020, 'parent' => 4, 'nom' => 'Chat siamois'),
-													array('id' => 201010, 'parent' => 5, 'nom' => 'Berger allemand'),
-													array('id' => 201020, 'parent' => 5, 'nom' => 'Caniche')
-												);
-
-
-												function afficher($parent, $depth, $datas) {
-
-													$text = '';
-
-													foreach ($datas as $node) {
-														
-														$parentNode = substr($node['id'], 0, -2);
-
-														//var_dump($parent, $parentNode);
-														
-														if ($parent == $parentNode) {
-
-															for ($i = 0; $i < $depth; $i++) {
-
-																$text .= '-';
-															}
-
-															$text .= ' '.$node['nom'].'<br/>';
-															$text .= afficher($node['id'], ($depth + 1), $datas);
+														if ($previous_level == $level && $previous_level != 0) 
+														{
+															$list .= '</ul>';
 														}
-														
+
+														$currentNode++;
 													}
 
-													return $text;
-												}
+													//var_dump($currentNode);
+													echo $list;
+													exit();
+													*/
+													
+												?>
 
+			                                    <?php //for ($i = 0; $i < count($response['stats']['global']['categories']); $i++) : ?>
 
-												echo afficher(0, 0, $animaux);
-												*/
-											?>
+			                                        <div class="progressbar">
+			                                            <div class="progressbar-title" title="<?php echo $response['stats']['global']['categories'][$i]['description']; ?>">
+			                                                <?php echo $response['stats']['global']['categories'][$i]['nom']; ?> / <strong><?php echo $response['stats']['global']['categories'][$i]['pourcent']; ?></strong>%
+			                                                <div class="progressbar-bg">
+			                                                    <span class="bg-<?php echo getColor($response['stats']['global']['categories'][$i]['pourcent']); ?>" style="width:<?php echo $response['stats']['global']['categories'][$i]['pourcent']; ?>%;"></span>
+			                                                </div>
+			                                            </div>
+			                                        </div>
 
-											<?php //foreach ($stats['categories'] as $statCategorie) : ?>
-												
-
-												
-												<?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : ?>
-
-												<!-- <li>
-
-													<p><?php //echo $statCategorie['nom_categorie']; ?> :
-														<strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php //echo $statCategorie['total']; ?></strong> questions)
-														<?php //$width = $statCategorie['percent']; ?>
-														<span class="percent" style="width:<?php //echo $width; ?>%" title="<?php// echo $statCategorie['descript_categorie']; ?>"></span>
-													</p>
-
-												</li> -->
-
-												<?php //endif; ?>
-												
-
-											<?php //endforeach; ?>
-
-											<!-- <ul> -->
+			                                    <?php //endfor; ?>
+			                                        
+			                                </div>
 
 										</div>
 

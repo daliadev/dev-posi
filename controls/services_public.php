@@ -334,7 +334,7 @@ class ServicesPublic extends Main
 
 						$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
 
-						$this->returnData['response']['stats']['categories'] = $this->getCategoriesHierarchy(0, 0, $categoriesArray);
+						//$this->returnData['response']['stats']['categories'] = $this->getCategoriesHierarchy(0, 0, $categoriesArray);
 						
 						
 
@@ -650,7 +650,7 @@ class ServicesPublic extends Main
 
 
 
-
+	/*
 	private function getCategoriesHierarchy($parent, $level, $categoriesArray)
 	{
 		$list = '';
@@ -688,6 +688,7 @@ class ServicesPublic extends Main
 
 		return $list;
 	}
+	*/
 	
 }
 

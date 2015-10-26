@@ -302,7 +302,7 @@ class ServicesAdminRestitution extends Main
         $resultsetcategories = $this->getCategories();
         //$resultsetcategories = $this->servicesCategories->getCategoriesHierarchy();
         $categoriesList = $resultsetcategories['response']['categorie'];
-        
+        $posiStats['categories'] = $resultsetcategories['response']['categorie'];
         
         /*** On va chercher tous les résultats classés par categories ***/
         
@@ -360,6 +360,24 @@ class ServicesAdminRestitution extends Main
             $j++;
         }
         
+
+        /* Transformation des objets Catégories en tableau générique */
+
+        $arrayCat = array();
+        $i = 0;
+
+        foreach ($posiStats['categories'] as $categorie) {
+            
+            $arrayCat[$i]['id'] = $categorie->getCode();
+            $arrayCat[$i]['parent'] = $categorie->getParent();
+            $arrayCat[$i]['nom'] = $categorie->getNom();
+            $arrayCat[$i]['description'] = $categorie->getDescription();
+
+            $i++;
+        }
+
+        $posiStats['categories'] = $arrayCat;
+
         
         /*** Intégration du système d'héritage des résultats ***/
         /*

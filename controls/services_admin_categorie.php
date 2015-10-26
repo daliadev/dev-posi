@@ -519,7 +519,7 @@ class ServicesAdminCategorie extends Main
 				}
 				*/
 
-				$oldCodes[] = $categorie->getCode();
+				//$oldCodes[] = $categorie->getCode();
 			}
 		}
 		else

@@ -311,13 +311,13 @@ $form_url = $response['url'];
 											<div class="progressbars" style="width:580px;">
 												
 												<?php
-													$sortedCat = ArraySort::recursiveList(null, 0, $stats['categories']);
-													//echo $sortedCat;
-													//exit();
+													$sortedCat = ArraySort::recursiveArray(0, 0, $stats['categories']);
+													var_dump($sortedCat);
+													exit();
 												?>
 
 												<?php
-
+													/*
 													$htmlList = '';
 
 													$firstLevel = preg_split('/(<ul>)/', $sortedCat);
@@ -327,6 +327,7 @@ $form_url = $response['url'];
 													var_dump($firstLevel);
 													//var_dump($firstLevelArray);
 													exit();
+													*/
 													/*
 													while (strlen($htmlList) < strlen(sortedCat))
 													{

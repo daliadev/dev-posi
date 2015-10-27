@@ -57,7 +57,7 @@ class ArraySort {
 
 	static public function recursiveArray($depth, $index, $datas, $currentArray = array())
     {
-    	var_dump($depth, 'yo', $index, 'end');
+    	//var_dump($depth, 'yo', $index, 'end');
     	$array = null;
     	$tempArray = array();
 		$previousDepth = 0;
@@ -76,10 +76,10 @@ class ArraySort {
 		{
 			//var_dump($count);
 			//var_dump(count($parentArray), count($array) - 1);
-			if ($index == $depth)
+			if (count($currentArray) == $index)
 			//if (count($array) !== null && count($parentArray) == count($array) - 1)
 			{
-				//var_dump($parentArray, $array);
+				var_dump(count($currentArray));
 				//for ($i = 0; $i < count($array); $i++) { 
 					# code...
 				//}
@@ -101,7 +101,7 @@ class ArraySort {
 		if ($previousDepth == $depth && $previousDepth != 0) 
 		{
 			$index++;
-			$array[] = $tempArray;
+			//$array[] = $tempArray;
 		}
 
 		return $array;

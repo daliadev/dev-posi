@@ -363,6 +363,35 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<div style="clear:both"></div>
 
+				
+				<!-- Partie basse : Gestion des parcours / préconisations de la compétence -->
+				<?php if (Config::ALLOW_PRECONISATION) : ?>
+
+				<div>
+
+					<div class="zone-formu2">
+	 
+						<div id="preconisations" class="form-full">
+
+							<fieldset>
+								
+								<legend>Préconisations de parcours</legend>
+								
+								<div>
+									
+									<a class="plus-button" href="#"><p>Ajouter une nouvelle préconisations.</p></a>
+
+									<a class="plus-button" href="#">Ajouter un découpage intervalaire pour cette categorie.</p></a>
+									
+								</div>
+
+								<hr />
+
+							</fieldset>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
 
 				<!-- Partie basse : Boutons de gestion de la question -->
 				<div class="zone-formu2">

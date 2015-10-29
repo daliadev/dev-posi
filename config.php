@@ -92,6 +92,12 @@ class Config
 
 
 
+    // Active la gestion des préconisations de parcourts pour les compétences
+    const ALLOW_PRECONISATION = 1; // autorisé (1) / non autorisé (0)
+
+
+
+
     /* Infos de connexion de la base de données*/
 
     public static $database = array(

@@ -55,7 +55,7 @@ class ArraySort {
 
 
 
-	static public function recursiveArray($depth, $index, $datas, $currentArray = array())
+	static public function recursiveArray($index, $depth, $datas, $currentArray = array())
     {
     	//var_dump($depth, 'yo', $index, 'end');
     	$array = null;
@@ -72,35 +72,34 @@ class ArraySort {
 			$array = $currentArray;
 		}
 
+		$i = 0;
+
 		foreach ($datas as $node) 
 		{
 			//var_dump($count);
-			//var_dump(count($parentArray), count($array) - 1);
-			if (count($currentArray) == $index)
-			//if (count($array) !== null && count($parentArray) == count($array) - 1)
+			if ($depth - 1 == count($array[$index]))
 			{
-				var_dump(count($currentArray));
-				//for ($i = 0; $i < count($array); $i++) { 
-					# code...
-				//}
-				//}
-				//if ($parentArray == $node['parent']) 
-				//{
-				//if ($previousDepth < $depth) 
-				//{
-				//	$tempArray = array();
-				//}
+				$index++;
+				//var_dump(count($currentArray));
 
-				array_push($tempArray, $node);
+				for ($i = 0; $i < count($depth); $i++) 
+				{ 	
+					//$tempArray = 
+				}
+				
+				$array[] = $tempArray;
+				//array_push($tempArray, $node);
 				$previousDepth = $depth;
 
-				$array[$depth] = self::recursiveArray(($depth + 1), $index, $datas, $tempArray);
+				$array[$depth] = self::recursiveArray($index, ($depth + 1), $datas, $tempArray);
 			}
+
+			$i++;
 		}
 
 		if ($previousDepth == $depth && $previousDepth != 0) 
 		{
-			$index++;
+			//$index++;
 			//$array[] = $tempArray;
 		}
 

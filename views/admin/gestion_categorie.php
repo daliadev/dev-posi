@@ -367,7 +367,7 @@ $form_url = WEBROOT."admin/categorie/";
 				<!-- Partie basse : Gestion des parcours / préconisations de la compétence -->
 				<?php if (Config::ALLOW_PRECONISATION) : ?>
 
-				<div>
+				<!-- <div> -->
 
 					<div class="zone-formu2">
 	 
@@ -375,22 +375,74 @@ $form_url = WEBROOT."admin/categorie/";
 
 							<fieldset>
 								
-								<legend>Préconisations de parcours</legend>
+								<legend><span style="display: block; float: left;">Préconisations de parcours</span><span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span><span style="display: block; clear: both;"></span></legend>
 								
+								<p>
+									Cette section vous permet de mettre en oeuvre une stratégie de préconisation de parcours. 
+									Il vous suffit de saisir au préalable la ou les domaines (parcours, temps, ...) que vous souhaitez voir travailler par l'utilisateur, en cliquant sur "Ajouter une nouvelle préconisation".
+									Ces préconisations pourront ensuite être attribuées à l'ensemble des compétences ou pour chacune d'entre elles. 
+									Ceci fait, il vous est possible de définir des intervalles (en pourcentage) des résultats obtenus lors de la passation du positionnement. 
+									Ces intervalles correspondent à des seuils à partir desquels vous établissez une préconisation.
+								</p>
+								<p>
+									Ex : Pour une compétence en calcul.
+										<ul>
+											<li>- De 0% à 40% -> 50 heures de formation préconisées en mathématiques.</li>
+											<li>- De 40% à 60% -> 30 heures de formation préconisées en mathématiques.</li>
+											<li>- ...</li>
+										</ul>
+								</p>
+
 								<div>
 									
-									<a class="plus-button" href="#"><p>Ajouter une nouvelle préconisations.</p></a>
+									<a class="add-link" href="#"><p style="line-height: 20px;">
+										<span style="line-height: 26px;" class="fa-stack fa-1x">
+											<i class="fa fa-circle-o fa-stack-2x"></i>
+											<i class="fa fa-plus fa-stack-1x"></i>
+										</span>
+										<strong>Ajouter une nouvelle préconisations.</strong>
+									</p></a>
 
-									<a class="plus-button" href="#">Ajouter un découpage intervalaire pour cette categorie.</p></a>
+									<a class="add-link" href="#"><p style="line-height: 20px;">
+										<span style="line-height: 26px;" class="fa-stack fa-1x">
+											<i class="fa fa-circle-o fa-stack-2x"></i>
+											<i class="fa fa-plus fa-stack-1x"></i>
+										</span>
+										<strong>Ajouter un découpage intervalaire pour cette categorie.</strong>
+									</p></a>
+
+									<!-- <a href="#"><p><i class="fa fa-plus-circle"></i> Ajouter un découpage intervalaire pour cette categorie.</p></a> -->
 									
 								</div>
 
 								<hr />
 
+								<div class="precos">
+
+									<div class="preco-item">
+										<span class="preco-item-num"><strong>1</strong></span>
+										De 
+										<input type="text" name="preco[]" value="" placeholder="Ex : 0" /> % 
+										&nbsp;&nbsp;à 
+										<input type="text" name="preco[]" value="" placeholder="Ex : 100" /> % 
+
+										<span class="arrow">
+											<i class="fa fa-long-arrow-right fa-lg"></i>
+										</span>
+
+										<select name="parcours-cbox">
+											<option value="select-cbox">---</option>
+											<option value="1">Parcours 1</option>
+											<option value="2">Parcours 2</option>
+										</select>
+									</div>
+
+								</div>
+
 							</fieldset>
 						</div>
 					</div>
-				</div>
+				<!-- </div> -->
 				<?php endif; ?>
 
 				<!-- Partie basse : Boutons de gestion de la question -->

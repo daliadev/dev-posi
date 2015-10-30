@@ -298,20 +298,35 @@ label
 	margin-bottom: 10px;
 	padding: 10px;
 	background-color: #2c3e50; /* #34495e (+clair) */
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: "Helvetica", Arial, sans-serif;
 	color: #ffffff;
 	font-size: 14px;
 	font-weight: bold;
 }
 
+#form-posi fieldset legend a, #form-posi fieldset legend a:hover, #form-posi fieldset legend a:active, #form-posi fieldset legend a:visited {
+	color: #fff;
+}
+
+#form-posi fieldset legend .fa {
+	font-size: 20px;
+}
+
+
 #form-posi .form-full fieldset legend {
 	width: 838px;
 }
+
+
 
 #form-posi span
 {
 	vertical-align: top !important;
 }
+
+
+
+
 
 
 #form-posi label {
@@ -1266,7 +1281,7 @@ select {
 	background: url(../images/ico-key.png) 0 0 no-repeat;
 } 
 
-/*   Ajout 10/2015 */
+/*   Ajout 09/2015 */
 
 #detail fieldset#edit-cat {
 	position: relative;
@@ -1336,9 +1351,59 @@ fieldset #liste-cat a:hover, fieldset #liste-cat a:active, fieldset #liste-cat a
 
 /* fin ajout */
 
+/* Ajout 10/2014 */
 
+fieldset a.add-link, fieldset a.add-link:visited {
+	color: #f39c12;
+	text-decoration: none;
+}
 
+fieldset a.add-link:hover, fieldset a.add-link:active {
+	color: #2c3e50;
+	text-decoration: none;
+}
 
+.precos {
+	
+}
+
+.preco-item {
+	padding: 5px 10px;
+	background-color: #eee;
+	border: 1px solid #bbb;
+	border-radius: 5px
+}
+
+.preco-item input {
+	width: 50px !important;
+	margin-left: 10px !important;
+}
+
+.preco-item select {
+	width: 350px !important;
+	margin: 0 5px !important;
+}
+
+.preco-item .preco-item-num {
+	display: inline-block;
+	width: 10px;
+	height: 12px;
+	color: #fff;
+	/*border: 2px solid #999;*/
+	background-color: #bbb;
+	border-radius: 20px;
+	line-height: 11px;
+	font-size: 14px;
+	padding: 6px 7px 6px 7px;
+	margin: 8px 5px;
+}
+
+.preco-item .arrow {
+	/*display: inline-block;*/
+	margin:  0 20px;
+}
+
+/* fin ajout */
 
 
 /*--------------------------------------------------------POSI APPLI-----------------------------------------------------------------*/

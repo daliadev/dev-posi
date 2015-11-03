@@ -309,7 +309,7 @@ class ServicesAdminRestitution extends Main
         // On sélectionne tous les résultats correspondant à la session en cours
         $resultats = $this->getResultatsByCategories($refSession);
         
-        $tabStats = array();
+        //$tabStats = array();
         $totalGlobal = 0;
         $totalCorrectGlobal = 0;
         $percentGlobal = 0;
@@ -320,12 +320,12 @@ class ServicesAdminRestitution extends Main
         {
             $codeCat = $categorie->getCode();
 
-            $tabStats[$j]['code_cat'] = $codeCat;
-            $tabStats[$j]['nom'] = $categorie->getNom();
-            $tabStats[$j]['description'] = $categorie->getDescription();
-            //$tabStats[$j]['type_lien'] = $categorie->getTypeLien();
-            $tabStats[$j]['total'] = 0;
-            $tabStats[$j]['total_correct'] = 0;
+            $posiStats[$j]['code_cat'] = $codeCat;
+            $posiStats[$j]['nom'] = $categorie->getNom();
+            $posiStats[$j]['description'] = $categorie->getDescription();
+            //$posiStats[$j]['type_lien'] = $categorie->getTypeLien();
+            $posiStats[$j]['total'] = 0;
+            $posiStats[$j]['total_correct'] = 0;
             
             // Pour chaque resultat attaché à la catégorie.
             for ($i = 0; $i < count($resultats); $i++)
@@ -333,12 +333,12 @@ class ServicesAdminRestitution extends Main
                 if ($resultats[$i]['code_cat'] == $codeCat)
                 {
                    // Le nombre de réponses s'incrémentent.
-                   $tabStats[$j]['total']++;
+                   $posiStats[$j]['total']++;
                    $totalGlobal++;
                    
                    if ($resultats[$i]['correct'])
                    {
-                       $tabStats[$j]['total_correct']++;
+                       $posiStats[$j]['total_correct']++;
                        $totalCorrectGlobal++;
                    }
                 }  
@@ -347,22 +347,24 @@ class ServicesAdminRestitution extends Main
             
             // Calcul du poucentage de réussite dans cette catégorie
             
-            if ($tabStats[$j]['total'] > 0)
+            if ($posiStats[$j]['total'] > 0)
             {
-                $tabStats[$j]['percent'] = round(($tabStats[$j]['total_correct'] * 100) / $tabStats[$j]['total']);
+                $posiStats[$j]['percent'] = round(($posiStats[$j]['total_correct'] * 100) / $posiStats[$j]['total']);
                 $countValidCategories++;
             }
             else 
             {
-                $tabStats[$j]['percent'] = 0;
+                $posiStats[$j]['percent'] = 0;
             }
 
             $j++;
         }
         
+        //$posiStats['categories'] = $arrayCat;
 
         /* Transformation des objets Catégories en tableau générique */
 
+        /*
         $arrayCat = array();
         $i = 0;
 
@@ -377,7 +379,7 @@ class ServicesAdminRestitution extends Main
         }
 
         $posiStats['categories'] = $arrayCat;
-
+        */
         
         /*** Intégration du système d'héritage des résultats ***/
         /*

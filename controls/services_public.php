@@ -334,6 +334,7 @@ class ServicesPublic extends Main
 
 						$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
 
+						//var_dump($this->returnData['response']['stats']);
 						//$this->returnData['response']['stats']['categories'] = $this->getCategoriesHierarchy(0, 0, $categoriesArray);
 						
 						

@@ -54,113 +54,13 @@ class ArraySort {
 	}
 
 
-	/**
-	 *
-	 *	Algorythme Arbre binaire (en pseudo C ou C) issu de 'Exercices et problèmes d'algorythmique:
-	 * 
-	 * 	// Définition structure d'un noeud
-	 * 	typedef struct arbre
-	 * 	{
-	 * 		T info;
-	 * 		struct arbre *sag; // Pointeur sous-arbre gauche
-	 * 		struct arbre *sad; // Pointeur sous-arbre droite
-	 * 	} arbre;
-	 * 	typedef arbre *ptr_arbre; // Définition pointeur arbre départ
-	 * 
-	 *	- Création
-	 *	- Parcourir (en profondeur) :
-	 * 		FONCTION preordre(a : ptr_arbre)
-	 * 		DEBUT
-	 * 			SI a <> NULL ALORS
-	 * 				afficher(a->info)
-	 * 				preordre(a->sag)
-	 * 				preordre(a->sad)
-	 * 			FINSI
-	 * 		FIN
-	 * 
-	 * 		FONCTION ordre(a : ptr_arbre)
-	 * 		DEBUT
-	 * 			SI a <> NULL ALORS
-	 * 				ordre(a->sag)
-	 * 				afficher(a->info)
-	 * 				ordre(a->sad)
-	 * 			FINSI
-	 * 		FIN
-	 * 
-	 * 		FONCTION postordre(a : ptr_arbre)
-	 * 		DEBUT
-	 * 			SI a <> NULL ALORS
-	 * 				postordre(a->sag)
-	 * 				postordre(a->sad)
-	 * 				afficher(a->info)
-	 * 				
-	 * 			FINSI
-	 * 		FIN
-	 *
-	 *	- Rechercher :
-	 * 		FONCTION recherche(x : T, a : ptr_arbre) : booléen
-	 * 		VAR ok : booléen
-	 * 		DEBUT
-	 * 			SI a = NULL ALORS
-	 * 				ok<-faux
-	 * 			SINON SI a->info = x ALORS
-	 * 				ok<-vrai
-	 * 			SINON SI a->info > x ALORS
-	 * 				recherche(x, a->sag, ok)
-	 * 			SINON
-	 * 				recherche(x, a->sad, ok)
-	 * 			FINSI
-	 * 			RETOURNER ok
-	 * 		FIN
-	 * 	
-	 * 	- Ajouter :
-	 * 		FONCTION ajout(x : T, *aj_a : ptr_arbre) : vide
-	 * 		DEBUT
-	 * 			SI *aj_a = NULL ALORS
-	 * 				reserver(*aj_a)
-	 * 				*aj_a->info <- x
-	 * 				*aj_a->sag <- NULL
-	 * 				*aj_a->sad <- NULL
-	 * 			SINON SI *aj_a->info <= x ALORS
-	 * 				ajout(x, &(*aj_a->sad))
-	 * 			SINON
-	 * 				ajout(x, &(*aj_a->sag))
-	 * 			FINSI
-	 * 			RETOURNER ok
-	 * 		FIN
-	 * 
-	 * 	- Compter :
-	 * 		FONCTION compter(a : ptr_arbre) : entier
-	 * 		VAR n : entier
-	 * 		DEBUT
-	 * 			SI a = NULL ALORS
-	 * 				n <- 0
-	 * 			SINON
-	 * 				n <- 1 + compter(a->sag) + compter(a->sad)
-	 * 			FINSI
-	 * 			RETOURNER n
-	 * 		FIN
-	 * 
-	 * 	- Hauteur :
-	 * 		FONCTION hauteur(a : ptr_arbre) : entier
-	 * 		VAR n : entier
-	 * 		DEBUT
-	 * 			SI a = NULL ALORS
-	 * 				n <- 0
-	 * 			SINON
-	 * 				n <- 1 + maximum(compter(a->sag), compter(a->sad))
-	 * 			FINSI
-	 * 			RETOURNER n
-	 * 		FIN
-	 *	
-	 */
 	
 	static public function recursiveArray($parentRef, $depth, $datasObjects, $refField)
     {
     	//var_dump($depth, 'yo', $index, 'end');
     	$array = null;
     	//$tempArray = array();
-		$previousDepth = 0;
+		$prevDepth = 0;
 		//$count = 0;
 
 		if ($depth == 0) 
@@ -174,8 +74,9 @@ class ArraySort {
 		}
 		*/
 
-		$i = 0;
+		
 
+		/*
 		foreach ($datasObjects as $object) 
 		{
 			if ($parentRef == $object[$refField])
@@ -199,14 +100,56 @@ class ArraySort {
 				$array[$depth] = self::recursiveArray($object[$refField], ($depth + 1), $datasObjects, $refField);
 			}
 
-			$i++;
+			//$i++;
 		}
+		*/
 
-		if ($previousDepth == $depth && $previousDepth != 0) 
+		$i = 0;
+
+
+		foreach ($datasObjects as $key => $object) 
+		{
+			//var_dump($key, $object);
+			$objectParentRef = 0;
+
+			if ($parentRef != 0)
+			{
+				$objectParentRef = substr($object->$refField, 0, strlen($parentRef));
+			}
+			/*
+			else
+			{
+				$objectParentRef = $object->$refField;
+			}
+			*/
+			
+			//$parentCode = $object[$refField]
+			var_dump($parentRef, $objectParentRef);
+
+			if ($parentRef == $objectParentRef)
+			{
+				var_dump($object);
+				$tempArray;
+
+				if ($prevDepth < $depth) 
+				{
+					$array[$i] = array();
+				}
+
+				array_push($array[$i], $object);
+				$prevDepth = $depth;
+				$i++;
+
+				$array[$i][] = self::recursiveArray($object->$refField, ($depth + 1), $datasObjects, $refField);
+			}
+		}
+		/*
+		if ($prevDepth == $depth && $prevDepth != 0) 
 		{
 			//$index++;
 			//$array[] = $tempArray;
 		}
+		*/
 
 		return $array;
     }

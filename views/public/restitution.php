@@ -2,6 +2,32 @@
 
 require_once(ROOT.'utils/array_sort.php');
 
+// Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage 
+function getColor($percent)
+{
+    $percent = intval($percent);
+    
+    $color = "gris";
+
+    if ($percent < 40)
+    {
+        $color = "rouge";
+    }
+    else if ($percent >= 40 && $percent < 60)
+    {
+        $color = "orange2";
+    }
+    else if ($percent >= 60 && $percent < 80)
+    {
+        $color = "jaune";
+    }
+    else if ($percent >= 80)
+    {
+        $color = "vert";
+    }
+
+    return $color;
+}
 
 
 // Initialisation par défaut des valeurs du formulaire
@@ -308,13 +334,36 @@ $form_url = $response['url'];
 
 										<div id="categories-list categories-score">
 											
-											<div class="progressbars" style="width:580px;">
+											<div class="progressbars" style="width:100%;">
 												
 												<?php
-													$sortedCat = ArraySort::recursiveArray(0, 0, $stats['categories']);
-													var_dump($sortedCat);
+													$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat');
+													//var_dump($response['stats']['categories']);
+													//var_dump($sortedCat);
 													exit();
 												?>
+
+
+			                                    <?php //foreach ($stats['categories'] as $statCategorie) : ?>
+
+													<?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : 
+													//var_dump($statCategorie); ?>
+
+			                                        <!-- <div class="progressbar">
+			                                            <div class="progressbar-title" title="<?php //echo $statCategorie['description']; ?>">
+			                                                <?php //echo $statCategorie['nom']; ?> / <strong><?php //echo $statCategorie['percent']; ?></strong>%
+			                                                <div class="progressbar-bg">
+			                                                    <span class="bg-<?php //echo getColor($statCategorie['percent']); ?>" style="width:<?php //$statCategorie['percent']; ?>%;"></span>
+			                                                </div>
+			                                            </div>
+			                                        </div> -->
+													
+													<?php //endif; ?>
+
+			                                    <?php //endforeach; ?>
+			                                        
+			                      
+												
 
 												<?php
 													/*
@@ -336,70 +385,11 @@ $form_url = $response['url'];
 													}
 													*/
 
-													/*
-													$list = '';
-													$parent = null;
-													$level = 0;
-													$datas = $stats['categories'];
-													$currentNode = 0;
-													var_dump(count($datas));
-
-													while ($currentNode <= count($datas))
-													{
-														$previous_level = 0;
-
-														if ($level == 0) 
-														{
-															$list .= '<ul>';
-														}
-
-														foreach ($datas as $node) 
-														{
-															if (isset($node['parent']) && $parent == $node['parent']) 
-															{
-																if ($previous_level < $level) 
-																{
-																	$list .= '<ul>';
-																}
-
-																$list .= '<li>'.$node['nom'].'</li>';
-																$previous_level = $level;
-
-																$level++;
-																$parent = $node['id'];
-																//$list .= self::recursiveList($node['id'], ($level + 1), $datas);
-
-																$currentNode++;
-															}
-														}
-
-														if ($previous_level == $level && $previous_level != 0) 
-														{
-															$list .= '</ul>';
-														}
-
-														$currentNode++;
-													}
-
-													//var_dump($currentNode);
-													echo $list;
-													exit();
-													*/
+													
 													
 												?>
 
-			                                    <?php //for ($i = 0; $i < count($response['stats']['global']['categories']); $i++) : ?>
-
-			                                        <div class="progressbar">
-			                                            <div class="progressbar-title" title="<?php echo $response['stats']['global']['categories'][$i]['description']; ?>">
-			                                                <?php echo $response['stats']['global']['categories'][$i]['nom']; ?> / <strong><?php echo $response['stats']['global']['categories'][$i]['pourcent']; ?></strong>%
-			                                                <div class="progressbar-bg">
-			                                                    <span class="bg-<?php echo getColor($response['stats']['global']['categories'][$i]['pourcent']); ?>" style="width:<?php echo $response['stats']['global']['categories'][$i]['pourcent']; ?>%;"></span>
-			                                                </div>
-			                                            </div>
-			                                        </div>
-
-			                                    <?php //endfor; ?>
+			                                    
 			                                        
 			                                </div>
 

@@ -395,16 +395,16 @@ $form_url = WEBROOT."admin/categorie/";
 
 								<div>
 									
-									<a class="add-link" href="#"><p style="line-height: 20px;">
-										<span style="line-height: 26px;" class="fa-stack fa-1x">
+									<a class="add-link" href="#"><p style="line-height: 16px;">
+										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
 											<i class="fa fa-plus fa-stack-1x"></i>
 										</span>
 										<strong>Ajouter une nouvelle préconisations.</strong>
 									</p></a>
 
-									<a class="add-link" href="#"><p style="line-height: 20px;">
-										<span style="line-height: 26px;" class="fa-stack fa-1x">
+									<a class="add-link" href="#"><p style="line-height: 16px;">
+										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
 											<i class="fa fa-plus fa-stack-1x"></i>
 										</span>

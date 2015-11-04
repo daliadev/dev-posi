@@ -1363,6 +1363,12 @@ fieldset a.add-link:hover, fieldset a.add-link:active {
 	text-decoration: none;
 }
 
+fieldset .add-link span
+{
+	font-size: 10px;
+}
+
+
 .precos {
 	
 }

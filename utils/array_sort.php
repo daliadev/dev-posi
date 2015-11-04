@@ -55,10 +55,11 @@ class ArraySort {
 
 
 	
-	static public function recursiveArray($parentRef, $depth, $datasObjects, $refField)
+	static public function recursiveArray($parentRef, $depth, $datasObjects, $refField, $refCharIncrement = 1)
     {
     	//var_dump($depth, 'yo', $index, 'end');
     	$array = null;
+    	
     	//$tempArray = array();
 		$prevDepth = 0;
 		//$count = 0;
@@ -110,12 +111,12 @@ class ArraySort {
 		foreach ($datasObjects as $key => $object) 
 		{
 			//var_dump($key, $object);
-			$objectParentRef = 0;
+			$objectParentRef = null;
 
-			if ($parentRef != 0)
-			{
-				$objectParentRef = substr($object->$refField, 0, strlen($parentRef));
-			}
+			//if ($parentRef !== null)
+			//{
+				$objectParentRef = substr($object->$refField, 0, strlen($object->$refField - $refCharIncrement));
+			//}
 			/*
 			else
 			{
@@ -128,19 +129,28 @@ class ArraySort {
 
 			if ($parentRef == $objectParentRef)
 			{
-				var_dump($object);
-				$tempArray;
+				//var_dump($object);
+
+				$tempArray = null;
 
 				if ($prevDepth < $depth) 
 				{
-					$array[$i] = array();
+					$tempArray = array();
 				}
-
-				array_push($array[$i], $object);
+				
+				if ($tempArray !== null)
+				{
+					array_push($tempArray[], $object);
+				}
+				
 				$prevDepth = $depth;
-				$i++;
+				
+				$tempArray[] = self::recursiveArray($object->$refField, ($depth + 1), $datasObjects, $refField);
 
-				$array[$i][] = self::recursiveArray($object->$refField, ($depth + 1), $datasObjects, $refField);
+				if ($array !== null && ) 
+				{
+					array_push($array, $tempArray);
+				}
 			}
 		}
 		/*

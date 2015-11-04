@@ -337,7 +337,7 @@ $form_url = $response['url'];
 											<div class="progressbars" style="width:100%;">
 												
 												<?php
-													$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat');
+													$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat', 2);
 													//var_dump($response['stats']['categories']);
 													//var_dump($sortedCat);
 													exit();

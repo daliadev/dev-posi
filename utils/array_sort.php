@@ -130,17 +130,18 @@ class ArraySort {
 			if ($parentRef == $objectParentRef)
 			{
 				//var_dump($depth, $parentRef, $objectParentRef, $object);
-
-				$tempArray = null;
+				
+				//$tempArray = null;
 				$iterativeResult = null;
 
-				$i = 0;
+				//$i = 0;
 
 				if ($prevDepth < $depth) 
 				{
-					$tempArray = array();
+					//$tempArray = array();
+					//$array[] = array();
 				}
-				
+				/*
 				if ($tempArray !== null)
 				{
 					$tempArray[$i] =  $object;
@@ -149,22 +150,25 @@ class ArraySort {
 				{
 					$tempArray =  $object;
 				}
+				*/
 				/*
 				for ($i = 0; $i < $depth; $i++) { 
 					# code...
 				}
 				*/
 				//$prevDepth = $depth;
-				
-				$iterativeResult = self::recursiveArray($object->$refField, ($depth + 1), $datasObjects, $refField, $refCharIncrement);
 
+				$array[] = $object;
 				
-				
+				$array[] = self::recursiveArray($object->$refField, ($depth + 1), $datasObjects, $refField, $refCharIncrement);
+
+				/*
 				if ($iterativeResult !== null)
 				{
 					$tempArray[$i] = array($iterativeResult);
 				}
-				
+
+				/*
 				if ($array !== null && $tempArray !== null) 
 				{
 					$array[] = $tempArray;
@@ -173,6 +177,7 @@ class ArraySort {
 				var_dump($array, $depth);
 				exit;
 				$i++;
+				*/
 			}
 		}
 		/*

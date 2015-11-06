@@ -29,7 +29,8 @@ class ResultatDAO extends ModelDAO
         
         if (!empty($refSession))
         {
-            $request = "SELECT * FROM resultat WHERE ref_session = ".$refSession;
+            $request = "SELECT id_result, ref_session, resultat.ref_question, ref_reponse_qcm, ref_reponse_qcm_correcte, reponse_champ, validation_reponse_champ, temps_reponse, ref_cat "
+                    . "FROM resultat, question_cat WHERE resultat.ref_session = ".$refSession." AND resultat.ref_question = question_cat.ref_question";
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "resultat", "Resultat");
         }

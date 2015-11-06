@@ -8,12 +8,12 @@ class Resultat
     public $id_result = null;
     public $ref_session = null;
     public $ref_question = null;
-    public $ref_cat = null;
     public $ref_reponse_qcm = null;
     public $ref_reponse_qcm_correcte = null;
     public $reponse_champ = null;
     public $validation_reponse_champ = null;
     public $temps_reponse = null;
+    public $ref_cat = null;
     
     
     

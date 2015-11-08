@@ -334,7 +334,7 @@ class ServicesPublic extends Main
 
 						$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
 						
-						exit();
+						//exit();
 
 						/*------ Validation des acquis -------*/
 

@@ -300,21 +300,16 @@ class ServicesAdminRestitution extends Main
 		/*** On récupère la liste des categories ***/
 		
 		$resultsetcategories = $this->getCategories();
-		//$resultsetcategories = $this->servicesCategories->getCategoriesHierarchy();
+
 		$categoriesList = $resultsetcategories['response']['categorie'];
-		//$posiStats['categories'] = $resultsetcategories['response']['categorie'];
 		
-		/*** On va chercher tous les résultats classés par categories ***/
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
 		$resultats = $this->getResultatsByCategories($refSession);
 
-		//var_dump($refSession, $resultats);
-		//exit();
-
 		$statsCat = array();
 		
-
+		$tempsGlobal = 0;
 		$totalGlobal = 0;
 		$totalCorrectGlobal = 0;
 		$percentGlobal = 0;
@@ -323,78 +318,31 @@ class ServicesAdminRestitution extends Main
 		
 		foreach ($categoriesList as $categorie)
 		{
-			// On détermine si c'est une categorie principale ou une sous-categorie
-			/*
-			if (strlen($tabStats[$i]['code_cat']) == 2)
-			{
-				// Catégorie parent
-
-				if ($tabStats[$i]['type_lien'] == "dynamic")
-				{
-					$tabStats[$i]['parent'] = true;
-					$parentCode = $tabStats[$i]['code_cat'];
-					$tabStats[$i]['total'] = 0;
-					$tabStats[$i]['total_correct'] = 0;
-					$tabStats[$i]['children'] = array();
-
-					for ($j = 0; $j < count($tabStats); $j++)
-					{
-						if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
-						{
-							$tabStats[$i]['total'] += $tabStats[$j]['total'];
-							$tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
-							$tabStats[$i]['children'][] = $tabStats[$j];
-						}
-					}
-				}
-				else if ($tabStats[$i]['type_lien'] == "static")
-				{
-					$tabStats[$i]['parent'] = true;
-					$parentCode = $tabStats[$i]['code_cat'];
-					$tabStats[$i]['children'] = false;
-				}
-			}
-			else 
-			{
-				$tabStats[$i]['parent'] = false;
-				$tabStats[$i]['children'] = false;
-			}*/
-
-
+			$tempsCat = 0;
 			$totalCategorie = 0;
 			$totalCorrectCategorie = 0;
 			$percentCategorie = 0;
+			$hasResults = false;
 
 			$codeCat = $categorie->getCode();
-			//var_dump($codeCat);
+
 
 			$statsCat[$i] = $categorie;
-			//$posiStats[$i]['code_cat'] = $codeCat;
-			//$posiStats[$i]['nom'] = $categorie->getNom();
-			//$posiStats[$i]['description'] = $categorie->getDescription();
-			//$posiStats[$i]['type_lien'] = $categorie->getTypeLien();
-			//$posiStats[$i]['total'] = 0;
-			//$posiStats[$i]['total_correct'] = 0;
 
 			$parents = array();
 
 			if (strlen($codeCat) % 2 === 0 && strlen($codeCat) > 2)
 			{
-
 				$codeLength = strlen($codeCat) - 2;
 				
 				for ($k = 0; $k <= $codeLength; $k += 2)
 				{
-					
 					if (($codeLength - $k) >= 2)
 					{
 						$parentCode = substr($codeCat, 0, $codeLength - $k);
 						array_push($parents, $parentCode);
 					}
-					
 				}
-				
-				//var_dump($parents);
 			}
 			
 			
@@ -405,19 +353,22 @@ class ServicesAdminRestitution extends Main
 
 				if ($resultats[$j]->getRefCat() == $codeCat)
 				{
-				   // Le nombre de réponses s'incrémentent.
-				   //$posiStats[$j]['total']++;
-				   $totalCategorie++;
-				   $totalGlobal++;
-				   
-				   //var_dump($totalCategorie);
+					
+					//$posiStats[$j]['total']++;
+					$totalCategorie++;
+					$totalGlobal++;
+				   	
+				   	$tempsGlobal += $resultats[$j]->getTempsReponse();
+					$tempsCat += $resultats[$j]->getTempsReponse();
 
-				   if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte())
-				   {
-					   //$posiStats[$j]['total_correct']++;
+					if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte())
+					{
+						//$posiStats[$j]['total_correct']++;
 						$totalCorrectCategorie++;
 						$totalCorrectGlobal++;
-				   }
+					}
+
+					$hasResults = true;
 				}  
 			}
 
@@ -436,108 +387,43 @@ class ServicesAdminRestitution extends Main
 
 			
 
-			//$posiStats[$i]->setTemps(null);
+			$statsCat[$i]->setTemps($tempsCat);
 			$statsCat[$i]->setTotalReponses($totalCategorie);
 			$statsCat[$i]->setTotalReponsesCorrectes($totalCorrectCategorie);
 			$statsCat[$i]->setScorePercent($percentCategorie);
+			$statsCat[$i]->setHasResult($hasResults);
 
 			$posiStats['categories'][$i] = $statsCat[$i];
 
 			//var_dump($posiStats[$i]);
 
 			$i++;
-		}
-		
-		//$posiStats['categories'] = $arrayCat;
 
-		/* Transformation des objets Catégories en tableau générique */
-
-		/*
-		$arrayCat = array();
-		$i = 0;
-
-		foreach ($posiStats['categories'] as $categorie) {
-			
-			$arrayCat[$i]['id'] = $categorie->getCode();
-			$arrayCat[$i]['parent'] = $categorie->getParent();
-			$arrayCat[$i]['nom'] = $categorie->getNom();
-			$arrayCat[$i]['description'] = $categorie->getDescription();
-
-			$i++;
-		}
-
-		$posiStats['categories'] = $arrayCat;
-		*/
-		
-		/*** Intégration du système d'héritage des résultats ***/
-		/*
-		for ($i = 0; $i < count($tabStats); $i++)
-		{
-			// On détermine si c'est une categorie principale ou une sous-categorie
-			if (strlen($tabStats[$i]['code_cat']) == 2)
-			{
-				// Catégorie parent
-
-				if ($tabStats[$i]['type_lien'] == "dynamic")
-				{
-					$tabStats[$i]['parent'] = true;
-					$parentCode = $tabStats[$i]['code_cat'];
-					$tabStats[$i]['total'] = 0;
-					$tabStats[$i]['total_correct'] = 0;
-					$tabStats[$i]['children'] = array();
-
-					for ($j = 0; $j < count($tabStats); $j++)
-					{
-						if (strlen($tabStats[$j]['code_cat']) > 2 && substr($tabStats[$j]['code_cat'], 0, 2) == $parentCode)
+			if (!empty($parents)) {
+				
+				for ($m = 0; $m < count($posiStats['categories']); $m++) 
+				{	
+					for ($n = 0; $n < count($parents); $n++) 
+					{ 
+						if ($posiStats['categories'][$m]->getCode() === $parents[$n]) 
 						{
-							$tabStats[$i]['total'] += $tabStats[$j]['total'];
-							$tabStats[$i]['total_correct'] += $tabStats[$j]['total_correct'];
-							$tabStats[$i]['children'][] = $tabStats[$j];
+							//$posiStats[$i]->setTemps(null);
+							$totalParent = $posiStats['categories'][$m]->getTotalReponses() + $totalCategorie;
+							$totalParentCorrect = $posiStats['categories'][$m]->getTotalReponsesCorrectes() + $totalCorrectCategorie;
+							$scoreParent = $posiStats['categories'][$m]->getScorePercent() + $percentCategorie;
+							$tempsParent = $posiStats['categories'][$m]->getTemps() + $tempsCat;
+
+							$posiStats['categories'][$m]->setTotalReponses($totalParent);
+							$posiStats['categories'][$m]->setTotalReponsesCorrectes($totalParentCorrect);
+							$posiStats['categories'][$m]->setScorePercent($scoreParent);
+							$posiStats['categories'][$m]->setTemps($tempsParent);
+							$posiStats['categories'][$m]->setHasResult(true);
 						}
 					}
 				}
-				else if ($tabStats[$i]['type_lien'] == "static")
-				{
-					$tabStats[$i]['parent'] = true;
-					$parentCode = $tabStats[$i]['code_cat'];
-					$tabStats[$i]['children'] = false;
-				}
-			}
-			else 
-			{
-				$tabStats[$i]['parent'] = false;
-				$tabStats[$i]['children'] = false;
-			}
-
-		}
-		*/
-		
-		/*** Données envoyées à la page de résultat ***/
-		/*
-		$posiStats['categories'] = array();
-		$k = 0;
-		
-		foreach ($tabStats as $stat)
-		{
-			$posiStats['categories'][$k]['parent'] = $stat['parent'];
-			$posiStats['categories'][$k]['children'] = $stat['children'];
-			$posiStats['categories'][$k]['nom_categorie'] = $stat['nom'];
-			$posiStats['categories'][$k]['descript_categorie'] = $stat['description'];
-			$posiStats['categories'][$k]['total'] = $stat['total'];
-			$posiStats['categories'][$k]['total_correct'] = $stat['total_correct'];
-
-			if ($stat['total'] > 0)
-			{
-				$posiStats['categories'][$k]['percent'] = round(($stat['total_correct'] * 100) / $stat['total']);
-			}
-			else 
-			{
-				$posiStats['categories'][$k]['percent'] = 0;
 			}
 			
-			$k++;
 		}
-		*/
 		
 		/*** Stats globales ***/
 		
@@ -545,6 +431,7 @@ class ServicesAdminRestitution extends Main
 		$posiStats['percent_global'] = $percentGlobal;
 		$posiStats['total_global'] = $totalGlobal;
 		$posiStats['total_correct_global'] = $totalCorrectGlobal;
+		$posiStats['temps-total'] = $tempsGlobal;
 		
 
 		return  $posiStats;

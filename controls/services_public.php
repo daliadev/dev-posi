@@ -329,12 +329,11 @@ class ServicesPublic extends Main
 						$refSession = $resultsetSession['response']['session'][0]->getId();
 						$this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
 						$this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
-								
+						
+						/*--------- Statistiques par catégories(temps, score...)-------------*/	
 						$this->returnData['response']['stats'] = array();
-
 						$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
 						
-						//exit();
 
 						/*------ Validation des acquis -------*/
 

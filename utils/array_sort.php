@@ -53,6 +53,42 @@ class ArraySort {
 		return $list;
 	}
 
+	/*
+	static public function recursiveCategories($parent, $level, $datas)
+	{
+		$list = '';
+		$previous_level = 0;
+
+		if ($level == 0) 
+		{
+			$list .= '<ul>';
+		}
+
+		foreach ($datas as $node) 
+		{
+			if ($parent == $node->getParent()) 
+			{
+				if ($previous_level < $level) 
+				{
+					$list .= '<ul>';
+				}
+
+				$list .= '<li>'.$node->getNom().'</li>';
+				$previous_level = $level;
+
+				$list .= self::recursiveCategories($node->getCode(), ($level + 1), $datas);
+			}
+		}
+
+		if ($previous_level == $level && $previous_level != 0) 
+		{
+			$list .= '</ul>';
+		}
+
+		return $list;
+	}
+	*/
+
 
 	
 	static public function recursiveArray($parentRef, $depth, $datasObjects, $refField, $refCharIncrement = 1)

@@ -5,28 +5,28 @@ require_once(ROOT.'utils/array_sort.php');
 // Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage 
 function getColor($percent)
 {
-    $percent = intval($percent);
-    
-    $color = "gris";
+	$percent = intval($percent);
+	
+	$color = "gris";
 
-    if ($percent < 40)
-    {
-        $color = "rouge";
-    }
-    else if ($percent >= 40 && $percent < 60)
-    {
-        $color = "orange2";
-    }
-    else if ($percent >= 60 && $percent < 80)
-    {
-        $color = "jaune";
-    }
-    else if ($percent >= 80)
-    {
-        $color = "vert";
-    }
+	if ($percent < 40)
+	{
+		$color = "rouge";
+	}
+	else if ($percent >= 40 && $percent < 60)
+	{
+		$color = "orange2";
+	}
+	else if ($percent >= 60 && $percent < 80)
+	{
+		$color = "jaune";
+	}
+	else if ($percent >= 80)
+	{
+		$color = "vert";
+	}
 
-    return $color;
+	return $color;
 }
 
 
@@ -339,30 +339,213 @@ $form_url = $response['url'];
 												<?php
 													$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat', 2);
 													//var_dump($response['stats']['categories']);
-													var_dump($sortedCat);
+													//var_dump($sortedCat);
+													//exit();
+												?>
+												
+												<?php 
+
+													//$index;
+													$level = 0;
+													$previous_level = 0;
+													$catdata = $sortedCat;
+													$parent = 0;
+													$html = '';
+													//count = 0;
+													
+													while (true)
+													{
+														//$previous_level = 0;
+
+														if ($level == 0) 
+														{
+															$html .= '<ul>';
+														}
+
+														foreach ($catdata as $cat)
+														{
+															if (is_object($cat))
+															{
+																if  ($parent == $cat->getParent())
+																{
+																	if ($previous_level < $level) 
+																	{
+																		$html .= '<ul>';
+																	}
+
+																	$html .= '<li>'.$cat->getNom().'</li>';
+
+																	$parent = $cat->getCode();
+																	
+																}
+															}
+															else if (is_array($cat))
+															{
+																//$catdata = $cat;
+																$previous_level = $level;
+																$level++;
+
+																//var_dump($catdata);
+																//exit();
+																break;
+															}	
+														}
+
+														if ($previous_level == $level && $previous_level != 0) 
+														{
+															$html .= '</ul>';
+														}
+													}
+													*/
+													var_dump($html);
 													exit();
+
+													/*
+													$level = 0;
+													$parent = 0;
+													$list = '';
+													$i = 0;
+
+													while (true)
+													{
+														$previous_level = 0;
+
+														if ($level == 0) 
+														{
+															$list .= '<ul>';
+														}
+
+														foreach ($response['stats']['categories'] as $cat) 
+														{
+															if ($parent == $cat->getParent()) 
+															{
+																if ($previous_level < $level) 
+																{
+																	$list .= '<ul>';
+																}
+
+																$list .= '<li>'.$cat->getNom().'</li>';
+																$previous_level = $level;
+
+																$parent = $cat->getCode();
+																$level++;
+																$i++;
+
+																//$list .= self::recursiveList($node['id'], ($level + 1), $datas);
+															}
+															
+															//}	
+															
+															//$list .= self::recursiveList($node['id'], ($level + 1));
+														}
+
+														if ($previous_level == $level && $previous_level != 0) 
+														{
+															$list .= '</ul>';
+														}
+													}
+
+													echo $list;
+													exit();
+													*/
+
+													/*
+													$list = '';
+													$previous_level = 0;
+
+													if ($level == 0) 
+													{
+														$list .= '<ul>';
+													}
+
+													foreach ($datas as $node) 
+													{
+														if ($parent == $node->getParent()) 
+														{
+															if ($previous_level < $level) 
+															{
+																$list .= '<ul>';
+															}
+
+															$list .= '<li>'.$node->getNom().'</li>';
+															$previous_level = $level;
+
+															$list .= self::recursiveCategories($node->getCode(), ($level + 1), $datas);
+														}
+													}
+
+													if ($previous_level == $level && $previous_level != 0) 
+													{
+														$list .= '</ul>';
+													}
+
+													return $list;
+													*/
 												?>
 
+												<?php 
+													/*
+													echo '<ul>';
+													for ($i = 0; $i < count($sortedCat); $i++) {
 
-			                                    <?php //foreach ($stats['categories'] as $statCategorie) : ?>
+														$categorie = $sortedCat[$i];
+														$level = 0;
 
-													<?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : 
-													//var_dump($statCategorie); ?>
+														do
+														{
+															//$activeCat = $activeCat[$level];
+															if (is_object($categorie))
+															{
+																//$level = 0;
+																$cat = $categorie;
+															}
+															else if (is_array($categorie))
+															{
+																$level++;
+																$cat = $categorie[$level];
+															}
+														}
+														while ($level >= 0);
+														
 
-			                                        <!-- <div class="progressbar">
-			                                            <div class="progressbar-title" title="<?php //echo $statCategorie['description']; ?>">
-			                                                <?php //echo $statCategorie['nom']; ?> / <strong><?php //echo $statCategorie['percent']; ?></strong>%
-			                                                <div class="progressbar-bg">
-			                                                    <span class="bg-<?php //echo getColor($statCategorie['percent']); ?>" style="width:<?php //$statCategorie['percent']; ?>%;"></span>
-			                                                </div>
-			                                            </div>
-			                                        </div> -->
+		
+													}
+													echo '</ul>';
+													exit();
+													*/
+												?>
+
+												<?php //foreach ($sortedCat as $categorie) : ?>
+													
+													<?php 
+														/*if (is_object($categorie))
+														{
+															//$level = 0;
+															$cat = $categorie;
+														}
+														if (is_array($categorie))
+														{
+															$level++;
+															$cat = $categorie[$level];
+														}*/
+													?>
+													
+													<?php //if ($cat->getTotalReponses() > 0) : ?>
+
+														<!-- <div class="progressbar">
+															<div class="progressbar-title" title="<?php //echo $cat->getDescription(); ?>">
+																<?php //echo $cat->getNom(); ?> / <strong><?php //echo $cat->getScorePercent(); ?></strong>%
+																<div class="progressbar-bg">
+																	<span class="bg-<?php //echo getColor($cat->getScorePercent()); ?>" style="width:<?php //echo $cat->getScorePercent(); ?>%;"></span>
+																</div>
+															</div>
+														</div> -->
 													
 													<?php //endif; ?>
 
-			                                    <?php //endforeach; ?>
-			                                        
-			                      
+												<?php //endforeach; ?>
+													
+								  
 												
 
 												<?php
@@ -389,9 +572,9 @@ $form_url = $response['url'];
 													
 												?>
 
-			                                    
-			                                        
-			                                </div>
+												
+													
+											</div>
 
 										</div>
 

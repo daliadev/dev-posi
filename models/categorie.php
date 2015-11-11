@@ -13,6 +13,7 @@ class Categorie
 	public $total_reponses = null;
 	public $total_reponses_correctes = null;
 	public $score_percent = null;
+	public $has_results = false;
 
 	
 	public function getCode()
@@ -42,7 +43,6 @@ class Categorie
 	public function getParent()
 	{
 		$parentCode = 0;
-		//$parentLength = 0;
 
 		if ($this->code_cat !== null)
 		{
@@ -95,6 +95,17 @@ class Categorie
 	public function setScorePercent($percent)
 	{
 		$this->score_percent = $percent;
+	}
+
+
+	public function getHasResult()
+	{
+		return $this->has_results;
+	}
+
+	public function setHasResult($result)
+	{
+		$this->has_results = $result;
 	}
 
 }

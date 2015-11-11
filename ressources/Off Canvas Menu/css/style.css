@@ -1,0 +1,280 @@
+
+/*** reset ***/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video 
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	/*font-size: 100%;*/
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section 
+{
+	display: block;
+}
+body 
+{
+	line-height: 1;
+}
+ol, ul 
+{
+	list-style: none;
+}
+blockquote, q 
+{
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after 
+{
+	content: '';
+	content: none;
+}
+table 
+{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/* clearfix */
+/*
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+*/
+.clear {
+	clear: both;
+}
+
+
+
+
+/* Fonts */
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300|Montserrat:400);
+
+
+
+/* Common styles */
+
+html {
+	font-size: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Ubuntu", Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2em;
+    /*letter-spacing: 0.03em;*/
+    line-height: 1.3em;
+    margin: 0.67rem 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    line-height: 1.15em;
+    margin: 0.5rem 0;
+}
+
+h3 {
+    font-size: 1.25em;
+    line-height: 1.7em;
+    margin: 0.25rem 0;
+}
+
+p {
+	margin: 0 auto;
+	/*max-width: 30rem;*/
+	/*color: #ecf0f1;*/
+	line-height: 1.5em;
+}
+
+strong {
+	font-weight: bold;
+}
+
+
+
+
+
+/* Custom style */
+
+body {
+	background-color: #333;
+}
+
+#wrapper {
+	width: 645px; height: 500px;
+	margin: 35px auto 0 auto;
+
+}
+
+h1 {
+	float: left;
+	width: 300px;
+	padding: 30px;
+	color: #fff; font-weight: 300; font-size: 2.5em; font-family: "Open Sans", sans-serif;
+}
+
+.mobile {
+	float: left;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
+}
+	
+	/* Hiding the checkbox */
+	#tm {
+		display: none;
+	}
+
+
+	/* Content section*/
+
+	.mobile section {
+		position: relative;
+		width: 285px; height: 500px;
+		background-image: url("../img/mb1.png");
+		transition: all 0.25s;
+	}
+
+	/* Animation controls using checkbox hack */
+	/* Animate content area to the right */
+	#tm:checked ~ section {
+		/*-webkit-transform: translateX(150px);*/
+		/*-moz-transform: translateX(150px);
+		-ms-transform: translateX(150px);
+		-o-transform: translateX(150px);*/
+		transform: translateX(150px);
+		
+	}
+	
+
+		.mobile section label {
+			position: absolute;
+			display: block;
+			width: 60%; left: 20%; top: 100px;
+			padding: 10px 0;
+			border: 2px solid #fff; border-radius: 4px;
+			color: #fff; font-weight: bold; font-size: 0.875em; font-family: "Monserrat", "Open Sans", sans-serif;
+			text-align: center; text-transform: uppercase;
+			cursor: pointer;
+			
+		}
+
+		
+
+		/* Nav styles */
+
+		.sidenav {
+			position: absolute;
+			top: 0; left: 0; bottom: 0;
+			width: 150px;
+			padding-top: 100px;
+			background-color: rgb(50, 60, 60);
+		}
+
+		.sidenav li {
+			list-style-type: none;
+		}
+
+		.sidenav a {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.sidenav i {
+			float: left;
+			display: block;
+			width: 50px;
+			font-size: 1em;
+			line-height: 2.25em; text-align: center;
+		}
+
+		.sidenav strong {
+			display: block;
+			font-weight: bold; font-size: 0.825em; font-family: "Monserrat", "Open Sans", sans-serif;
+			line-height: 3em;
+			opacity: 0;
+			/*-webkit-transform: translateX(50px);
+			-moz-transform: translateX(50px);
+			-ms-transform: translateX(50px);
+			-o-transform: translateX(50px);*/
+			transform: translateX(50px); transition: all 0.4s;
+		}
+
+		
+		
+		/* Animation controls using checkbox hack */
+
+		/* Animate links from right to left */
+		#tm:checked ~ .sidenav strong {
+			opacity: 1;
+			/*-webkit-transform: translateX(0px);
+			-moz-transform: translateX(0px);
+			-ms-transform: translateX(0px);
+			-o-transform: translateX(0px);*/
+			transform: translateX(0px);
+		}
+
+		/* Adding delay to link animation - in multiple of 0.08s */
+		#tm:checked ~ .sidenav li:nth-child(1) strong {
+			transition-delay: 0.08s;
+		}
+		#tm:checked ~ .sidenav li:nth-child(2) strong {
+			transition-delay: 0.16s;
+		}
+		#tm:checked ~ .sidenav li:nth-child(3) strong {
+			transition-delay: 0.24s;
+		}
+		#tm:checked ~ .sidenav li:nth-child(4) strong {
+			transition-delay: 0.32s;
+		}
+		#tm:checked ~ .sidenav li:nth-child(5) strong {
+			transition-delay: 0.40s;
+		}
+		#tm:checked ~ .sidenav li:nth-child(6) strong {
+			transition-delay: 0.48s;
+		}
+
+
+		
+

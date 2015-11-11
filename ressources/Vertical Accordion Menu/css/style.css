@@ -1,0 +1,221 @@
+
+/*** reset ***/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video 
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	/*font-size: 100%;*/
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section 
+{
+	display: block;
+}
+body 
+{
+	line-height: 1;
+}
+ol, ul 
+{
+	list-style: none;
+}
+blockquote, q 
+{
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after 
+{
+	content: '';
+	content: none;
+}
+table 
+{
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
+/* clearfix */
+/*
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+.clearfix:before, .clearfix:after {
+    content: " ";
+    display: table;
+}
+.clearfix:after {
+    clear: both;
+}
+*/
+.clear {
+	clear: both;
+}
+
+
+
+
+/* Fonts */
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300|Montserrat:400,700);
+
+
+
+/* Common styles */
+
+html {
+	font-size: 100%;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Ubuntu", Helvetica, Arial, sans-serif;
+	font-weight: 400;
+	font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2em;
+    /*letter-spacing: 0.03em;*/
+    line-height: 1.3em;
+    margin: 0.67rem 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    line-height: 1.15em;
+    margin: 0.5rem 0;
+}
+
+h3 {
+    font-size: 1.25em;
+    line-height: 1.7em;
+    margin: 0.25rem 0;
+}
+
+p {
+	margin: 0 auto;
+	/*max-width: 30rem;*/
+	/*color: #ecf0f1;*/
+	line-height: 1.5em;
+}
+
+strong {
+	font-weight: bold;
+}
+
+
+
+
+
+/* Custom style */
+
+body {
+	background-color: #4eb889;
+	color: #fff; font-weight: 400; font-size: 100%; font-family: "Open Sans", sans-serif;
+}
+
+#wrapper {
+	width: 100%; max-width: 960px; /*height: 500px;*/
+	margin: 35px auto 0 auto;
+
+}
+
+h1 {
+	/*float: left;*/
+	width: 100%;
+	padding: 30px;
+	color: #fff; font-weight: 300; font-size: 2.5em; /*font-family: "Open Sans", sans-serif;*/
+	text-align: center;
+}
+
+	#accordion {
+		width: 250px;
+		margin: 50px auto 0 auto;
+		background-color: #004050;
+		box-shadow: 0 5px 15px 1px rgba(0, 0, 0, 0.6),
+					0 0 200px 1px rgba(255, 255, 255, 0.5);
+		color: #fff; font-size: 1em; font-weight: 400; font-family: "Monserrat", "Open Sans", sans-serif;
+	}
+
+		/* Heading styles */
+
+		#accordion h3 {
+			margin: 0;
+			padding: 0 10px;
+			background-color: #003040; /* Fallback for browser who do not support gradient background */
+			background: linear-gradient(#003040, #002535);
+			font-size: 0.75em; font-weight: 700;
+			line-height: 2.85em;
+			cursor: pointer;
+		}
+
+		#accordion h3:hover {
+			text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);
+		}
+
+			/* Iconfont styles */
+			#accordion h3 i {
+				margin-right: 10px;
+				font-size: 1.2em;
+			}
+
+		/* List items */
+
+		#accordion li {
+			list-style-type: none;
+		}
+		
+			/* Links */
+			#accordion ul ul li a {
+				display: block;
+				padding: 0 15px;
+				color: #fff; font-size: 0.6875em; font-weight: 400;
+				text-decoration: none;
+				line-height: 2.455em;
+				-webkit-transition: all 0.25s;
+				-o-transition: all 0.25s;
+				transition: all 0.25s;
+			}
+
+			#accordion ul ul li a:hover {
+				background-color: #003545;
+				border-left: 5px solid #90ee90;
+			}
+
+			/* Hiding the non active lists by default */
+			#accordion ul li ul {
+				display: none;
+			}
+
+			#accordion ul li.active ul {
+				display: block;
+			}
+

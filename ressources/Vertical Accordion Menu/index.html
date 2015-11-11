@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+	<title>Vertical Accordion Menu</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+	<link type="text/css" href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+	
+	<div id="wrapper">
+
+		<h1>Vertical Accordion Menu using JQuery and CSS3</h1>
+
+		<div id="accordion">
+			
+			<ul>
+				<li>
+					<h3><i class="fa fa-tachometer"></i>Dashboard</h3>
+					<ul>
+						<li><a href="#">Reports</a></li>
+						<li><a href="#">Search</a></li>
+						<li><a href="#">Graphs</a></li>
+						<li><a href="#">Settings</a></li>
+					</ul>
+				</li>
+
+				<li class="active">
+					<h3><i class="fa fa-tasks"></i>Tasks</h3>
+					<ul>
+						<li><a href="#">Today's tasks</a></li>
+						<li><a href="#">Urgent</a></li>
+						<li><a href="#">Overdues</a></li>
+						<li><a href="#">Recurring</a></li>
+						<li><a href="#">Settings</a></li>
+					</ul>
+				</li>
+
+				<li>
+					<h3><i class="fa fa-calendar"></i></span>Calendar</h3>
+					<ul>
+						<li><a href="#">Current month</a></li>
+						<li><a href="#">Current week</a></li>
+						<li><a href="#">Previous month</a></li>
+						<li><a href="#">Previous week</a></li>
+						<li><a href="#">Next month</a></li>
+						<li><a href="#">Next week</a></li>
+						<li><a href="#">Team calendar</a></li>
+						<li><a href="#">Private calendar</a></li>
+						<li><a href="#">Settings</a></li>
+					</ul>
+				</li>
+
+				<li>
+					<h3><i class="fa fa-heart"></i>Favourites</h3>
+					<ul>
+						<li><a href="#">Global favs</a></li>
+						<li><a href="#">My favs</a></li>
+						<li><a href="#">Team favs</a></li>
+						<li><a href="#">Settings</a></li>
+					</ul>
+				</li>
+			</ul>
+			
+		</div>
+	</div>
+
+
+
+
+	<!-- JQuery -->
+
+	<script src="js/jquery-1.11.1.min.js" type="text/javascript"></script>
+
+	<script type="text/javascript">
+
+		$(function() {
+			
+			$("#accordion h3").on("click", function() {
+
+				/* Slide up all the link lists */
+				$("#accordion ul ul").slideUp();
+
+				/* Slide down the link list below the h3 clicked -only if it is closed */
+				if (!$(this).next().is(":visible")) {
+					$(this).next().slideDown();
+				};
+			});
+			
+
+		});
+
+	</script>
+
+</body>
+
+
+</html>

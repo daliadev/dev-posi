@@ -54,7 +54,7 @@ class ArraySort {
 	}
 
 	/*
-	static public function recursiveCategories($parent, $level, $datas)
+	static public function recursiveArrayToList($parentRef, $depth, $datasObjects, $refField)
 	{
 		$list = '';
 		$previous_level = 0;
@@ -76,7 +76,7 @@ class ArraySort {
 				$list .= '<li>'.$node->getNom().'</li>';
 				$previous_level = $level;
 
-				$list .= self::recursiveCategories($node->getCode(), ($level + 1), $datas);
+				$list .= self::recursiveArrayToList($node->$refField, ($level + 1), $datas, $refField);
 			}
 		}
 

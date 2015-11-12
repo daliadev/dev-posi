@@ -30,6 +30,59 @@ function getColor($percent)
 }
 
 
+
+
+function recursiveCategories($parent, $level, $datas)
+{
+	$list = '';
+	$previous_level = 0;
+	$isListOpen = false;
+
+	if ($level == 0) 
+	{
+		$list .= '<ul>';
+	}
+
+	foreach ($datas as $cat) 
+	{
+		if ($parent == $cat->getParent()) 
+		{
+			if ($previous_level < $level) 
+			{
+				$list .= '<ul>';
+			}
+
+			if ($level == 0)
+			{
+				$list .= '<li><h3><a>'.$cat->getNom().'</a></h3>';
+				$isListOpen = true;
+			}
+			else
+			{
+				$list .= '<li><a>'.$cat->getNom().'</a></li>';
+			}
+
+			$previous_level = $level;
+
+			$list .= recursiveCategories($cat->getCode(), ($level + 1), $datas);
+		}
+	}
+
+	if ($previous_level == $level && $previous_level != 0) 
+	{
+		if ($isListOpen)
+		{
+			$list .= '</li>';
+		}
+		$list .= '</ul>';
+	}
+
+	return $list;
+}
+
+
+
+
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
 $formData['ref_organ_cbox'] = "";
@@ -332,249 +385,28 @@ $form_url = $response['url'];
 										</div> -->
 										
 
-										<div id="categories-list categories-score">
+										<div class="categories-list">
 											
-											<div class="progressbars" style="width:100%;">
+											<!-- <div class="progressbars" style="width:100%;"> -->
 												
 												<?php
-													$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat', 2);
-													//var_dump($response['stats']['categories']);
-													//var_dump($sortedCat);
-													//exit();
+													//$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat', 2);
+													$catList = recursiveCategories(0, 0, $response['stats']['categories']);
+													echo $catList;
 												?>
 												
-												<?php 
-
-													//$index;
-													$level = 0;
-													$previous_level = 0;
-													$catdata = $sortedCat;
-													$parent = 0;
-													$html = '';
-													//count = 0;
-													
-													while (true)
-													{
-														//$previous_level = 0;
-
-														if ($level == 0) 
-														{
-															$html .= '<ul>';
-														}
-
-														foreach ($catdata as $cat)
-														{
-															if (is_object($cat))
-															{
-																if  ($parent == $cat->getParent())
-																{
-																	if ($previous_level < $level) 
-																	{
-																		$html .= '<ul>';
-																	}
-
-																	$html .= '<li>'.$cat->getNom().'</li>';
-
-																	$parent = $cat->getCode();
-																	
-																}
-															}
-															else if (is_array($cat))
-															{
-																//$catdata = $cat;
-																$previous_level = $level;
-																$level++;
-
-																//var_dump($catdata);
-																//exit();
-																break;
-															}	
-														}
-
-														if ($previous_level == $level && $previous_level != 0) 
-														{
-															$html .= '</ul>';
-														}
-													}
-													*/
-													var_dump($html);
-													exit();
-
-													/*
-													$level = 0;
-													$parent = 0;
-													$list = '';
-													$i = 0;
-
-													while (true)
-													{
-														$previous_level = 0;
-
-														if ($level == 0) 
-														{
-															$list .= '<ul>';
-														}
-
-														foreach ($response['stats']['categories'] as $cat) 
-														{
-															if ($parent == $cat->getParent()) 
-															{
-																if ($previous_level < $level) 
-																{
-																	$list .= '<ul>';
-																}
-
-																$list .= '<li>'.$cat->getNom().'</li>';
-																$previous_level = $level;
-
-																$parent = $cat->getCode();
-																$level++;
-																$i++;
-
-																//$list .= self::recursiveList($node['id'], ($level + 1), $datas);
-															}
-															
-															//}	
-															
-															//$list .= self::recursiveList($node['id'], ($level + 1));
-														}
-
-														if ($previous_level == $level && $previous_level != 0) 
-														{
-															$list .= '</ul>';
-														}
-													}
-
-													echo $list;
-													exit();
-													*/
-
-													/*
-													$list = '';
-													$previous_level = 0;
-
-													if ($level == 0) 
-													{
-														$list .= '<ul>';
-													}
-
-													foreach ($datas as $node) 
-													{
-														if ($parent == $node->getParent()) 
-														{
-															if ($previous_level < $level) 
-															{
-																$list .= '<ul>';
-															}
-
-															$list .= '<li>'.$node->getNom().'</li>';
-															$previous_level = $level;
-
-															$list .= self::recursiveCategories($node->getCode(), ($level + 1), $datas);
-														}
-													}
-
-													if ($previous_level == $level && $previous_level != 0) 
-													{
-														$list .= '</ul>';
-													}
-
-													return $list;
-													*/
-												?>
-
-												<?php 
-													/*
-													echo '<ul>';
-													for ($i = 0; $i < count($sortedCat); $i++) {
-
-														$categorie = $sortedCat[$i];
-														$level = 0;
-
-														do
-														{
-															//$activeCat = $activeCat[$level];
-															if (is_object($categorie))
-															{
-																//$level = 0;
-																$cat = $categorie;
-															}
-															else if (is_array($categorie))
-															{
-																$level++;
-																$cat = $categorie[$level];
-															}
-														}
-														while ($level >= 0);
-														
-
-		
-													}
-													echo '</ul>';
-													exit();
-													*/
-												?>
-
-												<?php //foreach ($sortedCat as $categorie) : ?>
-													
-													<?php 
-														/*if (is_object($categorie))
-														{
-															//$level = 0;
-															$cat = $categorie;
-														}
-														if (is_array($categorie))
-														{
-															$level++;
-															$cat = $categorie[$level];
-														}*/
-													?>
-													
-													<?php //if ($cat->getTotalReponses() > 0) : ?>
-
-														<!-- <div class="progressbar">
-															<div class="progressbar-title" title="<?php //echo $cat->getDescription(); ?>">
-																<?php //echo $cat->getNom(); ?> / <strong><?php //echo $cat->getScorePercent(); ?></strong>%
-																<div class="progressbar-bg">
-																	<span class="bg-<?php //echo getColor($cat->getScorePercent()); ?>" style="width:<?php //echo $cat->getScorePercent(); ?>%;"></span>
-																</div>
-															</div>
-														</div> -->
-													
-													<?php //endif; ?>
-
-												<?php //endforeach; ?>
-													
-								  
+												<!-- 
+												<div class="progressbar">
+													<div class="progressbar-title" title="<?php //echo $cat->getDescription(); ?>">
+														<?php //echo $cat->getNom(); ?> / <strong><?php //echo $cat->getScorePercent(); ?></strong>%
+														<div class="progressbar-bg">
+															<span class="bg-<?php //echo getColor($cat->getScorePercent()); ?>" style="width:<?php //echo $cat->getScorePercent(); ?>%;"></span>
+														</div>
 												
+													</div>
 
-												<?php
-													/*
-													$htmlList = '';
-
-													$firstLevel = preg_split('/(<ul>)/', $sortedCat);
-
-													//$firstLevelArray = explode('<ul>', $matches);
-
-													var_dump($firstLevel);
-													//var_dump($firstLevelArray);
-													exit();
-													*/
-													/*
-													while (strlen($htmlList) < strlen(sortedCat))
-													{
-
-
-													}
-													*/
-
-													
-													
-												?>
-
-												
-													
-											</div>
+												</div>-->
+											<!-- </div> -->
 
 										</div>
 
@@ -745,6 +577,60 @@ $form_url = $response['url'];
 			$("#infos-posi").tooltip();
 
 			$("#table-resultats").tablesorter();
+
+
+			// Liste des résultats par catégories interactives
+			$('.categories-list a').on('click', function() {
+
+				var ul_children = $(this).closest('ul').find('ul');
+				var active_links = ul_children.find('.active')
+				var closest_li = $(this).closest('li');
+				var closest_li_active = closest_li.hasClass('.active');
+				var count = 0;
+
+				/* Slide up all the link lists not marked has active */
+				ul_children.slideUp(function() {
+
+					count++;
+
+					if(count == $(this).length) {
+
+						active_links.removeClass('active');
+					}
+				});
+
+				/* Slide down the link list below the link clicked, only if it is closed */
+				if(!closest_li_active) {
+
+					closest_li.children('ul').slideDown();
+					closest_li.addClass('active');
+				}
+			});
+
+			/*
+			$("#accordian a").click(function(){
+
+					var link = $(this);
+					var closest_ul = link.closest("ul");
+					var parallel_active_links = closest_ul.find(".active")
+					var closest_li = link.closest("li");
+					var link_status = closest_li.hasClass("active");
+					var count = 0;
+
+					closest_ul.find("ul").slideUp(function(){
+						if(++count == closest_ul.find("ul").length)
+							parallel_active_links.removeClass("active");
+					});
+
+					if(!link_status)
+					{
+						closest_li.children("ul").slideDown();
+						closest_li.addClass("active");
+					}
+			})
+			*/
+		
+
 
 
 			// Validation des acquis : le select et le bouton "Enregistrer sont désactivés par défaut

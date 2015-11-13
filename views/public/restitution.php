@@ -9,19 +9,19 @@ function getColor($percent)
 	
 	$color = "gris";
 
-	if ($percent < 40)
+	if ($percent < 60)
 	{
 		$color = "rouge";
 	}
-	else if ($percent >= 40 && $percent < 60)
+	else if ($percent >= 60 && $percent < 75)
 	{
 		$color = "orange2";
 	}
-	else if ($percent >= 60 && $percent < 80)
+	else if ($percent >= 75 && $percent < 90)
 	{
 		$color = "jaune";
 	}
-	else if ($percent >= 80)
+	else if ($percent >= 90)
 	{
 		$color = "vert";
 	}
@@ -36,6 +36,7 @@ function recursiveCategories($parent, $level, $datas)
 {
 	$list = '';
 	$previous_level = 0;
+	$isMainListOpen = false;
 	$isListOpen = false;
 
 	if ($level == 0) 
@@ -55,11 +56,35 @@ function recursiveCategories($parent, $level, $datas)
 			if ($level == 0)
 			{
 				$list .= '<li><h3><a>'.$cat->getNom().'</a></h3>';
-				$isListOpen = true;
+				$isMainListOpen = true;
 			}
 			else
 			{
-				$list .= '<li><a>'.$cat->getNom().'</a></li>';
+				if ($isListOpen) 
+				{
+					$list .= '</li>';
+				}
+				$list .= '<li>'; /*<a>'.$cat->getNom().'</a>';*/
+
+				$list .= '<div class="progressbar">';
+				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
+				//$list .= '<a>'.$cat->getNom().'</a> / <strong>'.$cat->getScorePercent().'</strong>%';
+				$list .= '<div class="progressbar-bg">';
+				$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
+				$list .= '</div>';
+				$list .= '</div>';
+				//$list .= '</div>';
+				/*
+				echo '<p class="form-text-large">';
+					echo $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
+					echo '<div class="progress">';
+							echo '<div class="progress-bar progress-bar-'.$color.'" style="width: '.$percent.'%;"></div>';
+						//echo '<span class="bg-'.$color.'" style="width:'.$percent.'%;"></span>';
+					echo '</div>';
+				echo '</p>';
+				*/
+
+				$isListOpen = true;
 			}
 
 			$previous_level = $level;
@@ -70,7 +95,7 @@ function recursiveCategories($parent, $level, $datas)
 
 	if ($previous_level == $level && $previous_level != 0) 
 	{
-		if ($isListOpen)
+		if ($isMainListOpen || $isListOpen)
 		{
 			$list .= '</li>';
 		}
@@ -384,8 +409,8 @@ $form_url = $response['url'];
 
 										</div> -->
 										
-
-										<div class="categories-list">
+										<div class="info">
+											<div class="categories-list">
 											
 											<!-- <div class="progressbars" style="width:100%;"> -->
 												
@@ -408,6 +433,7 @@ $form_url = $response['url'];
 												</div>-->
 											<!-- </div> -->
 
+											</div>
 										</div>
 
 
@@ -583,7 +609,7 @@ $form_url = $response['url'];
 			$('.categories-list a').on('click', function() {
 
 				var ul_children = $(this).closest('ul').find('ul');
-				var active_links = ul_children.find('.active')
+				var active_links = ul_children.find('.active');
 				var closest_li = $(this).closest('li');
 				var closest_li_active = closest_li.hasClass('.active');
 				var count = 0;
@@ -593,17 +619,21 @@ $form_url = $response['url'];
 
 					count++;
 
-					if(count == $(this).length) {
+					if (count == $(this).length) {
 
 						active_links.removeClass('active');
 					}
 				});
 
 				/* Slide down the link list below the link clicked, only if it is closed */
-				if(!closest_li_active) {
+				if (!closest_li_active) {
 
 					closest_li.children('ul').slideDown();
 					closest_li.addClass('active');
+				}
+				else
+				{
+					//closest_li.removeClass('active');
 				}
 			});
 

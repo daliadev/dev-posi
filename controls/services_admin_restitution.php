@@ -378,6 +378,7 @@ class ServicesAdminRestitution extends Main
 			if ($totalCategorie > 0)
 			{
 				$percentCategorie = round(($totalCorrectCategorie * 100) / $totalCategorie);
+
 				$countValidCategories++;
 			}
 			else 
@@ -410,11 +411,23 @@ class ServicesAdminRestitution extends Main
 							//$posiStats[$i]->setTemps(null);
 							$totalParent = $posiStats['categories'][$m]->getTotalReponses() + $totalCategorie;
 							$totalParentCorrect = $posiStats['categories'][$m]->getTotalReponsesCorrectes() + $totalCorrectCategorie;
-							$scoreParent = $posiStats['categories'][$m]->getScorePercent() + $percentCategorie;
+ 
+							//$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
+							if ($totalParentCorrect > 0 && $totalParent > 0)
+							{
+								$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
+							}
+							else
+							{
+								$scoreParent = 0;
+							}
+
+							
 							$tempsParent = $posiStats['categories'][$m]->getTemps() + $tempsCat;
 
 							$posiStats['categories'][$m]->setTotalReponses($totalParent);
 							$posiStats['categories'][$m]->setTotalReponsesCorrectes($totalParentCorrect);
+
 							$posiStats['categories'][$m]->setScorePercent($scoreParent);
 							$posiStats['categories'][$m]->setTemps($tempsParent);
 							$posiStats['categories'][$m]->setHasResult(true);
@@ -427,12 +440,10 @@ class ServicesAdminRestitution extends Main
 		
 		/*** Stats globales ***/
 		
-		$percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
-		$posiStats['percent_global'] = $percentGlobal;
+		$posiStats['percent_global'] = round(($totalCorrectGlobal / $totalGlobal) * 100);
 		$posiStats['total_global'] = $totalGlobal;
 		$posiStats['total_correct_global'] = $totalCorrectGlobal;
 		$posiStats['temps-total'] = $tempsGlobal;
-		
 
 		return  $posiStats;
 	}

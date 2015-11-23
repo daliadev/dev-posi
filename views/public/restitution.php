@@ -29,6 +29,39 @@ function getColor($percent)
 	return $color;
 }
 
+function getProgressBar($percent)
+{
+	$progressbar = '';
+
+	if ($percent < 60)
+	{
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: '.$percent.'%;"></div>';
+	}
+	else if ($percent >= 60 && $percent < 75)
+	{
+		$percent -= 60;
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: '.$percent.'%;"></div>';
+	}
+	else if ($percent >= 75 && $percent < 90)
+	{
+		$percent -= 75;
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: 15%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-warning" style="width: '.$percent.'%;"></div>';
+	}
+	else if ($percent >= 90)
+	{
+		$percent -= 90;
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: 15%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-warning" style="width: 15%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-success" style="width: '.$percent.'%;"></div>';
+	}
+
+	return $progressbar;
+}
+
 
 
 
@@ -57,14 +90,17 @@ function recursiveCategories($parent, $level, $datas)
 			{
 				$list .= '<li>'; //<h3><a>'.$cat->getNom().'</a></h3>';
 
-				$list .= '<div class="progressbar">';
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
+				$list .= '<div class="progress">';
+				$list .= getProgressBar($cat->getScorePercent());
+				//$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
 				//$list .= '<a>'.$cat->getNom().'</a> / <strong>'.$cat->getScorePercent().'</strong>%';
-				$list .= '<div class="progressbar-bg">';
-				$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
-				$list .= '</div>';
-				$list .= '</div>';
+				//$list .= '<div class="progressbar-bg">';
 
+
+				//$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
+				//$list .= '</div>';
+				$list .= '</div>';
 
 				$isMainListOpen = true;
 			}
@@ -74,14 +110,16 @@ function recursiveCategories($parent, $level, $datas)
 				{
 					$list .= '</li>';
 				}
-				$list .= '<li>'; /*<a>'.$cat->getNom().'</a>';*/
-
-				$list .= '<div class="progressbar">';
-				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
+				$list .= '<li>';
+				$list .= '<div class="progress-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
+				$list .= '<div class="progress">';
+				//$list .= '<div class="progressbar">';
+				//$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
 				//$list .= '<a>'.$cat->getNom().'</a> / <strong>'.$cat->getScorePercent().'</strong>%';
-				$list .= '<div class="progressbar-bg">';
-				$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
-				$list .= '</div>';
+				//$list .= '<div class="progressbar-bg">';
+				$list .= getProgressBar($cat->getScorePercent());
+				//$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
+				//$list .= '</div>';
 				$list .= '</div>';
 				//$list .= '</div>';
 				/*
@@ -614,61 +652,37 @@ $form_url = $response['url'];
 
 			$("#table-resultats").tablesorter();
 
+			//$('.categories-list ul li').get(0).addClass('active)';
 
 			// Liste des résultats par catégories interactives
 			$('.categories-list a').on('click', function() {
 
-				var ul_children = $(this).closest('ul').find('ul');
-				var active_links = ul_children.find('.active');
-				var closest_li = $(this).closest('li');
-				var closest_li_active = closest_li.hasClass('.active');
+				var link = $(this);
+				var closest_ul = link.closest('ul');
+				//var ul_children = $(this).closest('ul').find('ul');
+				//var ul_children = link.closest('ul');
+				//var active_links = closest_ul.find('.active');
+				var closest_li = link.closest('li');
+				//var closest_active_li = closest_li.hasClass('.active');
 				var count = 0;
 
 				/* Slide up all the link lists not marked has active */
-				ul_children.slideUp(function() {
+				closest_ul.find('ul').slideUp(function() {
 
-					count++;
+					if (++count == closest_ul.find('ul').length) {
 
-					if (count == $(this).length) {
-
-						active_links.removeClass('active');
+						closest_ul.find('.active').removeClass('active');
 					}
 				});
 
 				/* Slide down the link list below the link clicked, only if it is closed */
-				if (!closest_li_active) {
+				if (!closest_li.hasClass('active')) {
 
 					closest_li.children('ul').slideDown();
 					closest_li.addClass('active');
 				}
-				else
-				{
-					//closest_li.removeClass('active');
-				}
+
 			});
-
-			/*
-			$("#accordian a").click(function(){
-
-					var link = $(this);
-					var closest_ul = link.closest("ul");
-					var parallel_active_links = closest_ul.find(".active")
-					var closest_li = link.closest("li");
-					var link_status = closest_li.hasClass("active");
-					var count = 0;
-
-					closest_ul.find("ul").slideUp(function(){
-						if(++count == closest_ul.find("ul").length)
-							parallel_active_links.removeClass("active");
-					});
-
-					if(!link_status)
-					{
-						closest_li.children("ul").slideDown();
-						closest_li.addClass("active");
-					}
-			})
-			*/
 		
 
 

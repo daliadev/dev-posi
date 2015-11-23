@@ -1794,7 +1794,7 @@ fieldset .add-link span
 .categories-list {
 	width: 100%; /*250px;*/
 	/*max-width: 760px;*/
-	/*margin: 50px auto 0 auto;*/
+	/*margin: 10px 0;*/
 	/*background-color: #f7f7f7;*/ /*#004050;*/
 	/*box-shadow: 0 5px 15px 1px rgba(0, 0, 0, 0.6),
 				0 0 200px 1px rgba(255, 255, 255, 0.5);*/
@@ -1805,26 +1805,29 @@ fieldset .add-link span
 		padding: 0;
 		margin: 0;
 	}
+	
+
+	/* Heading styles */
 
 	.categories-list h3 {
 		margin: 0;
 		padding: 0;
 		/*background-color: #ccc;*/
 	}
-	/*
+	
 	.categories-list h3:before {
 		float: left;
 		width: 30px;
-		content: '\f104';
+		content: '\f105';
 		font-family: "FontAwesome";
 		text-align: center;
 		line-height: 34px;
 	}
-	*/
 
 
 	.categories-list h3:hover {
 		/*text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);*/
+
 	}
 
 		/* Iconfont styles */
@@ -1834,15 +1837,18 @@ fieldset .add-link span
 			font-size: 1.2em;
 		}
 		*/
+
 	.categories-list h3 a {
 		display: block;
-		
 		padding: 0; /*0 10px;*/
 		font-size: 13px; font-weight: bold; color: #000;
 		line-height: 2.85em;
 		text-decoration: none;
 		cursor: pointer;
 	}
+	
+	
+
 
 
 	/* List items */
@@ -1851,12 +1857,7 @@ fieldset .add-link span
 		list-style-type: none;
 	}
 		
-		/* Incrément de la marge à partir du 3eme niveau d'imbrication */
-		.categories-list ul ul ul {
-			/*margin: 0 10px;*/
-			border-left: 1px dotted #999;
-			/*opacity: 0.5;*/
-		}
+		
 
 		/* Links */
 		.categories-list ul ul li a,
@@ -1873,29 +1874,55 @@ fieldset .add-link span
 			transition: all 0.25s;
 		}
 
-		.categories-list ul ul li a:not(:only-child):after {
-			position: absolute;
-			top: 0;
-			left: 0;
-			content: '\f104';
+		
+		.categories-list ul ul li a:not(:only-child):before {
+			content: '\f105';
+			/*position: absolute;*/
+			/*top: 0;
+			left: 0;*/
 			font-family: "FontAwesome"; font-size: 0.875em;
+			float: left;
+			width: 15px;
+			text-align: center;
+			line-height: 34px;
 		}
-
+		
 		.categories-list ul ul li a:hover {
 			/*background-color: #003545;*/
-			border-left: 5px solid #90ee90;
+			/*border-left: 5px solid #90ee90;*/
+		}
+		
+		/* Hiding the non active lists by default */
+
+		.categories-list ul ul {
+			display: none;
+			border-left: 1px dotted #999;
 		}
 
-		/* Hiding the non active lists by default */
+		.categories-list li.active>ul {
+			display: block;
+		}
+
+		/*
 		.categories-list ul ul, 
 		.categories-list ul li ul {
 			display: none;
 		}
+		*/
 
-		.categories-list ul li.active>ul {
-			display: block;
+		/* Incrément de la marge à partir du 3eme niveau d'imbrication */
+		.categories-list ul ul ul {
+			/*margin-left: 10px;*/
+			border-left: 1px dotted #999;
+			/*opacity: 0.5;*/
 		}
-
+		
+		
+		
+		.categories-list .active>a:not(:only-child):before {
+			content: '\f107';
+			font-family: "FontAwesome"; font-size: 0.875em;
+		}
 
 
 
@@ -2091,8 +2118,48 @@ fieldset .add-link span
 			background-color: #bdbdbd;
 		}
 
+/* Progress bars & sliders */
 
+.progress {
+    width: 100%;
+    height: 10px;
+    /*margin: 0 0 20px 0;*/
+    margin: 0 0 10px 0;
+    background-color: #bdbdbd;
+    background-image: none;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+    
 
+    .progress .progress-bar {
+        width: 0;
+        height: 100%;
+        float: left;
+        background-color: #ff9800;
+        /*transition: width 0.6s ease 0s;*/
+    }
+    
+    .progress .progress-bar-primary {
+        background-color: #00bfa5;
+    }
+    .progress .progress-bar-secondary {
+        background-color: #ff9800;
+    }
+    .progress .progress-bar-warning {
+        background-color: #f1c40f;
+    }
+    .progress .progress-bar-danger {
+        background-color: #e74c3c;
+    }
+    .progress .progress-bar-success {
+        background-color: #2ecc71;
+    }
+    .progress .progress-bar-info {
+        background-color: #3498db;
+    }
 
 
 /*-------------------------------------- tableau résultats restitution -------------------------------*/

@@ -947,47 +947,86 @@ form input[type="text"][disabled]
 
 
 
-/*** Couleurs ***/
+/*****   couleurs   *****/
+
+/*** Primary : Teal(blue-green) ***/
+/* A700: #00bfa5 */
+/* 500: #009688 */
+
+/*** Secondary : Orange ***/
+/* 500: #ff9800 */
+/* 700: #f57c00 */
+
+/*** Greys ***/
+/* 12%: #e0e0e0 */
+/* 26%: #bdbdbd */
+/* 54%: #757575 */
+/* 87%: #212121 */
+
+
+/** Special : Dark blue; **/
+/* Wet Asphalt: #34495e */
+/* Midnight Blue: #2c3e50 */
+
+/*** Info : Light blue ***/
+/* 600: #039be5 */
+/* 700: #0288d1 */
+
+/*** Success : Green ***/
+/* Emerald: #2ecc71 */
+/* Nephritis : #27ae60 */
+
+/*** Danger : Red ***/
+/* Alizarin: #e74c3c */
+/* Pomegranate: #c0392b */
+
+/*** Default : Grey ***/
+/* 35%: #a5a5a5 */
+/* 54%: #757575 */
+
+/*** Disabled : Light grey ***/
+/* 26%: #bdbdbd */
+
 
 .rouge {
-	color: #F75556;
+	color: #e74c3c;
 }
 
 .orange2 {
-	color: #f39c12;
+	color: #ff9800;
 }
 
 .jaune {
-	color: #F5D313;
+	color: #f5d313;
 }
 
 .vert {
-	color: #98C03A;
+	color: #2ecc71;
 }
 
 .gris {
-	color: #8D8D8D;
+	color: #757575;
 }
 
 
 .bg-rouge {
-	background-color: #F75556;
+	background-color: #e74c3c;
 }
 
 .bg-orange2 {
-	background-color: #f39c12;
+	background-color: #ff9800;
 }
 
 .bg-jaune {
-	background-color: #F5D313;
+	background-color: #f5d313;
 }
 
 .bg-vert {
-	background-color: #58D68D;
+	background-color: #2ecc71;
 }
 
 .bg-gris {
-	background-color: #8D8D8D;
+	background-color: #757575;
 }
 
 
@@ -1772,7 +1811,16 @@ fieldset .add-link span
 		padding: 0;
 		/*background-color: #ccc;*/
 	}
-
+	/*
+	.categories-list h3:before {
+		float: left;
+		width: 30px;
+		content: '\f104';
+		font-family: "FontAwesome";
+		text-align: center;
+		line-height: 34px;
+	}
+	*/
 
 
 	.categories-list h3:hover {
@@ -1815,7 +1863,7 @@ fieldset .add-link span
 		.categories-list h4 {
 			display: block;
 			position: relative;
-			padding: 0 10px;
+			padding: 0; /*0 10px;*/
 			color: #000; /*font-size: 0.6875em; font-weight: 400;*/
 			text-decoration: none;
 			line-height: 2.455em;
@@ -1828,7 +1876,7 @@ fieldset .add-link span
 		.categories-list ul ul li a:not(:only-child):after {
 			position: absolute;
 			top: 0;
-			right: 10px;
+			left: 0;
 			content: '\f104';
 			font-family: "FontAwesome"; font-size: 0.875em;
 		}
@@ -2016,7 +2064,7 @@ fieldset .add-link span
 	
 	.progressbar-bg span {
 		position: absolute;
-		top: 0; bottom: 0; left: 0;
+		top: 0; bottom: 0; left: 0px; /*right: 10px;*/
 		/*background-color: #f39c12;*/
 		border-radius: 5px;
 	}
@@ -2042,6 +2090,8 @@ fieldset .add-link span
 		.progressbar-bg .default {
 			background-color: #bdbdbd;
 		}
+
+
 
 
 

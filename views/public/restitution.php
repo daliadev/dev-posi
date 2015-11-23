@@ -55,7 +55,17 @@ function recursiveCategories($parent, $level, $datas)
 
 			if ($level == 0)
 			{
-				$list .= '<li><h3><a>'.$cat->getNom().'</a></h3>';
+				$list .= '<li>'; //<h3><a>'.$cat->getNom().'</a></h3>';
+
+				$list .= '<div class="progressbar">';
+				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
+				//$list .= '<a>'.$cat->getNom().'</a> / <strong>'.$cat->getScorePercent().'</strong>%';
+				$list .= '<div class="progressbar-bg">';
+				$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
+				$list .= '</div>';
+				$list .= '</div>';
+
+
 				$isMainListOpen = true;
 			}
 			else
@@ -409,7 +419,7 @@ $form_url = $response['url'];
 
 										</div> -->
 										
-										<div class="info">
+										<!-- <div class="info"> -->
 											<div class="categories-list">
 											
 											<!-- <div class="progressbars" style="width:100%;"> -->
@@ -434,7 +444,7 @@ $form_url = $response['url'];
 											<!-- </div> -->
 
 											</div>
-										</div>
+										<!-- </div> -->
 
 
 									<?php else : ?>

@@ -393,7 +393,7 @@ $form_url = WEBROOT."admin/categorie/";
 										</ul>
 								</p>
 
-								<div>
+								<div id="add_parcours">
 									
 									<a class="add-link" href="#"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
@@ -476,8 +476,40 @@ $form_url = WEBROOT."admin/categorie/";
 		?>
 
 	</div>
+
+
+	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un parcours -->
+	<div id="modal-box"></div>
+	<!-- Template form ajout parcours -->
+	<!--
+	<div class="modal-box">
+
+		<form id="parcours-form" action="<?php //echo $form_url; ?>" method="post">
+			
+			<div class="modal-box-title">Ajouter un parcours</div>
+			
+			<div class="modal-box-text">
+				<p>Saisissez une description courte du parcours</p>
+				<input type="text" value="" placeholder="Ex : 10 heures de formation civique" />
+			</div>
+
+			<div class="modal-box-buttons">
+				<button type="submit" class="default">Annuler</button>
+				<button type="submit" class="primary">Enregistrer</button>
+			</div>
+
+		</form>
+
+	</div>
+	-->
+
+
+
+	<!-- js -->
 	
 	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
+	<!-- <script src="<?php echo SERVER_URL; ?>media/js/modal-box.js" type="text/javascript"></script> -->
 
 	<script type="text/javascript">
 		
@@ -600,6 +632,77 @@ $form_url = WEBROOT."admin/categorie/";
 				//$('#del').val('Annuler');
 			});
 			*/
+
+
+
+
+			/***  Fenêtre modale d'ajout d'un parcours ***/
+			
+			//if ($("#name-validation").val() === "false") {
+		$('#add_parcours').on('click', function(event) 
+		{		
+			var title = 'Ajouter un parcours';
+			var contentText = '<p>Saisissez une description courte du parcours</p><input type="text" value="" placeholder="Ex : 10 heures de formation civique" />';
+			
+			$.modalbox(
+				{
+					formId: '#form-parcours',
+					action: '<?php echo $form_url; ?>',
+					method: 'post'
+				},
+				title,
+				contentText, 
+				{
+					buttons: [
+						{
+							'btnvalue': 'Annuler', 
+							'btnclass': 'default'
+						},
+						{
+							'btnvalue': 'Enregistrer', 
+							'btnclass': 'primary'
+						}
+					], 
+					callback: function(buttonText) {
+						/*
+						if (buttonText === 'Enregistrer') {
+
+							$('#name-validation').val('true');
+							$('#form-inscription').submit();
+							console.log('submit');
+						}
+						else {
+							$('#name-validation').val('false');
+						}
+						*/
+					}
+				}, 
+				'.modal-box'
+			);
+		});
+			//}
+			/*
+			<div class="modal-box">
+
+				<form id="parcours-form" action="<?php //echo $form_url; ?>" method="post">
+					
+					<div class="modal-box-title">Ajouter un parcours</div>
+					
+					<div class="modal-box-text">
+						<p>Saisissez une description courte du parcours</p>
+						<input type="text" value="" placeholder="Ex : 10 heures de formation civique" />
+					</div>
+
+					<div class="modal-box-buttons">
+						<button type="submit" class="default">Annuler</button>
+						<button type="submit" class="primary">Enregistrer</button>
+					</div>
+
+				</form>
+
+			</div>
+			*/
+
 
 			/*** Gestion de la demande de suppression ***/
 

@@ -106,7 +106,7 @@ p {
 	padding-bottom: 10px;
 	margin-bottom: 20px;
 	border-bottom: 1px solid #ccc8c8;
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	color: #807979;
 	text-transform: uppercase;
 	font-size: 16px;
@@ -298,7 +298,7 @@ label
 	margin-bottom: 10px;
 	padding: 10px;
 	background-color: #2c3e50; /* #34495e (+clair) */
-	font-family: "Helvetica", Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	color: #ffffff;
 	font-size: 14px;
 	font-weight: bold;
@@ -484,7 +484,7 @@ form input[type="text"][disabled]
 	width: 300px;
 }
 
-	#form-posi #submit input {
+	#form-posi #submit input, #submit button {
 		cursor: pointer;
 		width: 200px;
 		height: 40px;
@@ -508,7 +508,7 @@ form input[type="text"][disabled]
 		background-color: #f3a842;
 	}
 	
-#form-posi input[type=submit], #form-posi input[type=button] 
+#form-posi input[type=submit], #form-posi input[type=button], button[type=submit]
 {
 	cursor: pointer;
 	width: 140px;
@@ -524,7 +524,7 @@ form input[type="text"][disabled]
     /*line-height: 1px;*/
 }
 
-	form input[type="submit"][disabled], #form-posi input[type=button][disabled]
+	form input[type="submit"][disabled], #form-posi input[type=button][disabled], button[type=submit][disabled]
 	{
 	    background-color: #bdc3c7 !important;
 	    cursor: default;  	
@@ -881,6 +881,15 @@ form input[type="text"][disabled]
 	width:100px;	
 }
 
+.bt-admin-menu-default {
+	background-color: #a5a5a5;
+}
+
+.bt-admin-menu-default:hover, .bt-admin-menu-default:active, .bt-admin-menu:focus {
+	background-color: #757575;
+}
+
+
 
 
 
@@ -1129,7 +1138,7 @@ form input[type="text"][disabled]
 	margin: 20px 30px 10px 30px;
 	padding: 15px;
 	background-color: #1fbba6;
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	color: #ffffff;
 	font-size: 16px;
 	font-weight:bold;
@@ -1139,7 +1148,7 @@ form input[type="text"][disabled]
 	margin: 20px 20px 10px 20px;
 	padding: 15px;
 	background-color: #3498db;
-	font-family: Helvetica, Arial, sans-serif;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
 	color: #ffffff;
 	font-size: 16px;
 	font-weight:bold;
@@ -1686,7 +1695,7 @@ fieldset .add-link span
 
 #infos-posi .ui-state-default {
     border: none;
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: Tahoma, Helvetica, Arial, sans-serif;
     background: #2C3E50;
     outline: none;
 }
@@ -1757,7 +1766,7 @@ fieldset .add-link span
 	list-style: none;
 }
 	.stats li { 
-		font-family: Helvetica, Arial, sans-serif !important; 
+		font-family: Tahoma, Helvetica, Arial, sans-serif !important; 
 	}
 
 .stats .percent {
@@ -2446,7 +2455,7 @@ body:after {
 
 
 
-/*----------------------------------   Boite de dialogue modale   --------------------------------*/
+/*----------------------------------   Boite de message modale   --------------------------------*/
 
 
 .message-box
@@ -2545,6 +2554,119 @@ body:after {
 			border: 1px solid #aaa;
 		}
 			
+
+
+/*----------------------------------   Boite modale   --------------------------------*/
+
+.modal-box {
+	position:absolute;
+	top: 0px;
+	left: 0px;
+	width: 500px;
+	/*height: 175px;*/
+	/* padding-top: 30px; */
+	text-align: left;
+	background-color: #ffffff;
+	font-family: Tahoma, Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	text-align: left;
+	color: #000000;
+	/*-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;*/
+	box-shadow: 0px 0px 20px #888;
+}
+	
+	.modal-box-title {
+		margin: 20px;
+		padding: 10px;
+		width: 440px;
+		background-color: #2c3e50;
+		color: #fff;
+		font-size: 14px;
+		font-weight: bold;
+		/*line-height: 28px;*/
+	}
+
+	.modal-box-text {
+		margin: 10px 20px 30px 20px;
+		/*float: right;*/
+		width: 560px;
+		/*height: 75px;*/
+		padding: 0; /*25px 0px;*/
+		margin-bottom: 10px;
+		font-size: 13px;
+	}
+
+		.modal-box-text input {
+			height: 30px;
+			padding: 0 10px;
+			width: 438px;
+			border: 1px solid #ccc;
+			-webkit-border-radius: 5px 5px 5px 5px;
+			-moz-border-radius: 5px 5px 5px 5px;
+			border-radius: 5px 5px 5px 5px;
+		}
+	
+	.modal-box-buttons {
+		/*clear: both;*/
+		text-align: right;
+		width: 460px;
+		height: 40px;
+		background: #f0f0f0;
+		border-top: 1px solid #ccc;
+		/*padding: 5px 20px 5px 25px;*/
+		padding: 20px;
+		margin-top: 20px;
+		/*-webkit-border-radius: 0px 0px 5px 5px;
+		-moz-border-radius: 0px 0px 5px 5px;
+		border-radius: 0px 0px 5px 5px;*/
+	}
+		
+		.modal-box-buttons button {
+			margin: 0 10px 0 0;
+
+			cursor: pointer;
+			/*-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+			border-radius: 5px;*/
+		}
+		
+		.modal-box-buttons button.default {
+			background-color: #aaa;
+		}
+		
+		/*
+		.modal-box-buttons button:focus {
+			border: 1px solid #aaa;
+		}
+		*/
+		.modal-box-buttons button.primary
+		{
+			background-color: #ff9800;
+		}
+
+
+		.modal-box-buttons button.alert
+		{
+			background-color: #e74c3c;
+		}
+
+		.modal-box-buttons button.info
+		{
+			background-color: #3498db;
+		}
+		
+		.modal-box-buttons button.warning
+		{
+			background-color: #f5d313;
+		}
+		
+		.modal-box-buttons button.valid
+		{
+			background-color: #2ecc71;
+		}
+
 
 
 

@@ -5,6 +5,8 @@
 // Fichiers requis pour le formulaire
 require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
+require_once(ROOT.'models/dao/preconisation_dao.php');
+require_once(ROOT.'models/dao/parcours_dao.php');
 
 
 class ServicesAdminCategorie extends Main
@@ -12,8 +14,8 @@ class ServicesAdminCategorie extends Main
 	
 	private $categorieDAO = null;
 	private $questionCatDAO = null;
-	
-	
+	private $preconisationDAO = null;
+	private $parcoursDAO = null;
 	
 	public function __construct() 
 	{
@@ -22,6 +24,8 @@ class ServicesAdminCategorie extends Main
 
 		$this->categorieDAO = new CategorieDAO();
 		$this->questionCatDAO = new QuestionCategorieDAO();
+		$this->preconisationDAO = new PreconisationDAO();
+		$this->parcoursDAO = new ParcoursDAO();
 	}
 
 	
@@ -90,7 +94,7 @@ class ServicesAdminCategorie extends Main
 		$catDetails['code_cat'] = "";
 		$catDetails['nom_cat'] = "";
 		$catDetails['descript_cat'] = "";
-		$catDetails['type_lien_cat'] = "";
+		//$catDetails['type_lien_cat'] = "";
 
 		
 		$resultset = $this->categorieDAO->selectByCode($codeCat);
@@ -101,10 +105,72 @@ class ServicesAdminCategorie extends Main
 			$catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
 			$catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
 			$catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
-			$catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
+			// $catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
+
+			return $catDetails;
 		}
 
-		return $catDetails;
+		return false;
+	}
+
+	/*
+	public function getPreconisations($codeCat)
+	{
+		$resultset = $this->preconisationDAO->selectByCodeCat();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultset['response']['categorie'];
+				$resultset['response']['categorie'] = array($categorie);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+	*/
+
+	public function getParcoursList()
+	{
+		$resultset = $this->parcoursDAO->selectAll();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['parcours']) && count($resultset['response']['parcours']) == 1)
+			{ 
+				$categorie = $resultset['response']['parcours'];
+				$resultset['response']['parcours'] = array($parcours);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+
+	public function getParcoursDetails($idParcours)
+	{
+		$parcoursDetails = array();
+		
+		$parcoursDetails['id_parcours'] = '';
+		$parcoursDetails['nom_parcours'] = '';
+		$parcoursDetails['desc_parcours'] = '';
+
+		$resultset = $this->parcoursDAO->selectById($idParcours);
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			$parcoursDetails['id_parcours'] = $resultset['response']['parcours']->getId();
+			$parcoursDetails['nom_parcours'] = $resultset['response']['parcours']->getNom();
+			$parcoursDetails['desc_parcours'] = $resultset['response']['parcours']->getDescription();
+
+			return $parcoursDetails;
+		}
+
+		return false;
 	}
 
 

@@ -44,7 +44,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS categorie;
 CREATE TABLE categorie 
 (
-	code_cat VARCHAR(10) NOT NULL PRIMARY KEY,
+	code_cat VARCHAR(20) NOT NULL PRIMARY KEY,
 	nom_cat VARCHAR(255) NOT NULL UNIQUE,
 	descript_cat TINYTEXT NULL,
 	type_lien_cat ENUM('static','dynamic') NOT NULL DEFAULT 'static'
@@ -206,7 +206,7 @@ DROP TABLE IF EXISTS question_cat;
 CREATE TABLE question_cat
 (
 	ref_question INT(5) UNSIGNED NOT NULL,
-	ref_cat VARCHAR(10) NULL
+	ref_cat VARCHAR(20) NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -214,7 +214,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS cat_activite;
 CREATE TABLE cat_activite 
 (
-	ref_cat VARCHAR(10) NOT NULL,
+	ref_cat VARCHAR(20) NOT NULL,
 	ref_activite INT(5) UNSIGNED NOT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;

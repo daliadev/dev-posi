@@ -654,6 +654,8 @@ $form_url = $response['url'];
 
 			//$('.categories-list ul li').get(0).addClass('active)';
 
+
+
 			// Liste des résultats par catégories interactives
 			$('.categories-list a').on('click', function() {
 

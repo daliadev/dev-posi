@@ -36,13 +36,13 @@ class ParcoursDAO extends ModelDAO
 	 * @param int Identifiant du parcours.
 	 * @return array parcours correspondant à l'identifiant sinon erreurs.
 	 */
-	public function selectById($idDegre) 
+	public function selectById($idParcours) 
 	{
 		$this->initialize();
 		
-		if (!empty($idDegre))
+		if (!empty($idParcours))
 		{
-			$request = "SELECT * FROM parcours WHERE id_parcours = ".$idDegre;
+			$request = "SELECT * FROM parcours WHERE id_parcours = ".$idParcours;
 
 			$this->resultset['response'] = $this->executeRequest("select", $request, "parcours", "Parcours");
 		}
@@ -136,7 +136,7 @@ class ParcoursDAO extends ModelDAO
 		
 		if (!empty($refParcours))
 		{
-			$request = "DELETE FROM degre WHERE id_parcours = ".$refParcours;
+			$request = "DELETE FROM parcours WHERE id_parcours = ".$refParcours;
 
 			$this->resultset['response'] = $this->executeRequest("delete", $request, "parcours", "Parcours");
 		}

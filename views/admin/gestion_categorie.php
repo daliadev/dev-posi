@@ -524,12 +524,6 @@ $form_url = WEBROOT."admin/categorie/";
 			var self = this;
 			var mode = $('#mode').val();
 
-			// Sauvegarde du premier élément de la liste des préconisations pour duplication
-			//var $precoItem = $('.preco-item');
-
-			// Rend les éléments de la liste des préconisations déplaçables
-			$(".preco-list").sortable();
-
 
 			/* Vide le formulaire */
 
@@ -646,11 +640,18 @@ $form_url = WEBROOT."admin/categorie/";
 			*/
 
 
+
+
 			/*** Gestion des éléments de la liste de préconisation ***/
+
+			// Rend les éléments de la liste des préconisations déplaçables
+			$(".preco-list").sortable();
+
 			var i = 1;
 			var $item;
 			$numItemPreco = 0;
 			
+			// Ajout d'une nouvelle préconisation par duplication
 			$('#add-preco').on('click', function(event) {
 
 				event.preventDefault();
@@ -661,53 +662,39 @@ $form_url = WEBROOT."admin/categorie/";
 			});
 
 
+
+
 			/***  Fenêtre modale d'ajout d'un parcours ***/
 			
-			//if ($("#name-validation").val() === "false") {
 			$('#add-parcours').on('click', function(event) {
 
 				event.preventDefault();
 
 				var title = 'Ajouter un parcours';
-				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou le supprimer :</p>';
-				contentText += '<select name="parcours_cbox" id="parcours_cbox" class="select-<?php echo $formData['disabled']; ?>">';
-				contentText += '<option value="select_cbox">Aucun</option>';
 
-				/*
+				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou le supprimer :</p>';
+				contentText += '<select name="parcours_cbox" id="parcours_cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
+				contentText += '<option value="select_cbox">Aucun</option>';
 				<?php
-				foreach($response['categorie'] as $categorie)
+				foreach($response['parcours'] as $parcours)
 				{
 					$selected = "";
-					if (!empty($formData['parent_code_cat']) && $formData['parent_code_cat'] == $categorie->getCode())
+					if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
 					{
 						$selected = "selected";
 					}
-					
-					$length = strlen($categorie->getCode()) - 2;
-					
-					if ($length < 0)
-					{
-						$length = 0;
-					}
-
-					$style = "padding-left:".(($length * 10) + 5)."px;";
-
-					//if ($length <= 0)
-					//{
-						//echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-					//}
-					//else
-					//{
-						echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
-					//}
+					?>					
+					contentText += '<option value="<?php echo $categorie->getCode(); ?>" <?php echo $selected; ?>>- <?php echo $parcours->getNom(); ?></option>';	
+					<?php
 				}
 				?>
-				*/
-				
 				contentText += '</select>';
-				contentText += '<p>Ou saisissez la description d\'un nouveau parcours : </p>'
-				contentText += '<input type="text" value="" placeholder="Ex : 10 heures de formation civique" />';
+
+				contentText += '<p>Ou saisissez la description d\'un nouveau parcours : </p>';
+				contentText += '<input id="id-parcours" type="hidden" value="" />';
+				contentText += '<input id="nom-parcours" type="text" value="" placeholder="Ex : 10 heures de formation mathématiques" />';
 				
+
 				$.modalbox(
 					{
 						formId: '#form-parcours',
@@ -729,45 +716,54 @@ $form_url = WEBROOT."admin/categorie/";
 						], 
 						callback: function(buttonText) {
 
-							console.log('Callback calling');
-							/*
 							if (buttonText === 'Enregistrer') {
 
-								$('#name-validation').val('true');
-								$('#form-inscription').submit();
+								$('#form-parcours').submit();
 								console.log('submit');
 							}
-							else {
-								$('#name-validation').val('false');
-							}
-							*/
+							
 						}
 					}, 
 					'#modal-box'
 				);
 			});
-			//}
-			/*
-			<div class="modal-box">
+			
+			
 
-				<form id="parcours-form" action="<?php //echo $form_url; ?>" method="post">
-					
-					<div class="modal-box-title">Ajouter un parcours</div>
-					
-					<div class="modal-box-text">
-						<p>Saisissez une description courte du parcours</p>
-						<input type="text" value="" placeholder="Ex : 10 heures de formation civique" />
-					</div>
+			/*** Gestion de la requête pour éditer un parcours dans la liste des parcours ***/
 
-					<div class="modal-box-buttons">
-						<button type="submit" class="default">Annuler</button>
-						<button type="submit" class="primary">Enregistrer</button>
-					</div>
+			$('#parcours_cbox').on('change', function(event) {
 
-				</form>
+				var refParcours = $('#parcours_cbox').val();
+				
+				<?php if (Config::ALLOW_AJAX) : ?>
 
-			</div>
-			*/
+					if (refParcours != 'select_cbox')
+					{
+						$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
+
+							if (data.error) {
+
+								alert(data.error);
+							}
+							else if (data.result) {
+
+								console.log(data.results);
+								$('#id-parcours').val(data.results.id_parcours);
+								$('#nom-parcours').val(data.results.nom_parcours);
+							}
+						}, 'json');
+					}
+
+				<?php endif; ?>
+			});
+
+			
+
+
+
+
+
 
 
 			/*** Gestion de la demande de suppression ***/
@@ -795,6 +791,7 @@ $form_url = WEBROOT."admin/categorie/";
 			});
 			
 		});
+
 
 	</script>
 	   

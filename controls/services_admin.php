@@ -475,11 +475,14 @@ class ServicesAdmin extends Main
 
 
 
-
-		/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
+		/* ==========================================================================
+		   Requêtes ajax
+		   ========================================================================== */
 
         if (Config::ALLOW_AJAX)
         {
+        	/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
+
         	if (isset($_POST['ref_cat']) && !empty($_POST['ref_cat']))
 			{
 				$catDetails = $this->servicesCategorie->getCategorieDetails($_POST['ref_cat']);
@@ -490,13 +493,39 @@ class ServicesAdmin extends Main
 				}
 				else
 				{
-					 $response = array('error' => "Cette catégorie n'existe pas.");
+					$response = array('error' => "Cette catégorie n'existe pas.");
 				}
 				
 				echo json_encode($response);
                 exit();
 			}
+
+			/*** Requête pour sélectionner un parcours et l'éditer ***/
+			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']))
+			{
+				$selectParcours = $this->servicesCategorie->getParcours($_POST['ref_parcours']);
+
+				if ($selectParcours)
+                {
+					$response = array('error' => false, 'results' => $selectParcours);
+				}
+				else
+				{
+					$response = array('error' => "Ce parcours n'existe pas.");
+				}
+				
+				echo json_encode($response);
+                exit();
+			}
+
+			/*** Requête pour enregistrer un nouveau parcours ***/
+
+			/*** Requête pour supprimer un nouveau parcours ***/
+
         }
+
+        /* Fin requêtes ajax
+           ========================================================================== */
 
 
 

@@ -26,15 +26,17 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS cat_preco;
 CREATE TABLE cat_preco
 (
-   ref_code_cat VARCHAR(10) NOT NULL,
+   ref_code_cat VARCHAR(20) NOT NULL,
    ref_preco INT(5) UNSIGNED NOT NULL
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+
 /*==============================================================*/
-/* Table : intervalle                                             */
+/* Table : intervalle                                           */
 /*==============================================================*/
+/*
 DROP TABLE IF EXISTS intervalle;
 CREATE TABLE intervalle 
 (
@@ -43,7 +45,7 @@ CREATE TABLE intervalle
 	taux_max INT(5) UNSIGNED NOT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+*/
 
 /*==============================================================*/
 /* Table : parcours                                             */
@@ -66,9 +68,11 @@ CREATE TABLE preconisation
 (
 	id_preco INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_parcours INT(5) UNSIGNED NOT NULL,
-	ref_intervalle INT(5) UNSIGNED NOT NULL,
+	/*ref_intervalle INT(5) UNSIGNED NOT NULL,*/
 	nom_preco VARCHAR(255) NOT NULL UNIQUE,
 	descript_preco TINYTEXT NULL,
+	taux_min INT(10) UNSIGNED NULL,
+	taux_max INT(10) UNSIGNED NULL,
 	num_ordre int(3) UNSIGNED NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -81,7 +85,7 @@ CREATE INDEX I_FK_preco_cat ON cat_preco (ref_code_cat ASC);
 CREATE INDEX I_FK_cat_preco ON cat_preco (ref_preco ASC);
 
 CREATE INDEX I_FK_preco_parcours ON preconisation (ref_parcours ASC);
-CREATE INDEX I_FK_preco_fraction ON preconisation (ref_intervalle ASC);
+/*CREATE INDEX I_FK_preco_fraction ON preconisation (ref_intervalle ASC);*/
 
 
 /*==============================================================*/
@@ -95,7 +99,7 @@ ALTER TABLE cat_preco
 
 ALTER TABLE preconisation 
 	ADD CONSTRAINT FK_preco_parcours FOREIGN KEY (ref_parcours) REFERENCES parcours (id_parcours) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
+/*
 ALTER TABLE preconisation 
 	ADD CONSTRAINT FK_preco_intervalle FOREIGN KEY (ref_intervalle) REFERENCES intervalle (id_intervalle) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
+*/

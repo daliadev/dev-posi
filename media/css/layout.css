@@ -1422,6 +1422,7 @@ fieldset .add-link span
 }
 
 .preco-item {
+	margin-top: 10px;
 	padding: 5px 10px;
 	background-color: #eee;
 	border: 1px solid #bbb;
@@ -2598,7 +2599,7 @@ body:after {
 		font-size: 13px;
 	}
 
-		.modal-box-text input {
+		.modal-box-text input, .modal-box-text select {
 			height: 30px;
 			padding: 0 10px;
 			width: 438px;
@@ -2607,6 +2608,15 @@ body:after {
 			-moz-border-radius: 5px 5px 5px 5px;
 			border-radius: 5px 5px 5px 5px;
 		}
+		
+		.modal-box-text select {
+			width: 458px;
+		}
+
+		.modal-box-text option {
+			/*width: 458px;*/
+		}
+
 	
 	.modal-box-buttons {
 		/*clear: both;*/

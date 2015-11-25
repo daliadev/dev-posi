@@ -369,7 +369,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<!-- <div> -->
 
-					<div class="zone-formu2">
+					<div id="precos" class="zone-formu2">
 	 
 						<div id="preconisations" class="form-full">
 
@@ -393,22 +393,23 @@ $form_url = WEBROOT."admin/categorie/";
 										</ul>
 								</p>
 
-								<div id="add_parcours">
+								<div>
 									
-									<a class="add-link" href="#"><p style="line-height: 16px;">
+									<a id="add-parcours" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
 											<i class="fa fa-plus fa-stack-1x"></i>
 										</span>
-										<strong>Ajouter une nouvelle préconisations.</strong>
+										<strong>1 - Commencer par ajouter un (ou des) nouveau(x) parcours.</strong>
 									</p></a>
 
-									<a class="add-link" href="#"><p style="line-height: 16px;">
+									<a id="add-preco" class="add-link" href="#precos"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
 											<i class="fa fa-plus fa-stack-1x"></i>
 										</span>
-										<strong>Ajouter un découpage intervalaire pour cette categorie.</strong>
+										<strong> 2 - Ensuite, créer une nouvelle préconisation, en saisissant des valeurs minimum et maximun, en pourcentage.
+										Répéter l'opération pour que l'ensemble des préconisations pour cette catégorie couvre 0 à 100% des résultats.</strong>
 									</p></a>
 
 									<!-- <a href="#"><p><i class="fa fa-plus-circle"></i> Ajouter un découpage intervalaire pour cette categorie.</p></a> -->
@@ -417,14 +418,14 @@ $form_url = WEBROOT."admin/categorie/";
 
 								<hr />
 
-								<div class="precos">
+								<ul class="preco-list">
 
-									<div class="preco-item">
+									<li class="preco-item">
 										<span class="preco-item-num"><strong>1</strong></span>
 										De 
-										<input type="text" name="preco[]" value="" placeholder="Ex : 0" /> % 
+										<input type="text" name="precoMin[]" value="" placeholder="Ex : 75" /> % 
 										&nbsp;&nbsp;à 
-										<input type="text" name="preco[]" value="" placeholder="Ex : 100" /> % 
+										<input type="text" name="precoMax[]" value="" placeholder="Ex : 100" /> % 
 
 										<span class="arrow">
 											<i class="fa fa-long-arrow-right fa-lg"></i>
@@ -435,9 +436,9 @@ $form_url = WEBROOT."admin/categorie/";
 											<option value="1">Parcours 1</option>
 											<option value="2">Parcours 2</option>
 										</select>
-									</div>
+									</li>
 
-								</div>
+								</ul>
 
 							</fieldset>
 						</div>
@@ -479,7 +480,11 @@ $form_url = WEBROOT."admin/categorie/";
 
 
 	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un parcours -->
-	<div id="modal-box"></div>
+	<?php if (Config::ALLOW_PRECONISATION) : ?>
+
+		<div id="modal-box"></div>
+
+	<?php endif; ?>
 	<!-- Template form ajout parcours -->
 	<!--
 	<div class="modal-box">
@@ -509,7 +514,7 @@ $form_url = WEBROOT."admin/categorie/";
 	
 	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
 	<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
-	<!-- <script src="<?php echo SERVER_URL; ?>media/js/modal-box.js" type="text/javascript"></script> -->
+	<script src="<?php echo SERVER_URL; ?>media/js/modal-box.js" type="text/javascript"></script>
 
 	<script type="text/javascript">
 		
@@ -518,6 +523,12 @@ $form_url = WEBROOT."admin/categorie/";
 
 			var self = this;
 			var mode = $('#mode').val();
+
+			// Sauvegarde du premier élément de la liste des préconisations pour duplication
+			//var $precoItem = $('.preco-item');
+
+			// Rend les éléments de la liste des préconisations déplaçables
+			$(".preco-list").sortable();
 
 
 			/* Vide le formulaire */
@@ -562,7 +573,8 @@ $form_url = WEBROOT."admin/categorie/";
 				return false;
 			}
 
-
+			
+			
 
 
 
@@ -634,52 +646,106 @@ $form_url = WEBROOT."admin/categorie/";
 			*/
 
 
+			/*** Gestion des éléments de la liste de préconisation ***/
+			var i = 1;
+			var $item;
+			$numItemPreco = 0;
+			
+			$('#add-preco').on('click', function(event) {
+
+				event.preventDefault();
+				i++;
+				$item = $('.preco-item:first').clone();
+				$(".preco-list").append($item);
+				$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+			});
 
 
 			/***  Fenêtre modale d'ajout d'un parcours ***/
 			
 			//if ($("#name-validation").val() === "false") {
-		$('#add_parcours').on('click', function(event) 
-		{		
-			var title = 'Ajouter un parcours';
-			var contentText = '<p>Saisissez une description courte du parcours</p><input type="text" value="" placeholder="Ex : 10 heures de formation civique" />';
-			
-			$.modalbox(
-				{
-					formId: '#form-parcours',
-					action: '<?php echo $form_url; ?>',
-					method: 'post'
-				},
-				title,
-				contentText, 
-				{
-					buttons: [
-						{
-							'btnvalue': 'Annuler', 
-							'btnclass': 'default'
-						},
-						{
-							'btnvalue': 'Enregistrer', 
-							'btnclass': 'primary'
-						}
-					], 
-					callback: function(buttonText) {
-						/*
-						if (buttonText === 'Enregistrer') {
+			$('#add-parcours').on('click', function(event) {
 
-							$('#name-validation').val('true');
-							$('#form-inscription').submit();
-							console.log('submit');
-						}
-						else {
-							$('#name-validation').val('false');
-						}
-						*/
+				event.preventDefault();
+
+				var title = 'Ajouter un parcours';
+				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou le supprimer :</p>';
+				contentText += '<select name="parcours_cbox" id="parcours_cbox" class="select-<?php echo $formData['disabled']; ?>">';
+				contentText += '<option value="select_cbox">Aucun</option>';
+
+				/*
+				<?php
+				foreach($response['categorie'] as $categorie)
+				{
+					$selected = "";
+					if (!empty($formData['parent_code_cat']) && $formData['parent_code_cat'] == $categorie->getCode())
+					{
+						$selected = "selected";
 					}
-				}, 
-				'.modal-box'
-			);
-		});
+					
+					$length = strlen($categorie->getCode()) - 2;
+					
+					if ($length < 0)
+					{
+						$length = 0;
+					}
+
+					$style = "padding-left:".(($length * 10) + 5)."px;";
+
+					//if ($length <= 0)
+					//{
+						//echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
+					//}
+					//else
+					//{
+						echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
+					//}
+				}
+				?>
+				*/
+				
+				contentText += '</select>';
+				contentText += '<p>Ou saisissez la description d\'un nouveau parcours : </p>'
+				contentText += '<input type="text" value="" placeholder="Ex : 10 heures de formation civique" />';
+				
+				$.modalbox(
+					{
+						formId: '#form-parcours',
+						action: '<?php echo $form_url; ?>',
+						method: 'post'
+					},
+					title,
+					contentText, 
+					{
+						buttons: [
+							{
+								'btnvalue': 'Annuler', 
+								'btnclass': 'default'
+							},
+							{
+								'btnvalue': 'Enregistrer', 
+								'btnclass': 'primary'
+							}
+						], 
+						callback: function(buttonText) {
+
+							console.log('Callback calling');
+							/*
+							if (buttonText === 'Enregistrer') {
+
+								$('#name-validation').val('true');
+								$('#form-inscription').submit();
+								console.log('submit');
+							}
+							else {
+								$('#name-validation').val('false');
+							}
+							*/
+						}
+					}, 
+					'#modal-box'
+				);
+			});
 			//}
 			/*
 			<div class="modal-box">

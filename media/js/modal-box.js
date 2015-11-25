@@ -21,23 +21,25 @@
 
 		template: function(title, text, buttons) {
 			
-			html = [];
-
+			var html = [];
+			/*
 			if (isFormUrl != null)
 			{
 				html = [] = '<form id="parcours-form" action="<?php //echo $form_url; ?>" method="post">';
 			}
-
+			*/
 			if (title != null) {
 
-				html[] = '<div class="modal-box-title">' + title + '</div>';
+				html.push('<div class="modal-box-title">' + title + '</div>');
 			}
 			
-			html[] = '<div class="modal-box-text">' + text + '</div>';
+			html.push('<div class="modal-box-text">' + text + '</div>');
 
 			if (buttons != null) {
 
-				html[] = '<div class="modal-box-buttons">' + buttons + '</div>';
+				html.push('<div class="modal-box-buttons">');
+				html.push(buttons);
+				html.push('</div>');
 			}
 			/*
 			return ['<form action=',
@@ -50,19 +52,19 @@
 
 		initialize: function(form, title, text, settings, boxContainer) {
 
-			this.text = text;
+			//this.text = text;
 			this.container = boxContainer;
-			//this.bg = $('<div>', {'class': 'message-bg', 'style': 'display:none'});
-			this.el = $('<div>', {'class': 'inner-box', 'style': 'display:none'});
+			//this.bg = $('<div>', {'class': 'modalbox-bg', 'style': 'display:none'});
+			this.el = $('<div>', {'class': 'modal-box', 'style': 'display:none'});
 			
-			this.settings = $.extend({}, $.message.defaults, settings);
+			this.settings = $.extend({}, $.modalbox.defaults, settings);
 			var buttons = this.createButtons(this.settings.buttons);
-			this.el.html(this.template(isForm, title, text, buttons));
-
+			this.el.html(this.template(title, text, buttons));
+			/*
 			if (typeof(form) === 'object') {
 				wrapForm(form, html);
 			}
-
+			*/
 			this.events();
 
 			//this.bg.appendTo(this.container);
@@ -120,8 +122,8 @@
 			var posY = 0;
 			this.el.css('left', posX).css('top', posY);
 			
-			this.el.animate({top: Math.round($(window).height() / 3 - this.el.outerHeight(true) / 2), opacity: 'show'}, 500);
-			this.bg.fadeTo(this.animDuration, this.bgOpacity);
+			this.el.animate({top: Math.round($(window).height() / 2 + - this.el.outerHeight(true) / 2), opacity: 'show'}, 500);
+			//this.bg.fadeTo(this.animDuration, this.bgOpacity);
 		}
 	};
 

@@ -636,7 +636,7 @@ $form_url = $response['url'];
 			*/
 
 
-			/*  Fenêtre de validation du nom dupliqué */
+			/* Fenêtre de validation du nom dupliqué */
 
 			if ($("#name-validation").val() === "false") {
 

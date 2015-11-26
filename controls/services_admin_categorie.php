@@ -141,7 +141,7 @@ class ServicesAdminCategorie extends Main
 		{
 			if (!empty($resultset['response']['parcours']) && count($resultset['response']['parcours']) == 1)
 			{ 
-				$categorie = $resultset['response']['parcours'];
+				$parcours = $resultset['response']['parcours'];
 				$resultset['response']['parcours'] = array($parcours);
 			}
 
@@ -150,6 +150,7 @@ class ServicesAdminCategorie extends Main
 		
 		return false;
 	}
+
 
 	public function getParcoursDetails($idParcours)
 	{
@@ -985,8 +986,41 @@ class ServicesAdminCategorie extends Main
 	}
 	
 	
+	public function insertParcours($nomParcours)
+	{
+		if (!empty($nomParcours) && $nomParcours !== null)
+		{
+			// Insertion de la parcours dans la bdd
+			$resultset = $this->parcoursDAO->insert(array('nom_parcours' => $nomParcours));
+				
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function updateParcours($refParcours, $nomParcours)
+	{
+		if (!empty($nomParcours) && $nomParcours !== null)
+		{
+			// Insertion de la parcours dans la bdd
+			$resultset = $this->parcoursDAO->update(array('ref_parcours' => $refParcours, 'nom_parcours' => $nomParcours));
+				
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 	
-	
+
 	public function deleteCategorie($codeCat)
 	{
 		// On commence par sélectionner les réponses associèes à la question

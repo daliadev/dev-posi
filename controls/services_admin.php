@@ -503,7 +503,7 @@ class ServicesAdmin extends Main
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']))
 			{
-				$selectParcours = $this->servicesCategorie->getParcours($_POST['ref_parcours']);
+				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
 
 				if ($selectParcours)
                 {
@@ -519,7 +519,31 @@ class ServicesAdmin extends Main
 			}
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
+			
+			if (isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
+			{
+				if (isset($_POST['id_parcours']) && !empty($_POST['id_parcours']))
+				{
+					$saveParcours = $this->servicesCategorie->updateParcours($_POST['id_parcours'], $_POST['nom_parcours']);
+				}
+				else
+				{
+					$saveParcours = $this->servicesCategorie->insertParcours($_POST['nom_parcours']);
+				}
 
+				if ($saveParcours)
+                {
+					$response = array('error' => false);
+				}
+				else
+				{
+					$response = array('error' => "L'enregistrement a échoué.");
+				}
+				
+				echo json_encode($response);
+                exit();
+			}
+			
 			/*** Requête pour supprimer un nouveau parcours ***/
 
         }
@@ -960,12 +984,16 @@ class ServicesAdmin extends Main
 		
 		// Requete pour obtenir la liste des catégories
 		$listeCategories = $this->servicesCategorie->getCategories();
-		
+
+		// Requete pour obtenir la liste des parcours
+		$listeParcours = $this->servicesCategorie->getParcoursList();
+
 		// Assemblage de toutes les données de la réponse
 		$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
-		
+		$this->returnData['response'] = array_merge($listeParcours['response'], $this->returnData['response']);
+
 		/*** Envoi des données et rendu de la vue ***/
-		
+
 		$this->setResponse($this->returnData);
 		$this->setTemplate("tpl_admin_form");
 		$this->render("gestion_categorie");    

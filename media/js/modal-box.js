@@ -50,7 +50,7 @@
 			return html.join('');
 		},
 
-		initialize: function(form, title, text, settings, boxContainer) {
+		initialize: function(form, title, text, settings, events, boxContainer) {
 
 			//this.text = text;
 			this.container = boxContainer;
@@ -59,13 +59,15 @@
 			
 			this.settings = $.extend({}, $.modalbox.defaults, settings);
 			var buttons = this.createButtons(this.settings.buttons);
-			this.el.html(this.template(title, text, buttons));
-			/*
-			if (typeof(form) === 'object') {
-				wrapForm(form, html);
+			var html = this.template(title, text, buttons)
+			
+			if (typeof form == 'object') {
+				html = this.wrapForm(form, html);
 			}
-			*/
-			this.events();
+
+			this.el.html(html);
+			
+			this.addEvents();
 
 			//this.bg.appendTo(this.container);
 			this.el.appendTo(this.container);
@@ -74,8 +76,11 @@
 		},
 
 		wrapForm: function(form, content) {
-
-			console.log('wrapform');
+			var formHtml = [];
+			formHtml.push('<form id="'+ form.formId +'" name ="'+ form.formId +'" action="'+ form.action +'" method="'+ form.method +'">');
+			formHtml.push(content);
+			formHtml.push(['</form>']);
+			return formHtml.join('');
 		},
 
 		createButtons: function(buttons) {
@@ -84,14 +89,33 @@
 			}).join('');
 		},
 
-		events: function() {
+		addEvents: function() {
+
+			//console.log('addEvents');
 			var self = this;
+			/*
+			for (var i = 0; i < events.length; i++)
+			{
+				this.el.find(events[i].selector).on(events[i].type, function(event) {
+					if (typeof events[i].callback === 'function') {
+						events[i].callback.call(self, $(this).val());
+					}
+				});
+			}
+			*/
 			this.el.find('button').on('click', function() {
 				self.close();
 				if (typeof self.settings.callback === 'function') {
 					self.settings.callback.call(self, $(this).val());
 				}
 			});
+
+			// // A généraliser
+			// this.el.find('select').on('change', function() {
+			// 	//self.close();
+			// 	alert('change');
+			// 	self.settings.callback.call(self, $(this).val());
+			// });
 		},
 
 		close: function() {

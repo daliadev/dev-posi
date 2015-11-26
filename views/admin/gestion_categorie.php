@@ -423,18 +423,34 @@ $form_url = WEBROOT."admin/categorie/";
 									<li class="preco-item">
 										<span class="preco-item-num"><strong>1</strong></span>
 										De 
-										<input type="text" name="precoMin[]" value="" placeholder="Ex : 75" /> % 
+										<input type="text" name="precoMin[]" value="" placeholder="Ex : 0" /> % 
 										&nbsp;&nbsp;à 
-										<input type="text" name="precoMax[]" value="" placeholder="Ex : 100" /> % 
+										<input type="text" name="precoMax[]" value="" placeholder="Ex : 20" /> % 
 
 										<span class="arrow">
 											<i class="fa fa-long-arrow-right fa-lg"></i>
 										</span>
 
-										<select name="parcours-cbox">
+										<select id="parcours-preco-cbox" name="parcours-preco-cbox" <?php echo $formData['disabled']; ?>>
 											<option value="select-cbox">---</option>
-											<option value="1">Parcours 1</option>
-											<option value="2">Parcours 2</option>
+											<?php
+											if (isset($response['parcours']) && !empty($response['parcours']))
+											{
+												foreach($response['parcours'] as $parcours)
+												{
+													$selected = "";
+													if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
+													{
+														$selected = "selected";
+													}
+													?>					
+													contentText += '<option value="<?php echo $parcours->getId(); ?>" <?php echo $selected; ?>>- <?php echo $parcours->getNom(); ?></option>';	
+													<?php
+												}
+											}
+											?>
+											<!-- <option value="1">Parcours 1</option> -->
+											<!-- <option value="2">Parcours 2</option> -->
 										</select>
 									</li>
 
@@ -603,7 +619,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<?php if (Config::ALLOW_AJAX) : ?>
 
-					console.log(mode);
+					//console.log(mode);
 
 					if (mode === 'view') {
 
@@ -644,7 +660,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 			/*** Gestion des éléments de la liste de préconisation ***/
 
-			// Rend les éléments de la liste des préconisations déplaçables
+			// Rend les éléments de la liste des préconisations déplaçables et triables
 			$(".preco-list").sortable();
 
 			var i = 1;
@@ -663,8 +679,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 
 
-
-			/***  Fenêtre modale d'ajout d'un parcours ***/
+			/***  Fenêtre modale de gestion des parcours de la catégorie ***/
 			
 			$('#add-parcours').on('click', function(event) {
 
@@ -675,24 +690,31 @@ $form_url = WEBROOT."admin/categorie/";
 				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou le supprimer :</p>';
 				contentText += '<select name="parcours_cbox" id="parcours_cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
 				contentText += '<option value="select_cbox">Aucun</option>';
+
 				<?php
-				foreach($response['parcours'] as $parcours)
+
+				if (isset($response['parcours']) && !empty($response['parcours']))
 				{
-					$selected = "";
-					if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
+					foreach($response['parcours'] as $parcours)
 					{
-						$selected = "selected";
+						$selected = "";
+						if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
+						{
+							$selected = "selected";
+						}
+						?>					
+						contentText += '<option value="<?php echo $parcours->getId(); ?>" <?php echo $selected; ?>>- <?php echo $parcours->getNom(); ?></option>';	
+						<?php
 					}
-					?>					
-					contentText += '<option value="<?php echo $categorie->getCode(); ?>" <?php echo $selected; ?>>- <?php echo $parcours->getNom(); ?></option>';	
-					<?php
 				}
+
 				?>
+
 				contentText += '</select>';
 
 				contentText += '<p>Ou saisissez la description d\'un nouveau parcours : </p>';
-				contentText += '<input id="id-parcours" type="hidden" value="" />';
-				contentText += '<input id="nom-parcours" type="text" value="" placeholder="Ex : 10 heures de formation mathématiques" />';
+				contentText += '<input id="id-parcours" name="id_parcours" type="hidden" value="" />';
+				contentText += '<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de formation mathématiques" />';
 				
 
 				$.modalbox(
@@ -719,11 +741,22 @@ $form_url = WEBROOT."admin/categorie/";
 							if (buttonText === 'Enregistrer') {
 
 								$('#form-parcours').submit();
-								console.log('submit');
+								//console.log('submit');
 							}
-							
 						}
-					}, 
+					},
+					null,/*
+					{
+
+						events: [
+							// {
+							// 	'type': 'change', 
+							// 	'selector': '#parcours_cbox',
+							// 	'callback': 'onChangeParcours'
+							// }
+						]
+					},
+					*/
 					'#modal-box'
 				);
 			});
@@ -732,8 +765,13 @@ $form_url = WEBROOT."admin/categorie/";
 
 			/*** Gestion de la requête pour éditer un parcours dans la liste des parcours ***/
 
-			$('#parcours_cbox').on('change', function(event) {
+			//$('#parcours_cbox').change(function(event) {
 
+				//alert('change');
+				/*
+			onChangeParcours = function() {
+
+				console.log('onChangeParcours');
 				var refParcours = $('#parcours_cbox').val();
 				
 				<?php if (Config::ALLOW_AJAX) : ?>
@@ -746,18 +784,20 @@ $form_url = WEBROOT."admin/categorie/";
 
 								alert(data.error);
 							}
-							else if (data.result) {
+							else if (data.results) {
 
 								console.log(data.results);
 								$('#id-parcours').val(data.results.id_parcours);
 								$('#nom-parcours').val(data.results.nom_parcours);
 							}
+
 						}, 'json');
 					}
 
 				<?php endif; ?>
-			});
-
+			};
+			//});
+			*/
 			
 
 

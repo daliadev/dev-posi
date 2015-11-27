@@ -92,7 +92,7 @@ $form_url = WEBROOT."admin/categorie/";
 				
 				<div style="float:left;">
 
-					<div class="zone-formu2">
+					<div id="liste-cat-main" class="zone-formu2">
 	 
 						<div class="form-half">
 
@@ -180,7 +180,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<div style="float:right;">
 
-					<div class="zone-formu2">
+					<div id="detail-cat" class="zone-formu2">
 						
 						<div class="form-half">
 
@@ -393,9 +393,13 @@ $form_url = WEBROOT."admin/categorie/";
 										</ul>
 								</p>
 
-								<div>
+								<!-- <div> -->
 									
-									<a id="add-parcours" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
+								<div class="buttons-block">
+									<input type="submit" id="add-parcours" name="add_parcours" class="bt-admin-menu-ajout" style="width:200px; margin-left:100px;" value="Ajouter une préconistation" <?php echo $formData['add_disabled']; ?> />
+									<input type="submit" id="edit-parcours" name="edit_parcours" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un parcours" <?php echo $formData['edit_disabled']; ?> />
+								</div>
+									<!-- <a id="add-parcours" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
 											<i class="fa fa-plus fa-stack-1x"></i>
@@ -410,11 +414,11 @@ $form_url = WEBROOT."admin/categorie/";
 										</span>
 										<strong> 2 - Ensuite, créer une nouvelle préconisation, en saisissant des valeurs minimum et maximun, en pourcentage.
 										Répéter l'opération pour que l'ensemble des préconisations pour cette catégorie couvre 0 à 100% des résultats.</strong>
-									</p></a>
+									</p></a> -->
 
 									<!-- <a href="#"><p><i class="fa fa-plus-circle"></i> Ajouter un découpage intervalaire pour cette categorie.</p></a> -->
 									
-								</div>
+								<!-- </div> -->
 
 								<hr />
 
@@ -540,11 +544,13 @@ $form_url = WEBROOT."admin/categorie/";
 			var self = this;
 			var mode = $('#mode').val();
 
+			$('#precos').hide();
 
 			/* Vide le formulaire */
 
 			this.resetFieldsValues = function() {
 
+				$('.num-indicator').text('');
 				$('#nom_cat').val('');
 				$('#ref_parent_cbox').val('select_cbox');
 				$('#ordre_cat').val('');
@@ -554,14 +560,16 @@ $form_url = WEBROOT."admin/categorie/";
 
 			/* Rempli le formulaire avec les valeurs en paramètres */
 
-			this.setFieldsValues = function(name, parentCode, order, descript) {
-
+			this.setFieldsValues = function(code, name, parentCode, order, descript) {
+				
+				$('.num-indicator').text('N°' + code);
 				$('#nom_cat').val(name);
 				$('#ref_parent_cbox').val(parentCode);
 				$('#ordre_cat').val(order);
 				$('#descript_cat').val(descript);
 
-			}
+				console.log($('.num-indicator').html());
+			};
 
 
 			/* Trouve la catégorie parente */
@@ -619,11 +627,11 @@ $form_url = WEBROOT."admin/categorie/";
 
 				<?php if (Config::ALLOW_AJAX) : ?>
 
-					//console.log(mode);
+					console.log(mode);
 
-					if (mode === 'view') {
+					if (mode == 'view') {
 
-						$.post('<?php echo $form_url; ?>', {"ref_cat":code}, function(data) {
+						$.post('<?php echo $form_url; ?>', {"ref_cat": code}, function(data) {
 
 							if (data.error) {
 
@@ -632,55 +640,89 @@ $form_url = WEBROOT."admin/categorie/";
 							else {
 
 								var parentCode = self.getParentCode(code);
-								console.log(parentCode);
+								//console.log(parentCode);
 
-								self.setFieldsValues(data.results.nom_cat, parentCode, 0, data.results.descript_cat)
+								self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
 							}
 							
 						}, 'json');
 					}
 
 				<?php endif; ?>
+				/*
+				if (mode == 'edit')
+				{
+					$('#precos').fadeIn(500);
+
+					// Rend les éléments de la liste des préconisations déplaçables et triables
+					$(".preco-list").sortable();
+
+					var i = 1;
+					var $item;
+					$numItemPreco = 0;
+					
+					// Ajout d'une nouvelle préconisation par duplication
+					$('#add-preco').on('click', function(event) {
+
+						event.preventDefault();
+						i++;
+						$item = $('.preco-item:first').clone();
+						$(".preco-list").append($item);
+						$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+					});
+				}
+				*/
 			});
 
-			/*
+			
+			if (mode == 'edit')
+			{
+				$('#del').val('Annuler');
+
+				if ($selected !== null) {
+
+					$('#precos').fadeIn(500, function() {
+
+						// Rend les éléments de la liste des préconisations déplaçables et triables
+						$(".preco-list").sortable();
+
+						var i = 1;
+						var $item;
+						$numItemPreco = 0;
+						
+						// Ajout d'une nouvelle préconisation par duplication
+						$('#add-preco').on('click', function(event) {
+
+							event.preventDefault();
+							i++;
+							$item = $('.preco-item:first').clone();
+							$(".preco-list").append($item);
+							$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+						});
+					});
+				}
+			}
+
+
 			$('#add').click(function(event) {
 
-				//$('#del').val('Annuler');
+				$('#del').val('Annuler');
 			});
 
-			$('#edit').click(function(event) {
-
-				//$('#del').val('Annuler');
-			});
-			*/
 
 
 
 
 			/*** Gestion des éléments de la liste de préconisation ***/
 
-			// Rend les éléments de la liste des préconisations déplaçables et triables
-			$(".preco-list").sortable();
+			$('#edit').click(function(event) {
 
-			var i = 1;
-			var $item;
-			$numItemPreco = 0;
-			
-			// Ajout d'une nouvelle préconisation par duplication
-			$('#add-preco').on('click', function(event) {
-
-				event.preventDefault();
-				i++;
-				$item = $('.preco-item:first').clone();
-				$(".preco-list").append($item);
-				$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+				//event.preventDefault();
+				
 			});
 
-
-
 			/***  Fenêtre modale de gestion des parcours de la catégorie ***/
-			
+			/*
 			$('#add-parcours').on('click', function(event) {
 
 				event.preventDefault();
@@ -745,7 +787,7 @@ $form_url = WEBROOT."admin/categorie/";
 							}
 						}
 					},
-					null,/*
+					null,*//*
 					{
 
 						events: [
@@ -756,11 +798,11 @@ $form_url = WEBROOT."admin/categorie/";
 							// }
 						]
 					},
-					*/
+					*//*
 					'#modal-box'
 				);
 			});
-			
+			*/
 			
 
 			/*** Gestion de la requête pour éditer un parcours dans la liste des parcours ***/
@@ -820,11 +862,11 @@ $form_url = WEBROOT."admin/categorie/";
 						$('#form-posi').submit();
 					}
 				}
-				else if (mode == 'new')
+				else if (mode == 'new' || mode == 'edit')
 				{
 					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?"))
 					{
-						resetFieldsValues();
+						self.resetFieldsValues();
 					}
 				}
 				

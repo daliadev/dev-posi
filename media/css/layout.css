@@ -1329,7 +1329,16 @@ select {
 	background: url(../images/ico-key.png) 0 0 no-repeat;
 } 
 
+
 /*   Ajout 09/2015 */
+
+#liste-cat-main {
+	min-width: 378px;
+}
+
+#detail-cat {
+	min-width: 378px;
+}
 
 #detail fieldset#edit-cat {
 	position: relative;
@@ -1350,6 +1359,9 @@ fieldset .block  {
 	margin: 5px 0 10px 0 !important;
 }
 
+fieldset .block:last-child  {
+	margin-bottom : 0 !important;
+}
 
 fieldset .block>textarea {
 	width: 386px !important; 
@@ -1417,46 +1429,53 @@ fieldset .add-link span
 }
 
 
-.precos {
-	
+#precos {
+	/*display: none;*/
+	margin-bottom: 20px;
+}
+
+.preco-list {
+	margin: 10px 0 0 0 !important;
+	padding: 0 !important;
 }
 
 .preco-item {
-	margin-top: 10px;
-	padding: 5px 10px;
+	/*margin: 10px 0;*/
+	margin: 15px 0 0 0 !important;
+	padding: 5px 10px !important;
 	background-color: #eee;
 	border: 1px solid #bbb;
-	border-radius: 5px
+	border-radius: 5px;
 }
 
-.preco-item input {
-	width: 50px !important;
-	margin-left: 10px !important;
-}
+	.preco-item input {
+		width: 60px !important;
+		margin-left: 10px !important;
+	}
 
-.preco-item select {
-	width: 350px !important;
-	margin: 0 5px !important;
-}
+	.preco-item select {
+		width: 350px !important;
+		margin: !important;
+	}
 
-.preco-item .preco-item-num {
-	display: inline-block;
-	width: 10px;
-	height: 12px;
-	color: #fff;
-	/*border: 2px solid #999;*/
-	background-color: #bbb;
-	border-radius: 20px;
-	line-height: 11px;
-	font-size: 14px;
-	padding: 6px 7px 6px 7px;
-	margin: 8px 5px;
-}
+	.preco-item .preco-item-num {
+		display: inline-block;
+		width: 10px;
+		height: 12px;
+		color: #fff;
+		/*border: 2px solid #999;*/
+		background-color: #bbb;
+		border-radius: 20px;
+		line-height: 11px;
+		font-size: 14px;
+		padding: 6px 7px 6px 7px;
+		margin: 8px 5px;
+	}
 
-.preco-item .arrow {
-	/*display: inline-block;*/
-	margin:  0 20px;
-}
+	.preco-item .arrow {
+		/*display: inline-block;*/
+		margin:  0 20px;
+	}
 
 /* fin ajout */
 

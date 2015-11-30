@@ -306,8 +306,30 @@ class ServicesAdminCategorie extends Main
 		{
 			$level = $codeLength / 2;
 		}
+		else
+		{
+			return false;
+		}
 
 		return $level;
+	}
+
+
+
+	private function getEcartCodes($code1, $code2, $ecartMax)
+	{
+		$ecart = $code2 - $code1;
+
+		if ($ecart >= $ecartMax)
+		{
+			return ($ecartMax / 2);
+		}
+		else if ($ecart > 1)
+		{
+			return ($ecart / 2);
+		}
+
+		return false;
 	}
 
 
@@ -322,7 +344,7 @@ class ServicesAdminCategorie extends Main
 	 *	2) Récupération du code parent
 	 * 		1a) Aucune catégorie parente -> level = 1
 	 * 	3) Trouver level selon longueur du code parent
-	 * 	3) Récupération de la liste des catégories
+	 * 	3) Récupération de la liste des catégories correspondant au level
 	 * 	4) Recherche des codes suivants et précédents selon le numéro d'ordres
 	 * 
 	 * 	4b) Création d'un nouveau code
@@ -335,52 +357,103 @@ class ServicesAdminCategorie extends Main
 	 * 		
 	 */
 
-	public function generateCode($orderInput = null, $parentCode = null, $currentCode = null)
+	public function generateCode($orderInput = null, $parentCode = null)
 	{
+		$level = null;
+		$error = false;
+		$newCode = null;
+
 		// Déduction du niveau selon le code parent
 		if ($parentCode === null) 
 		{
-			// Pas de parent ->catégorie de premier niveau
+			// Pas de parent -> catégorie de premier niveau
 			$level = 1;
 			//$parentCode = $this->getParentCode($currentCode);
 		}
 		else
 		{
-			$level = getLevel($parentCode) + 1;
+			$parentlevel = $this->getLevel($parentCode);
+			$level = ($parentlevel) ? $parentlevel + 1 : null;
+		}
+
+		if ($level === null)
+		{
+			$error = true;
 		}
 
 		// Requête de récupération de la liste des catégories de même niveau
-		$levelCategories = $this->categorieDAO->findCodesByLevel($parentCode, $level);
+		$codesResultset = $this->categorieDAO->selectCodesByLevel($parentCode, $level);
 
-		// Selon l'ordre choisi, récupération des codes précédents et suivants
-		$previousCode = null;
-		$nextCode = null;
-
-		if ($orderInput != null)
+		// Filtrage du résultat
+		if (!$this->filterDataErrors($codesResultset['response']))
 		{
-			for ($i = 0; $i < count($levelCategories['response']); $i++) 
+			if (!empty($codesResultset['response']['categorie']) && count($codesResultset['response']['categorie']) == 1)
 			{ 
-				if ($i >= $orderInput)
-				{
-					$nextCode = $levelCategories['response'][$i]->getCode();
-					$previousCode = $levelCategories['response'][($i -  1)]->getCode();
-					break;
-				}
+				$levelCodes = $codesResultset['response']['categorie'];
+				$codesResultset['response']['categorie'] = array($levelCodes);
+			}
+			else
+			{
+				$levelCodes = $codesResultset['response']['categorie'];
 			}
 		}
 		else
 		{
-			// S'il n'y a pas d'ordre, la catégorie vient se greffer à la fin des catégorie du niveau
-			$previousCode = $levelCategories['response'][(count($levelCategories['response']) - 1)]->getCode();
+			$error = true;
 		}
 
 
-		$this->createNewCode($previousCode, $nextCode, $parentCode);
+		if (!$error)
+		{
+			// Selon l'ordre choisi, récupération des codes précédents et suivants
+			$previousCode = null;
+			$nextCode = null;
+
+			if ($orderInput !== null)
+			{
+				for ($i = 0; $i < count($levelCodes); $i++) 
+				{ 
+					if ($i >= $orderInput)
+					{
+						$nextCode = $levelCodes[$i]->getCode();
+						$previousCode = ($i > 0) ? $levelCodes[($i -  1)]->getCode() : null;
+						break;
+					}
+				}
+			}
+			else
+			{
+				// S'il n'y a pas d'ordre, la catégorie vient se greffer à la fin des catégorie du niveau
+				$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
+			}
+
+			// Modifier les paramètres
+			$newCode = $this->createNewCode($previousCode, $nextCode, $parentCode);
+
+			if ($newCode && is_numeric($newCode) && strlen($newCode) >= 2)
+			{
+				return $newCode;
+			}
+			else
+			{
+				$error = true;
+			}
+		}
+
+		if ($error)
+		{
+			// Erreur
+			return false;
+		}
+
+		return null;
 	}
 
 
 	private function createNewCode($previousCode = null, $nextCode = null, $parentCodePrefix = null)
 	{
+		var_dump($previousCode, $nextCode, $parentCodePrefix);
+
 		$ecartMax = 20;
 		$ecart = 0;
 		$levelCode = 0;
@@ -395,49 +468,61 @@ class ServicesAdminCategorie extends Main
 		{
 			// Le code devient le premier du niveau
 			$previousCode = 0;
-			
+			$nextCode = substr($nextCode, strlen($parentCodePrefix));
 		}
 		else if ($previousCode !== null && $nextCode === null)
 		{
+			$previousCode = substr($previousCode, strlen($parentCodePrefix));
 			// Le code devient le dernier du niveau
 			$nextCode = 100;	
 		}
+		else
+		{
+			$previousCode = substr($previousCode, strlen($parentCodePrefix));
+			$nextCode = substr($nextCode, strlen($parentCodePrefix));
+		}
 
-		// Le code se situe entre le code précédent et le suivant
-		$levelCode = $this->getEcartCode($previousCode, $nextCode, $ecartMax);
+		//var_dump($previousCode, $nextCode);
 
 
-		if (!$levelCode || $levelCode == 0)
+		if ($levelCode === 0)
+		{
+			// Le code se situe entre le code précédent et le suivant
+			$levelCode = (int) $this->getEcartCodes($previousCode, $nextCode, $ecartMax);
+
+			if ($levelCode && $previousCode !== null) 
+			{
+				$levelCode = $previousCode + $levelCode; 
+			}
+		}
+		else
 		{
 			// Décalage du code précédent ou suivant
 
 		}
 
-		if ($parentCodePrefix !== null && strlen($parentCodePrefix) > 0)
+		
+		if ($levelCode)
 		{
-			$newCode .= $parentCodePrefix;
-		}
-		$newCode .= $levelCode;
+			if ($parentCodePrefix !== null && strlen($parentCodePrefix) > 0)
+			{
+				$newCode .= $parentCodePrefix;
+			}
 
-		return $newCode;
-	}
+			if ($levelCode < 10)
+			{
+				$levelCode = '0' . $levelCode;
+			}
+			$newCode .= $levelCode;
 
-
-	private function getEcartCode($code1, $code2, $ecartMax)
-	{
-		$ecart = $code1 - $code2;
-
-		if ($ecart => $ecartMax)
-		{
-			return ($ecartMax / 2);
-		}
-		else if ($ecart > 1)
-		{
-			return ($ecart / 2);
+			return $newCode;
 		}
 
 		return false;
 	}
+
+
+	
 
 
 	/*

@@ -740,8 +740,12 @@ class ServicesAdmin extends Main
 			 * 	
 			 * 
 			 */
-			
-			
+
+			$test1 = $this->servicesCategorie->generateCode(0, '10'); // Situation classique
+			var_dump($test1);
+			exit();
+
+
 			/**
 			 * TODO: 
 			 *   - Récupération du code parent (si existant)
@@ -785,7 +789,7 @@ class ServicesAdmin extends Main
 			//var_dump($test3);
 			//var_dump($test4);
 			//var_dump($test5);
-			exit();
+			//exit();
 
 
 

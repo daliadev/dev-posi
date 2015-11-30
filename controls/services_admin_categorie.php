@@ -272,8 +272,6 @@ class ServicesAdminCategorie extends Main
 	=============================================*/
 
 
-	
-
 	public function getParentCode($code = null) 
 	{	
 		$parentCode = null;
@@ -310,6 +308,135 @@ class ServicesAdminCategorie extends Main
 		}
 
 		return $level;
+	}
+
+
+	/**
+	 * 
+	 *	TODO:
+	 * 	------
+	 * 	Contexte : La saisie est correcte et le mode est établi 
+	 * 
+	 * 	1) Récupération du numéro d'ordre
+	 * 
+	 *	2) Récupération du code parent
+	 * 		1a) Aucune catégorie parente -> level = 1
+	 * 	3) Trouver level selon longueur du code parent
+	 * 	3) Récupération de la liste des catégories
+	 * 	4) Recherche des codes suivants et précédents selon le numéro d'ordres
+	 * 
+	 * 	4b) Création d'un nouveau code
+	 * 		4b1) Le code existe déjà
+	 * 		4b2) Décalage à effectuer sur la catégorie suivante
+	 * 	4c) Mise à jour de la catégorie à décaler
+	 *  
+	 * 	4) Si mode = 'new' -> insert
+	 * 	5) Si mode = 'edit -> update
+	 * 		
+	 */
+
+	public function generateCode($orderInput = null, $parentCode = null, $currentCode = null)
+	{
+		// Déduction du niveau selon le code parent
+		if ($parentCode === null) 
+		{
+			// Pas de parent ->catégorie de premier niveau
+			$level = 1;
+			//$parentCode = $this->getParentCode($currentCode);
+		}
+		else
+		{
+			$level = getLevel($parentCode) + 1;
+		}
+
+		// Requête de récupération de la liste des catégories de même niveau
+		$levelCategories = $this->categorieDAO->findCodesByLevel($parentCode, $level);
+
+		// Selon l'ordre choisi, récupération des codes précédents et suivants
+		$previousCode = null;
+		$nextCode = null;
+
+		if ($orderInput != null)
+		{
+			for ($i = 0; $i < count($levelCategories['response']); $i++) 
+			{ 
+				if ($i >= $orderInput)
+				{
+					$nextCode = $levelCategories['response'][$i]->getCode();
+					$previousCode = $levelCategories['response'][($i -  1)]->getCode();
+					break;
+				}
+			}
+		}
+		else
+		{
+			// S'il n'y a pas d'ordre, la catégorie vient se greffer à la fin des catégorie du niveau
+			$previousCode = $levelCategories['response'][(count($levelCategories['response']) - 1)]->getCode();
+		}
+
+
+		$this->createNewCode($previousCode, $nextCode, $parentCode);
+	}
+
+
+	private function createNewCode($previousCode = null, $nextCode = null, $parentCodePrefix = null)
+	{
+		$ecartMax = 20;
+		$ecart = 0;
+		$levelCode = 0;
+		$newCode = '';
+
+		if ($previousCode === null && $nextCode === null)
+		{
+			// Aucun code dans ce niveau
+			$levelCode = 10;
+		}
+		else if ($previousCode === null && $nextCode !== null)
+		{
+			// Le code devient le premier du niveau
+			$previousCode = 0;
+			
+		}
+		else if ($previousCode !== null && $nextCode === null)
+		{
+			// Le code devient le dernier du niveau
+			$nextCode = 100;	
+		}
+
+		// Le code se situe entre le code précédent et le suivant
+		$levelCode = $this->getEcartCode($previousCode, $nextCode, $ecartMax);
+
+
+		if (!$levelCode || $levelCode == 0)
+		{
+			// Décalage du code précédent ou suivant
+
+		}
+
+		if ($parentCodePrefix !== null && strlen($parentCodePrefix) > 0)
+		{
+			$newCode .= $parentCodePrefix;
+		}
+		$newCode .= $levelCode;
+
+		return $newCode;
+	}
+
+
+	private function getEcartCode($code1, $code2, $ecartMax)
+	{
+		$ecart = $code1 - $code2;
+
+		if ($ecart => $ecartMax)
+		{
+			return ($ecartMax / 2);
+		}
+		else if ($ecart > 1)
+		{
+			return ($ecart / 2);
+		}
+
+		return false;
 	}
 
 
@@ -388,15 +515,16 @@ class ServicesAdminCategorie extends Main
 	*/
 
 
-
+	/*
 	private function decayOldCodes($oldCodes, $index, $increment) {
 
 	}
+	*/
 
-
-
+	/*
 	private function sortCodesByOrder($oldCodes, $parentCode, $insertOrder = null)
 	{
+		*/
 		/**
 		 *
 		 *	TODO:
@@ -417,6 +545,8 @@ class ServicesAdminCategorie extends Main
 		 * 
 		 * 	Faire tableau contenant les nouveau codes, les anciens codes et l'ordre correspondant (clé du tableau)
 		 */
+
+		/*
 		var_dump('sort', $insertOrder);
 		//var_dump($oldCodes);
 		//var_dump($parentCode);
@@ -483,7 +613,7 @@ class ServicesAdminCategorie extends Main
 
 		//$newCode = $this->generateCode($previousIndex, $nextIndex, $oldCodes);
 	}
-
+	*/
 
 
 	public function createCodes($currentCode = null, $parentCode = null, $orderInput = null) {
@@ -597,7 +727,7 @@ class ServicesAdminCategorie extends Main
 		var_dump($currentCode, $parentCode, $oldCodes, $level);
 		
 		
-		$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
+		//$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
 
 		exit();
 

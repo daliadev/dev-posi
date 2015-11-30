@@ -598,6 +598,10 @@ class ServicesAdmin extends Main
 		{
 			$ordre = $this->formData['ordre_cat'];
 		}
+		else {
+			//error
+			//exit
+		}
 
 
 		/*** Récupération du code de la catégorie par la méthode GET ***/
@@ -706,11 +710,37 @@ class ServicesAdmin extends Main
 			}
 
 
-
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
 
+			/**
+			 * 
+			 *	TODO:
+			 * 	------
+			 * 	Contexte : La saisie est correcte et le mode est établi 
+			 * 
+			 * 	1) Récupération du numéro d'ordre
+			 * 
+			 *	2) Récupération du code parent
+			 * 		1a) Aucune catégorie parente -> level = 1
+			 * 	3) Trouver level selon longueur du code parent
+			 * 	3) Récupération de la liste des catégories
+			 * 
+			 * 	4) Recherche des codes suivants et précédents selon le numéro d'ordres
+			 * 
+			 * 	4b) Création d'un nouveau code
+			 * 		4b1) Le code existe déjà
+			 * 		4b2) Décalage à effectuer sur la catégorie suivante
+			 * 	4c) Mise à jour de la nouvelle catégorie à décaler
+			 *  
+			 * 	4) Si mode = 'new' -> insert
+			 * 	5) Si mode = 'edit -> update
+			 * 		
+			 * 	
+			 * 
+			 */
+			
 			
 			/**
 			 * TODO: 
@@ -748,7 +778,7 @@ class ServicesAdmin extends Main
 			//$test5 = $this->servicesCategorie->createCodes('103010', '10', 0); // Code qui n'existe pas, un peu plus loin dans la hiérarchie 
 			//$test6 = $this->servicesCategorie->createCodes('103010', '20', 0); // Code qui n'existe pas avec code parent différent de code
 
-			$test1 = $this->servicesCategorie->createCodes('1030', '10', 3); // Situation classique
+			//$test1 = $this->servicesCategorie->createCodes('1030', '10', 3); // Situation classique
 
 			//var_dump($test1);
 			//var_dump($test2);

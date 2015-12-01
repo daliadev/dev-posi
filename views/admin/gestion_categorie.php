@@ -6,7 +6,7 @@ $formData = array();
 $formData['code_cat'] = "";
 $formData['nom_cat'] = "";
 $formData['descript_cat'] = "";
-$formData['type_lien_cat'] = "";
+
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
@@ -29,6 +29,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
+var_dump($formData['mode']);
+var_dump($formData['parent_cat_cbox']);
 
 ?>
 
@@ -205,22 +207,43 @@ $form_url = WEBROOT."admin/categorie/";
 										</p>
 									</div>
 									
+
 									<div id="parent-cat" class="block">
-										<label for="parent_cat_cbox">Compétence parente *</label>
+										<label for="ref_parent_cbox">Compétence parente *</label>
 
 										<select name="parent_cat_cbox" id="ref_parent_cbox" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>>
 											<option value="select_cbox">Aucun</option>
 											<?php
-											
+
 											foreach($response['categorie'] as $categorie)
 											{
 												$selected = "";
-												if (!empty($formData['parent_code_cat']) && $formData['parent_code_cat'] == $categorie->getCode())
+
+												/*
+												if (!empty($formData['parent_cat_cbox']) && $formData['parent_cat_cbox'] !== null && is_numeric($formData['parent_cat_cbox']))
 												{
-													$selected = "selected";
+													$catParent = strlen($categorie->getCode()) % 2 === 0 ? substr($categorie->getCode(), 0, strlen($categorie->getCode()) - 2) : null;
+													
+													if ($catParent !== null && strlen($catParent) > 1 && $catParent == $formData['parent_cat_cbox'])
+													{
+														$selected = "selected";
+													}
+												}
+												*/
+
+
+												
+												if (!empty($formData['parent_cat_cbox']) && $formData['parent_cat_cbox'] !== null && $formData['parent_cat_cbox'] == $categorie->getCode())
+												{
+													//if ($categorie->getCode() !== null && strlen($categorie->getCode()) > 1 && $categorie->getCode() == $formData['parent_cat_cbox'])
+													//{
+														$selected = "selected";
+													//}
 												}
 												
-												$length = strlen($categorie->getCode()) - 2;
+
+
+												$length = strlen($categorie->getCode());
 												
 												if ($length < 0)
 												{
@@ -568,7 +591,7 @@ $form_url = WEBROOT."admin/categorie/";
 				$('#ordre_cat').val(order);
 				$('#descript_cat').val(descript);
 
-				console.log($('.num-indicator').html());
+				//console.log($('.num-indicator').html());
 			};
 
 
@@ -598,81 +621,88 @@ $form_url = WEBROOT."admin/categorie/";
 
 			/*  Système de sélection de la liste des catégories à gauche */
 
-			var $selected = null;
-
-			$('.cat-item-link').each(function() {
-
-				if ($(this).hasClass('selected')) {
-					$selected = $(this);
-				}
-			});
+			
 				
 
-			$('.cat-item-link').on('click', function(event) {
+			if (mode != 'edit' && mode != 'delete')
+			{	
 
-				event.preventDefault();
+				var $selected = null;
 
-				if ($selected !== null) {
+				$('.cat-item-link').each(function() {
 
-					$selected.removeClass('selected');
-				}
+					if ($(this).hasClass('selected')) {
+						$selected = $(this);
+					}
+				});
 
-				$(this).addClass('selected');
-				$selected = $(this);
 
-				var code = $(this).find('.cat-item-code').html();
-				$('#code').val(code);
-				$('#edit').removeProp('disabled');
-				//$('#add').removeProp('disabled');
+				$('.cat-item-link').on('click', function(event) {
 
-				<?php if (Config::ALLOW_AJAX) : ?>
+					event.preventDefault();
 
-					console.log(mode);
+					if ($selected !== null) {
 
-					if (mode == 'view') {
-
-						$.post('<?php echo $form_url; ?>', {"ref_cat": code}, function(data) {
-
-							if (data.error) {
-
-								alert(data.error);
-							}
-							else {
-
-								var parentCode = self.getParentCode(code);
-								//console.log(parentCode);
-
-								self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
-							}
-							
-						}, 'json');
+						$selected.removeClass('selected');
 					}
 
-				<?php endif; ?>
-				/*
-				if (mode == 'edit')
-				{
-					$('#precos').fadeIn(500);
+					$(this).addClass('selected');
+					$selected = $(this);
 
-					// Rend les éléments de la liste des préconisations déplaçables et triables
-					$(".preco-list").sortable();
+					var code = $(this).find('.cat-item-code').html();
+					$('#code').val(code);
+					$('#edit').removeProp('disabled');
+					//$('#add').removeProp('disabled');
 
-					var i = 1;
-					var $item;
-					$numItemPreco = 0;
-					
-					// Ajout d'une nouvelle préconisation par duplication
-					$('#add-preco').on('click', function(event) {
+					<?php if (Config::ALLOW_AJAX) : ?>
 
-						event.preventDefault();
-						i++;
-						$item = $('.preco-item:first').clone();
-						$(".preco-list").append($item);
-						$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
-					});
-				}
-				*/
-			});
+						console.log(mode);
+
+						if (mode == 'view') {
+
+							$.post('<?php echo $form_url; ?>', {"ref_cat": code}, function(data) {
+
+								if (data.error) {
+
+									alert(data.error);
+								}
+								else {
+
+									var parentCode = self.getParentCode(code);
+									//console.log(parentCode);
+
+									self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
+								}
+								
+							}, 'json');
+						}
+
+					<?php endif; ?>
+					/*
+					if (mode == 'edit')
+					{
+						$('#precos').fadeIn(500);
+
+						// Rend les éléments de la liste des préconisations déplaçables et triables
+						$(".preco-list").sortable();
+
+						var i = 1;
+						var $item;
+						$numItemPreco = 0;
+						
+						// Ajout d'une nouvelle préconisation par duplication
+						$('#add-preco').on('click', function(event) {
+
+							event.preventDefault();
+							i++;
+							$item = $('.preco-item:first').clone();
+							$(".preco-list").append($item);
+							$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+						});
+					}
+					*/
+				});
+			}
 
 			
 			if (mode == 'edit')
@@ -715,11 +745,11 @@ $form_url = WEBROOT."admin/categorie/";
 
 			/*** Gestion des éléments de la liste de préconisation ***/
 
-			$('#edit').click(function(event) {
+			//$('#edit').click(function(event) {
 
 				//event.preventDefault();
 				
-			});
+			//});
 
 			/***  Fenêtre modale de gestion des parcours de la catégorie ***/
 			/*
@@ -862,12 +892,19 @@ $form_url = WEBROOT."admin/categorie/";
 						$('#form-posi').submit();
 					}
 				}
-				else if (mode == 'new' || mode == 'edit')
+				else if (mode == 'new')
 				{
 					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?"))
 					{
 						self.resetFieldsValues();
 					}
+				}
+				else if (mode == 'edit')
+				{
+					// Retour au mode view
+					$('#mode').val('view');
+
+					$('#form-posi').submit();
 				}
 				
 			});

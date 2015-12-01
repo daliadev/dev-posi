@@ -577,45 +577,27 @@ class ServicesAdmin extends Main
 		/*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
 		
 		$initializedData = array(
-			"nom"           => "text",
+			"nom"             => "text",
 			"parent_cat_cbox" => "select",
-			"ordre_cat"  		=> "text",
-			"descript_cat"  => "text",
-			"actif"         => "text"
+			"ordre_cat"       => "text",
+			"descript_cat"    => "text",
+			"actif"           => "text"
 		);
 
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
 
 
-		/*** Récupération du code parent et de l'ordre ***/
+		/*** Récupération du code de la catégorie ***/
 
-		if (isset($this->formData['parent_cat_cbox']) && !empty($this->formData['parent_cat_cbox']))
-		{
-			$parentCode = $this->formData['parent_cat_cbox'] != 'aucun' ? $this->formData['parent_cat_cbox'] : null;
-		}
-		
-
-		$ordre = null;
-
-		if (isset($this->formData['ordre_cat']) && !empty($this->formData['ordre_cat']) && is_numeric($this->formData['ordre_cat']))
-		{
-			$ordre = $this->formData['ordre_cat'];
-		}
-		else 
-		{
-			//error
-			//exit
-		}
-
-
-		/*** Récupération du code de la catégorie par la méthode GET ***/
+		// Par la méthode GET
 		
 		if (isset($requestParams[0]) && !empty($requestParams[0]) && is_numeric($requestParams[0]))
 		{
 		   // $this->formData['code_cat_cbox'] = $requestParams[0];
 			$this->formData['code_cat'] = $requestParams[0];
 		}
-		else if (isset($_POST['code_cat']) && !empty($_POST['code_cat']))
+		// ou par méthode GET
+		else if (isset($_POST['code_cat']) && !empty($_POST['code_cat']) && is_numeric($_POST['code_cat']))
 		{
 			$this->formData['code_cat'] = $_POST['code_cat'];
 		}
@@ -625,6 +607,53 @@ class ServicesAdmin extends Main
 		}
 
 		$code = $this->formData['code_cat'];
+
+
+
+		/*** Récupération du code parent et de l'ordre ***/
+		
+		$parentCode = null;
+
+		//if (isset($_POST['parent_cat_cbox']) && !empty($_POST['parent_cat_cbox']))
+		if (isset($this->formData['parent_cat_cbox']) && !empty($this->formData['parent_cat_cbox']))
+		{
+			if ($this->formData['parent_cat_cbox'] != 'select_cbox')
+			{
+				$parentCode = $this->formData['parent_cat_cbox'];
+			}	
+		}
+		else if ($code !== null)
+		{
+			$parentCode = (strlen($code) >= 4) ? substr($code, 0, strlen($code) - 2) : null;
+		}
+
+		$this->formData['parent_cat_cbox'] = ($parentCode !== null) ? $parentCode : '';
+		/*
+		if (!empty($this->formData['parent_cat_cbox']))
+		{
+			var_dump('$parentCode :', $_POST['parent_cat_cbox']);
+			exit();
+		}
+		*/
+
+		
+
+		$ordre = null;
+
+		if (isset($this->formData['ordre_cat']) && !empty($this->formData['ordre_cat']) && is_numeric($this->formData['ordre_cat']))
+		{
+			$ordre = $this->formData['ordre_cat'];
+			var_dump($this->formData['ordre_cat']);
+			exit();
+		}
+		else 
+		{
+			//error
+			//exit
+		}
+
+
+		
 
 
 	   
@@ -650,7 +679,7 @@ class ServicesAdmin extends Main
 			$this->servicesGestion->switchFormButtons($this->formData, $this->formData['mode']);
 
 			// Avec la référence, on va chercher toutes les infos sur la question 
-			if (!empty($this->formData['code_cat']))
+			if ($code !== null)
 			{
 				if ($this->formData['mode'] == "view")
 				{
@@ -662,11 +691,30 @@ class ServicesAdmin extends Main
 				{
 					$this->formData['delete_label'] = 'Annuler';
 				}
+
 				
 				$catDetails = array();
-				$catDetails = $this->servicesCategorie->getCategorieDetails($this->formData['code_cat']);
+				$catDetails = $this->servicesCategorie->getCategorieDetails($code);
 				
 				$this->formData = array_merge($this->formData, $catDetails);
+				
+				/*
+				if ($this->formData['code_cat']) 
+				{
+					$this->formData['parent_cat_cbox'] = $this->servicesCategorie->getParentCode($this->formData['code_cat']);
+				}
+				else if ($parentCode)
+				{
+					$this->formData['parent_cat_cbox'] = $parentCode;
+				}
+				else
+				{
+					$this->formData['parent_cat_cbox'] = null;
+				}
+				*/
+				//var_dump($parentCode);
+				//exit();
+
 			}
 			else if ($this->formData['mode'] == "edit")
 			{
@@ -758,7 +806,7 @@ class ServicesAdmin extends Main
 			//exit();
 
 			$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
-			var_dump('new code :', $newCode);
+			//var_dump('new code :', $newCode);
 
 			if ($newCode !== null && $newCode != false)
 			{

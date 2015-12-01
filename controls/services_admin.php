@@ -738,11 +738,16 @@ class ServicesAdmin extends Main
 			 * 	5) Si mode = 'edit -> update
 			 * 		
 			 * 	
-			 * 
 			 */
 
-			$test1 = $this->servicesCategorie->generateCode(0, '10'); // Situation classique
-			var_dump($test1);
+			//$test1 = $this->servicesCategorie->generateCode(2, '10'); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(0, '10'); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(8, '10'); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(2, '1010'); // test unitaire
+			$test1 = $this->servicesCategorie->generateCode(1, '1040'); // test unitaire, renvoi une erreur
+			//$test1 = $this->servicesCategorie->generateCode(2, null); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(null, '10'); // test unitaire
+			var_dump('test :', $test1);
 			exit();
 
 

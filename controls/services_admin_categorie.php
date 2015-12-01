@@ -385,7 +385,7 @@ class ServicesAdminCategorie extends Main
 		$codesResultset = $this->categorieDAO->selectCodesByLevel($parentCode, $level);
 
 		// Filtrage du résultat
-		if (!$this->filterDataErrors($codesResultset['response']))
+		if (!$this->filterDataErrors($codesResultset['response']) && !empty($codesResultset['response']['categorie']))
 		{
 			if (!empty($codesResultset['response']['categorie']) && count($codesResultset['response']['categorie']) == 1)
 			{ 
@@ -402,6 +402,8 @@ class ServicesAdminCategorie extends Main
 			$error = true;
 		}
 
+		var_dump('error :', $error);
+		var_dump('level :', $level);
 
 		if (!$error)
 		{
@@ -411,13 +413,21 @@ class ServicesAdminCategorie extends Main
 
 			if ($orderInput !== null)
 			{
-				for ($i = 0; $i < count($levelCodes); $i++) 
-				{ 
-					if ($i >= $orderInput)
-					{
-						$nextCode = $levelCodes[$i]->getCode();
-						$previousCode = ($i > 0) ? $levelCodes[($i -  1)]->getCode() : null;
-						break;
+				if ($orderInput > (count($levelCodes) - 1))
+				{
+					//$nextCode = $levelCodes[$i]->getCode();
+					$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
+				}
+				else
+				{
+					for ($i = 0; $i < count($levelCodes); $i++) 
+					{ 
+						if ($i >= $orderInput)
+						{
+							$nextCode = $levelCodes[$i]->getCode();
+							$previousCode = ($i > 0) ? $levelCodes[($i -  1)]->getCode() : null;
+							break;
+						}
 					}
 				}
 			}
@@ -440,6 +450,8 @@ class ServicesAdminCategorie extends Main
 			}
 		}
 
+		var_dump('error :', $error);
+
 		if ($error)
 		{
 			// Erreur
@@ -452,7 +464,8 @@ class ServicesAdminCategorie extends Main
 
 	private function createNewCode($previousCode = null, $nextCode = null, $parentCodePrefix = null)
 	{
-		var_dump($previousCode, $nextCode, $parentCodePrefix);
+		var_dump('previousCode :', $previousCode);
+		var_dump('nextCode :', $nextCode);
 
 		$ecartMax = 20;
 		$ecart = 0;

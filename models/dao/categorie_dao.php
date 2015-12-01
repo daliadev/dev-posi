@@ -117,7 +117,6 @@ class CategorieDAO extends ModelDAO
 			{ 
 				$search .= '_';
 			}
-			
 		}
 		else
 		{

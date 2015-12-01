@@ -585,12 +585,15 @@ class ServicesAdmin extends Main
 		);
 
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
-		
 
 
 		/*** Récupération du code parent et de l'ordre ***/
 
-		$parentCode = $this->formData['parent_cat_cbox'] != 'aucun' ? $this->formData['parent_cat_cbox'] : null;
+		if (isset($this->formData['parent_cat_cbox']) && !empty($this->formData['parent_cat_cbox']))
+		{
+			$parentCode = $this->formData['parent_cat_cbox'] != 'aucun' ? $this->formData['parent_cat_cbox'] : null;
+		}
+		
 
 		$ordre = null;
 
@@ -598,7 +601,8 @@ class ServicesAdmin extends Main
 		{
 			$ordre = $this->formData['ordre_cat'];
 		}
-		else {
+		else 
+		{
 			//error
 			//exit
 		}
@@ -714,6 +718,7 @@ class ServicesAdmin extends Main
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
 
+
 			/**
 			 * 
 			 *	TODO:
@@ -744,10 +749,27 @@ class ServicesAdmin extends Main
 			//$test1 = $this->servicesCategorie->generateCode(0, '10'); // test unitaire
 			//$test1 = $this->servicesCategorie->generateCode(8, '10'); // test unitaire
 			//$test1 = $this->servicesCategorie->generateCode(2, '1010'); // test unitaire
-			$test1 = $this->servicesCategorie->generateCode(1, '1040'); // test unitaire, renvoi une erreur
-			//$test1 = $this->servicesCategorie->generateCode(2, null); // test unitaire
-			//$test1 = $this->servicesCategorie->generateCode(null, '10'); // test unitaire
-			var_dump('test :', $test1);
+			//$test1 = $this->servicesCategorie->generateCode(1, '1040'); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(0, null); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(null, '70'); // test unitaire
+			//$test1 = $this->servicesCategorie->generateCode(null, '1050'); // test unitaire -> resultat = 105010 => impossible, erreur
+			//$test1 = $this->servicesCategorie->generateCode(null, null); // test unitaire
+			//var_dump('test :', $test1);
+			//exit();
+
+			$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
+			var_dump('new code :', $newCode);
+
+			if ($newCode !== null && $newCode != false)
+			{
+				$dataCategorie['new_code_cat'] = $newCode;
+			}
+			else
+			{
+				$this->registerError("form_valid", "Le code de la catégorie n'a pas pu être généré.");
+			}
+
+			var_dump('dataCategorie :', $dataCategorie);
 			exit();
 
 

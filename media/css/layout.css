@@ -1426,11 +1426,12 @@ fieldset #liste-cat a:hover, fieldset #liste-cat a:active, fieldset #liste-cat a
 
 .fleche-cat {
 	position: absolute;
-	top: 325px;
-	right: 49%;
+	top: 244px;
+	/*right: 49%;*/
 	left: 49%;
-	color: #757575;
-	font-size: 48px;
+	text-align: center;
+	color: #999999;
+	font-size: 40px;
 }
 
 /* fin ajout */
@@ -1458,28 +1459,40 @@ fieldset .add-link span
 	/*margin-bottom: 20px;*/
 }
 
+#precos fieldset {
+	/*text-align: center;*/
+}
+
+#add-preco {
+	display: inline !important;
+	/*text-align: center !important;*/
+	margin: 0 !important;
+}
+
 .preco-list {
-	margin: 10px 0 0 0 !important;
+	margin: 0 !important;
 	padding: 0 !important;
+	text-align: left;
 }
 
 .preco-item {
 	/*margin: 10px 0;*/
-	margin: 15px 0 0 0 !important;
-	padding: 5px 10px !important;
+	width: 383px;
+	margin: 10px 0 0 0 !important;
+	padding: 0 5px 0 10px !important;
 	background-color: #eee;
 	border: 1px solid #bbb;
 	border-radius: 5px;
 }
 
 	.preco-item input {
-		width: 35px !important;
+		width: 38px !important;
 		margin-left: 10px !important;
 	}
 
 	.preco-item select {
-		width: 145px !important;
-		margin: !important;
+		width: 120px !important;
+		margin: 0 !important;
 	}
 
 	.preco-item .preco-item-num {
@@ -1497,7 +1510,8 @@ fieldset .add-link span
 	}
 
 	.preco-item .preco-icon {
-		margin: 0 5px;
+		position: relative;
+		margin: 5px 0;
 		font-size: 16px;
 	}
 
@@ -1505,11 +1519,29 @@ fieldset .add-link span
 			color: #757575;
 		}
 
+		.preco-item .preco-icon .fa-plus-square {
+			color: #2ecc71;
+			cursor: pointer;
+		}
+
 		.preco-item .preco-icon .fa-times-circle, .preco-item .preco-icon .fa-times-circle,  .preco-item .preco-icon .fa-times-circle-o {
+			/*display: inline;*/
 			color: #e74c3c;
-			margin: 0 0 0 5px;
+			cursor: pointer;
+			/*margin: 0 5px 0 5px;*/
+			margin: 0;
 			text-align: right;
-			
+		}
+
+		.preco-item .preco-icon .fa-times {
+			position: absolute;
+			display: inline;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			color: #e74c3c;
+			cursor: pointer;
 		}
 
 

@@ -360,6 +360,7 @@ $form_url = WEBROOT."admin/categorie/";
 							<fieldset>
 								
 								<legend><span style="display: block; float: left;">Préconisations de parcours</span><span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span><span style="display: block; clear: both;"></span></legend>
+								
 								<!--
 								<p>
 									Cette section vous permet de mettre en oeuvre une stratégie de préconisation de parcours. 
@@ -380,8 +381,8 @@ $form_url = WEBROOT."admin/categorie/";
 								-->
 								<!-- <div> -->
 									
-								<div class="buttons-block">
-									<input type="submit" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width:200px; margin-left:100px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
+								<div class="buttons-block" style="margin: 0 auto">
+									<input type="submit" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width:200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
 									<!-- <input type="submit" id="edit-parcours" name="edit_parcours" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un parcours" <?php //echo $formData['edit_disabled']; ?> /> -->
 								</div>
 									<!-- <a id="add-parcours" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
@@ -410,6 +411,7 @@ $form_url = WEBROOT."admin/categorie/";
 								<ul class="preco-list">
 
 									<li class="preco-item">
+										<input type="hidden" class="preco-item-num" value="1" />
 										<!-- <span class="preco-item-num"><strong>1</strong></span> -->
 										De<input type="text" name="precoMin[]" value="" placeholder="Ex: 0" />%
 										&nbsp;à<input type="text" name="precoMax[]" value="" placeholder="Ex: 20" />% 
@@ -435,14 +437,14 @@ $form_url = WEBROOT."admin/categorie/";
 												}
 											}
 											?>
-											<!-- <option value="1">Parcours 1</option> -->
-											<!-- <option value="2">Parcours 2</option> -->
 										</select>
-
-										<input type="hidden" class="preco-item-num" value="1" />
+										
+										<span class="preco-icon">
+											<i class="fa fa-plus-square"></i>
+										</span>
 										
 										<span class="del-preco preco-icon">
-											<i class="fa fa-times-circle"></i>
+											<i class="fa fa-times"></i>
 										</span>
 										
 									</li>

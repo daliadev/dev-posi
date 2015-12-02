@@ -1365,7 +1365,7 @@ fieldset .block:last-child  {
 
 fieldset .block>textarea {
 	width: 386px !important; 
-	height: 100px !important;
+	height: 70px !important;
 	margin: 5px 0 0 0 !important;
 }
 
@@ -1380,18 +1380,33 @@ fieldset .block input {
 	margin: 5px 0 10px 0 !important;
 }
 
-fieldset #liste-cat ul {
-	height: 295px; 
-	padding: 10px 20px 10px 5px; 
-	margin-bottom: 5px; 
-	background-color: #f0f0f0; 
+
+/* Ajout 11/2015 */
+
+fieldset #liste-cat {
+	height: 500px;
+	max-height: 100%;
+	margin-top: 10px;
+	/*padding: 10px;*/
+	background-color: #f0f0f0;
+	border: 1px solid #ccc8c8;
+	border-radius: 5px;
 	overflow: auto;
+}
+
+fieldset #liste-cat ul {
+	
+	padding: 0 20px 10px 10px;
+	margin-bottom: 5px; 
+
 }
 
 
 /*fieldset #liste-cat .cat-item-block {*/
 	/*background-color: #f0f0f0;*/
 /*}*/
+
+
 
 fieldset #liste-cat a {
 	display: block;
@@ -1409,9 +1424,18 @@ fieldset #liste-cat a:hover, fieldset #liste-cat a:active, fieldset #liste-cat a
 }
 
 
+.fleche-cat {
+	position: absolute;
+	top: 325px;
+	right: 49%;
+	left: 49%;
+	color: #757575;
+	font-size: 48px;
+}
+
 /* fin ajout */
 
-/* Ajout 10/2014 */
+/* Ajout 10/2015 et 11/2015 */
 
 fieldset a.add-link, fieldset a.add-link:visited {
 	color: #f39c12;
@@ -1431,7 +1455,7 @@ fieldset .add-link span
 
 #precos {
 	/*display: none;*/
-	margin-bottom: 20px;
+	/*margin-bottom: 20px;*/
 }
 
 .preco-list {
@@ -1449,12 +1473,12 @@ fieldset .add-link span
 }
 
 	.preco-item input {
-		width: 60px !important;
+		width: 35px !important;
 		margin-left: 10px !important;
 	}
 
 	.preco-item select {
-		width: 350px !important;
+		width: 145px !important;
 		margin: !important;
 	}
 
@@ -1472,12 +1496,26 @@ fieldset .add-link span
 		margin: 8px 5px;
 	}
 
-	.preco-item .arrow {
-		/*display: inline-block;*/
-		margin:  0 20px;
+	.preco-item .preco-icon {
+		margin: 0 5px;
+		font-size: 16px;
 	}
 
+		.preco-item .preco-icon .fa-arrow-right {
+			color: #757575;
+		}
+
+		.preco-item .preco-icon .fa-times-circle, .preco-item .preco-icon .fa-times-circle,  .preco-item .preco-icon .fa-times-circle-o {
+			color: #e74c3c;
+			margin: 0 0 0 5px;
+			text-align: right;
+			
+		}
+
+
 /* fin ajout */
+
+
 
 
 /*--------------------------------------------------------POSI APPLI-----------------------------------------------------------------*/

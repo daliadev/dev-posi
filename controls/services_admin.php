@@ -518,6 +518,7 @@ class ServicesAdmin extends Main
                 exit();
 			}
 
+
 			/*** Requête pour enregistrer un nouveau parcours ***/
 			
 			if (isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))

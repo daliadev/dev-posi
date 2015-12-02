@@ -29,8 +29,8 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
-var_dump($formData['mode']);
-var_dump($formData['parent_cat_cbox']);
+//var_dump($formData['mode']);
+//var_dump($formData['parent_cat_cbox']);
 
 ?>
 
@@ -91,7 +91,8 @@ var_dump($formData['parent_cat_cbox']);
 
 				
 				<!-- Partie gauche : Listing des compétences sélectionnables -->
-				
+				<div style="position: relative;">
+
 				<div style="float:left;">
 
 					<div id="liste-cat-main" class="zone-formu2">
@@ -110,8 +111,7 @@ var_dump($formData['parent_cat_cbox']);
 										
 										foreach($response['categorie'] as $categorie)
 										{   
-											
-											$prefix = '';
+											$prefix = '';	
 											$textSize = 14;
 											$weight = 'normal';
 
@@ -218,48 +218,16 @@ var_dump($formData['parent_cat_cbox']);
 											foreach($response['categorie'] as $categorie)
 											{
 												$selected = "";
-
-												/*
-												if (!empty($formData['parent_cat_cbox']) && $formData['parent_cat_cbox'] !== null && is_numeric($formData['parent_cat_cbox']))
-												{
-													$catParent = strlen($categorie->getCode()) % 2 === 0 ? substr($categorie->getCode(), 0, strlen($categorie->getCode()) - 2) : null;
-													
-													if ($catParent !== null && strlen($catParent) > 1 && $catParent == $formData['parent_cat_cbox'])
-													{
-														$selected = "selected";
-													}
-												}
-												*/
-
-
-												
 												if (!empty($formData['parent_cat_cbox']) && $formData['parent_cat_cbox'] !== null && $formData['parent_cat_cbox'] == $categorie->getCode())
 												{
-													//if ($categorie->getCode() !== null && strlen($categorie->getCode()) > 1 && $categorie->getCode() == $formData['parent_cat_cbox'])
-													//{
-														$selected = "selected";
-													//}
+													$selected = "selected";
 												}
-												
-
 
 												$length = strlen($categorie->getCode());
-												
-												if ($length < 0)
-												{
-													$length = 0;
-												}
 
 												$style = "padding-left:".(($length * 10) + 5)."px;";
 
-												//if ($length <= 0)
-												//{
-													//echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$categorie->getNom().'</option>';
-												//}
-												//else
-												//{
-													echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
-												//}
+												echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
 											}
 											
 											?>
@@ -381,25 +349,18 @@ var_dump($formData['parent_cat_cbox']);
 							</div>
 						</div>
 					</div>
-				</div>
 
 
-				<div style="clear:both"></div>
-
-				
-				<!-- Partie basse : Gestion des parcours / préconisations de la compétence -->
-				<?php if (Config::ALLOW_PRECONISATION) : ?>
-
-				<!-- <div> -->
+					<?php if (Config::ALLOW_PRECONISATION) : ?>
 
 					<div id="precos" class="zone-formu2">
-	 
-						<div id="preconisations" class="form-full">
+
+						<div id="preconisations" class="form-half">
 
 							<fieldset>
 								
 								<legend><span style="display: block; float: left;">Préconisations de parcours</span><span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span><span style="display: block; clear: both;"></span></legend>
-								
+								<!--
 								<p>
 									Cette section vous permet de mettre en oeuvre une stratégie de préconisation de parcours. 
 									Il vous suffit de saisir au préalable la ou les domaines (parcours, temps, ...) que vous souhaitez voir travailler par l'utilisateur, en cliquant sur "Ajouter une nouvelle préconisation".
@@ -407,6 +368,7 @@ var_dump($formData['parent_cat_cbox']);
 									Ceci fait, il vous est possible de définir des intervalles (en pourcentage) des résultats obtenus lors de la passation du positionnement. 
 									Ces intervalles correspondent à des seuils à partir desquels vous établissez une préconisation.
 								</p>
+
 								<p>
 									Ex : Pour une compétence en calcul.
 										<ul>
@@ -415,12 +377,12 @@ var_dump($formData['parent_cat_cbox']);
 											<li>- ...</li>
 										</ul>
 								</p>
-
+								-->
 								<!-- <div> -->
 									
 								<div class="buttons-block">
-									<input type="submit" id="add-parcours" name="add_parcours" class="bt-admin-menu-ajout" style="width:200px; margin-left:100px;" value="Ajouter une préconistation" <?php echo $formData['add_disabled']; ?> />
-									<input type="submit" id="edit-parcours" name="edit_parcours" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un parcours" <?php echo $formData['edit_disabled']; ?> />
+									<input type="submit" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width:200px; margin-left:100px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
+									<!-- <input type="submit" id="edit-parcours" name="edit_parcours" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un parcours" <?php //echo $formData['edit_disabled']; ?> /> -->
 								</div>
 									<!-- <a id="add-parcours" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
@@ -448,17 +410,15 @@ var_dump($formData['parent_cat_cbox']);
 								<ul class="preco-list">
 
 									<li class="preco-item">
-										<span class="preco-item-num"><strong>1</strong></span>
-										De 
-										<input type="text" name="precoMin[]" value="" placeholder="Ex : 0" /> % 
-										&nbsp;&nbsp;à 
-										<input type="text" name="precoMax[]" value="" placeholder="Ex : 20" /> % 
-
-										<span class="arrow">
-											<i class="fa fa-long-arrow-right fa-lg"></i>
+										<!-- <span class="preco-item-num"><strong>1</strong></span> -->
+										De<input type="text" name="precoMin[]" value="" placeholder="Ex: 0" />%
+										&nbsp;à<input type="text" name="precoMax[]" value="" placeholder="Ex: 20" />% 
+										
+										<span class="preco-icon">
+											<i class="fa fa-arrow-right"></i>
 										</span>
-
-										<select id="parcours-preco-cbox" name="parcours-preco-cbox" <?php echo $formData['disabled']; ?>>
+										
+										<select class="parcours-preco-cbox" name="parcours_preco_cbox" <?php echo $formData['disabled']; ?>>
 											<option value="select-cbox">---</option>
 											<?php
 											if (isset($response['parcours']) && !empty($response['parcours']))
@@ -469,16 +429,22 @@ var_dump($formData['parent_cat_cbox']);
 													if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
 													{
 														$selected = "selected";
-													}
-													?>					
-													contentText += '<option value="<?php echo $parcours->getId(); ?>" <?php echo $selected; ?>>- <?php echo $parcours->getNom(); ?></option>';	
-													<?php
+													}				
+													
+													echo '<option value="'.$parcours->getId().'" '.$selected.'>- '.$parcours->getNom().'></option>';	
 												}
 											}
 											?>
 											<!-- <option value="1">Parcours 1</option> -->
 											<!-- <option value="2">Parcours 2</option> -->
 										</select>
+
+										<input type="hidden" class="preco-item-num" value="1" />
+										
+										<span class="del-preco preco-icon">
+											<i class="fa fa-times-circle"></i>
+										</span>
+										
 									</li>
 
 								</ul>
@@ -486,8 +452,21 @@ var_dump($formData['parent_cat_cbox']);
 							</fieldset>
 						</div>
 					</div>
-				<!-- </div> -->
-				<?php endif; ?>
+
+					<?php endif; ?>
+				</div>
+				
+				</div>
+
+				<div class="fleche-cat">
+					<i class="fa fa-arrow-right"></i>
+				</div>
+
+				<div style="clear:both"></div>
+
+				
+				<!-- Partie basse : Gestion des parcours / préconisations de la compétence -->
+				
 
 				<!-- Partie basse : Boutons de gestion de la question -->
 				<div class="zone-formu2">
@@ -567,7 +546,7 @@ var_dump($formData['parent_cat_cbox']);
 			var self = this;
 			var mode = $('#mode').val();
 
-			$('#precos').hide();
+			//$('#precos').hide();
 
 			/* Vide le formulaire */
 
@@ -626,7 +605,6 @@ var_dump($formData['parent_cat_cbox']);
 
 			if (mode != 'edit' && mode != 'delete')
 			{	
-
 				var $selected = null;
 
 				$('.cat-item-link').each(function() {
@@ -635,7 +613,6 @@ var_dump($formData['parent_cat_cbox']);
 						$selected = $(this);
 					}
 				});
-
 
 				$('.cat-item-link').on('click', function(event) {
 
@@ -701,43 +678,60 @@ var_dump($formData['parent_cat_cbox']);
 						});
 					}
 					*/
+
+					$(this).blur();
 				});
 			}
 
+			// Ajout d'une nouvelle préconisation par duplication
+			//console.log($('#add-preco'));
 			
-			if (mode == 'edit')
+			
+			
+			
+			if (mode == 'edit' || mode == 'new')
 			{
 				$('#del').val('Annuler');
 
 				if ($selected !== null) {
 
-					$('#precos').fadeIn(500, function() {
+					//$('#precos').fadeIn(500, function() {
 
-						// Rend les éléments de la liste des préconisations déplaçables et triables
-						$(".preco-list").sortable();
+					// Rend les éléments de la liste des préconisations déplaçables et triables
+					$(".preco-list").sortable();
 
-						var i = 1;
-						var $item;
-						$numItemPreco = 0;
-						
-						// Ajout d'une nouvelle préconisation par duplication
-						$('#add-preco').on('click', function(event) {
+					var i = 1;
+					var $item;
+					//$numItemPreco = 0;
+					
+					// Ajout d'une nouvelle préconisation par duplication
+					$('#add-preco').on('click', function(event) {
 
-							event.preventDefault();
-							i++;
-							$item = $('.preco-item:first').clone();
-							$(".preco-list").append($item);
-							$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
-						});
+						event.preventDefault();
+						i++;
+
+						$item = $('.preco-item:first').clone();
+						$(".preco-list").append($item);
+						$item.find('.preco-item-num').val(i);
+						//console.log(i);
+						//$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+					});
+
+					$('.del-preco').on('click', function(event) {
+
+						//var num = $(this).parent().find('.preco-item-num').val();
+						var num = $(".preco-list:last", '.preco-item-num').val();
+						console.log(num);
 					});
 				}
 			}
 
-
+			/*
 			$('#add').click(function(event) {
 
 				$('#del').val('Annuler');
 			});
+			*/
 
 
 

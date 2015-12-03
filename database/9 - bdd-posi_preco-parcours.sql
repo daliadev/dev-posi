@@ -32,30 +32,15 @@ CREATE TABLE cat_preco
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
 /*==============================================================*/
-/* Table : intervalle                                           */
+/* Table : type_preco                                             */
 /*==============================================================*/
-/*
-DROP TABLE IF EXISTS intervalle;
-CREATE TABLE intervalle 
+DROP TABLE IF EXISTS type_preco;
+CREATE TABLE type_preco 
 (
-	id_intervalle INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	taux_min INT(5) UNSIGNED NOT NULL,
-	taux_max INT(5) UNSIGNED NOT NULL
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
-*/
-
-/*==============================================================*/
-/* Table : parcours                                             */
-/*==============================================================*/
-DROP TABLE IF EXISTS parcours;
-CREATE TABLE parcours 
-(
-	id_parcours INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	nom_parcours VARCHAR(255) NOT NULL UNIQUE,
-	descript_parcours TINYTEXT NULL
+	id_type INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nom_type VARCHAR(255) NOT NULL UNIQUE,
+	descript_type TINYTEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -67,8 +52,7 @@ DROP TABLE IF EXISTS preconisation;
 CREATE TABLE preconisation 
 (
 	id_preco INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_parcours INT(5) UNSIGNED NOT NULL,
-	/*ref_intervalle INT(5) UNSIGNED NOT NULL,*/
+	ref_type INT(5) UNSIGNED NOT NULL,
 	nom_preco VARCHAR(255) NOT NULL UNIQUE,
 	descript_preco TINYTEXT NULL,
 	taux_min INT(10) UNSIGNED NULL,
@@ -84,8 +68,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX I_FK_preco_cat ON cat_preco (ref_code_cat ASC);
 CREATE INDEX I_FK_cat_preco ON cat_preco (ref_preco ASC);
 
-CREATE INDEX I_FK_preco_parcours ON preconisation (ref_parcours ASC);
-/*CREATE INDEX I_FK_preco_fraction ON preconisation (ref_intervalle ASC);*/
+CREATE INDEX I_FK_preco_type ON preconisation (ref_type ASC);
 
 
 /*==============================================================*/
@@ -98,8 +81,5 @@ ALTER TABLE cat_preco
 	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE preconisation 
-	ADD CONSTRAINT FK_preco_parcours FOREIGN KEY (ref_parcours) REFERENCES parcours (id_parcours) ON DELETE RESTRICT ON UPDATE RESTRICT;
-/*
-ALTER TABLE preconisation 
-	ADD CONSTRAINT FK_preco_intervalle FOREIGN KEY (ref_intervalle) REFERENCES intervalle (id_intervalle) ON DELETE RESTRICT ON UPDATE RESTRICT;
-*/
+	ADD CONSTRAINT FK_type_preco_preco FOREIGN KEY (ref_type) REFERENCES type_preco (id_type) ON DELETE RESTRICT ON UPDATE RESTRICT;
+

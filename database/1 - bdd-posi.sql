@@ -46,8 +46,8 @@ CREATE TABLE categorie
 (
 	code_cat VARCHAR(20) NOT NULL PRIMARY KEY,
 	nom_cat VARCHAR(255) NOT NULL UNIQUE,
-	descript_cat TINYTEXT NULL,
-	type_lien_cat ENUM('static','dynamic') NOT NULL DEFAULT 'static'
+	descript_cat TINYTEXT NULL
+	/*type_lien_cat ENUM('static','dynamic') NOT NULL DEFAULT 'static'*/
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

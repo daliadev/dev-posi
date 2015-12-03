@@ -359,7 +359,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 							<fieldset>
 								
-								<legend><span style="display: block; float: left;">Préconisations de parcours</span><span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span><span style="display: block; clear: both;"></span></legend>
+								<legend><span style="display: block; float: left;">Préconisations</span><span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span><span style="display: block; clear: both;"></span></legend>
 								
 								<!--
 								<p>
@@ -380,17 +380,31 @@ $form_url = WEBROOT."admin/categorie/";
 								</p>
 								-->
 								<!-- <div> -->
+
+								<div id="type-preco">
 									
-								<div class="buttons-block" style="margin: 0 auto">
-									<input type="submit" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width:200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
-									<!-- <input type="submit" id="edit-parcours" name="edit_parcours" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un parcours" <?php //echo $formData['edit_disabled']; ?> /> -->
+									<div class="type-title">Ajouter un type de préconisation</div>
+			
+									<div class="type-text">
+										<input type="text" value="" placeholder="Ex : 10 heures" />
+										<input type="submit" id="add-type-preco" name="add_type_preco" class="bt-admin-menu-ajout" style="width:36px;" value="+" <?php echo $formData['disabled']; ?> />
+									</div>
+									
+									<hr />
+
 								</div>
-									<!-- <a id="add-parcours" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
+
+									
+								<div id="add-preco-button">
+									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width:200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
+									<!-- <input type="submit" id="edit-type" name="edit_type" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un type" <?php //echo $formData['edit_disabled']; ?> /> -->
+								</div>
+									<!-- <a id="add-type" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
 											<i class="fa fa-plus fa-stack-1x"></i>
 										</span>
-										<strong>1 - Commencer par ajouter un (ou des) nouveau(x) parcours.</strong>
+										<strong>1 - Commencer par ajouter un (ou des) nouveau(x) type.</strong>
 									</p></a>
 
 									<a id="add-preco" class="add-link" href="#precos"><p style="line-height: 16px;">
@@ -406,11 +420,32 @@ $form_url = WEBROOT."admin/categorie/";
 									
 								<!-- </div> -->
 
+
 								<hr />
+
+								<!-- Affichage du formulaire ajout d'un type de préconisation -->
+								<!-- 
+								<div id="type-preco">
+									
+									<div class="type-title">Ajouter un type de préconisation</div>
+			
+									<div class="type-text">
+										<input type="text" value="" placeholder="Ex : 10 heures" />
+										<input type="submit" id="add-type-preco" name="add_type_preco" class="bt-admin-menu-ajout" style="width:44px;" value="+" <?php echo $formData['disabled']; ?> />
+									</div>
+									
+									<hr />
+
+								</div>
+
+								 -->
+								
+
 
 								<ul class="preco-list">
 
 									<li class="preco-item">
+
 										<input type="hidden" class="preco-item-num" value="1" />
 										<!-- <span class="preco-item-num"><strong>1</strong></span> -->
 										De<input type="text" name="precoMin[]" value="" placeholder="Ex: 0" />%
@@ -420,23 +455,37 @@ $form_url = WEBROOT."admin/categorie/";
 											<i class="fa fa-arrow-right"></i>
 										</span>
 										
-										<select class="parcours-preco-cbox" name="parcours_preco_cbox" <?php echo $formData['disabled']; ?>>
+										<select class="type-preco-cbox" name="type_preco_cbox[]" <?php echo $formData['disabled']; ?>>
 											<option value="select-cbox">---</option>
 											<?php
-											if (isset($response['parcours']) && !empty($response['parcours']))
+											if (isset($response['type_preco']) && !empty($response['type_preco']))
 											{
-												foreach($response['parcours'] as $parcours)
+												foreach($response['type_preco'] as $type)
 												{
 													$selected = "";
-													if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
+													if (!empty($formData['ref_type_preco']) && $formData['ref_type_preco'] == $type->getId())
 													{
 														$selected = "selected";
 													}				
 													
-													echo '<option value="'.$parcours->getId().'" '.$selected.'>- '.$parcours->getNom().'></option>';	
+													echo '<option value="'.$type->getId().'" '.$selected.'>- '.$type->getNom().'></option>';	
 												}
 											}
+											
+
+											if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] === "Nouveau")
+											{
+												$selected = "selected";
+
+												echo '<option value="new" '.$selected.' style="font-weight:bold;">Autre</option>';
+											}
 											?>
+											<option value="new" style="font-weight:bold;" <?php echo $selected; ?>>Nouveau</option>
+												<!-- <a class="add-type" href=""> -->
+												<!-- Nouveau -->
+												<!-- </a> -->
+											<!-- </option> -->
+
 										</select>
 										
 										<span class="preco-icon">
@@ -467,7 +516,7 @@ $form_url = WEBROOT."admin/categorie/";
 				<div style="clear:both"></div>
 
 				
-				<!-- Partie basse : Gestion des parcours / préconisations de la compétence -->
+				<!-- Partie basse : Gestion des type / préconisations de la compétence -->
 				
 
 				<!-- Partie basse : Boutons de gestion de la question -->
@@ -503,22 +552,22 @@ $form_url = WEBROOT."admin/categorie/";
 	</div>
 
 
-	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un parcours -->
+	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un type -->
 	<?php if (Config::ALLOW_PRECONISATION) : ?>
 
 		<div id="modal-box"></div>
 
 	<?php endif; ?>
-	<!-- Template form ajout parcours -->
+	<!-- Template form ajout type -->
 	<!--
 	<div class="modal-box">
 
-		<form id="parcours-form" action="<?php //echo $form_url; ?>" method="post">
+		<form id="type-form" action="<?php //echo $form_url; ?>" method="post">
 			
-			<div class="modal-box-title">Ajouter un parcours</div>
+			<div class="modal-box-title">Ajouter un type</div>
 			
 			<div class="modal-box-text">
-				<p>Saisissez une description courte du parcours</p>
+				<p>Saisissez une description courte du type</p>
 				<input type="text" value="" placeholder="Ex : 10 heures de formation civique" />
 			</div>
 
@@ -549,6 +598,7 @@ $form_url = WEBROOT."admin/categorie/";
 			var mode = $('#mode').val();
 
 			//$('#precos').hide();
+			$('#type-preco').hide();
 
 			/* Vide le formulaire */
 
@@ -706,6 +756,49 @@ $form_url = WEBROOT."admin/categorie/";
 					var $item;
 					//$numItemPreco = 0;
 					
+					$('.type-preco-cbox').on('change', function(event) {
+
+						/*** Gestion de la requête pour éditer un type dans la liste des type ***/
+
+						if ($(this).val() == 'new') {
+							//console.log('onChangeParcours');
+							//var refParcours = $(this).val();
+							//console.log(refParcours);
+
+							$('#type-preco').show();
+						}
+						else {
+
+							$('#type-preco').hide();
+						}
+							/*
+							<?php if (Config::ALLOW_AJAX) : ?>
+
+								if (refParcours != 'select_cbox')
+								{
+									$.post('<?php echo $form_url; ?>', {'ref_type': refParcours}, function(data) {
+
+										if (data.error) {
+
+											alert(data.error);
+										}
+										else if (data.results) {
+
+											console.log(data.results);
+											$('#id-type').val(data.results.id_type);
+											$('#nom-type').val(data.results.nom_type);
+										}
+
+									}, 'json');
+								}
+
+							<?php endif; ?>
+							*/
+						//};
+						//});
+					});
+
+
 					// Ajout d'une nouvelle préconisation par duplication
 					$('#add-preco').on('click', function(event) {
 
@@ -719,10 +812,11 @@ $form_url = WEBROOT."admin/categorie/";
 						//$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
 					});
 
+
 					$('.del-preco').on('click', function(event) {
 
-						//var num = $(this).parent().find('.preco-item-num').val();
-						var num = $(".preco-list:last", '.preco-item-num').val();
+						var num = $(this).parent().find('.preco-item-num').val();
+						//var num = $(".preco-list:last", '.preco-item-num').val();
 						console.log(num);
 					});
 				}
@@ -831,22 +925,22 @@ $form_url = WEBROOT."admin/categorie/";
 			*/
 			
 
-			/*** Gestion de la requête pour éditer un parcours dans la liste des parcours ***/
+			/*** Gestion de la requête pour éditer un type dans la liste des type ***/
 
-			//$('#parcours_cbox').change(function(event) {
+			//$('#type_cbox').change(function(event) {
 
 				//alert('change');
 				/*
 			onChangeParcours = function() {
 
 				console.log('onChangeParcours');
-				var refParcours = $('#parcours_cbox').val();
+				var refParcours = $('#type_cbox').val();
 				
 				<?php if (Config::ALLOW_AJAX) : ?>
 
 					if (refParcours != 'select_cbox')
 					{
-						$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
+						$.post('<?php echo $form_url; ?>', {'ref_type': refParcours}, function(data) {
 
 							if (data.error) {
 
@@ -855,8 +949,8 @@ $form_url = WEBROOT."admin/categorie/";
 							else if (data.results) {
 
 								console.log(data.results);
-								$('#id-parcours').val(data.results.id_parcours);
-								$('#nom-parcours').val(data.results.nom_parcours);
+								$('#id-type').val(data.results.id_type);
+								$('#nom-type').val(data.results.nom_type);
 							}
 
 						}, 'json');

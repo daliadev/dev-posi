@@ -1463,11 +1463,16 @@ fieldset .add-link span
 	/*text-align: center;*/
 }
 
-#add-preco {
-	display: inline !important;
-	/*text-align: center !important;*/
-	margin: 0 !important;
+#add-preco-button {
+	
+	text-align: center;
 }
+	#add-preco {
+		display: inline !important;
+		/*text-align: center !important;*/
+		background-color: #1fbba6 !important;
+		/*margin: 0 auto !important;*/
+	}
 
 .preco-list {
 	margin: 0 !important;
@@ -1484,6 +1489,11 @@ fieldset .add-link span
 	border: 1px solid #bbb;
 	border-radius: 5px;
 }
+
+	.preco-item option.add-parcours {
+		/*cursor: pointer;*/
+	}
+
 
 	.preco-item input {
 		width: 38px !important;
@@ -1703,7 +1713,7 @@ fieldset .add-link span
 }
 
 
-#zone-activite p:hover{
+#zone-activite p:hover {
 	background-color:#c7e9ef;
 }
 

@@ -1266,7 +1266,7 @@ select {
 }	
 */
 
-.datalist{ 
+.datalist { 
     border:1px solid #ccc;
     margin: 10px 0;
     padding: 10px;
@@ -1384,7 +1384,7 @@ fieldset .block input {
 /* Ajout 11/2015 */
 
 fieldset #liste-cat {
-	height: 500px;
+	height: 287px;
 	max-height: 100%;
 	margin-top: 10px;
 	/*padding: 10px;*/
@@ -1456,15 +1456,51 @@ fieldset .add-link span
 
 #precos {
 	/*display: none;*/
-	/*margin-bottom: 20px;*/
+	margin-bottom: 20px;
+
 }
+
+
+.preco-text
+{
+	float: left;
+	width: 300px;
+	margin-right: 20px;
+	text-align: justify;
+}
+
+.preco-content
+{
+	float: right;
+	width: 540px;
+}
+
+
+.square-btn {
+	width: 32px !important; 
+	height: 32px !important;
+	/*line-height: 28px !important;*/
+	margin-top: 5px !important;
+	margin-left: 5px !important;
+	font-family: "FontAwesome", Arial, sans-serif !important;
+}
+
+	#edit-type-preco {
+		background-color: #1fbba6 !important;
+	}
+
+	#suppr-type-preco {
+		background-color: #f75556 !important;
+	}
+
 
 #precos fieldset {
 	/*text-align: center;*/
 }
 
-#add-preco-button {
 	
+
+#add-preco-button {
 	text-align: center;
 }
 	#add-preco {

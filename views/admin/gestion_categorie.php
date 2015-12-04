@@ -92,6 +92,10 @@ $form_url = WEBROOT."admin/categorie/";
 				
 				<!-- Partie gauche : Listing des compétences sélectionnables -->
 				<div style="position: relative;">
+				
+				<div class="fleche-cat">
+					<i class="fa fa-arrow-right"></i>
+				</div>
 
 				<div style="float:left;">
 
@@ -349,19 +353,28 @@ $form_url = WEBROOT."admin/categorie/";
 							</div>
 						</div>
 					</div>
+				</div>
+				
+				<div style="clear:both"></div>
+				
 
+				<!-- Partie basse : Gestion des type / préconisations de la compétence -->
 
-					<?php if (Config::ALLOW_PRECONISATION) : ?>
+				<?php if (Config::ALLOW_PRECONISATION) : ?>
+				
+				<div id="precos" class="zone-formu2">
 
-					<div id="precos" class="zone-formu2">
+					<div id="preconisations" class="form-full">
 
-						<div id="preconisations" class="form-half">
-
-							<fieldset>
-								
-								<legend><span style="display: block; float: left;">Préconisations</span><span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span><span style="display: block; clear: both;"></span></legend>
-								
-								<!--
+						<fieldset>
+							
+							<legend>
+								<span style="display: block; float: left;">Préconisations</span>
+								<span style="display: block; float: right;"><a href="#"><i class="fa fa-ellipsis-v"></i></a></span>
+								<span style="display: block; clear: both;"></span>
+							</legend>
+							
+							<div class="preco-text">
 								<p>
 									Cette section vous permet de mettre en oeuvre une stratégie de préconisation de parcours. 
 									Il vous suffit de saisir au préalable la ou les domaines (parcours, temps, ...) que vous souhaitez voir travailler par l'utilisateur, en cliquant sur "Ajouter une nouvelle préconisation".
@@ -372,22 +385,31 @@ $form_url = WEBROOT."admin/categorie/";
 
 								<p>
 									Ex : Pour une compétence en calcul.
-										<ul>
-											<li>- De 0% à 40% -> 50 heures de formation préconisées en mathématiques.</li>
-											<li>- De 40% à 60% -> 30 heures de formation préconisées en mathématiques.</li>
-											<li>- ...</li>
-										</ul>
+									<ul>
+										<li>- De 0% à 40% -> 50 heures de formation préconisées.</li>
+										<li>- De 40% à 60% -> 30 heures de formation préconisées.</li>
+										<li>- ...</li>
+									</ul>
 								</p>
-								-->
-								<!-- <div> -->
+							</div>
+							
+							<div class="preco-content">
 
 								<div id="type-preco">
 									
-									<div class="type-title">Ajouter un type de préconisation</div>
-			
+									<div class="type-title">Présaisir les temps de préconisation</div>
+									
 									<div class="type-text">
-										<input type="text" value="" placeholder="Ex : 10 heures" />
-										<input type="submit" id="add-type-preco" name="add_type_preco" class="bt-admin-menu-ajout" style="width:36px;" value="+" <?php echo $formData['disabled']; ?> />
+
+										<select class="type-preco-cbox" name="type_preco_cbox" style="width: 270px;" <?php echo $formData['disabled']; ?>>
+											<option value="select-cbox">---</option>
+										</select>
+
+										<!-- <input type="text" value="" placeholder="Ex : 10 heures" /> -->
+										<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+										<button type="submit" id="edit-type-preco" name="edit_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
+										<button type="submit" id="suppr-type-preco" name="suppr_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
+										<input type="text" value="" placeholder="Ex : 10 heures" style="width: 386px;" />
 									</div>
 									
 									<hr />
@@ -396,7 +418,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 									
 								<div id="add-preco-button">
-									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width:200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
+									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
 									<!-- <input type="submit" id="edit-type" name="edit_type" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un type" <?php //echo $formData['edit_disabled']; ?> /> -->
 								</div>
 									<!-- <a id="add-type" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
@@ -431,7 +453,7 @@ $form_url = WEBROOT."admin/categorie/";
 			
 									<div class="type-text">
 										<input type="text" value="" placeholder="Ex : 10 heures" />
-										<input type="submit" id="add-type-preco" name="add_type_preco" class="bt-admin-menu-ajout" style="width:44px;" value="+" <?php echo $formData['disabled']; ?> />
+										<input type="submit" id="add-type-preco" name="add_type_preco" class="bt-admin-menu-ajout" style="width:44px;" value="+" <?php //echo $formData['disabled']; ?> />
 									</div>
 									
 									<hr />
@@ -455,7 +477,7 @@ $form_url = WEBROOT."admin/categorie/";
 											<i class="fa fa-arrow-right"></i>
 										</span>
 										
-										<select class="type-preco-cbox" name="type_preco_cbox[]" <?php echo $formData['disabled']; ?>>
+										<select class="choix_type_preco_cbox" name="type_preco_cbox[]" <?php echo $formData['disabled']; ?>>
 											<option value="select-cbox">---</option>
 											<?php
 											if (isset($response['type_preco']) && !empty($response['type_preco']))
@@ -499,27 +521,22 @@ $form_url = WEBROOT."admin/categorie/";
 									</li>
 
 								</ul>
+							</div>
 
-							</fieldset>
-						</div>
+							<div style="clear:both"></div>
+
+						</fieldset>
 					</div>
-
-					<?php endif; ?>
-				</div>
-				
 				</div>
 
-				<div class="fleche-cat">
-					<i class="fa fa-arrow-right"></i>
-				</div>
-
-				<div style="clear:both"></div>
+				<?php endif; ?>
 
 				
-				<!-- Partie basse : Gestion des type / préconisations de la compétence -->
+				
 				
 
 				<!-- Partie basse : Boutons de gestion de la question -->
+
 				<div class="zone-formu2">
 
 					<div id="buttons" class="form-full">
@@ -541,7 +558,7 @@ $form_url = WEBROOT."admin/categorie/";
 		</div>
 
 	
-		<div style="clear:both;"></div>
+		<!-- <div style="clear:both;"></div> -->
 
 
 		<?php
@@ -756,7 +773,7 @@ $form_url = WEBROOT."admin/categorie/";
 					var $item;
 					//$numItemPreco = 0;
 					
-					$('.type-preco-cbox').on('change', function(event) {
+					$('.choix_type_preco_cbox').on('change', function(event) {
 
 						/*** Gestion de la requête pour éditer un type dans la liste des type ***/
 

@@ -6,8 +6,7 @@ class Preconisation
 {
 	
 	public $id_preco = NULL;
-	//public $ref_code_cat = NULL;
-	public $ref_parcours = NULL;
+	public $ref_type = NULL;
 	public $nom_preco = NULL;
 	public $descript_preco = NULL;
 	public $taux_min = NULL;
@@ -20,9 +19,9 @@ class Preconisation
 		return $this->id_preco;
 	}
 	
-	public function getRefParcours()
+	public function getRefType()
 	{
-		return $this->ref_parcours;
+		return $this->ref_type;
 	}
 	
 	public function getNom()

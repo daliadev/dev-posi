@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS preconisation;
 CREATE TABLE preconisation 
 (
 	id_preco INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_type INT(5) UNSIGNED NOT NULL,
+	ref_type INT(5) UNSIGNED NULL,
 	nom_preco VARCHAR(255) NOT NULL UNIQUE,
 	descript_preco TINYTEXT NULL,
 	taux_min INT(10) UNSIGNED NULL,
@@ -75,11 +75,11 @@ CREATE INDEX I_FK_preco_type ON preconisation (ref_type ASC);
 /* Contraintes relationnelles                                   */
 /*==============================================================*/
 ALTER TABLE cat_preco 
-	ADD CONSTRAINT FK_cat_preco_cat FOREIGN KEY (ref_code_cat) REFERENCES categorie (code_cat) ON DELETE RESTRICT ON UPDATE RESTRICT;
+	ADD CONSTRAINT FK_cat_preco_cat FOREIGN KEY (ref_code_cat) REFERENCES categorie (code_cat) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE cat_preco 
-	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE RESTRICT ON UPDATE RESTRICT;
+	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 ALTER TABLE preconisation 
-	ADD CONSTRAINT FK_type_preco_preco FOREIGN KEY (ref_type) REFERENCES type_preco (id_type) ON DELETE RESTRICT ON UPDATE RESTRICT;
+	ADD CONSTRAINT FK_type_preco_preco FOREIGN KEY (ref_type) REFERENCES type_preco (id_type) ON DELETE SET NULL ON UPDATE RESTRICT;
 

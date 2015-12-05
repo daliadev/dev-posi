@@ -4,10 +4,8 @@
 
 // Inclusion du fichier de la classe Question
 require_once(ROOT.'models/question.php');
-require_once(ROOT.'models/degre.php');
-require_once(ROOT.'models/reponse.php');
-require_once(ROOT.'models/question.php');
-require_once(ROOT.'models/question.php');
+//require_once(ROOT.'models/degre.php');
+//require_once(ROOT.'models/reponse.php');
 
 
 class QuestionDAO extends ModelDAO

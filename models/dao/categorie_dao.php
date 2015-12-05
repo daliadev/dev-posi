@@ -205,11 +205,11 @@ class CategorieDAO extends ModelDAO
 		}
 		return $this->resultset;
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * insert - Insère une catégorie
 	 * 

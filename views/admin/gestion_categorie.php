@@ -416,7 +416,8 @@ $form_url = WEBROOT."admin/categorie/";
 
 								</div>
 
-									
+
+
 								<div id="add-preco-button">
 									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
 									<!-- <input type="submit" id="edit-type" name="edit_type" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un type" <?php //echo $formData['edit_disabled']; ?> /> -->
@@ -443,7 +444,7 @@ $form_url = WEBROOT."admin/categorie/";
 								<!-- </div> -->
 
 
-								<hr />
+								
 
 								<!-- Affichage du formulaire ajout d'un type de préconisation -->
 								<!-- 
@@ -615,7 +616,7 @@ $form_url = WEBROOT."admin/categorie/";
 			var mode = $('#mode').val();
 
 			//$('#precos').hide();
-			$('#type-preco').hide();
+			//$('#type-preco').hide();
 
 			/* Vide le formulaire */
 
@@ -782,11 +783,11 @@ $form_url = WEBROOT."admin/categorie/";
 							//var refParcours = $(this).val();
 							//console.log(refParcours);
 
-							$('#type-preco').show();
+							//$('#type-preco').show();
 						}
 						else {
 
-							$('#type-preco').hide();
+							//$('#type-preco').hide();
 						}
 							/*
 							<?php if (Config::ALLOW_AJAX) : ?>

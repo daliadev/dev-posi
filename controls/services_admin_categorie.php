@@ -113,6 +113,44 @@ class ServicesAdminCategorie extends Main
 		return false;
 	}
 
+
+
+	public function getCategoriePrecos($refCat)
+	{
+		$preconisations = array();
+		
+		$resultsetPreconisations = $this->categorieDAO->selectByCategorie($refCat);
+		
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultsetPreconisations['response']) && !empty($resultsetPreconisations['response']['preconisation']))
+		{
+			if (!empty($resultsetPreconisations['response']['preconisation']) && count($resultsetPreconisations['response']['preconisation']) == 1)
+			{ 
+				$preconisation = $resultsetPreconisations['response']['preconisation'];
+				$resultsetPreconisations['response']['preconisation'] = array($preconisation);
+			}
+			
+			$i = 0;
+			foreach($resultsetPreconisations['response']['preconisation'] as $preco)
+			{
+				$preconisations[$i] = array();
+				$preconisations[$i]['id_preco'] = $preco->getId();
+				$preconisations[$i]['ref_type'] = $preco->getRefType();
+				$preconisations[$i]['nom_preco'] = $preco->getNom();
+				$preconisations[$i]['descript_preco'] = $preco->getDescription();
+				$preconisations[$i]['taux_min'] = $preco->getTauxMin();
+				$preconisations[$i]['taux_max'] = $preco->getTauxMax();
+				$preconisations[$i]['num_ordre'] = $preco->getNumOrdre();
+
+				$i++;
+			}
+		}
+		
+		return $preconisations;
+	}
+
+
+
 	/*
 	public function getPreconisations($codeCat)
 	{
@@ -141,8 +179,8 @@ class ServicesAdminCategorie extends Main
 		{
 			if (!empty($resultset['response']['type_preco']) && count($resultset['response']['type_preco']) == 1)
 			{ 
-				$parcours = $resultset['response']['type_preco'];
-				$resultset['response']['type_preco'] = array($parcours);
+				$type = $resultset['response']['type_preco'];
+				$resultset['response']['type_preco'] = array($type);
 			}
 
 			return $resultset;
@@ -152,23 +190,24 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-	public function getParcoursDetails($idParcours)
+
+	public function getTypeDetails($idType)
 	{
 		$parcoursDetails = array();
 		
 		$parcoursDetails['id_type'] = '';
-		$parcoursDetails['nom_parcours'] = '';
-		$parcoursDetails['desc_parcours'] = '';
+		$parcoursDetails['nom_type'] = '';
+		$parcoursDetails['desc_type'] = '';
 
-		$resultset = $this->typePrecoDAO->selectById($idParcours);
+		$resultset = $this->typePrecoDAO->selectById($idType);
 
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			$parcoursDetails['id_type'] = $resultset['response']['type_preco']->getId();
-			$parcoursDetails['nom_parcours'] = $resultset['response']['type_preco']->getNom();
-			$parcoursDetails['desc_parcours'] = $resultset['response']['type_preco']->getDescription();
+			$parcoursDetails['nom_type'] = $resultset['response']['type_preco']->getNom();
+			$parcoursDetails['desc_type'] = $resultset['response']['type_preco']->getDescription();
 
-			return $parcoursDetails;
+			return $typeDetails;
 		}
 
 		return false;
@@ -213,16 +252,16 @@ class ServicesAdminCategorie extends Main
 
 		// Test catégorie parente existante
 
-        if (!empty($postData['parent_cat_cbox']) && $postData['parent_cat_cbox'] != 'aucun')
-        {
-        	$formData['parent_code_cat'] = $this->validatePostData($postData['parent_cat_cbox'], "parent_cat_cbox", "integer", false, "Aucune catégorie parent n'a été sélectionnée.", "La catégorie parente n'a étécorrectement sélectionnée.");
-        	$dataCategorie['parent_code_cat'] = $formData['parent_code_cat'];
-        }
-        else
-        {
-        	$formData['parent_code_cat'] = 0;
-            $dataQuestion['parent_code_cat'] = 0;
-        }
+		if (!empty($postData['parent_cat_cbox']) && $postData['parent_cat_cbox'] != 'aucun')
+		{
+			$formData['parent_code_cat'] = $this->validatePostData($postData['parent_cat_cbox'], "parent_cat_cbox", "integer", false, "Aucune catégorie parent n'a été sélectionnée.", "La catégorie parente n'a étécorrectement sélectionnée.");
+			$dataCategorie['parent_code_cat'] = $formData['parent_code_cat'];
+		}
+		else
+		{
+			$formData['parent_code_cat'] = 0;
+			$dataQuestion['parent_code_cat'] = 0;
+		}
 
 
 		// Formatage du nom de la catégorie
@@ -234,8 +273,8 @@ class ServicesAdminCategorie extends Main
 		$dataCategorie['descript_cat'] = $formData['descript_cat'];
 		
 		// Récupèration du numero d'ordre de la catégorie
-        $formData['ordre_cat'] = $this->validatePostData($postData['ordre_cat'], "ordre_cat", "integer", true, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
-        $dataQuestion['ordre_cat'] = $formData['ordre_cat'];
+		$formData['ordre_cat'] = $this->validatePostData($postData['ordre_cat'], "ordre_cat", "integer", true, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
+		$dataQuestion['ordre_cat'] = $formData['ordre_cat'];
 		
 		// Formatage du code catégorie
 		/*
@@ -713,7 +752,7 @@ class ServicesAdminCategorie extends Main
 	}
 	*/
 
-
+	/*
 	public function createCodes($currentCode = null, $parentCode = null, $orderInput = null) {
 
 		$selectedCode = null;
@@ -734,15 +773,6 @@ class ServicesAdminCategorie extends Main
 				$parentCode = $this->getParentCode($currentCode);
 			}
 		}
-		/*
-		else
-		{
-			if ($parentCode !== null) 
-			{
-
-			}
-		}
-		*/
 
 		// Détermination du niveau hiérarchique dans lequel doit être inséré l'élément
 		if ($currentCode !== false && $currentCode !== null)
@@ -788,31 +818,18 @@ class ServicesAdminCategorie extends Main
 		if (isset($levelCodes['response']['errors']) && count($levelCodes['response']['errors']) > 0)
 		{
 			$this->filterDataErrors($levelCodes['response']);
-			/*
-			foreach ($levelCodes['response']['errors'] as $key => $value) {
-
-				$this->registerError($levelCodes['response']['errors'][$key]['type'], $levelCodes['response']['errors'][$key]['message']);
-			}
-			*/
 		}
 		else if (!empty($levelCodes['response']['categorie']) && count($levelCodes['response']['categorie']) > 0)
 		{
-	        if (count($levelCodes['response']['categorie']) == 1)
-	        { 
-	            $categorie = $levelCodes['response']['categorie'];
-	            $levelCodes['response']['categorie'] = array($categorie);
-	        }
+			if (count($levelCodes['response']['categorie']) == 1)
+			{ 
+				$categorie = $levelCodes['response']['categorie'];
+				$levelCodes['response']['categorie'] = array($categorie);
+			}
 
 			foreach ($levelCodes['response']['categorie'] as $categorie)
 			{
-				/*
-				$code = substr($categorie->getCode(), strlen($parentCode), strlen($categorie->getCode()));
 
-				if (strlen($code) !== 0) 
-				{
-					$oldCodes[] = $code;
-				}
-				*/
 
 				//$oldCodes[] = $categorie->getCode();
 			}
@@ -834,270 +851,8 @@ class ServicesAdminCategorie extends Main
 
 		return null; //$allCodesArray;
 	}
+	*/
 
-
-	public function getCategorieOrder($code) 
-	{
-
-	}
-
-
-	public function generateCategorieCode($code = null, $parentCode = null, $order = null) 
-	{
-		$generatedCode = null;
-		$previousCode = null;
-		$nextCode = null;
-		$level = 0;
-
-		// Mode edit
-		if ($code !== null) {
-
-			$level = strlen($code / 2);
-			$currentCode = $this->categorieDAO->selectByCode($parentCode, $level);
-
-			if ($parentCode !== null)
-			{
-				$parentLevel = strlen($code / 2);
-				$level = strlen($code / 2) + 1;
-				$nextCode = $this->categorieDAO->selectByCode($parentCode, $level);
-				//$code = $this->servicesCategorie->generateCategorieCode($code, $parentCode);
-			}
-			else
-			{
-				$level = 1;
-				$parentCode = $this->getParentCode($code);
-				//$code = $this->servicesCategorie->generateCategorieCode($code);
-			}
-		}
-
-		// Mode new
-		else
-		{
-			if ($parentCode !== null) 
-			{
-				$level = strlen($parentCode / 2) + 1;
-
-				$resultset = $this->categorieDAO->findCategorieCode($parentCode, $level, $order);
-
-				//var_dump($resultset);
-				//exit();
-
-				if (!$this->filterDataErrors($resultset['response']))
-				{
-					if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-					{ 
-						$categorie = $resultset['response']['categorie'];
-						$resultset['response']['categorie'] = array($categorie);
-					}
-					else if (!isset($resultset['response']['categorie']) || empty($resultset['response']['categorie'])) 
-					{
-						$code = $parentCode . '10';
-						return $code;
-					}
-
-					$codes = $resultset['response']['categorie'];
-
-					//echo 'mode new - parentcode = '.$parentCode.' - child codes = ';
-					//var_dump($codes);
-
-					if ($order === null) 
-					{
-						$lastCodeIndex = count($codes) - 1;
-						$code = $codes[$lastCodeIndex]->getCode();
-						$previousCode = ($lastCodeIndex - 1) >= 0 ? $codes[($lastCodeIndex - 1)]->getCode() : -1;
-
-						$last_num = substr($code, -2, 2);
-						$last_num_previous = strlen($previousCode) >= 2 ? substr($previousCode, -2, 2) : -1;
-						$increment = 10;
-
-						if ($last_num_previous >= 0 && $last_num >= 50) 
-						{
-							$increment = $last_num - $last_num_previous;
-						}
-
-
-						if (($last_num + $increment) >= (100 - $increment) || floor($increment / 2) <= 0)
-						{
-							$this->registerError("form_valid", "Le nombre de catégories a atteint son maximum dans ce niveau hiérarchique.");
-						}
-						else
-						{
-							$increment = $increment >= 10 ? 10 : floor($increment / 2);
-							$code += $increment;
-						}
-						
-					}
-					else 
-					{
-						/**
-						*
-						*	TODO:
-						*	- les ordres correspondent à chaque code (code1 = ordre1, code2 = ordre2, ..., $codemax = ordre_n). 
-						*	- L'ajout/insertion d'une catégorie entre deux autres incrémente les codes d'une position en augmentant l'ordre de chaque codes
-						* 	- La suppression d'une catégorie réduit l'ordre d'un cran vers le bas
-						*	- Les ordres doivent s'afficher selon l'ordre et le nombre de code + 1
-						* 	- ATTENTION : Le code doit rester identique pour une même catégorie 
-						**/
-						
-						$nextCode = $codes[$order] <= count($codes) - 1 ? $codes[count($codes) - 1] : null;
-						//$code = $codes[$lastCodeIndex]->getCode();
-						$previousCode = ($order - 2) >= 0 ? $codes[($order - 2)] : null;
-
-						$increment = 10;
-
-
-						if ($previousCode === null || $nextCode === null) 
-						{
-							if ($previousCode === null)
-							{
-								$index = 0;
-							}
-						}
-
-
-						$range = $nextcode - $previousCode;
-
-						$increment = $range >= 10 ? 10 : $range / 2;
-
-
-
-
-						/*
-						$ordres = array();
-
-						for ($i = 0; $i < count($codes); $i++) 
-						{ 
-							if ($i == $order) 
-							{
-								++
-							}
-
-							if ($codes[$i] ) 
-							{
-
-							}
-
-							$ordres[$i] = $i;
-						}
-						*/
-					}
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				$level = 1;
-				$resultset = $this->categorieDAO->findCategorieCode(null, $level);
-
-				if (!$this->filterDataErrors($resultset['response']))
-				{
-					if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-					{ 
-						$categorie = $resultset['response']['categorie'];
-						$resultset['response']['categorie'] = array($categorie);
-					}
-
-					$codes = $resultset['response']['categorie'];
-
-					echo 'mode new - level one codes = ';
-					//var_dump($codes);
-					//exit();
-					//$codes = $this->generateKey(null, 1);
-					//$code = $this->servicesCategorie->generateCategorieCode();
-
-					if ($order === null) 
-					{
-
-						$lastCodeIndex = count($codes) - 1;
-						$code = $codes[$lastCodeIndex]->getCode();
-						$previousCode = ($lastCodeIndex - 1) >= 0 ? $codes[($lastCodeIndex - 1)]->getCode() : -1;
-
-						$last_num = substr($code, -2, 2);
-						$last_num_previous = strlen($previousCode) >= 2 ? substr($previousCode, -2, 2) : -1;
-						$increment = 10;
-
-						if ($last_num_previous >= 0 && $last_num >= 75) 
-						{
-							$increment = $last_num - $last_num_previous;
-						}
-
-
-						if ($last_num + $increment >= 100 - $increment || floor($increment / 2) <= 0)
-						{
-							$this->registerError("form_valid", "Le nombre de catégories a atteint son maximum dans ce niveau hiérarchique.");
-						}
-						else
-						{
-							$increment = $increment >= 10 ? 10 : floor($increment / 2);
-							$code += $increment;
-						}
-
-					}
-					else 
-					{
-
-						/*
-							TODO:
-							- $ordre : compris entre 0 et 50
-							SI $ordre vaut 0 ALORS
-								$code compris entre 0 et premier code
-							SINONSI  $ordre > longueur tab $codes ALORS
-								$code compris entre dernier $code et dernier $code + $incrément
-							SINON
-								$code compris dernier $code + $incrément
-							FINSI
-						*/
-
-						$code = 10;
-
-						if ($order > count($codes)) 
-						{
-							$order = count($codes) + 1;
-							$code = count($codes);
-						}
-						else
-						{	
-
-						}
-
-						$ordres = array();
-
-						for ($i = 0; $i < count($codes); $i++) 
-						{
-							$ordres[$i] = $i;
-
-							if ($i == $order) 
-							{
-								$orderCode = $codes[$i];
-								$previous = $codes[($i - 1)];
-								$next = $codes[($i + 1)];
-								//++
-							}
-
-							if ($codes[$i]) 
-							{
-
-							}
-
-						}
-					}
-				}
-				else
-				{
-					return false;
-				}
-			}
-		}
-
-		//var_dump($code);
-
-		//exit();
-
-		return $code;
-	}
 
 
 

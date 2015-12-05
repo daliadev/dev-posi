@@ -475,6 +475,9 @@ class ServicesAdmin extends Main
 
 
 
+
+
+
 		/* ==========================================================================
 		   Requêtes ajax
 		   ========================================================================== */
@@ -501,6 +504,7 @@ class ServicesAdmin extends Main
 			}
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
+			/*
 			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']))
 			{
 				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
@@ -517,10 +521,10 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
                 exit();
 			}
-
+			*/
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
-			
+			/*
 			if (isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
 			{
 				if (isset($_POST['id_parcours']) && !empty($_POST['id_parcours']))
@@ -544,13 +548,16 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
                 exit();
 			}
-			
+			*/
 			/*** Requête pour supprimer un nouveau parcours ***/
 
         }
 
         /* Fin requêtes ajax
-           ========================================================================== */
+           =================== */
+
+
+
 
 
 

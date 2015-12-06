@@ -1489,6 +1489,10 @@ fieldset .add-link span
 		background-color: #1fbba6 !important;
 	}
 
+	#save-type-preco {
+		background-color: #3498db !important;
+	}
+
 	#suppr-type-preco {
 		background-color: #f75556 !important;
 	}

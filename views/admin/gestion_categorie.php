@@ -395,21 +395,25 @@ $form_url = WEBROOT."admin/categorie/";
 							
 							<div class="preco-content">
 
-								<div id="type-preco">
+								<div id="type-preco-section">
 									
-									<div class="type-title">Présaisir les temps de préconisation</div>
+									<div class="type-title">Présaisir les durée de préconisation :</div>
 									
 									<div class="type-text">
 
-										<select class="type-preco-cbox" name="type_preco_cbox" style="width: 270px;" <?php echo $formData['disabled']; ?>>
+										<select id="type-preco-cbox" name="type_preco_cbox" style="width: 270px;" <?php echo $formData['disabled']; ?>>
 											<option value="select-cbox">---</option>
 										</select>
 
-										<!-- <input type="text" value="" placeholder="Ex : 10 heures" /> -->
+										
 										<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+										<input type="text" id="type-preco" name="nom_type_preco" value="" placeholder="Ex: 10 heures" style="width: 100px; margin: 0 5px;" />
+
 										<button type="submit" id="edit-type-preco" name="edit_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
+										<button type="submit" id="save-type-preco" name="save_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-refresh"></i></button>
 										<button type="submit" id="suppr-type-preco" name="suppr_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
-										<input type="text" value="" placeholder="Ex : 10 heures" style="width: 386px;" />
+										
+										<!-- <input type="text" id="type-preco" name="type_preco" value="" placeholder="Ex : 10 heures" style="width: 386px;" /> -->
 									</div>
 									
 									<hr />
@@ -495,19 +499,16 @@ $form_url = WEBROOT."admin/categorie/";
 												}
 											}
 											
-
+											/*
 											if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] === "Nouveau")
 											{
 												$selected = "selected";
 
 												echo '<option value="new" '.$selected.' style="font-weight:bold;">Autre</option>';
 											}
+											*/
 											?>
-											<option value="new" style="font-weight:bold;" <?php echo $selected; ?>>Nouveau</option>
-												<!-- <a class="add-type" href=""> -->
-												<!-- Nouveau -->
-												<!-- </a> -->
-											<!-- </option> -->
+											<!-- <option value="new" style="font-weight:bold;" <?php //echo $selected; ?>>Nouveau</option> -->
 
 										</select>
 										
@@ -616,7 +617,8 @@ $form_url = WEBROOT."admin/categorie/";
 			var mode = $('#mode').val();
 
 			//$('#precos').hide();
-			//$('#type-preco').hide();
+			//$('#type-preco-section').hide();
+			$('#type-preco').hide();
 
 			/* Vide le formulaire */
 
@@ -773,6 +775,68 @@ $form_url = WEBROOT."admin/categorie/";
 					var i = 1;
 					var $item;
 					//$numItemPreco = 0;
+
+					$("#add-type-preco").on('click', function (event) {
+
+						event.preventDefault();
+						$('#type-preco').show();
+					});
+
+					$("#edit-type-preco").on('click', function (event) {
+
+						event.preventDefault();
+					});
+					
+					$("#save-type-preco").on('click', function (event) {
+
+						event.preventDefault();
+
+						var refType = null;
+						var nomType = '';
+
+						<?php if (Config::ALLOW_AJAX) : ?>
+
+						if ($('#type-preco-cbox').val() !== '' && $('#type-preco-cbox').val() !== 'select-cbox')
+						{
+							refType = $('#type-preco-cbox').val();
+						}
+
+						console.log(refType);
+
+						nomType = $('#type-preco').val();
+
+						console.log(nomType);
+
+						if (nomType !== '' && nomType !== null)
+						{
+							$.post('<?php echo $form_url; ?>', {'ref_type': refType, 'nom_type': nomType}, function(data) {
+
+								if (data.error) {
+
+									alert(data.error);
+								}
+								else {
+
+									//var parentCode = self.getParentCode(code);
+									//console.log(parentCode);
+
+									//self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
+								}
+								
+							}, 'json');
+						}
+						else
+						{
+							alert('Vous devez saisir un type de préconisation pour pouvoir l\'enregistrer.');
+						}
+
+						<?php endif; ?>
+					});
+
+					$("#suppr-type-preco").on('click', function (event) {
+
+						event.preventDefault();
+					});
 					
 					$('.choix_type_preco_cbox').on('change', function(event) {
 
@@ -783,11 +847,11 @@ $form_url = WEBROOT."admin/categorie/";
 							//var refParcours = $(this).val();
 							//console.log(refParcours);
 
-							//$('#type-preco').show();
+							//$('#type-preco-section').show();
 						}
 						else {
 
-							//$('#type-preco').hide();
+							//$('#type-preco-section').hide();
 						}
 							/*
 							<?php if (Config::ALLOW_AJAX) : ?>

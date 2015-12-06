@@ -524,19 +524,19 @@ class ServicesAdmin extends Main
 			*/
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
-			/*
-			if (isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
+			
+			if (isset($_POST['nom_type']) && !empty($_POST['nom_type']))
 			{
-				if (isset($_POST['id_parcours']) && !empty($_POST['id_parcours']))
+				if (isset($_POST['ref_type']) && !empty($_POST['ref_type']))
 				{
-					$saveParcours = $this->servicesCategorie->updateParcours($_POST['id_parcours'], $_POST['nom_parcours']);
+					$saveType = $this->servicesCategorie->updateTypePreco($_POST['ref_type'], $_POST['nom_type']);
 				}
 				else
 				{
-					$saveParcours = $this->servicesCategorie->insertParcours($_POST['nom_parcours']);
+					$saveType = $this->servicesCategorie->insertTypePreco($_POST['nom_type']);
 				}
 
-				if ($saveParcours)
+				if ($saveType)
                 {
 					$response = array('error' => false);
 				}
@@ -548,7 +548,7 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
                 exit();
 			}
-			*/
+			
 			/*** Requête pour supprimer un nouveau parcours ***/
 
         }
@@ -1103,11 +1103,11 @@ class ServicesAdmin extends Main
 		$listeCategories = $this->servicesCategorie->getCategories();
 
 		// Requete pour obtenir la liste des parcours
-		$listeParcours = $this->servicesCategorie->getParcoursList();
+		$listeTypesPreco = $this->servicesCategorie->getTypePrecoList();
 
 		// Assemblage de toutes les données de la réponse
 		$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
-		$this->returnData['response'] = array_merge($listeParcours['response'], $this->returnData['response']);
+		$this->returnData['response'] = array_merge($listeTypesPreco['response'], $this->returnData['response']);
 
 		/*** Envoi des données et rendu de la vue ***/
 

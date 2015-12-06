@@ -171,7 +171,7 @@ class ServicesAdminCategorie extends Main
 	}
 	*/
 
-	public function getParcoursList()
+	public function getTypePrecoList()
 	{
 		$resultset = $this->typePrecoDAO->selectAll();
 		

@@ -3,9 +3,9 @@
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
 
-$formData['code_cat'] = "";
-$formData['nom_cat'] = "";
-$formData['descript_cat'] = "";
+//$formData['code_cat'] = "";
+//$formData['nom_cat'] = "";
+//$formData['descript_cat'] = "";
 
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -29,8 +29,10 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
-//var_dump($formData['mode']);
+var_dump($formData['mode']);
 //var_dump($formData['parent_cat_cbox']);
+
+var_dump($formData);
 
 ?>
 
@@ -240,14 +242,14 @@ $form_url = WEBROOT."admin/categorie/";
 					
 									
 									<div id="ordre-cat" class="block">
-										<label for="ordre_cat">Ordre (pour l'organisation des compétences de même niveau)</label>
-										<input type="text" name="ordre_cat" id="ordre_cat" value="<?php echo $formData['ordre_cat']; ?>" <?php echo $formData['disabled']; ?> style="width: 80px !important;" />
+										<label for="ordre-cat">Ordre (pour l'organisation des compétences de même niveau)</label>
+										<input type="text" name="ordre_cat" id="ordre-cat" value="<?php echo $formData['ordre_cat']; ?>" <?php echo $formData['disabled']; ?> style="width: 80px !important;" />
 									</div>
 
 
 									<div id="descript-cat" class="block">
-										<label for="descript_cat">Description</label>
-										<textarea name="descript_cat" id="descript_cat" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_cat']; ?></textarea>
+										<label for="descript-cat">Description</label>
+										<textarea name="descript_cat" id="descript-cat" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_cat']; ?></textarea>
 									</div>
 										
 									<!-- <div id="score-cat" class="block">
@@ -401,8 +403,23 @@ $form_url = WEBROOT."admin/categorie/";
 									
 									<div class="type-text">
 
-										<select id="type-preco-cbox" name="type_preco_cbox" style="width: 270px;" <?php echo $formData['disabled']; ?>>
+										<select id="type-preco-cbox" name="type_preco_cbox_edit" style="width: 200px;" <?php echo $formData['disabled']; ?>>
 											<option value="select-cbox">---</option>
+											<?php
+											if (isset($response['type_preco']) && !empty($response['type_preco']))
+											{
+												foreach($response['type_preco'] as $type)
+												{
+													$selected = "";
+													if (!empty($formData['ref_type_preco_edit']) && $formData['ref_type_preco_edit'] == $type->getId())
+													{
+														$selected = "selected";
+													}				
+													
+													echo '<option value="'.$type->getId().'" '.$selected.'>'.$type->getNom().'</option>';	
+												}
+											}
+											?>
 										</select>
 
 										
@@ -424,8 +441,9 @@ $form_url = WEBROOT."admin/categorie/";
 
 								<div id="add-preco-button">
 									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
-									<!-- <input type="submit" id="edit-type" name="edit_type" class="bt-admin-menu-modif" style="width:200px; margin-left:100px;" value="Créer un type" <?php //echo $formData['edit_disabled']; ?> /> -->
 								</div>
+
+
 									<!-- <a id="add-type" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
 										<span class="fa-stack fa-1x">
 											<i class="fa fa-circle-o fa-stack-2x"></i>
@@ -448,8 +466,6 @@ $form_url = WEBROOT."admin/categorie/";
 								<!-- </div> -->
 
 
-								
-
 								<!-- Affichage du formulaire ajout d'un type de préconisation -->
 								<!-- 
 								<div id="type-preco">
@@ -466,39 +482,88 @@ $form_url = WEBROOT."admin/categorie/";
 								</div>
 
 								 -->
-								
-
+						
 
 								<ul class="preco-list">
+									
+									<?php
 
-									<li class="preco-item">
+									$nbrPrecos = 1;
 
-										<input type="hidden" class="preco-item-num" value="1" />
-										<!-- <span class="preco-item-num"><strong>1</strong></span> -->
-										De<input type="text" name="precoMin[]" value="" placeholder="Ex: 0" />%
-										&nbsp;à<input type="text" name="precoMax[]" value="" placeholder="Ex: 20" />% 
+									if (isset($formData['precos']) && !empty($formData['precos']))
+									{
+										$nbrPrecos = (count($formData['precos']) > 0) ? count($formData['precos']) : 1;
+									}
+									
+
+									for ($i = 0; $i < $nbrPrecos; $i++) 
+									{
 										
-										<span class="preco-icon">
-											<i class="fa fa-arrow-right"></i>
-										</span>
+										echo '<li class="preco-item">';
 										
-										<select class="choix_type_preco_cbox" name="type_preco_cbox[]" <?php echo $formData['disabled']; ?>>
-											<option value="select-cbox">---</option>
-											<?php
+
+										if (isset($formData['precos'][$i]) && !empty($formData['precos'][$i]))
+										{
+											/*
+											$checked = "";
+											if ($formData['reponses'][$i]['est_correct'] == 1) 
+											{
+												$checked = "checked";
+											}
+
+											if (!empty($formData['reponses'][$i]['ref_reponse']))
+											{
+												echo '<input type="hidden" name="ref_reponses[]" value="'.$formData['reponses'][$i]['ref_reponse'].'" />';
+											}
+											else 
+											{
+												echo '<input type="hidden" name="ref_reponses[]" value="" />';
+											}
+
+											echo '<input type="text" name="intitules_reponses[]" value="'.$formData['reponses'][$i]['intitule_reponse'].'" placeholder="Réponse" '.$formData['disabled'].' /> &nbsp;';
+											echo '<input type="radio" name="correct" value="'.$formData['reponses'][$i]['num_ordre_reponse'].'" '.$checked.' '.$formData['disabled'].' />';
+											*/
+
+
+											if (!empty($formData['reponses'][$i]['ref_preco']))
+											{
+												echo '<input type="hidden" name="ref_preco[]" value="'.$formData['precos'][$i]['ref_preco'].'" />';
+											}
+											else
+											{
+												echo '<input type="hidden" name="ref_preco[]" value="" />';
+											}
+
+											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$formData['precos'][$i]['num_ordre'].'" />';
+											echo 'De<input type="text" name="preco_min[]" value="'.$formData['precos'][$i]['preco_min'].'" placeholder="Ex: 0" />%';
+											echo '&nbsp;à<input type="text" name="preco_max[]" value="'.$formData['precos'][$i]['preco_max'].'" placeholder="Ex: 20" />%';
+										}
+										else
+										{
+											echo '<input type="hidden" name="ref_preco[]" value="" />';
+											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="1" />';
+											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />%';
+											echo '&nbsp;à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />%';
+										}
+
+										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>';
+
+										echo '<select class="type_preco_cbox" name="type_preco_cbox[]" '.$formData['disabled'].'>';
+											echo '<option value="select-cbox">---</option>';
+
 											if (isset($response['type_preco']) && !empty($response['type_preco']))
 											{
 												foreach($response['type_preco'] as $type)
 												{
 													$selected = "";
-													if (!empty($formData['ref_type_preco']) && $formData['ref_type_preco'] == $type->getId())
+													if (!empty($formData['precos'][$i]['ref_type_preco']) && $formData['precos'][$i]['ref_type_preco'] == $type->getId())
 													{
 														$selected = "selected";
 													}				
 													
-													echo '<option value="'.$type->getId().'" '.$selected.'>- '.$type->getNom().'></option>';	
+													echo '<option value="'.$type->getId().'" '.$selected.'>'.$type->getNom().'</option>';	
 												}
 											}
-											
 											/*
 											if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] === "Nouveau")
 											{
@@ -507,11 +572,10 @@ $form_url = WEBROOT."admin/categorie/";
 												echo '<option value="new" '.$selected.' style="font-weight:bold;">Autre</option>';
 											}
 											*/
-											?>
-											<!-- <option value="new" style="font-weight:bold;" <?php //echo $selected; ?>>Nouveau</option> -->
 
-										</select>
+										echo '</select>';
 										
+										/*
 										<span class="preco-icon">
 											<i class="fa fa-plus-square"></i>
 										</span>
@@ -519,8 +583,12 @@ $form_url = WEBROOT."admin/categorie/";
 										<span class="del-preco preco-icon">
 											<i class="fa fa-times"></i>
 										</span>
-										
-									</li>
+										*/
+											
+										echo '</li>';
+
+									} 
+									?>
 
 								</ul>
 							</div>
@@ -574,7 +642,7 @@ $form_url = WEBROOT."admin/categorie/";
 	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un type -->
 	<?php if (Config::ALLOW_PRECONISATION) : ?>
 
-		<div id="modal-box"></div>
+		<!-- <div id="modal-box"></div> -->
 
 	<?php endif; ?>
 	<!-- Template form ajout type -->
@@ -627,8 +695,8 @@ $form_url = WEBROOT."admin/categorie/";
 				$('.num-indicator').text('');
 				$('#nom_cat').val('');
 				$('#ref_parent_cbox').val('select_cbox');
-				$('#ordre_cat').val('');
-				$('#descript_cat').val('');
+				$('#ordre-cat').val('');
+				$('#descript-cat').val('');
 			};
 
 
@@ -639,8 +707,8 @@ $form_url = WEBROOT."admin/categorie/";
 				$('.num-indicator').text('N°' + code);
 				$('#nom_cat').val(name);
 				$('#ref_parent_cbox').val(parentCode);
-				$('#ordre_cat').val(order);
-				$('#descript_cat').val(descript);
+				$('#ordre-cat').val(order);
+				$('#descript-cat').val(descript);
 
 				//console.log($('.num-indicator').html());
 			};
@@ -761,11 +829,11 @@ $form_url = WEBROOT."admin/categorie/";
 			
 			
 			
-			if (mode == 'edit' || mode == 'new')
-			{
+			if (mode == 'edit' || mode == 'new') {
+
 				$('#del').val('Annuler');
 
-				if ($selected !== null) {
+				//if ($selected !== null) {
 
 					//$('#precos').fadeIn(500, function() {
 
@@ -776,17 +844,20 @@ $form_url = WEBROOT."admin/categorie/";
 					var $item;
 					//$numItemPreco = 0;
 
+
 					$("#add-type-preco").on('click', function (event) {
 
 						event.preventDefault();
 						$('#type-preco').show();
 					});
 
+
 					$("#edit-type-preco").on('click', function (event) {
 
 						event.preventDefault();
 					});
 					
+
 					$("#save-type-preco").on('click', function (event) {
 
 						event.preventDefault();
@@ -833,11 +904,13 @@ $form_url = WEBROOT."admin/categorie/";
 						<?php endif; ?>
 					});
 
+
 					$("#suppr-type-preco").on('click', function (event) {
 
 						event.preventDefault();
 					});
 					
+
 					$('.choix_type_preco_cbox').on('change', function(event) {
 
 						/*** Gestion de la requête pour éditer un type dans la liste des type ***/
@@ -884,14 +957,13 @@ $form_url = WEBROOT."admin/categorie/";
 					// Ajout d'une nouvelle préconisation par duplication
 					$('#add-preco').on('click', function(event) {
 
-						event.preventDefault();
-						i++;
-
-						$item = $('.preco-item:first').clone();
+						//event.preventDefault();
+						$item = $('.preco-item:last').clone();
+						var num = $item.find('.num-ordre').val();
 						$(".preco-list").append($item);
-						$item.find('.preco-item-num').val(i);
-						//console.log(i);
-						//$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+
+						num++;
+						$('.preco-item:last').find('.num-ordre').val(num);
 					});
 
 
@@ -901,7 +973,7 @@ $form_url = WEBROOT."admin/categorie/";
 						//var num = $(".preco-list:last", '.preco-item-num').val();
 						console.log(num);
 					});
-				}
+				//}
 			}
 
 			/*

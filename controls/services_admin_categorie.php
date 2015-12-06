@@ -105,7 +105,13 @@ class ServicesAdminCategorie extends Main
 			$catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
 			$catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
 			$catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
-			// $catDetails['type_lien_cat'] = $resultset['response']['categorie']->getTypeLien();
+
+			$precos = $this->getCategoriePrecos($catDetails['code_cat']);
+
+            if ($precos)
+            {
+                $catDetails['precos'] = $precos;
+            }
 
 			return $catDetails;
 		}
@@ -119,7 +125,7 @@ class ServicesAdminCategorie extends Main
 	{
 		$preconisations = array();
 		
-		$resultsetPreconisations = $this->categorieDAO->selectByCategorie($refCat);
+		$resultsetPreconisations = $this->preconisationDAO->selectByCategorie($refCat);
 		
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultsetPreconisations['response']) && !empty($resultsetPreconisations['response']['preconisation']))
@@ -151,7 +157,7 @@ class ServicesAdminCategorie extends Main
 
 
 
-	/*
+	
 	public function getPreconisations($codeCat)
 	{
 		$resultset = $this->preconisationDAO->selectByCodeCat();
@@ -169,7 +175,7 @@ class ServicesAdminCategorie extends Main
 		
 		return false;
 	}
-	*/
+	
 
 	public function getTypePrecoList()
 	{
@@ -229,10 +235,6 @@ class ServicesAdminCategorie extends Main
 
 		$dataCategorie['code_cat'] = $formData['code_cat'];
 
-
-
-		/* !!!! A vérifier !!! */
-
 		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
 		if (!empty($formData['code_cat']))
 		{
@@ -247,6 +249,10 @@ class ServicesAdminCategorie extends Main
 			{
 				$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
 			}
+			else
+			{
+				$dataCategorie['code_cat'] = $formData['code_cat'];
+			}
 		}
 
 
@@ -259,8 +265,8 @@ class ServicesAdminCategorie extends Main
 		}
 		else
 		{
-			$formData['parent_code_cat'] = 0;
-			$dataQuestion['parent_code_cat'] = 0;
+			$formData['parent_code_cat'] = null;
+			$dataCategorie['parent_code_cat'] = null;
 		}
 
 
@@ -274,30 +280,114 @@ class ServicesAdminCategorie extends Main
 		
 		// Récupèration du numero d'ordre de la catégorie
 		$formData['ordre_cat'] = $this->validatePostData($postData['ordre_cat'], "ordre_cat", "integer", true, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
-		$dataQuestion['ordre_cat'] = $formData['ordre_cat'];
+		$dataCategorie['ordre_cat'] = $formData['ordre_cat'];
 		
-		// Formatage du code catégorie
-		/*
-		if (!isset($formData['type_lien_cat']) || empty($formData['type_lien_cat']) || $formData['type_lien_cat'] === null) 
-		{
-			$formData['type_lien_cat'] = $this->validatePostData($postData['type_lien_cat'], "type_lien_cat", "integer", true, "Aucun type d'héritage des scores n'a été sélectionné.", "Le type d'héritage des scores n'est pas correctement saisi.");
-		}
 
-		$dataCategorie['type_lien_cat'] = $formData['type_lien_cat'];
+		/* Gestion des préconisations */
 
-		// Formatage du type de lien de la catégorie
-		/*
-		if (isset($_POST['type_lien_cat']))
+		$dataCategorie['data_precos'] = array();
+
+		if (isset($postData['num_ordre_preco']) && is_array($postData['num_ordre_preco']) && count($postData['num_ordre_preco']) > 0)
 		{
-			$formData['type_lien_cat'] = "dynamic";
-			$dataCategorie['type_lien_cat'] = "dynamic";
+			$dataPrecos = array();
+			$errorPreco = false;
+
+			for ($i = 0; $i < count($postData['num_ordre_preco']); $i++)
+			{
+				$dataPrecos[$i]['code_cat'] = $formData['code_cat'];
+
+				if (isset($postData['ref_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+				{
+					$formData['precos'][$i]['ref_preco'] = $postData['ref_preco'][$i];
+					$dataPrecos[$i]['ref_preco'] = $formData['precos'][$i]['ref_preco'];
+				}
+
+				if (isset($postData['num_ordre_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+				{
+					$formData['precos'][$i]['num_ordre_preco'] = $postData['num_ordre_preco'][$i];
+					$dataPrecos[$i]['num_ordre_preco'] = $formData['precos'][$i]['num_ordre_preco'];
+				}
+				else
+				{
+					$errorPreco = true;
+				}
+
+
+				if (isset($postData['preco_min'][$i]))
+				{
+					if ($postData['preco_min'][$i] != 0) 
+					{
+						$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
+					}
+					else
+					{
+						$precoMin = 0;
+					}
+
+
+					if ($precoMin != "empty" && $precoMin !== false && $precoMin != 0)
+					{
+						$formData['precos'][$i]['preco_min'] = $precoMin;
+					}
+					else 
+					{
+						$formData['precos'][$i]['preco_min'] = 0;
+					}
+					$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
+				}
+				else
+				{
+					$errorPreco = true;
+				}
+
+				if (isset($postData['preco_max'][$i]))
+				{
+					if ($postData['preco_max'][$i] != 0) 
+					{
+						$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
+					}
+					else
+					{
+						$precoMax = 0;
+					}
+
+					if ($precoMax != "empty" && $precoMax !== false)
+					{
+						$formData['precos'][$i]['preco_max'] = $precoMax;
+					}
+					else 
+					{
+						$errorPreco = true;
+						$formData['precos'][$i]['preco_max'] = 0;
+					}
+					$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
+				}
+				else
+				{
+					$errorPreco = true;
+				}
+
+
+				if (isset($postData['type_preco_cbox'][$i]) && $postData['type_preco_cbox'][$i] != 'select_cbox' && $postData['type_preco_cbox'][$i] != null)
+				{
+					$formData['precos'][$i]['ref_type_preco'] = $postData['type_preco_cbox'][$i];
+					$dataPrecos[$i]['ref_type_preco'] = $formData['precos'][$i]['ref_type_preco'];
+				}
+				else
+				{
+					$errorPreco = true;
+				}
+			}
+
+			if ($errorPreco)
+			{
+				$this->registerError("form_valid", "Une préconisation n'est pas correctement renseignée.");
+			}
+			//else
+			//{
+				$dataCategorie['data_precos'] = $dataPrecos;
+			//}
 		}
-		else 
-		{
-			$formData['type_lien_cat'] = "static";
-			$dataCategorie['type_lien_cat'] = "static";
-		}
-		*/
 
 		return $dataCategorie;
 	}
@@ -441,8 +531,8 @@ class ServicesAdminCategorie extends Main
 			$error = true;
 		}
 
-		var_dump('error :', $error);
-		var_dump('level :', $level);
+		//var_dump('error :', $error);
+		//var_dump('level :', $level);
 
 		if (!$error)
 		{
@@ -489,7 +579,7 @@ class ServicesAdminCategorie extends Main
 			}
 		}
 
-		var_dump('error :', $error);
+		//var_dump('error :', $error);
 
 		if ($error)
 		{
@@ -503,8 +593,8 @@ class ServicesAdminCategorie extends Main
 
 	private function createNewCode($previousCode = null, $nextCode = null, $parentCodePrefix = null)
 	{
-		var_dump('previousCode :', $previousCode);
-		var_dump('nextCode :', $nextCode);
+		//var_dump('previousCode :', $previousCode);
+		//var_dump('nextCode :', $nextCode);
 
 		$ecartMax = 20;
 		$ecart = 0;

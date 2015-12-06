@@ -482,16 +482,16 @@ class ServicesAdmin extends Main
 		   Requêtes ajax
 		   ========================================================================== */
 
-        if (Config::ALLOW_AJAX)
-        {
-        	/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
+		if (Config::ALLOW_AJAX)
+		{
+			/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
 
-        	if (isset($_POST['ref_cat']) && !empty($_POST['ref_cat']))
+			if (isset($_POST['ref_cat']) && !empty($_POST['ref_cat']))
 			{
 				$catDetails = $this->servicesCategorie->getCategorieDetails($_POST['ref_cat']);
 
 				if ($catDetails)
-                {
+				{
 					$response = array('error' => false, 'results' => $catDetails);
 				}
 				else
@@ -500,7 +500,7 @@ class ServicesAdmin extends Main
 				}
 				
 				echo json_encode($response);
-                exit();
+				exit();
 			}
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
@@ -510,7 +510,7 @@ class ServicesAdmin extends Main
 				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
 
 				if ($selectParcours)
-                {
+				{
 					$response = array('error' => false, 'results' => $selectParcours);
 				}
 				else
@@ -519,7 +519,7 @@ class ServicesAdmin extends Main
 				}
 				
 				echo json_encode($response);
-                exit();
+				exit();
 			}
 			*/
 
@@ -537,7 +537,7 @@ class ServicesAdmin extends Main
 				}
 
 				if ($saveType)
-                {
+				{
 					$response = array('error' => false);
 				}
 				else
@@ -546,15 +546,15 @@ class ServicesAdmin extends Main
 				}
 				
 				echo json_encode($response);
-                exit();
+				exit();
 			}
 			
 			/*** Requête pour supprimer un nouveau parcours ***/
 
-        }
+		}
 
-        /* Fin requêtes ajax
-           =================== */
+		/* Fin requêtes ajax
+		   =================== */
 
 
 
@@ -585,11 +585,17 @@ class ServicesAdmin extends Main
 		/*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
 		
 		$initializedData = array(
-			"nom"             => "text",
+			"nom_cat"         => "text",
 			"parent_cat_cbox" => "select",
 			"ordre_cat"       => "text",
 			"descript_cat"    => "text",
-			"actif"           => "text"
+			"ref_preco"       => "multi",
+			"nom_preco"       => "multi",
+			"num_ordre_preco" => "multi",
+			"preco_min"       => "multi",
+			"preco_max"       => "multi",
+			// "ref_type_preco"  => "multi",
+			"type_preco_cbox" => "select"
 		);
 
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
@@ -623,11 +629,11 @@ class ServicesAdmin extends Main
 		$parentCode = null;
 
 		//if (isset($_POST['parent_cat_cbox']) && !empty($_POST['parent_cat_cbox']))
-		if (isset($this->formData['parent_cat_cbox']) && !empty($this->formData['parent_cat_cbox']))
+		if (isset($_POST['parent_cat_cbox']) && !empty($_POST['parent_cat_cbox']))
 		{
-			if ($this->formData['parent_cat_cbox'] != 'select_cbox')
+			if ($_POST['parent_cat_cbox'] != 'select_cbox')
 			{
-				$parentCode = $this->formData['parent_cat_cbox'];
+				$parentCode = $_POST['parent_cat_cbox'];
 			}	
 		}
 		else if ($code !== null)
@@ -648,18 +654,21 @@ class ServicesAdmin extends Main
 
 		$ordre = null;
 
-		if (isset($this->formData['ordre_cat']) && !empty($this->formData['ordre_cat']) && is_numeric($this->formData['ordre_cat']))
+		if (isset($_POST['ordre_cat']) && !empty($_POST['ordre_cat']) && is_numeric($_POST['ordre_cat']))
 		{
-			$ordre = $this->formData['ordre_cat'];
-			var_dump($this->formData['ordre_cat']);
-			exit();
+			$ordre = $_POST['ordre_cat'];
+			//var_dump($this->formData['ordre_cat']);
+			//exit();
 		}
+
+		var_dump('ordre', $ordre);
+		/*
 		else 
 		{
 			//error
 			//exit
 		}
-
+		*/
 
 		
 
@@ -741,9 +750,9 @@ class ServicesAdmin extends Main
 			$this->formData['code_cat'] = null;
 			$this->formData['nom_cat'] = null;
 			$this->formData['descript_cat'] = null;
-			//$this->formData['type_lien_cat'] = "dynamic";
 
 			$this->formData['delete_label'] = 'Effacer';
+
 		}
 
 
@@ -769,11 +778,28 @@ class ServicesAdmin extends Main
 				$this->formData['code_cat'] = null;
 			}
 
+			if (empty($this->formData['code_cat']) || $this->formData['code_cat'] === null)
+			{
+				$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
+				//var_dump('new code :', $newCode);
+
+				if ($newCode !== null && $newCode != false)
+				{
+					$this->formData['code_cat'] = $newCode;
+					$dataCategorie['code_cat'] = $this->formData['code_cat'];
+				}
+				else
+				{
+					$this->registerError("form_valid", "Le code de la catégorie n'a pas pu être généré.");
+				}
+			}
+
+			
 
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
-
+			
 
 			/**
 			 * 
@@ -812,7 +838,7 @@ class ServicesAdmin extends Main
 			//$test1 = $this->servicesCategorie->generateCode(null, null); // test unitaire
 			//var_dump('test :', $test1);
 			//exit();
-
+			/*
 			$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
 			//var_dump('new code :', $newCode);
 
@@ -824,7 +850,9 @@ class ServicesAdmin extends Main
 			{
 				$this->registerError("form_valid", "Le code de la catégorie n'a pas pu être généré.");
 			}
+			*/
 
+			var_dump('formData :', $this->formData);
 			var_dump('dataCategorie :', $dataCategorie);
 			exit();
 
@@ -1098,7 +1126,15 @@ class ServicesAdmin extends Main
 		
 		
 		/*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
-		
+
+		// Requete pour obtenir la liste des préconisations pour la categories en cours.
+
+		// $listePrecos = array();
+		// if (!empty($this->formData['code_cat']) && !empty($this->formData['code_cat']))
+		// {
+		// 	$listePrecos['precos'] = $this->servicesCategorie->getPreconisations($this->formData['code_cat']);
+		// }
+
 		// Requete pour obtenir la liste des catégories
 		$listeCategories = $this->servicesCategorie->getCategories();
 
@@ -1107,6 +1143,7 @@ class ServicesAdmin extends Main
 
 		// Assemblage de toutes les données de la réponse
 		$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
+		// $this->returnData['response'] = array_merge($listePrecos, $this->returnData['response']);
 		$this->returnData['response'] = array_merge($listeTypesPreco['response'], $this->returnData['response']);
 
 		/*** Envoi des données et rendu de la vue ***/

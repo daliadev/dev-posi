@@ -1522,13 +1522,21 @@ fieldset .add-link span
 
 .preco-item {
 	/*margin: 10px 0;*/
-	width: 383px;
+	/*width: 383px;*/
 	margin: 10px 0 0 0 !important;
 	padding: 0 5px 0 10px !important;
 	background-color: #eee;
 	border: 1px solid #bbb;
 	border-radius: 5px;
+	line-height: 38px;
 }
+
+	.preco-item .anchor {
+		color: #aaaaaa;
+		font-size: 18px;
+		/*line-height: 38px;*/
+		margin-right: 10px;
+	}
 
 	.preco-item option.add-parcours {
 		/*cursor: pointer;*/
@@ -1536,12 +1544,12 @@ fieldset .add-link span
 
 
 	.preco-item input {
-		width: 38px !important;
+		width: 50px !important;
 		margin-left: 10px !important;
 	}
 
 	.preco-item select {
-		width: 120px !important;
+		width: 220px !important;
 		margin: 0 !important;
 	}
 
@@ -1560,8 +1568,7 @@ fieldset .add-link span
 	}
 
 	.preco-item .preco-icon {
-		position: relative;
-		margin: 5px 0;
+		margin: 5px 10px;
 		font-size: 16px;
 	}
 
@@ -1584,11 +1591,7 @@ fieldset .add-link span
 		}
 
 		.preco-item .preco-icon .fa-times {
-			position: absolute;
-			display: inline;
-			top: 0;
-			right: 0;
-			margin: 0;
+			margin: 0 0 0 5px;
 			padding: 0;
 			color: #e74c3c;
 			cursor: pointer;

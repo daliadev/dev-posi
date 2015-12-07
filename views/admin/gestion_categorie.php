@@ -218,9 +218,9 @@ $form_url = WEBROOT."admin/categorie/";
 										<label for="ref_parent_cbox">Compétence parente *</label>
 
 										<select name="parent_cat_cbox" id="ref_parent_cbox" class="select-<?php echo $formData['disabled']; ?>" <?php echo $formData['disabled']; ?>>
-											<option value="select_cbox">Aucun</option>
+											<option value="select_cbox">Aucune</option>
 											<?php
-
+											/*
 											foreach($response['categorie'] as $categorie)
 											{
 												$selected = "";
@@ -235,7 +235,44 @@ $form_url = WEBROOT."admin/categorie/";
 
 												echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
 											}
-											
+											*/
+											?>
+
+
+											<?php 
+
+											foreach($response['categorie'] as $categorie)
+											{
+												$selected = "";
+												if (!empty($formData['parent_cat_cbox']) && $formData['parent_cat_cbox'] !== null && $formData['parent_cat_cbox'] == $categorie->getCode())
+												{
+													$selected = "selected";
+												}
+
+												$space = '';
+
+												if (strlen($categorie->getCode()) == 2)
+												{
+													$label = '- '.$categorie->getNom();
+
+													$length = 0;
+												}
+												else
+												{
+													
+													$label = $categorie->getNom();
+
+													$length = strlen($categorie->getCode());
+													for ($i = 0; $i < $length; $i++) 
+													{ 
+														$space .= '&nbsp;&nbsp;';
+													}
+												}
+												
+												echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$space.$label.'</option>';
+												
+											}
+
 											?>
 										</select>
 									</div>
@@ -501,30 +538,10 @@ $form_url = WEBROOT."admin/categorie/";
 										
 										echo '<li class="preco-item">';
 										
+										echo '<span class="anchor">::</span> ';
 
 										if (isset($formData['precos'][$i]) && !empty($formData['precos'][$i]))
 										{
-											/*
-											$checked = "";
-											if ($formData['reponses'][$i]['est_correct'] == 1) 
-											{
-												$checked = "checked";
-											}
-
-											if (!empty($formData['reponses'][$i]['ref_reponse']))
-											{
-												echo '<input type="hidden" name="ref_reponses[]" value="'.$formData['reponses'][$i]['ref_reponse'].'" />';
-											}
-											else 
-											{
-												echo '<input type="hidden" name="ref_reponses[]" value="" />';
-											}
-
-											echo '<input type="text" name="intitules_reponses[]" value="'.$formData['reponses'][$i]['intitule_reponse'].'" placeholder="Réponse" '.$formData['disabled'].' /> &nbsp;';
-											echo '<input type="radio" name="correct" value="'.$formData['reponses'][$i]['num_ordre_reponse'].'" '.$checked.' '.$formData['disabled'].' />';
-											*/
-
-
 											if (!empty($formData['reponses'][$i]['ref_preco']))
 											{
 												echo '<input type="hidden" name="ref_preco[]" value="'.$formData['precos'][$i]['ref_preco'].'" />';
@@ -535,15 +552,15 @@ $form_url = WEBROOT."admin/categorie/";
 											}
 
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$formData['precos'][$i]['num_ordre'].'" />';
-											echo 'De<input type="text" name="preco_min[]" value="'.$formData['precos'][$i]['preco_min'].'" placeholder="Ex: 0" />%';
-											echo '&nbsp;à<input type="text" name="preco_max[]" value="'.$formData['precos'][$i]['preco_max'].'" placeholder="Ex: 20" />%';
+											echo 'De<input type="text" name="preco_min[]" value="'.$formData['precos'][$i]['preco_min'].'" placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$formData['precos'][$i]['preco_max'].'" placeholder="Ex: 20" />&nbsp;%';
 										}
 										else
 										{
 											echo '<input type="hidden" name="ref_preco[]" value="" />';
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="1" />';
-											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />%';
-											echo '&nbsp;à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />%';
+											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />&nbsp;%';
 										}
 
 										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>';
@@ -579,11 +596,11 @@ $form_url = WEBROOT."admin/categorie/";
 										<span class="preco-icon">
 											<i class="fa fa-plus-square"></i>
 										</span>
-										
-										<span class="del-preco preco-icon">
-											<i class="fa fa-times"></i>
-										</span>
 										*/
+										echo '<span class="del-preco preco-icon">';
+										echo '<i class="fa fa-times"></i>';
+										echo '</span>';
+										
 											
 										echo '</li>';
 

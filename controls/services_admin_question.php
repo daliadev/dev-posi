@@ -25,7 +25,6 @@ class ServicesAdminQuestion extends Main
     
     public function __construct() 
     {
-
         $this->controllerName = "adminQuestion";
         
         $this->questionDAO = new QuestionDAO();
@@ -146,7 +145,7 @@ class ServicesAdminQuestion extends Main
                 $categories[$i]['code_cat'] = $cat->getCode();
                 $categories[$i]['nom_cat'] = $cat->getNom();
                 $categories[$i]['descript_cat'] = $cat->getDescription();
-                $categories[$i]['type_lien_cat'] = $cat->getTypeLien();
+                // $categories[$i]['type_lien_cat'] = $cat->getTypeLien();
                 
                 $i++;
             }
@@ -188,7 +187,7 @@ class ServicesAdminQuestion extends Main
 
         /*** Récupèration de la categorie ***/
 
-        $formData['code_cat'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
+        $formData['code_cat'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", false, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
         $dataQuestion['code_cat'] = $formData['code_cat'];
 
 

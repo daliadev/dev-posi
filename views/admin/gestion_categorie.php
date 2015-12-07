@@ -29,10 +29,10 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = WEBROOT."admin/categorie/";
 
-var_dump($formData['mode']);
+//var_dump($formData['mode']);
 //var_dump($formData['parent_cat_cbox']);
 
-var_dump($formData);
+//var_dump($formData);
 
 ?>
 

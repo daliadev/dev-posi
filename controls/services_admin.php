@@ -442,14 +442,14 @@ class ServicesAdmin extends Main
 		$this->returnData['response'] = array_merge($listeReponses, $this->returnData['response']);
 		$this->returnData['response'] = array_merge($listeDegres['response'], $this->returnData['response']);
 		$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
-		
+		//var_dump($listeCategories['response']);
+		//exit();
 
 		/*** Envoi des données et rendu de la vue ***/
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_question");
-		$this->render("gestion_question");
-		
+		$this->setTemplate("tpl_admin_form");
+		$this->render("gestion_question");		
 	}
 	
 	
@@ -524,7 +524,7 @@ class ServicesAdmin extends Main
 			*/
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
-			
+			/*
 			if (isset($_POST['nom_type']) && !empty($_POST['nom_type']))
 			{
 				if (isset($_POST['ref_type']) && !empty($_POST['ref_type']))
@@ -548,7 +548,7 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
 				exit();
 			}
-			
+			*/
 			/*** Requête pour supprimer un nouveau parcours ***/
 
 		}
@@ -657,11 +657,11 @@ class ServicesAdmin extends Main
 		if (isset($_POST['ordre_cat']) && !empty($_POST['ordre_cat']) && is_numeric($_POST['ordre_cat']))
 		{
 			$ordre = $_POST['ordre_cat'];
-			//var_dump($this->formData['ordre_cat']);
+			var_dump($ordre);
 			//exit();
 		}
 
-		var_dump('ordre', $ordre);
+		//var_dump('ordre', $ordre);
 		/*
 		else 
 		{
@@ -775,13 +775,10 @@ class ServicesAdmin extends Main
 			}
 			else 
 			{
-				$this->formData['code_cat'] = null;
-			}
+				//$this->formData['code_cat'] = null;
 
-			if (empty($this->formData['code_cat']) || $this->formData['code_cat'] === null)
-			{
 				$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
-				//var_dump('new code :', $newCode);
+				var_dump('new code :', $newCode);
 
 				if ($newCode !== null && $newCode != false)
 				{
@@ -794,6 +791,23 @@ class ServicesAdmin extends Main
 				}
 			}
 
+			/*
+			if (empty($this->formData['code_cat']) || $this->formData['code_cat'] === null)
+			{
+				$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
+				var_dump('new code :', $newCode);
+
+				if ($newCode !== null && $newCode != false)
+				{
+					$this->formData['code_cat'] = $newCode;
+					$dataCategorie['code_cat'] = $this->formData['code_cat'];
+				}
+				else
+				{
+					$this->registerError("form_valid", "Le code de la catégorie n'a pas pu être généré.");
+				}
+			}
+			*/
 			
 
 			// Traitement/vérification des infos saisies.
@@ -852,9 +866,9 @@ class ServicesAdmin extends Main
 			}
 			*/
 
-			var_dump('formData :', $this->formData);
+			//var_dump('formData :', $this->formData);
 			var_dump('dataCategorie :', $dataCategorie);
-			exit();
+			
 
 
 			/**
@@ -1007,9 +1021,6 @@ class ServicesAdmin extends Main
 			*/
 			
 
-
-
-
 			// Le score est toujours attaché à une catégorie (il hérite automatiquement des scores de ses enfants)
 			//$this->formData['type_lien_cat'] = "dynamic";
 			//$dataCategorie['type_lien_cat'] = $this->formData['type_lien_cat'];
@@ -1020,22 +1031,18 @@ class ServicesAdmin extends Main
 
 
 
-
-
-
-
 			// Sauvegarde ou mise à jour des données (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors)) 
 			{
-				//$this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
+				$this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
 			}
-
+			//exit();
 			
 			// Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors))
 			{
 				// On recharge la page en mode visualisation.
-				//header("Location: ".$this->url.$this->formData['code_cat']);
+				header("Location: ".$this->url.$this->formData['code_cat']);
 			}
 			else 
 			{
@@ -1150,7 +1157,7 @@ class ServicesAdmin extends Main
 
 		$this->setResponse($this->returnData);
 		$this->setTemplate("tpl_admin_form");
-		$this->render("gestion_categorie");    
+		$this->render("gestion_categorie");
 	}
 	
 	

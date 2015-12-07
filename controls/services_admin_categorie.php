@@ -260,7 +260,7 @@ class ServicesAdminCategorie extends Main
 
 		if (!empty($postData['parent_cat_cbox']) && $postData['parent_cat_cbox'] != 'aucun')
 		{
-			$formData['parent_code_cat'] = $this->validatePostData($postData['parent_cat_cbox'], "parent_cat_cbox", "integer", false, "Aucune catégorie parent n'a été sélectionnée.", "La catégorie parente n'a étécorrectement sélectionnée.");
+			$formData['parent_code_cat'] = $this->validatePostData($postData['parent_cat_cbox'], "parent_cat_cbox", "string", false, "Aucune catégorie parente n'a été sélectionnée.", "La catégorie parente n'a été correctement sélectionnée.");
 			$dataCategorie['parent_code_cat'] = $formData['parent_code_cat'];
 		}
 		else
@@ -279,12 +279,12 @@ class ServicesAdminCategorie extends Main
 		$dataCategorie['descript_cat'] = $formData['descript_cat'];
 		
 		// Récupèration du numero d'ordre de la catégorie
-		$formData['ordre_cat'] = $this->validatePostData($postData['ordre_cat'], "ordre_cat", "integer", true, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
+		$formData['ordre_cat'] = $this->validatePostData($postData['ordre_cat'], "ordre_cat", "string", false, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
 		$dataCategorie['ordre_cat'] = $formData['ordre_cat'];
 		
 
 		/* Gestion des préconisations */
-
+		/*
 		$dataCategorie['data_precos'] = array();
 
 		if (isset($postData['num_ordre_preco']) && is_array($postData['num_ordre_preco']) && count($postData['num_ordre_preco']) > 0)
@@ -387,7 +387,9 @@ class ServicesAdminCategorie extends Main
 			//{
 				$dataCategorie['data_precos'] = $dataPrecos;
 			//}
+
 		}
+		*/
 
 		return $dataCategorie;
 	}
@@ -510,29 +512,44 @@ class ServicesAdminCategorie extends Main
 			$error = true;
 		}
 
+		var_dump('orderInput :', $orderInput);
+		var_dump('parentCode :', $parentCode);
+		var_dump('level :', $level);
+
 		// Requête de récupération de la liste des catégories de même niveau
 		$codesResultset = $this->categorieDAO->selectCodesByLevel($parentCode, $level);
-
+		
 		// Filtrage du résultat
-		if (!$this->filterDataErrors($codesResultset['response']) && !empty($codesResultset['response']['categorie']))
+		if (!$this->filterDataErrors($codesResultset['response']))
 		{
-			if (!empty($codesResultset['response']['categorie']) && count($codesResultset['response']['categorie']) == 1)
-			{ 
-				$levelCodes = $codesResultset['response']['categorie'];
-				$codesResultset['response']['categorie'] = array($levelCodes);
+			if (!empty($codesResultset['response']['categorie']))
+			{
+				if (count($codesResultset['response']['categorie']) == 1)
+				{
+					$levelCodes = array($codesResultset['response']['categorie']);
+					//$codesResultset['response']['categorie'] = array($levelCodes);
+				}
+				else
+				{
+					$levelCodes = $codesResultset['response']['categorie'];
+				}
 			}
 			else
 			{
-				$levelCodes = $codesResultset['response']['categorie'];
+				//$levelCodes = array($this->categorieDAO->createCategorieObjectCode($parentCode."10"));
+				$levelCodes = null;
+				$orderInput = null;
 			}
 		}
 		else
 		{
+			//else
 			$error = true;
 		}
 
-		//var_dump('error :', $error);
-		//var_dump('level :', $level);
+		var_dump('error :', $error);
+		var_dump('level :', $level);
+		var_dump('levelCodes :', $levelCodes);
 
 		if (!$error)
 		{
@@ -542,32 +559,40 @@ class ServicesAdminCategorie extends Main
 
 			if ($orderInput !== null)
 			{
-				if ($orderInput > (count($levelCodes) - 1))
+				if ($levelCodes !== null)
 				{
-					//$nextCode = $levelCodes[$i]->getCode();
-					$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
-				}
-				else
-				{
-					for ($i = 0; $i < count($levelCodes); $i++) 
-					{ 
-						if ($i >= $orderInput)
-						{
-							$nextCode = $levelCodes[$i]->getCode();
-							$previousCode = ($i > 0) ? $levelCodes[($i -  1)]->getCode() : null;
-							break;
+					if ($orderInput > (count($levelCodes) - 1))
+					{
+						//$nextCode = $levelCodes[$i]->getCode();
+						$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
+					}
+					else
+					{
+						for ($i = 0; $i < count($levelCodes); $i++) 
+						{ 
+							if ($i >= $orderInput)
+							{
+								$nextCode = $levelCodes[$i]->getCode();
+								$previousCode = ($i > 0) ? $levelCodes[($i -  1)]->getCode() : null;
+								break;
+							}
 						}
 					}
 				}
 			}
 			else
 			{
-				// S'il n'y a pas d'ordre, la catégorie vient se greffer à la fin des catégorie du niveau
-				$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
+				if ($levelCodes !== null)
+				{
+					// S'il n'y a pas d'ordre, la catégorie vient se greffer à la fin des catégorie du niveau
+					$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
+				}
 			}
 
 			// Modifier les paramètres
 			$newCode = $this->createNewCode($previousCode, $nextCode, $parentCode);
+			var_dump('$previousCode : ', $previousCode);
+			var_dump('$newCode : ', $newCode);
 
 			if ($newCode && is_numeric($newCode) && strlen($newCode) >= 2)
 			{
@@ -616,7 +641,7 @@ class ServicesAdminCategorie extends Main
 		{
 			$previousCode = substr($previousCode, strlen($parentCodePrefix));
 			// Le code devient le dernier du niveau
-			$nextCode = 100;	
+			$nextCode = 100;
 		}
 		else
 		{
@@ -625,7 +650,6 @@ class ServicesAdminCategorie extends Main
 		}
 
 		//var_dump($previousCode, $nextCode);
-
 
 		if ($levelCode === 0)
 		{
@@ -643,7 +667,6 @@ class ServicesAdminCategorie extends Main
 
 		}
 
-		
 		if ($levelCode)
 		{
 			if ($parentCodePrefix !== null && strlen($parentCodePrefix) > 0)
@@ -943,14 +966,7 @@ class ServicesAdminCategorie extends Main
 	}
 	*/
 
-
-
-
-	/*=====  End of gestion code catégorie  ======*/
-
-	
-
- 
+	/*=====  Fin génération du code catégorie  ======*/
 
 
 
@@ -960,18 +976,20 @@ class ServicesAdminCategorie extends Main
 
 		if ($previousMode == "new")
 		{
-			
 			// Insertion de la catégorie dans la bdd
 			$resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
 
 			//var_dump($resultsetCategorie);
 			//exit();
 
+			$this->categorieDAO->selectByCode($dataCategorie['code_cat']);
 			// Traitement des erreurs de la requête
-			if ($resultsetCategorie['response'])
-			{
-				$this->registerSuccess("La catégorie a été enregistrée.");
-			}
+			if (isset($resultsetCategorie['response']['categorie']) && $dataCategorie['code_cat'])
+            {
+            	//$dataCategorie['code_cat'] = 
+                $formData['code_cat'] = $dataCategorie['code_cat'];
+                $dataCategorie['code_cat'] = $formData['code_cat'];
+            }
 			else 
 			{
 				$this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
@@ -1013,11 +1031,14 @@ class ServicesAdminCategorie extends Main
 		{
 			if (!empty($dataCategorie['code_cat']) && !empty($dataCategorie['nom_cat']))
 			{
+				unset($dataCategorie['parent_code_cat']);
+				unset($dataCategorie['ordre_cat']);
+
 				if ($modeCategorie == "insert")
 				{
 					$resultset = $this->categorieDAO->insert($dataCategorie);
 					//var_dump($resultset);
-
+					//exit();
 					// Traitement des erreurs de la requête
 					if (!$this->filterDataErrors($resultset['response']))
 					{

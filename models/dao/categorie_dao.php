@@ -9,8 +9,6 @@ require_once(ROOT.'models/categorie.php');
 
 class CategorieDAO extends ModelDAO
 {
-
-	
 	
 	/**
 	 * selectAll - Retourne la liste de toutes les catégories
@@ -69,16 +67,14 @@ class CategorieDAO extends ModelDAO
 		// Définition du niveau parent
 		if ($parentCode !== null)
 		{
-			
 			$parentLevel = strlen($parentCode) % 2 === 0 ? strlen($parentCode) / 2 : null;
-			
 		}
 		else
 		{
 			$parentLevel = 0;
 		}
 
-		$searchLevel = $parentLevel + 1;
+		//$searchLevel = $parentLevel + 1;
 
 
 		/*
@@ -126,9 +122,9 @@ class CategorieDAO extends ModelDAO
 		if (!empty($search) && !$error)
 		{   
 			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
-			//var_dump($request);
+			var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
-			//var_dump($this->resultset['response']);
+			var_dump($this->resultset['response']);
 		}
 		else
 		{
@@ -139,6 +135,14 @@ class CategorieDAO extends ModelDAO
 	}
 
 
+	/*
+	public function createCategorieObjectCode($code) 
+	{
+		$cat = new Categorie();
+		$cat->code_cat = $code;
+		return $cat;
+	}
+	*/
 
 	/**
 	 * selectByCode - Récupère la catégorie correspondant au code.
@@ -146,6 +150,7 @@ class CategorieDAO extends ModelDAO
 	 * @param string Code de la catégorie
 	 * @return array Catégorie correspondant au code sinon erreurs
 	 */
+	/*
 	public function findCategorieCode($code, $level, $order = null) 
 	{
 		$this->initialize();
@@ -176,8 +181,7 @@ class CategorieDAO extends ModelDAO
 		
 		return $this->resultset;
 	}
-
-
+	*/
 	
 	
 	
@@ -194,7 +198,7 @@ class CategorieDAO extends ModelDAO
 		
 		if (!empty($refQuestion))
 		{   
-			$request = "SELECT code_cat, nom_cat, descript_cat, type_lien_cat FROM question_cat, categorie ";
+			$request = "SELECT code_cat, nom_cat, descript_cat FROM question_cat, categorie ";
 			$request .= "WHERE question_cat.ref_question = ".$refQuestion." AND categorie.code_cat = question_cat.ref_cat ORDER BY code_cat ASC";
 
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
@@ -218,6 +222,8 @@ class CategorieDAO extends ModelDAO
 	 */
 	public function insert($values) 
 	{
+		//var_dump($values);
+		//exit();
 		$this->initialize();
 		
 		if (!empty($values))

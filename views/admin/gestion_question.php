@@ -415,8 +415,6 @@ $form_url = WEBROOT."admin/question/";
 										<option value="select_cbox">---</option>
 										<?php 
 
-										$optgroup = false;
-
 										foreach($response['categorie'] as $categorie)
 										{
 											$selected = "";
@@ -425,50 +423,28 @@ $form_url = WEBROOT."admin/question/";
 												$selected = "selected";
 											}
 
+											$space = '';
+
 											if (strlen($categorie->getCode()) == 2)
 											{
-												if ($optgroup)
-												{
-													echo '</optgroup>';
-													$optgroup = false;
-												}
-												else
-												{
-													echo '<optgroup label="'.$categorie->getNom().'">';
-													$optgroup = true;
-												}
-												/*
-												if ($categorie->getTypeLien() == "dynamic")
-												{
-													echo '<optgroup label="'.$categorie->getNom().'">';
-													$optgroup = true;
-												}
-												*/
+												$label = '- '.$categorie->getNom();
+
+												$length = 0;
 											}
-
-											$length = strlen($categorie->getCode());
-
-											if ($optgroup)
+											else
 											{
-												$length -= 2;
-												if ($length < 0)
-												{
-													$length = 0;
+												
+												$label = $categorie->getNom();
+
+												$length = strlen($categorie->getCode());
+												for ($i = 0; $i < $length; $i++) 
+												{ 
+													$space .= '&nbsp;&nbsp;';
 												}
 											}
-
-											$style = "padding-left:".($length * 10)."px;";
-
-											if ($length > 0)
-											{
-												echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
-											}
-
-										}
-
-										if ($optgroup)
-										{
-											echo '</optgroup>';
+											
+											echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$space.$label.'</option>';
+											
 										}
 
 										?>

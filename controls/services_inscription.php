@@ -6,7 +6,8 @@ require_once(ROOT.'controls/authentication.php');
 require_once(ROOT.'controls/services_admin_gestion.php');
 require_once(ROOT.'controls/services_inscription_gestion.php');
 
-		
+require_once(ROOT.'utils/region.php');
+
 
 
 class ServicesInscription extends Main
@@ -100,8 +101,14 @@ class ServicesInscription extends Main
 		/*** Fin requêtes ajax ***/
 
 
+		/* test region */
 
+		$regionFile = ROOT.'database/regions/region2015.txt';
 
+		$regionsText = new Region($regionFile);
+
+		
+		exit();
 
 		/*** Initialisation des données ***/
 

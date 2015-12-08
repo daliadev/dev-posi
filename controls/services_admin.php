@@ -657,7 +657,7 @@ class ServicesAdmin extends Main
 		if (isset($_POST['ordre_cat']) && !empty($_POST['ordre_cat']) && is_numeric($_POST['ordre_cat']))
 		{
 			$ordre = $_POST['ordre_cat'];
-			var_dump($ordre);
+			//var_dump($ordre);
 			//exit();
 		}
 
@@ -778,7 +778,7 @@ class ServicesAdmin extends Main
 				//$this->formData['code_cat'] = null;
 
 				$newCode = $this->servicesCategorie->generateCode($ordre, $parentCode);
-				var_dump('new code :', $newCode);
+				//var_dump('new code :', $newCode);
 
 				if ($newCode !== null && $newCode != false)
 				{
@@ -790,6 +790,8 @@ class ServicesAdmin extends Main
 					$this->registerError("form_valid", "Le code de la catégorie n'a pas pu être généré.");
 				}
 			}
+
+
 
 			/*
 			if (empty($this->formData['code_cat']) || $this->formData['code_cat'] === null)
@@ -813,7 +815,8 @@ class ServicesAdmin extends Main
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
-			
+			//var_dump($dataCategorie);
+			//exit();
 
 			/**
 			 * 
@@ -867,7 +870,7 @@ class ServicesAdmin extends Main
 			*/
 
 			//var_dump('formData :', $this->formData);
-			var_dump('dataCategorie :', $dataCategorie);
+			//var_dump('dataCategorie :', $dataCategorie);
 			
 
 
@@ -1064,7 +1067,7 @@ class ServicesAdmin extends Main
 		else if ($this->formData['mode'] == "delete")
 		{
 			// Verrouillage des boutons.
-			$this->servicesGestion->switchFormButtons($this->formData, "delete");
+			$this->servicesGestion->switchFormButtons($this->formData, "view");
 			
 			// Si le code de la catégorie active existe :
 			if (!empty($this->formData['code_cat']))

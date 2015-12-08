@@ -28,8 +28,6 @@ class CategorieDAO extends ModelDAO
 	
 	
 	
-	
-	
 	/**
 	 * selectByCode - Récupère la catégorie correspondant au code.
 	 * 
@@ -122,9 +120,9 @@ class CategorieDAO extends ModelDAO
 		if (!empty($search) && !$error)
 		{   
 			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
-			var_dump($request);
+			//var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
-			var_dump($this->resultset['response']);
+			//var_dump($this->resultset['response']);
 		}
 		else
 		{

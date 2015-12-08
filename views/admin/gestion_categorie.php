@@ -27,12 +27,9 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 	}
 }
 
+//var_dump($formData['code_cat']);
+
 $form_url = WEBROOT."admin/categorie/";
-
-//var_dump($formData['mode']);
-//var_dump($formData['parent_cat_cbox']);
-
-//var_dump($formData);
 
 ?>
 
@@ -196,7 +193,7 @@ $form_url = WEBROOT."admin/categorie/";
 								
 								<fieldset id="edit-cat">
 								
-									<legend>Ajout / détail d'une compétence</legend>
+									<legend>Détail d'une compétence (ajout, modification)</legend>
 										
 									<?php if(isset($formData['code_cat'])) : ?>
 
@@ -752,7 +749,14 @@ $form_url = WEBROOT."admin/categorie/";
 
 			
 			
-
+			if (mode == 'edit' || mode == 'del' || mode == 'del')
+			{
+				$('#del').val('Supprimer');
+			}
+			else if (mode == 'new')
+			{
+				$('#del').val('Annuler');
+			}
 
 
 			/*  Système de sélection de la liste des catégories à gauche */
@@ -762,6 +766,8 @@ $form_url = WEBROOT."admin/categorie/";
 
 			if (mode != 'edit' && mode != 'delete')
 			{	
+				//$('#del').val('Supprimer');
+
 				var $selected = null;
 
 				$('.cat-item-link').each(function() {
@@ -847,8 +853,6 @@ $form_url = WEBROOT."admin/categorie/";
 			
 			
 			if (mode == 'edit' || mode == 'new') {
-
-				$('#del').val('Annuler');
 
 				//if ($selected !== null) {
 
@@ -1140,32 +1144,44 @@ $form_url = WEBROOT."admin/categorie/";
 
 
 			/*** Gestion de la demande de suppression ***/
+			//console.log($('#del').val());
 
 			$('#del').on('click', function(event) 
 			{
 				event.preventDefault();
-
+				/*
 				if (mode == 'view') 
 				{
 					if (confirm("Voulez-vous réellement supprimer cette compétence ?"))
 					{
-						$('input[name="delete"]').val("true");
-						$('#form-posi').submit();
+						//$('input[name="delete"]').val("true");
+						//$('#form-posi').submit();
 					}
 				}
-				else if (mode == 'new')
+				else*/
+
+				if (mode == 'new')
 				{
 					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?"))
 					{
 						self.resetFieldsValues();
+						$('#mode').val('view');
+						$('#form-posi').submit();
 					}
 				}
 				else if (mode == 'edit')
 				{
 					// Retour au mode view
-					$('#mode').val('view');
+					//$('#mode').val('view');
 
-					$('#form-posi').submit();
+					// $('#form-posi').submit();
+
+					if (confirm("Voulez-vous réellement supprimer cette compétence ?"))
+					{
+						$('input[name="delete"]').val("true");
+						$('#mode').val('view');
+						$('#form-posi').submit();
+					}
 				}
 				
 			});

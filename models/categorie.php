@@ -8,7 +8,6 @@ class Categorie
 	public $code_cat = null;
 	public $nom_cat = null;
 	public $descript_cat = null;
-	//public $type_lien_cat = null;
 	public $temps = null;
 	public $total_reponses = null;
 	public $total_reponses_correctes = null;
@@ -33,12 +32,6 @@ class Categorie
 		return $this->descript_cat;
 	}
 	
-	/*
-	public function getTypeLien()
-	{
-		return $this->type_lien_cat;
-	}
-	*/
 
 	public function getParent()
 	{

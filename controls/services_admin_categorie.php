@@ -245,6 +245,8 @@ class ServicesAdminCategorie extends Main
 			
 			$resultsetCode = $this->getCategorie($formData['code_cat']);
 
+
+
 			if (!empty($resultsetCode['response']) && $resultsetCode !== false)
 			{
 				$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
@@ -512,9 +514,9 @@ class ServicesAdminCategorie extends Main
 			$error = true;
 		}
 
-		var_dump('orderInput :', $orderInput);
-		var_dump('parentCode :', $parentCode);
-		var_dump('level :', $level);
+		//var_dump('orderInput :', $orderInput);
+		//var_dump('parentCode :', $parentCode);
+		//var_dump('level :', $level);
 
 		// Requête de récupération de la liste des catégories de même niveau
 		$codesResultset = $this->categorieDAO->selectCodesByLevel($parentCode, $level);
@@ -547,9 +549,9 @@ class ServicesAdminCategorie extends Main
 			$error = true;
 		}
 
-		var_dump('error :', $error);
-		var_dump('level :', $level);
-		var_dump('levelCodes :', $levelCodes);
+		//var_dump('error :', $error);
+		//var_dump('level :', $level);
+		//var_dump('levelCodes :', $levelCodes);
 
 		if (!$error)
 		{
@@ -591,8 +593,8 @@ class ServicesAdminCategorie extends Main
 
 			// Modifier les paramètres
 			$newCode = $this->createNewCode($previousCode, $nextCode, $parentCode);
-			var_dump('$previousCode : ', $previousCode);
-			var_dump('$newCode : ', $newCode);
+			//var_dump('$previousCode : ', $previousCode);
+			//var_dump('$newCode : ', $newCode);
 
 			if ($newCode && is_numeric($newCode) && strlen($newCode) >= 2)
 			{
@@ -989,6 +991,7 @@ class ServicesAdminCategorie extends Main
             	//$dataCategorie['code_cat'] = 
                 $formData['code_cat'] = $dataCategorie['code_cat'];
                 $dataCategorie['code_cat'] = $formData['code_cat'];
+                $this->registerSuccess("La catégorie a été ajoutée.");
             }
 			else 
 			{
@@ -1174,7 +1177,94 @@ class ServicesAdminCategorie extends Main
 
 	
 	
+	/*=============================================================
+	=            Gestion des liaisons preco-catégories           =
+	=============================================================*/
+	
+	public function getQuestionCategorie($refQuestion)
+	{
+		$resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		
+		// Traitement des erreurs de la requête
+		$this->filterDataErrors($resultset['response']);
+		
+		return $resultset;
+	}
+	
+	
+	
+	public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
+	{
+		if (!empty($refQuestion) && !empty($codeCat))
+		{
+			if ($modeCategorie == "insert")
+			{
+				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+				
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					return $resultset;
+				}
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
+				}
+			}
+			else if ($modeCategorie == "update")
+			{ 
+				$resultset = $this->questionCatDAO->update(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
 
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
+				{
+					return $resultset;
+				} 
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
+				}
+			}
+		}
+		else 
+		{
+			$this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
+		}
+
+		return false;
+	}
+	
+	
+	
+	
+	public function deleteQuestionCategorie($refQuestion)
+	{
+		// On commence par sélectionner les réponses associèes à la question
+		$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		
+		if (!$this->filterDataErrors($resultsetSelect['response']))
+		{ 
+			$resultsetDelete = $this->questionCatDAO->delete($refQuestion);
+		
+			if (!$this->filterDataErrors($resultsetDelete['response']))
+			{
+				return true;
+			}
+			else 
+			{
+				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
+			}
+		}
+		else
+		{
+		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
+		}
+
+		return false;
+	}
+	
+	/*=====  Gestion des liaisons preco-catégories  ======*/
+	
 
 
 	

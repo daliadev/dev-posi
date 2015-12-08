@@ -256,7 +256,6 @@ $form_url = WEBROOT."admin/categorie/";
 												}
 												else
 												{
-													
 													$label = $categorie->getNom();
 
 													$length = strlen($categorie->getCode());
@@ -285,104 +284,6 @@ $form_url = WEBROOT."admin/categorie/";
 										<label for="descript-cat">Description</label>
 										<textarea name="descript_cat" id="descript-cat" cols="30" rows="4" maxlength="250" class="select-" <?php echo $formData['disabled']; ?>><?php echo $formData['descript_cat']; ?></textarea>
 									</div>
-										
-									<!-- <div id="score-cat" class="block">
-
-										<label for="type_lien_cat"><strong>Gestion des scores</strong></label><br/>
-										
-										<p>Chaque réponse de l'apprenant est liée à une catégorie. Ce score peut dépendre de la catégorie active ou de celles de ses enfants.</p> 
-										<?php
-										/*
-										$checked = "";
-										if (isset($formData['type_lien_cat']) && !empty($formData['type_lien_cat']) && $formData['type_lien_cat'] == "dynamic")
-										{
-											$checked = "checked";
-										}
-										*/
-										?>
-										
- 
-										<p>
-											<input type="radio" name="type_lien_cat" id="type_lien_cat" value="static" <?php //echo $checked; ?> <?php //echo $formData['disabled']; ?> /> 
-											<label class="checkbox-<?php //echo $formData['disabled']; ?>">Catégorie qui possède son propre score.</label>
-										</p>
-										
-										<p>
-											<input type="radio" name="type_lien_cat" id="type_lien_cat" class="radio_degre" value="dynamic" <?php //echo $checked; ?> <?php //echo $formData['disabled']; ?> /> 
-											<label>Catégorie qui hérite de la moyenne des scores de ces enfants.</label>
-
-										</p>
-
-										<p>
-											<input type="radio" name="type_lien_cat" id="type_lien_cat" class="radio_degre" value="null" <?php //echo $checked; ?> <?php //echo $formData['disabled']; ?> /> 
-											<label>Catégorie sans score.</label>
-										</p>
-
-									</div> -->
-									<!-- 
-									<div id="submit">
-										<input type="submit" class="add" name="add" value="Ajouter" <?php //echo $formData['add_disabled']; ?> />
-									</div> -->
-
-									<!-- 
-									<select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php// echo $formData['disabled']; ?>" style="margin:10px 0;" <?php //echo $formData['disabled']; ?>>
-										<option value="select_cbox">---</option>
-										<?php 
-										/*
-										$optgroup = false;
-
-										foreach($response['categorie'] as $categorie)
-										{
-											$selected = "";
-											if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
-											{
-												$selected = "selected";
-											}
-
-											if (strlen($categorie->getCode()) == 2)
-											{
-												if ($optgroup)
-												{
-													echo '</optgroup>';
-													$optgroup = false;
-												}
-
-												if ($categorie->getTypeLien() == "dynamic")
-												{
-													echo '<optgroup label="'.$categorie->getNom().'">';
-													$optgroup = true;
-												}
-											}
-
-											$length = strlen($categorie->getCode());
-
-											if ($optgroup)
-											{
-												$length -= 2;
-												if ($length < 0)
-												{
-													$length = 0;
-												}
-											}
-
-											$style = "padding-left:".($length * 10)."px;";
-
-											if ($length > 0)
-											{
-												echo '<option value="'.$categorie->getCode().'" style="'.$style.'" '.$selected.'>- '.$categorie->getNom().'</option>';
-											}
-
-										}
-
-										if ($optgroup)
-										{
-											echo '</optgroup>';
-										}
-										*/
-										?>
-										
-									</select>
-									-->
 
 								</fieldset>
 
@@ -411,7 +312,7 @@ $form_url = WEBROOT."admin/categorie/";
 							</legend>
 							
 							<div class="preco-text">
-								<p>
+								<p style="text-align: justify;">
 									Cette section vous permet de mettre en oeuvre une stratégie de préconisation de parcours. 
 									Il vous suffit de saisir au préalable la ou les domaines (parcours, temps, ...) que vous souhaitez voir travailler par l'utilisateur, en cliquant sur "Ajouter une nouvelle préconisation".
 									Ces préconisations pourront ensuite être attribuées à l'ensemble des compétences ou pour chacune d'entre elles. 
@@ -419,7 +320,7 @@ $form_url = WEBROOT."admin/categorie/";
 									Ces intervalles correspondent à des seuils à partir desquels vous établissez une préconisation.
 								</p>
 
-								<p>
+								<p style="text-align: left;">
 									Ex : Pour une compétence en calcul.
 									<ul>
 										<li>- De 0% à 40% -> 50 heures de formation préconisées.</li>
@@ -433,7 +334,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 								<div id="type-preco-section">
 									
-									<div class="type-title">Présaisir les durée de préconisation :</div>
+									<div class="type-title">Présaisir les types de préconisation :</div>
 									
 									<div class="type-text">
 
@@ -464,7 +365,6 @@ $form_url = WEBROOT."admin/categorie/";
 										<button type="submit" id="save-type-preco" name="save_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-refresh"></i></button>
 										<button type="submit" id="suppr-type-preco" name="suppr_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
 										
-										<!-- <input type="text" id="type-preco" name="type_preco" value="" placeholder="Ex : 10 heures" style="width: 386px;" /> -->
 									</div>
 									
 									<hr />
@@ -474,48 +374,8 @@ $form_url = WEBROOT."admin/categorie/";
 
 
 								<div id="add-preco-button">
-									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconistation" <?php echo $formData['disabled']; ?> />
+									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php echo $formData['disabled']; ?> />
 								</div>
-
-
-									<!-- <a id="add-type" class="add-link" href="#liste-cat"><p style="line-height: 16px;">
-										<span class="fa-stack fa-1x">
-											<i class="fa fa-circle-o fa-stack-2x"></i>
-											<i class="fa fa-plus fa-stack-1x"></i>
-										</span>
-										<strong>1 - Commencer par ajouter un (ou des) nouveau(x) type.</strong>
-									</p></a>
-
-									<a id="add-preco" class="add-link" href="#precos"><p style="line-height: 16px;">
-										<span class="fa-stack fa-1x">
-											<i class="fa fa-circle-o fa-stack-2x"></i>
-											<i class="fa fa-plus fa-stack-1x"></i>
-										</span>
-										<strong> 2 - Ensuite, créer une nouvelle préconisation, en saisissant des valeurs minimum et maximun, en pourcentage.
-										Répéter l'opération pour que l'ensemble des préconisations pour cette catégorie couvre 0 à 100% des résultats.</strong>
-									</p></a> -->
-
-									<!-- <a href="#"><p><i class="fa fa-plus-circle"></i> Ajouter un découpage intervalaire pour cette categorie.</p></a> -->
-									
-								<!-- </div> -->
-
-
-								<!-- Affichage du formulaire ajout d'un type de préconisation -->
-								<!-- 
-								<div id="type-preco">
-									
-									<div class="type-title">Ajouter un type de préconisation</div>
-			
-									<div class="type-text">
-										<input type="text" value="" placeholder="Ex : 10 heures" />
-										<input type="submit" id="add-type-preco" name="add_type_preco" class="bt-admin-menu-ajout" style="width:44px;" value="+" <?php //echo $formData['disabled']; ?> />
-									</div>
-									
-									<hr />
-
-								</div>
-
-								 -->
 						
 
 								<ul class="preco-list">
@@ -528,7 +388,6 @@ $form_url = WEBROOT."admin/categorie/";
 									{
 										$nbrPrecos = (count($formData['precos']) > 0) ? count($formData['precos']) : 1;
 									}
-									
 
 									for ($i = 0; $i < $nbrPrecos; $i++) 
 									{
@@ -548,7 +407,7 @@ $form_url = WEBROOT."admin/categorie/";
 												echo '<input type="hidden" name="ref_preco[]" value="" />';
 											}
 
-											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$formData['precos'][$i]['num_ordre'].'" />';
+											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$formData['precos'][$i]['num_ordre_preco'].'" />';
 											echo 'De<input type="text" name="preco_min[]" value="'.$formData['precos'][$i]['preco_min'].'" placeholder="Ex: 0" />&nbsp;%';
 											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$formData['precos'][$i]['preco_max'].'" placeholder="Ex: 20" />&nbsp;%';
 										}

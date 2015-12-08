@@ -105,10 +105,10 @@ class ServicesAdminCategorie extends Main
 
 			$precos = $this->getCategoriePrecos($catDetails['code_cat']);
 
-            if ($precos)
-            {
-                $catDetails['precos'] = $precos;
-            }
+			if ($precos)
+			{
+				$catDetails['precos'] = $precos;
+			}
 
 			return $catDetails;
 		}
@@ -155,7 +155,7 @@ class ServicesAdminCategorie extends Main
 
 		// Test catégorie parente existante
 
-		if (!empty($postData['parent_cat_cbox']) && $postData['parent_cat_cbox'] != 'aucun')
+		if (!empty($postData['parent_cat_cbox']) && $postData['parent_cat_cbox'] != 'select_cbox')
 		{
 			$formData['parent_code_cat'] = $this->validatePostData($postData['parent_cat_cbox'], "parent_cat_cbox", "string", false, "Aucune catégorie parente n'a été sélectionnée.", "La catégorie parente n'a été correctement sélectionnée.");
 			$dataCategorie['parent_code_cat'] = $formData['parent_code_cat'];
@@ -181,7 +181,7 @@ class ServicesAdminCategorie extends Main
 		
 
 		/* Gestion des préconisations */
-		/*
+		
 		$dataCategorie['data_precos'] = array();
 
 		if (isset($postData['num_ordre_preco']) && is_array($postData['num_ordre_preco']) && count($postData['num_ordre_preco']) > 0)
@@ -197,6 +197,11 @@ class ServicesAdminCategorie extends Main
 				{
 					$formData['precos'][$i]['ref_preco'] = $postData['ref_preco'][$i];
 					$dataPrecos[$i]['ref_preco'] = $formData['precos'][$i]['ref_preco'];
+					//$formData['precos'][$i]['mode'] = 'update';
+				}
+				else
+				{
+					//$formData['precos'][$i]['mode'] = 'insert';
 				}
 
 				if (isset($postData['num_ordre_preco'][$i]) && !empty($postData['ref_preco'][$i]))
@@ -210,54 +215,38 @@ class ServicesAdminCategorie extends Main
 				}
 
 
-				if (isset($postData['preco_min'][$i]))
+				if (isset($postData['preco_min'][$i]) && is_numeric($postData['preco_min'][$i]) && $postData['preco_min'][$i] >= 0)
 				{
-					if ($postData['preco_min'][$i] != 0) 
+					$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
+
+					if ($precoMin != "empty" && $precoMin === true && $precoMin !== null)
 					{
-						$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
+						$formData['precos'][$i]['preco_min'] = $precoMin;
+						$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
 					}
 					else
 					{
-						$precoMin = 0;
-					}
-
-
-					if ($precoMin != "empty" && $precoMin !== false && $precoMin != 0)
-					{
-						$formData['precos'][$i]['preco_min'] = $precoMin;
-					}
-					else 
-					{
-						$formData['precos'][$i]['preco_min'] = 0;
-					}
-					$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
+						$errorPreco = true;
+					}		
 				}
 				else
 				{
 					$errorPreco = true;
 				}
 
-				if (isset($postData['preco_max'][$i]))
+				if (isset($postData['preco_max'][$i]) && is_numeric($postData['preco_max'][$i]) && $postData['preco_max'][$i] >= 0)
 				{
-					if ($postData['preco_max'][$i] != 0) 
+					$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
+
+					if ($precoMax != "empty" && $precoMax === true && $precoMax !== null)
 					{
-						$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
+						$formData['precos'][$i]['preco_max'] = $precoMax;
+						$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
 					}
 					else
 					{
-						$precoMax = 0;
-					}
-
-					if ($precoMax != "empty" && $precoMax !== false)
-					{
-						$formData['precos'][$i]['preco_max'] = $precoMax;
-					}
-					else 
-					{
 						$errorPreco = true;
-						$formData['precos'][$i]['preco_max'] = 0;
-					}
-					$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
+					}		
 				}
 				else
 				{
@@ -280,13 +269,9 @@ class ServicesAdminCategorie extends Main
 			{
 				$this->registerError("form_valid", "Une préconisation n'est pas correctement renseignée.");
 			}
-			//else
-			//{
-				$dataCategorie['data_precos'] = $dataPrecos;
-			//}
 
+			$dataCategorie['data_precos'] = $dataPrecos;
 		}
-		*/
 
 		return $dataCategorie;
 	}
@@ -552,6 +537,8 @@ class ServicesAdminCategorie extends Main
 	public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
 	{
 
+		$formData['code_cat'] = null;
+
 		if ($previousMode == "new")
 		{
 			// Insertion de la catégorie dans la bdd
@@ -563,12 +550,14 @@ class ServicesAdminCategorie extends Main
 			$this->categorieDAO->selectByCode($dataCategorie['code_cat']);
 			// Traitement des erreurs de la requête
 			if (isset($resultsetCategorie['response']['categorie']) && $dataCategorie['code_cat'])
-            {
-            	//$dataCategorie['code_cat'] = 
-                $formData['code_cat'] = $dataCategorie['code_cat'];
-                $dataCategorie['code_cat'] = $formData['code_cat'];
-                $this->registerSuccess("La catégorie a été ajoutée.");
-            }
+			{
+
+
+				//$dataCategorie['code_cat'] = 
+				$formData['code_cat'] = $dataCategorie['code_cat'];
+				//$dataCategorie['code_cat'] = $formData['code_cat'];
+				$this->registerSuccess("La catégorie a été ajoutée.");
+			}
 			else 
 			{
 				$this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
@@ -598,6 +587,91 @@ class ServicesAdminCategorie extends Main
 		{
 			header("Location: ".SERVER_URL."erreur/page404");
 			exit();
+		}
+
+
+		if (isset($dataCategorie['data_precos']) && is_array($dataCategorie['data_precos']) && count($dataCategorie['data_precos']) > 0)
+		{
+
+			//$refsPrecos = array();
+			$j = 0;
+
+			if ($formData['code_cat'] != null)
+			{
+				// On récupère les preconisations qui correspondent à la catégorie
+				$existingPrecos = $this->getPreconisations();
+				$precoMode = 'insert';
+
+				// On récupère également le mode initial de la catégorie
+				if ($formData['code_cat'] == "update")
+				{
+					$modeCat = "update";
+				}
+				else
+				{
+					$modeCat = "insert";
+				}
+
+				// Boucle sur chaque préconisation saisies
+				
+				for ($i = 0; $i < count($dataCategorie['data_precos']); $i++)
+				{
+					$preco = $dataCategorie['data_precos'][$i];
+
+					if (!empty($existingPrecos))
+					{
+						for ($k = 0; $k < count($existingPrecos); $k++)
+						{
+							if (isset($existingPrecos[$k]['id_preco']) && !empty($existingPrecos[$k]['id_preco']) && $existingPrecos[$i]['id_preco'] == $preco['ref_preco'])
+							{
+								$precoMode = 'update';
+								$refPreco = $existingPrecos[$k]['id_preco'];
+								break;
+							}
+						}
+					}
+					
+					if ($precoMode == 'update')
+					{
+						$resultsetPreco = $this->updatePreconisation($preco);
+					}
+					else
+					{
+						$resultsetPreco = $this->insertPreconisation($preco);
+					}
+
+					$refPrecoDef = null;
+					
+					if ($resultsetPreco['response'])
+					{
+						if ($precoMode == 'insert' && isset($resultsetPreco['response']['preconisation']['last_insert_id']))
+						{
+							$refPrecoDef = $resultsetPreco['response']['preconisation']['last_insert_id'];
+						}
+						else if ($precoMode == 'update' && isset($resultsetPreco['response']['preconisation']['row_count'])  && $resultsetPreco['response']['preconisation']['row_count'] > 0)
+						{
+							$refPrecoDef = $refPreco;
+						}
+
+						$resultsetCatPreco = $this->setCategoriePrecos($modeCat, $precoMode, $formData['code_cat'], $refPrecoDef);
+
+						if (!$resultsetCatPreco)
+						{
+							$this->registerError("form_valid", "L'enregistrement d'une' préconisation a échouée.");
+						}
+					}
+					else 
+					{
+						$this->registerError("form_valid", "L'enregistrement d'une préconisation a échouée.");
+					}
+				}
+				
+			}
+			else
+			{
+				// erreur catégorie
+			}
+			
 		}
 	}
 
@@ -643,7 +717,6 @@ class ServicesAdminCategorie extends Main
 						$this->registerError("form_request", "La catégorie n'a pu être mise à jour.");
 					}
 				}
-				
 			}
 			else 
 			{
@@ -811,7 +884,7 @@ class ServicesAdminCategorie extends Main
 	
 
 	/* Ok */
-	public function setCategoriePrecos($mode, $refCodeCat, $refPreco, $oldRefPreco = null)
+	public function setCategoriePrecos($modeCat, $modePreco, $refCodeCat, $refPreco, $oldRefPreco = null)
 	{
 		if (!empty($refCodeCat) && !empty($refPreco))
 		{
@@ -977,9 +1050,13 @@ class ServicesAdminCategorie extends Main
 			$resultset = $this->preconisationDAO->insert($dataPreco);
 				
 			// Traitement des erreurs de la requête
-			if (!$this->filterDataErrors($resultset['response']))
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['preconisation']['last_insert_id']))
 			{
-				return true;
+				return $resultset;
+			} 
+			else 
+			{
+				$this->registerError("form_request", "La préconisation n'a pas pu être insérée.");
 			}
 		}
 
@@ -995,9 +1072,13 @@ class ServicesAdminCategorie extends Main
 			$resultset = $this->preconisationDAO->update($dataPreco);
 				
 			// Traitement des erreurs de la requête
-			if (!$this->filterDataErrors($resultset['response']))
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['preconisation']['row_count']))
 			{
-				return true;
+				return $resultset;
+			} 
+			else 
+			{
+				$this->registerError("form_request", "La préconisation n'a pas pu être mise à jour.");
 			}
 		}
 
@@ -1095,9 +1176,13 @@ class ServicesAdminCategorie extends Main
 			$resultset = $this->typePrecoDAO->insert(array('nom_type' => $nomType, 'descript_type' => $description));
 				
 			// Traitement des erreurs de la requête
-			if (!$this->filterDataErrors($resultset['response']))
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['type_preco']['last_insert_id']))
 			{
-				return true;
+				return $resultset;
+			} 
+			else 
+			{
+				$this->registerError("form_request", "Le type de la préconisation n'a pu être inséré.");
 			}
 		}
 
@@ -1113,9 +1198,13 @@ class ServicesAdminCategorie extends Main
 			$resultset = $this->typePrecoDAO->update(array('ref_type_preco' => $refType, 'nom_type' => $nomType, 'descript_type' => $description));
 				
 			// Traitement des erreurs de la requête
-			if (!$this->filterDataErrors($resultset['response']))
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['type_preco']['row_count']))
 			{
-				return true;
+				return $resultset;
+			} 
+			else 
+			{
+				$this->registerError("form_request", "Le type de la préconisation n'a pu être mis à jour.");
 			}
 		}
 

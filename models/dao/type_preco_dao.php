@@ -96,12 +96,17 @@ class TypePrecoDAO extends ModelDAO
 		
 		if (!empty($values))
 		{
-			if (isset($values['ref_type_preco']) && !empty($values['ref_type_preco']))
+			if (isset($values['ref_type_preco']) && !empty($values['ref_type_preco']) && isset($values['nom_preco']) && !empty($values['nom_preco']))
 			{
+				if (isset($values['descript_type']) && $values['descript_type'] == null)
+				{
+					unset($values['descript_type']);
+				}
+				
 				$refType = $values['ref_type_preco'];
 				unset($values['ref_type_preco']);
 				
-				$request = $this->createQueryString("update", $values, "type_preco", "WHERE type_preco = ".$refType);
+				$request = $this->createQueryString("update", $values, "type_preco", "WHERE id_type = ".$refType);
 				
 				$this->resultset['response'] = $this->executeRequest("update", $request, "type_preco", "TypePreco");
 			}

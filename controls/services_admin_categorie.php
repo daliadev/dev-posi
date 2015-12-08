@@ -5,6 +5,7 @@
 // Fichiers requis pour le formulaire
 require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
+require_once(ROOT.'models/dao/categorie_preco_dao.php');
 require_once(ROOT.'models/dao/preconisation_dao.php');
 require_once(ROOT.'models/dao/type_preco_dao.php');
 
@@ -14,6 +15,7 @@ class ServicesAdminCategorie extends Main
 	
 	private $categorieDAO = null;
 	private $questionCatDAO = null;
+	private $categoriePrecoDAO = null;
 	private $preconisationDAO = null;
 	private $typePrecoDAO = null;
 	
@@ -24,13 +26,20 @@ class ServicesAdminCategorie extends Main
 
 		$this->categorieDAO = new CategorieDAO();
 		$this->questionCatDAO = new QuestionCategorieDAO();
+		$this->categoriePrecoDAO = new CategoriePrecoDAO();
 		$this->preconisationDAO = new PreconisationDAO();
 		$this->typePrecoDAO = new typePrecoDAO();
 	}
 
 	
 	
-	
+
+
+	/*=============================================
+	=            Gestion des catégories           =
+	=============================================*/
+
+
 	public function getCategories()
 	{
 		$resultset = $this->categorieDAO->selectAll();
@@ -49,14 +58,6 @@ class ServicesAdminCategorie extends Main
 		return false;
 	}
 
-	/*
-	public function getCategoriesHierarchy()
-	{
-
-		
-	}
-	*/
-
 
 	public function getCategoriesByLevel($code, $level)
 	{
@@ -64,7 +65,6 @@ class ServicesAdminCategorie extends Main
 
 		return $levelCodes['response'];
 	}
-	
 	
 
 	public function getCategorie($codeCat)
@@ -86,7 +86,6 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-
 	public function getCategorieDetails($codeCat)
 	{
 		$catDetails = array();
@@ -94,8 +93,6 @@ class ServicesAdminCategorie extends Main
 		$catDetails['code_cat'] = "";
 		$catDetails['nom_cat'] = "";
 		$catDetails['descript_cat'] = "";
-		//$catDetails['type_lien_cat'] = "";
-
 		
 		$resultset = $this->categorieDAO->selectByCode($codeCat);
 		
@@ -118,108 +115,6 @@ class ServicesAdminCategorie extends Main
 
 		return false;
 	}
-
-
-
-	public function getCategoriePrecos($refCat)
-	{
-		$preconisations = array();
-		
-		$resultsetPreconisations = $this->preconisationDAO->selectByCategorie($refCat);
-		
-		// Traitement des erreurs de la requête
-		if (!$this->filterDataErrors($resultsetPreconisations['response']) && !empty($resultsetPreconisations['response']['preconisation']))
-		{
-			if (!empty($resultsetPreconisations['response']['preconisation']) && count($resultsetPreconisations['response']['preconisation']) == 1)
-			{ 
-				$preconisation = $resultsetPreconisations['response']['preconisation'];
-				$resultsetPreconisations['response']['preconisation'] = array($preconisation);
-			}
-			
-			$i = 0;
-			foreach($resultsetPreconisations['response']['preconisation'] as $preco)
-			{
-				$preconisations[$i] = array();
-				$preconisations[$i]['id_preco'] = $preco->getId();
-				$preconisations[$i]['ref_type'] = $preco->getRefType();
-				$preconisations[$i]['nom_preco'] = $preco->getNom();
-				$preconisations[$i]['descript_preco'] = $preco->getDescription();
-				$preconisations[$i]['taux_min'] = $preco->getTauxMin();
-				$preconisations[$i]['taux_max'] = $preco->getTauxMax();
-				$preconisations[$i]['num_ordre'] = $preco->getNumOrdre();
-
-				$i++;
-			}
-		}
-		
-		return $preconisations;
-	}
-
-
-
-	
-	public function getPreconisations($codeCat)
-	{
-		$resultset = $this->preconisationDAO->selectByCodeCat();
-		
-		if (!$this->filterDataErrors($resultset['response']))
-		{
-			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
-			{ 
-				$categorie = $resultset['response']['categorie'];
-				$resultset['response']['categorie'] = array($categorie);
-			}
-
-			return $resultset;
-		}
-		
-		return false;
-	}
-	
-
-	public function getTypePrecoList()
-	{
-		$resultset = $this->typePrecoDAO->selectAll();
-		
-		if (!$this->filterDataErrors($resultset['response']))
-		{
-			if (!empty($resultset['response']['type_preco']) && count($resultset['response']['type_preco']) == 1)
-			{ 
-				$type = $resultset['response']['type_preco'];
-				$resultset['response']['type_preco'] = array($type);
-			}
-
-			return $resultset;
-		}
-		
-		return false;
-	}
-
-
-
-	public function getTypeDetails($idType)
-	{
-		$parcoursDetails = array();
-		
-		$parcoursDetails['id_type'] = '';
-		$parcoursDetails['nom_type'] = '';
-		$parcoursDetails['desc_type'] = '';
-
-		$resultset = $this->typePrecoDAO->selectById($idType);
-
-		if (!$this->filterDataErrors($resultset['response']))
-		{
-			$parcoursDetails['id_type'] = $resultset['response']['type_preco']->getId();
-			$parcoursDetails['nom_type'] = $resultset['response']['type_preco']->getNom();
-			$parcoursDetails['desc_type'] = $resultset['response']['type_preco']->getDescription();
-
-			return $typeDetails;
-		}
-
-		return false;
-	}
-
-
 
 
 	public function filterCategorieData(&$formData, $postData)
@@ -397,6 +292,9 @@ class ServicesAdminCategorie extends Main
 	}
 
 
+	/*=====  Fin gestion des catégories  ======*/
+
+
 
 
 
@@ -416,8 +314,6 @@ class ServicesAdminCategorie extends Main
 			if ($parentCodeLength > 2) {
 
 				$parentCode = substr($code, 0, $parentCodeLength);
-
-				//return $parentCode;
 			}
 		}
 
@@ -466,29 +362,6 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-	/**
-	 * 
-	 *	TODO:
-	 * 	------
-	 * 	Contexte : La saisie est correcte et le mode est établi 
-	 * 
-	 * 	1) Récupération du numéro d'ordre
-	 * 
-	 *	2) Récupération du code parent
-	 * 		1a) Aucune catégorie parente -> level = 1
-	 * 	3) Trouver level selon longueur du code parent
-	 * 	3) Récupération de la liste des catégories correspondant au level
-	 * 	4) Recherche des codes suivants et précédents selon le numéro d'ordres
-	 * 
-	 * 	4b) Création d'un nouveau code
-	 * 		4b1) Le code existe déjà
-	 * 		4b2) Décalage à effectuer sur la catégorie suivante
-	 * 	4c) Mise à jour de la catégorie à décaler
-	 *  
-	 * 	4) Si mode = 'new' -> insert
-	 * 	5) Si mode = 'edit -> update
-	 * 		
-	 */
 
 	public function generateCode($orderInput = null, $parentCode = null)
 	{
@@ -501,7 +374,6 @@ class ServicesAdminCategorie extends Main
 		{
 			// Pas de parent -> catégorie de premier niveau
 			$level = 1;
-			//$parentCode = $this->getParentCode($currentCode);
 		}
 		else
 		{
@@ -514,10 +386,6 @@ class ServicesAdminCategorie extends Main
 			$error = true;
 		}
 
-		//var_dump('orderInput :', $orderInput);
-		//var_dump('parentCode :', $parentCode);
-		//var_dump('level :', $level);
-
 		// Requête de récupération de la liste des catégories de même niveau
 		$codesResultset = $this->categorieDAO->selectCodesByLevel($parentCode, $level);
 		
@@ -529,7 +397,6 @@ class ServicesAdminCategorie extends Main
 				if (count($codesResultset['response']['categorie']) == 1)
 				{
 					$levelCodes = array($codesResultset['response']['categorie']);
-					//$codesResultset['response']['categorie'] = array($levelCodes);
 				}
 				else
 				{
@@ -538,20 +405,15 @@ class ServicesAdminCategorie extends Main
 			}
 			else
 			{
-				//$levelCodes = array($this->categorieDAO->createCategorieObjectCode($parentCode."10"));
 				$levelCodes = null;
 				$orderInput = null;
 			}
 		}
 		else
 		{
-			//else
 			$error = true;
 		}
 
-		//var_dump('error :', $error);
-		//var_dump('level :', $level);
-		//var_dump('levelCodes :', $levelCodes);
 
 		if (!$error)
 		{
@@ -565,7 +427,6 @@ class ServicesAdminCategorie extends Main
 				{
 					if ($orderInput > (count($levelCodes) - 1))
 					{
-						//$nextCode = $levelCodes[$i]->getCode();
 						$previousCode = $levelCodes[(count($levelCodes) - 1)]->getCode();
 					}
 					else
@@ -593,8 +454,6 @@ class ServicesAdminCategorie extends Main
 
 			// Modifier les paramètres
 			$newCode = $this->createNewCode($previousCode, $nextCode, $parentCode);
-			//var_dump('$previousCode : ', $previousCode);
-			//var_dump('$newCode : ', $newCode);
 
 			if ($newCode && is_numeric($newCode) && strlen($newCode) >= 2)
 			{
@@ -606,7 +465,6 @@ class ServicesAdminCategorie extends Main
 			}
 		}
 
-		//var_dump('error :', $error);
 
 		if ($error)
 		{
@@ -620,8 +478,6 @@ class ServicesAdminCategorie extends Main
 
 	private function createNewCode($previousCode = null, $nextCode = null, $parentCodePrefix = null)
 	{
-		//var_dump('previousCode :', $previousCode);
-		//var_dump('nextCode :', $nextCode);
 
 		$ecartMax = 20;
 		$ecart = 0;
@@ -651,7 +507,6 @@ class ServicesAdminCategorie extends Main
 			$nextCode = substr($nextCode, strlen($parentCodePrefix));
 		}
 
-		//var_dump($previousCode, $nextCode);
 
 		if ($levelCode === 0)
 		{
@@ -689,286 +544,7 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-	
-
-
-	/*
-	private function generateNewCodes($previousIndex, $nextIndex, $codes)
-	{
-		//$codePrefix = strlen($codes[0]) - 2;
-		$newCode = null;
-		$increment = 10;
-		$previousCodeSuffix = null;
-		$nextCodeSuffix = null;
-
-		// Morceaux de code précédent le niveau de hiérarchie correspondant au code à insérer (le même pour tous les codes du niveau)
-		$codePrefix = substr($codes[0], 0, strlen($codes[0]));
-
-
-		if ($previousIndex !== null) 
-		{
-			$previousCodeSuffix = substr($codes[$previousIndex], 0, strlen($codes[$previousIndex]));
-		}
-		else
-		{
-			// Tout est décalé d'un cran à partir du début
-			//$newCode = 0;
-		}
-
-
-		if ($nextCode !== null) 
-		{
-			// Ajout du code à la fin
-			$nextCodeSuffix = substr($codes[$nextIndex], 0, strlen($codes[$nextIndex]));
-		}
-		else
-		{
-			// $nextCode = (int) $codes[$nextIndex]
-		}
-
-		$increment = (int) $nextCodeSuffix - (int) $previousCodeSuffix;
-
-		if ($increment >= 15) 
-		{
-			$increment = 10;
-		}
-		else if ($increment >= 10)
-		{
-			$increment = 5;
-		}
-		else if ($increment <= 0) 
-		{
-			// error
-		}
-
-		$newCodeSuffix = (int) $codes[$previousIndex] + $increment;
-		$newCode = $codePrefix . $newCodeSuffix; 
-
-		var_dump($newCode);
-		//exit();
-		if ($newCode !== null)
-		{
-			for ($i = 0; $i < count($codes); $i++) 
-			{ 
-				$currenCode = (int) $codes[$i];
-
-
-				if ($newCode > $codes[$i])
-				{
-
-				}
-			}
-		}
-		
-
-
-		return $newCode;
-	}
-	*/
-
-
-	/*
-	private function decayOldCodes($oldCodes, $index, $increment) {
-
-	}
-	*/
-
-	/*
-	private function sortCodesByOrder($oldCodes, $parentCode, $insertOrder = null)
-	{
-		*/
-		/**
-		 *
-		 *	TODO:
-		 *  - Création d'un nouveau tableau comportant l'ensemble des codes avec les numéros d'ordre correspondant
-		 * 
-		 * 	Pour chaque clé du tableau
-		 *  	Trouver la clé précédent l'ordre
-		 * 		Trouver la clé correspondant ou suivant l'ordre
-		 * 	FinPour
-		 * 
-		 * 	Calculer l'écart entre les codes précédents et suivants
-		 * 	Si écart est plus grand ou égal à 10
-		 * 		Générer un code compris entre le code précédent et le suivant
-		 * 	Sinon
-		 * 		Calculer incrément idéal
-		 * 		Décaler tous les codes suivants en ajoutant l'incrément
-		 * 	FinSi
-		 * 
-		 * 	Faire tableau contenant les nouveau codes, les anciens codes et l'ordre correspondant (clé du tableau)
-		 */
-
-		/*
-		var_dump('sort', $insertOrder);
-		//var_dump($oldCodes);
-		//var_dump($parentCode);
-		
-		$previousIndex = null;
-		$nextIndex = null;
-		$previousCode = null;
-		$nextCode = null;
-		//$newOrderedCodes = array();
-		//$finalCodes = array();
-		
-		$count = 1;
-
-		for ($i = 0; $i < count($oldCodes); $i++) 
-		{
-			$code = substr($oldCodes[$i], strlen($parentCode));
-
-			if (strlen($code) == 2)
-			{
-				if (($insertOrder - 1) >= 0 && $count == ($insertOrder - 1)) 
-				{
-					$previousIndex = $i;
-				}
-				else if ($insertOrder == $count) 
-				{
-					$nextIndex = $i;
-				}
-
-				$count++;
-			}
-		}
-		
-		
-		if ($previousIndex !== null)
-		{
-			$previousCode = $oldCodes[$previousIndex];
-		}
-
-		if ($nextIndex !== null)
-		{
-			$nextCode = $oldCodes[$nextIndex];
-		}
-		
-		$decay = false;
-
-		$increment = round(($nextCode - $previousCode) / 2);
-
-		if ($increment < 2)
-		{
-			$decay = true;
-		}
-
-		var_dump("prevIndex = ", $previousIndex, "nextIndex = ", $nextIndex, "prevCode = ", $previousCode, "nextCode = ", $nextCode);
-
-		if ($decay)
-		{
-
-		}
-		else
-		{
-			$newCode = $previousCode + $increment;
-			var_dump("newCode = ", $newCode);
-		}
-
-		//$newCode = $this->generateCode($previousIndex, $nextIndex, $oldCodes);
-	}
-	*/
-
-	/*
-	public function createCodes($currentCode = null, $parentCode = null, $orderInput = null) {
-
-		$selectedCode = null;
-		//$levelCodes = array();
-		//$allCodesArray = array();
-		$level = 1;
-		
-
-		// Récupération du code parent (si existant)
-
-		if ($currentCode !== null)
-		{	
-			// Stockage du code sélectionné
-			$selectedCode = $currentCode;
-
-			if ($parentCode === null) 
-			{
-				$parentCode = $this->getParentCode($currentCode);
-			}
-		}
-
-		// Détermination du niveau hiérarchique dans lequel doit être inséré l'élément
-		if ($currentCode !== false && $currentCode !== null)
-		{
-			$level = $this->getLevel($currentCode);
-
-			if ($level === null)
-			{
-				$this->registerError("form_valid", "Le code de la catégorie est érroné.");
-			}
-		}
-		else 
-		{
-			if ($parentCode !== null) 
-			{
-				$level = $this->getLevel($parentCode) + 1;
-			}
-			else
-			{
-				$this->registerError("form_valid", "Le code parent de la catégorie est érroné.");
-			}
-		}
-
-		//var_dump($parentCode, $level);
-
-
-		// Gestion de l'ordre et des codes de même niveau
-		if ($orderInput !== null) 
-		{
-			$order = $orderInput;
-		}
-
-
-		// Création d'un tableau comportant la liste des codes du niveau
-		$levelCodes = array();
-		$oldCodes = array();
-
-		$levelCodes = $this->categorieDAO->findCodesByLevel($parentCode, $level); // $parentCode à la place de $currentCode
-
-		//var_dump($currentCode, $parentCode, $level, $levelCodes);
-		//exit();
-
-		if (isset($levelCodes['response']['errors']) && count($levelCodes['response']['errors']) > 0)
-		{
-			$this->filterDataErrors($levelCodes['response']);
-		}
-		else if (!empty($levelCodes['response']['categorie']) && count($levelCodes['response']['categorie']) > 0)
-		{
-			if (count($levelCodes['response']['categorie']) == 1)
-			{ 
-				$categorie = $levelCodes['response']['categorie'];
-				$levelCodes['response']['categorie'] = array($categorie);
-			}
-
-			foreach ($levelCodes['response']['categorie'] as $categorie)
-			{
-
-
-				//$oldCodes[] = $categorie->getCode();
-			}
-		}
-		else
-		{
-			$this->registerError("form_valid", "La catégorie n'existe pas.");
-		}
-
-		var_dump($currentCode, $parentCode, $oldCodes, $level);
-		
-		
-		//$this->sortCodesByOrder($oldCodes, $parentCode, $orderInput);
-
-		exit();
-
-		// Création d'un nouveau tableau comportant le nouveau code - l'ancien code - et l'ordre correspondant
-		//$allCodesArray = $this->generateCodes($levelCodesArray, $selectedCode);
-
-		return null; //$allCodesArray;
-	}
-	*/
-
-	/*=====  Fin génération du code catégorie  ======*/
+	/*=====  Fin gestion du code catégorie  ======*/
 
 
 
@@ -1111,15 +687,294 @@ class ServicesAdminCategorie extends Main
 	}
 
 
+	
+
 
 	
+	/*=============================================================
+	=           Gestion des liaisons question-catégories          =
+	=============================================================*/
 	
-	public function insertTypePreco($nomType)
+
+	public function getQuestionCategorie($refQuestion)
 	{
-		if (!empty($nomType) && $nomType !== null)
+		$resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		
+		// Traitement des erreurs de la requête
+		$this->filterDataErrors($resultset['response']);
+		
+		return $resultset;
+	}
+	
+	
+	
+	public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
+	{
+		if (!empty($refQuestion) && !empty($codeCat))
+		{
+			if ($modeCategorie == "insert")
+			{
+				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+				
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					return $resultset;
+				}
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
+				}
+			}
+			else if ($modeCategorie == "update")
+			{ 
+				$resultset = $this->questionCatDAO->update(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
+				{
+					return $resultset;
+				} 
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
+				}
+			}
+		}
+		else 
+		{
+			$this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
+		}
+
+		return false;
+	}
+	
+	
+	
+	
+	public function deleteQuestionCategorie($refQuestion)
+	{
+		// On commence par sélectionner les réponses associèes à la question
+		$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		
+		if (!$this->filterDataErrors($resultsetSelect['response']))
+		{ 
+			$resultsetDelete = $this->questionCatDAO->delete($refQuestion);
+		
+			if (!$this->filterDataErrors($resultsetDelete['response']))
+			{
+				return true;
+			}
+			else 
+			{
+				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
+			}
+		}
+		else
+		{
+		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
+		}
+
+		return false;
+	}
+	
+
+	/*=====  Gestion des liaisons question-catégories  ======*/
+	
+
+
+
+
+	/*=============================================================
+	=            Gestion des liaisons preco-catégories           =
+	=============================================================*/
+	
+
+	/* ok */
+	public function getCategoriePrecos($refCodeCat)
+	{
+		$resultset = $this->categoriePrecoDAO->selectByRefCodeCat($refCodeCat);
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['cat_preco']) && count($resultset['response']['cat_preco']) == 1)
+			{ 
+				$catPreco = $resultset['response']['cat_preco'];
+				$resultset['response']['cat_preco'] = array($catPreco);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+	
+
+	/* Ok */
+	public function setCategoriePrecos($mode, $refCodeCat, $refPreco, $oldRefPreco = null)
+	{
+		if (!empty($refCodeCat) && !empty($refPreco))
+		{
+			if ($mode == "insert")
+			{
+				$resultset = $this->categoriePrecoDAO->insert(array('ref_code_cat' => $refCodeCat, 'ref_preco' => $refPreco));
+				
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					return $resultset;
+				}
+				else 
+				{
+					$this->registerError("form_request", "La préconisation liée à la catégorie n'a pas pu être insérée.");
+				}
+			}
+			else if ($mode == "update")
+			{ 
+				$resultset = $this->categoriePrecoDAO->update(array('ref_code_cat' => $refCodeCat, 'ref_preco' => $oldRefPreco, 'id_preco' => $refPreco));
+
+				// Traitement des erreurs de la requête
+				if (!$this->filterDataErrors($resultset['response']))
+				{
+					return $resultset;
+				} 
+				else 
+				{
+					$this->registerError("form_request", "La préconisation liée à la catégorie n'a pu être mise à jour.");
+				}
+			}
+		}
+		else 
+		{
+			$this->registerError("form_request", "Les références des préconisations ou le code catégorie sont manquants.");
+		}
+
+		return false;
+	}
+	
+
+	/* Ok */
+	public function deleteCategoriePrecos($refCodeCat)
+	{
+		// On commence par sélectionner les réponses associèes à la question
+		$resultsetSelect = $this->categoriePrecoDAO->selectByRefCodeCat($refCodeCat);
+		
+		if (!$this->filterDataErrors($resultsetSelect['response']))
+		{ 
+			$resultsetDelete = $this->categoriePrecoDAO->delete($refCodeCat);
+		
+			if (!$this->filterDataErrors($resultsetDelete['response']))
+			{
+				return true;
+			}
+			else 
+			{
+				$this->registerError("form_request", "Les préconisations attachées à la catégorie n'ont pas pu être supprimées.");
+			}
+		}
+		else
+		{
+		   $this->registerError("form_request", "Les préconisations attachées à la catégorie n'existent pas."); 
+		}
+
+		return false;
+	}
+
+
+	/*=====  Fin gestion des liaisons preco-catégories  ======*/
+
+
+
+
+
+	/*=============================================================
+	=                  Gestion des préconisations                 =
+	=============================================================*/
+	
+	/* Ok */
+	public function getPreconisations($refCat)
+	{
+		$preconisations = array();
+		
+		$resultsetPreconisations = $this->preconisationDAO->selectByRefCodeCat($refCat);
+		
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultsetPreconisations['response']) && !empty($resultsetPreconisations['response']['preconisation']))
+		{
+			if (!empty($resultsetPreconisations['response']['preconisation']) && count($resultsetPreconisations['response']['preconisation']) == 1)
+			{ 
+				$preconisation = $resultsetPreconisations['response']['preconisation'];
+				$resultsetPreconisations['response']['preconisation'] = array($preconisation);
+			}
+			
+			$i = 0;
+			foreach($resultsetPreconisations['response']['preconisation'] as $preco)
+			{
+				$preconisations[$i] = array();
+				$preconisations[$i]['id_preco'] = $preco->getId();
+				$preconisations[$i]['ref_type'] = $preco->getRefType();
+				$preconisations[$i]['nom_preco'] = $preco->getNom();
+				$preconisations[$i]['descript_preco'] = $preco->getDescription();
+				$preconisations[$i]['taux_min'] = $preco->getTauxMin();
+				$preconisations[$i]['taux_max'] = $preco->getTauxMax();
+				$preconisations[$i]['num_ordre'] = $preco->getNumOrdre();
+
+				$i++;
+			}
+		}
+		
+		return $preconisations;
+	}
+
+	public function getCategoriePreco($refPreco)
+	{
+
+	}
+	/*
+	public function getPreconisationsList()
+	{
+		$resultset = $this->preconisationDAO->selectAll();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultset['response']['categorie'];
+				$resultset['response']['categorie'] = array($categorie);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+	
+	public function getPreconisation($codeCat)
+	{
+		$resultset = $this->preconisationDAO->selectByCodeCat();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultset['response']['categorie'];
+				$resultset['response']['categorie'] = array($categorie);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+	*/
+
+	/* Ok */
+	public function insertPreconisation($dataPreco)
+	{
+		if (!empty($dataPreco) && is_array($dataPreco))
 		{
 			// Insertion du type dans la bdd
-			$resultset = $this->typePrecoDAO->insert(array('nom_type' => $nomType));
+			$resultset = $this->preconisationDAO->insert($dataPreco);
 				
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']))
@@ -1131,12 +986,13 @@ class ServicesAdminCategorie extends Main
 		return false;
 	}
 
-	public function updateTypePreco($refType, $nomType)
+	/* Ok */
+	public function updatePreconisation($dataPreco)
 	{
-		if (!empty($nomType) && $nomType !== null)
+		if (!empty($dataPreco) && is_array($dataPreco))
 		{
 			// Insertion du type dans la bdd
-			$resultset = $this->typePrecoDAO->update(array('ref_type_preco' => $refType, 'nom_type' => $nomType));
+			$resultset = $this->preconisationDAO->update($dataPreco);
 				
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']))
@@ -1149,6 +1005,124 @@ class ServicesAdminCategorie extends Main
 	}
 	
 
+	/* Ok */
+	public function deletePreconisation($refPreco)
+	{
+		// On commence par sélectionner les réponses associèes à la question
+		$resultsetSelect = $this->preconisationDAO->selectById($refPreco);
+		
+		if (!$this->filterDataErrors($resultsetSelect['response']))
+		{ 
+			$resultsetDelete = $this->preconisationDAO->delete($refPreco);
+		
+			if (!$this->filterDataErrors($resultsetDelete['response']))
+			{
+				return true;
+			}
+			else 
+			{
+				$this->registerError("form_request", "La préconisation n'a pas pu être supprimée.");
+			}
+		}
+		else
+		{
+		   $this->registerError("form_request", "Cette préconisation n'existe pas."); 
+		}
+
+		return false;
+	}
+
+
+	/*=====  Fin gestion des préconisations  ======*/
+
+
+
+
+
+	/*=============================================================
+	=              Gestion des types de préconisation             =
+	=============================================================*/
+
+
+	/* Ok */
+	public function getTypePrecoList()
+	{
+		$resultset = $this->typePrecoDAO->selectAll();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['type_preco']) && count($resultset['response']['type_preco']) == 1)
+			{ 
+				$type = $resultset['response']['type_preco'];
+				$resultset['response']['type_preco'] = array($type);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+
+	/* Ok */
+	public function getTypeDetails($idType)
+	{
+		$parcoursDetails = array();
+		
+		$parcoursDetails['id_type'] = '';
+		$parcoursDetails['nom_type'] = '';
+		$parcoursDetails['desc_type'] = '';
+
+		$resultset = $this->typePrecoDAO->selectById($idType);
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			$parcoursDetails['id_type'] = $resultset['response']['type_preco']->getId();
+			$parcoursDetails['nom_type'] = $resultset['response']['type_preco']->getNom();
+			$parcoursDetails['desc_type'] = $resultset['response']['type_preco']->getDescription();
+
+			return $typeDetails;
+		}
+
+		return false;
+	}
+
+	/* Ok */
+	public function insertTypePreco($nomType, $description = null)
+	{
+		if (!empty($nomType) && $nomType !== null)
+		{
+			// Insertion du type dans la bdd
+			$resultset = $this->typePrecoDAO->insert(array('nom_type' => $nomType, 'descript_type' => $description));
+				
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/* Ok */
+	public function updateTypePreco($refType, $nomType, $description = null)
+	{
+		if (!empty($nomType) && $nomType !== null)
+		{
+			// Insertion du type dans la bdd
+			$resultset = $this->typePrecoDAO->update(array('ref_type_preco' => $refType, 'nom_type' => $nomType, 'descript_type' => $description));
+				
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	/* Ok */
 	public function deleteTypePreco($refType)
 	{
 		// On commence par sélectionner les réponses associèes à la question
@@ -1175,181 +1149,10 @@ class ServicesAdminCategorie extends Main
 		return false;
 	}
 
-	
-	
-	/*=============================================================
-	=            Gestion des liaisons preco-catégories           =
-	=============================================================*/
-	
-	public function getQuestionCategorie($refQuestion)
-	{
-		$resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-		
-		// Traitement des erreurs de la requête
-		$this->filterDataErrors($resultset['response']);
-		
-		return $resultset;
-	}
-	
-	
-	
-	public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
-	{
-		if (!empty($refQuestion) && !empty($codeCat))
-		{
-			if ($modeCategorie == "insert")
-			{
-				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-				
-				// Traitement des erreurs de la requête
-				if (!$this->filterDataErrors($resultset['response']))
-				{
-					return $resultset;
-				}
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
-				}
-			}
-			else if ($modeCategorie == "update")
-			{ 
-				$resultset = $this->questionCatDAO->update(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
 
-				// Traitement des erreurs de la requête
-				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
-				{
-					return $resultset;
-				} 
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
-				}
-			}
-		}
-		else 
-		{
-			$this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
-		}
-
-		return false;
-	}
-	
-	
-	
-	
-	public function deleteQuestionCategorie($refQuestion)
-	{
-		// On commence par sélectionner les réponses associèes à la question
-		$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-		
-		if (!$this->filterDataErrors($resultsetSelect['response']))
-		{ 
-			$resultsetDelete = $this->questionCatDAO->delete($refQuestion);
-		
-			if (!$this->filterDataErrors($resultsetDelete['response']))
-			{
-				return true;
-			}
-			else 
-			{
-				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
-			}
-		}
-		else
-		{
-		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
-		}
-
-		return false;
-	}
-	
-	/*=====  Gestion des liaisons preco-catégories  ======*/
+	/*=====  Fin gestion des types de préconisations  ======*/
 	
 
-
-	
-	public function getQuestionCategorie($refQuestion)
-	{
-		$resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-		
-		// Traitement des erreurs de la requête
-		$this->filterDataErrors($resultset['response']);
-		
-		return $resultset;
-	}
-	
-	
-	
-	public function setQuestionCategorie($modeCategorie, $refQuestion, $codeCat)
-	{
-		if (!empty($refQuestion) && !empty($codeCat))
-		{
-			if ($modeCategorie == "insert")
-			{
-				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-				
-				// Traitement des erreurs de la requête
-				if (!$this->filterDataErrors($resultset['response']))
-				{
-					return $resultset;
-				}
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
-				}
-			}
-			else if ($modeCategorie == "update")
-			{ 
-				$resultset = $this->questionCatDAO->update(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-
-				// Traitement des erreurs de la requête
-				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
-				{
-					return $resultset;
-				} 
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
-				}
-			}
-		}
-		else 
-		{
-			$this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
-		}
-
-		return false;
-	}
-	
-	
-	
-	
-	public function deleteQuestionCategorie($refQuestion)
-	{
-		// On commence par sélectionner les réponses associèes à la question
-		$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
-		
-		if (!$this->filterDataErrors($resultsetSelect['response']))
-		{ 
-			$resultsetDelete = $this->questionCatDAO->delete($refQuestion);
-		
-			if (!$this->filterDataErrors($resultsetDelete['response']))
-			{
-				return true;
-			}
-			else 
-			{
-				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
-			}
-		}
-		else
-		{
-		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
-		}
-
-		return false;
-	}
-	
 }
 
 

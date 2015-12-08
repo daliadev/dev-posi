@@ -2,7 +2,7 @@
 
 
 
-// Inclusion du fichier de la classe Categorie
+// Inclusion du fichier de la classe Preconisation
 require_once(ROOT.'models/preconisation.php');
 
 
@@ -10,96 +10,68 @@ require_once(ROOT.'models/preconisation.php');
 class preconisationDAO extends ModelDAO
 {
 
-	
-	
+		
 	/**
-	 * selectAll - Retourne la liste de toutes les catégories
+	 * selectAll - Retourne la liste de toutes les préconisations.
 	 * 
-	 * @return array Liste d'objets "Categorie"
+	 * @return array Liste d'objets "Preconisation".
 	 */
 	public function selectAll() 
 	{
 		$this->initialize();
 
-		$request = "SELECT * FROM question_cat ORDER BY code_cat ASC";
+		$request = "SELECT * FROM preconisation ORDER BY taux_min ASC";
 		
-		$this->resultset['response'] = $this->executeRequest("select", $request, "question_cat", "QuestionCategorie");
+		$this->resultset['response'] = $this->executeRequest("select", $request, "preconisation", "Preconisation");
 
 		return $this->resultset;
 	}
-	
-	
-	
+
 	
 	
 	/**
-	 * selectByCode - Récupère la catégorie correspondant au code.
+	 * selectById - Récupère la préconisation correspondant à l'identifiant.
 	 * 
-	 * @param string Code de la catégorie
-	 * @return array Catégorie correspondant au code sinon erreurs
+	 * @param int Identifiant de la préconisation.
+	 * @return array Préconisation correspondant à l'identifiant sinon erreurs.
 	 */
-	public function selectByCodeCat($codeCat) 
+	public function selectById($idPreco) 
 	{
 		$this->initialize();
 		
-		if (!empty($codeCat))
+		if (!empty($idPreco))
 		{
-			$request = "SELECT * FROM question_cat WHERE ref_cat = ".$codeCat;
+			$request = "SELECT * FROM preconisation WHERE id_preco = ".$idPreco;
 
-			$this->resultset['response'] = $this->executeRequest("select", $request, "question_cat", "QuestionCategorie");
-		}
-		else
-		{
-			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour la catégorie recherchée.");
-		}
-		
-		return $this->resultset;
-	}
-	
-	
-
-
-
-	/**
-	 * selectByCategorie - Récupère la préconisation correspondant à la référence de la catégorie.
-	 * 
-	 * @param string référence de la catégorie
-	 * @return array Catégorie correspondant au code sinon erreurs
-	 */
-	public function selectByCategorie($refCat) 
-	{
-		$this->initialize();
-		
-		if (!empty($refCat))
-		{   
-			$request = "SELECT id_preco, ref_type, nom_preco, descript_preco, taux_min, taux_max, num_ordre FROM cat_preco, preconisation ";
-			$request .= "WHERE cat_preco.ref_code_cat = ".$refCat." AND preconisation.id_preco = cat_preco.ref_preco ORDER BY num_ordre ASC";
 			$this->resultset['response'] = $this->executeRequest("select", $request, "preconisation", "Preconisation");
 		}
 		else
 		{
-			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucune code pour la catégorie recherchée.");
+			$this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
 		}
+		
 		return $this->resultset;
 	}
 	
 	
 	
-/**
-	 * insert - Insère une catégorie
+	
+	
+	/**
+	 * insert - Insère une préconisation
 	 * 
-	 * @param array Valeurs de la catégorie à inserer
+	 * @param array Valeurs de la préconisation à inserer
 	 * @return bool Vrai si l'insertion a fonctionné
 	 */
 	public function insert($values) 
 	{
-		$this->initialize();
+	   $this->initialize();
 		
 		if (!empty($values))
 		{       
-			$request = $this->createQueryString("insert", $values, "categorie");
+			$request = $this->createQueryString("insert", $values, "preconisation");
 			
-			$this->resultset['response'] = $this->executeRequest("insert", $request, "categorie", "Categorie");
+			$this->resultset['response'] = $this->executeRequest("insert", $request, "preconisation", "Preconisation");
 		}
 		else
 		{
@@ -114,9 +86,9 @@ class preconisationDAO extends ModelDAO
 	
 	
 	/**
-	 * update - Met à jour une catégorie
+	 * update - Met à jour une préconisation
 	 * 
-	 * @param array Valeurs de la catégorie à mettre à jour
+	 * @param array Valeurs de la préconisation à mettre à jour
 	 * @return array Nbre de lignes mises à jour sinon erreurs
 	 */
 	public function update($values) 
@@ -125,18 +97,18 @@ class preconisationDAO extends ModelDAO
 		
 		if (!empty($values))
 		{
-			if (isset($values['code_cat']) && !empty($values['code_cat']))
+			if (isset($values['ref_preco']) && !empty($values['ref_preco']))
 			{
-				$codeCat = $values['code'];
-				unset($values['code']);
+				$refPreco = $values['ref_preco'];
+				unset($values['ref_preco']);
 				
-				$request = $this->createQueryString("update", $values, "categorie", "WHERE code_cat = ".$codeCat);
+				$request = $this->createQueryString("update", $values, "preconisation", "WHERE id_preco = ".$refPreco);
 				
-				$this->resultset['response'] = $this->executeRequest("update", $request, "categorie", "Categorie");
+				$this->resultset['response'] = $this->executeRequest("update", $request, "preconisation", "Preconisation");
 			}
 			else
 			{
-				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour la catégorie à mettre à jour.");
+				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour la préconisation à mettre à jour.");
 			}
 		}
 		else
@@ -152,24 +124,24 @@ class preconisationDAO extends ModelDAO
 	
 	
 	/**
-	 * delete - Efface une catégorie
+	 * delete - Efface une  préconisation
 	 * 
-	 * @param int Identifiant de la catégorie
+	 * @param int Identifiant de la préconisation
 	 * @return array Nbre de lignes effacées sinon erreurs
 	 */
-	public function delete($codeCat) 
+	public function delete($refPreco) 
 	{
 		$this->initialize();
 		
-		if (!empty($codeCat))
+		if (!empty($refPreco))
 		{
-			$request = "DELETE FROM categorie WHERE code_cat = ".$codeCat;
+			$request = "DELETE FROM preconisation WHERE id_preco = ".$refPreco;
 
-			$this->resultset['response'] = $this->executeRequest("delete", $request, "categorie", "Categorie");
+			$this->resultset['response'] = $this->executeRequest("delete", $request, "preconisation", "Preconisation");
 		}
 		else
 		{
-			$this->resultset['response']['errors'][] = array('type' => "delete", 'message' => "Il n'y a aucun identifiant pour la suppression de la catégorie.");
+			$this->resultset['response']['errors'][] = array('type' => "delete", 'message' => "Il n'y a aucun identifiant pour la suppression de la préconisation.");
 		}
 
 		return $this->resultset;

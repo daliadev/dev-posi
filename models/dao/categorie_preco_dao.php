@@ -69,7 +69,7 @@ class CategoriePrecoDAO extends ModelDAO
 		}
 		else
 		{
-			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour la catégorie recherchée.");
+			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour la préconisation recherchée.");
 		}
 		
 		return $this->resultset;
@@ -79,9 +79,9 @@ class CategoriePrecoDAO extends ModelDAO
 	
 	
 	/**
-	 * insert - Insère une catégorie
+	 * insert - Insère une paire de références préco - catégorie 
 	 * 
-	 * @param array Valeurs de la catégorie à inserer
+	 * @param array Valeurs des références à inserer
 	 * @return bool Vrai si l'insertion a fonctionné
 	 */
 	public function insert($values) 
@@ -106,7 +106,7 @@ class CategoriePrecoDAO extends ModelDAO
 	
 	
 	/**
-	 * update - Met à jour une catégorie
+	 * update - Met à jour les lignes comportants le code_cat passé en paramètre 
 	 * 
 	 * @param array Valeurs de la catégorie à mettre à jour
 	 * @return array Nbre de lignes mises à jour sinon erreurs
@@ -115,21 +115,24 @@ class CategoriePrecoDAO extends ModelDAO
 	{
 		$this->initialize();
 		
-		
 		if (!empty($values))
 		{
 			if (isset($values['ref_code_cat']) && !empty($values['ref_code_cat']) && isset($values['ref_preco']) && !empty($values['ref_preco']))
 			{
 				$refCodeCat = $values['ref_code_cat'];
 				unset($values['ref_code_cat']);
+				$refpreco = $values['ref_preco'];
+				unset($values['ref_preco']);
 				
-				$request = $this->createQueryString("update", $values, "cat_preco", "WHERE ref_code_cat = ".$refCodeCat);
+				//$request = $this->createQueryString("update", $values, "cat_preco", "WHERE ref_code_cat = ".$refCodeCat);
+
+				$request = "UPDATE cat_preco SET ref_code_cat = '".$refCodeCat."', id_preco = ".$values['id_preco']." WHERE ref_code_cat = '".$refCodeCat."' AND ref_preco = ".$refpreco;
 				
 				$this->resultset['response'] = $this->executeRequest("update", $request, "cat_preco", "CategoriePreconisation");
 			}
 			else
 			{
-				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour la catégorie et la préconisation à mettre à jour.");
+				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour la catégorie ou la préconisation à mettre à jour.");
 			}
 		}
 		else
@@ -146,7 +149,7 @@ class CategoriePrecoDAO extends ModelDAO
 	
 	
 	/**
-	 * delete - Efface une catégorie
+	 * delete - Efface une paire de références préco - catégorie 
 	 * 
 	 * @param int Identifiant de la question
 	 * @return array Nbre de lignes effacées sinon erreurs

@@ -19,7 +19,7 @@
 				</div>
 				<div class="header-title">
 					<!-- <i class="fa fa-file-text-o"></i> -->
-					<h1>Test de positionnement</h1>
+					<h1>Test de positionnement <?php echo Config::CLIENT_NAME_LONG; ?></h1>
 				</div>
 				<div class="clear"></div>
 			</div>

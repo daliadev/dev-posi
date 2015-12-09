@@ -18,13 +18,16 @@ class Config
     /* Nom et titre du positionnement */
 
     // Nom du positionnement.
-    const POSI_NAME = "Positionnement XXX";
+    const POSI_NAME = "Positionnement";
     
     // Titre/accroche du positionnement.
     const POSI_TITLE = "Test de positionnement"; 
     
     // Titre de la partie admin.
-    const ADMIN_TITLE = "Gestion du positionnement XXX"; 
+    const ADMIN_TITLE = "Gestion du positionnement";
+
+    const CLIENT_NAME = ""; /*"Uniformation";*/
+    const CLIENT_NAME_LONG = "Uniformation";
     
     
     /* Gestion du nombre de positionnement */

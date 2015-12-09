@@ -14,6 +14,7 @@
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/layout.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/480.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/client.css" />
 
     <!--[if lt IE 9]>
     <script src="<?php echo SERVER_URL; ?>media/js/dist/html5shiv.js"></script>

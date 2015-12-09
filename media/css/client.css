@@ -1,0 +1,23 @@
+﻿
+
+/* Identité visuelle du client */
+
+#posi-inscript .header .logo {
+	width: 240px;
+	height: 200px;
+	background: url(../images/logo-uniformation.png) no-repeat 50% 50%;
+	background-color: #fff;
+}
+
+#logo{
+	width:260px;
+	height:200px;
+	background:url(../images/logo-uniformation.png) center center no-repeat;
+    background-color:#FFF;
+}
+
+
+
+
+
+

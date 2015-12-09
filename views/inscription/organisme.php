@@ -58,7 +58,7 @@ $form_url = $response['url'];
 				</div>
 
 				<div class="header-title">
-					<h1>Test de positionnement DALIA</h1>
+					<h1>Test de positionnement <?php echo Config::CLIENT_NAME; ?></h1>
 				</div>
 				<!--  
 				<div class="header-menu">

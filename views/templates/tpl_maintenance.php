@@ -23,7 +23,7 @@
     <![endif]-->
 </head>
 
-<body style="background: none #7b827a;">
+<body style="background: none #009688;">
     
     <?php
         echo $template_content;

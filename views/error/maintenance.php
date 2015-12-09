@@ -12,7 +12,7 @@
 
             <div style="margin: 64px auto 32px auto; text-align: center">
                 
-                <h1 style="color: white;">Maintenance en cours</h1>
+                <h2 style="color: white;">Positionnement en maintenance</h2>
                 <img src="<?php echo WEBROOT; ?>media/images/en_attente.png" style="width: 470px; height: 372px; display: inline;" />
 
             </div>

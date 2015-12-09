@@ -41,40 +41,47 @@ if (isset($_GET['p']) && (!empty($_GET['p'])))
 }
 
 
+// Si maintenance => true
+$maintenance_mode = true;
+
+
 if (!isset($requestParams[0]) || empty($requestParams[0]))
 {
-    $requestParams = array('inscription', 'organisme');
+    if ($maintenance_mode)
+    {
+        $requestParams = array('erreur', 'maintenance');
+    }
+    else
+    {
+        $requestParams = array('inscription', 'organisme');
+    }
 }
 
 
-
-// Décommenter si en maintenance
-//$requestParams = array('erreur', 'maintenance'); 
-
-if ($requestParams[1] != 'maintenance')
+if ($requestParams[0] == 'admin')
 {
-
-    if ($requestParams[0] == 'admin')
-    {
-        if (!isset($requestParams[1]) || empty($requestParams[1]))
-        {
-            $requestParams[1] = 'login';
-        }
-    }
-
     if (!isset($requestParams[1]) || empty($requestParams[1]))
     {
-        if ($requestParams[0] == 'admin')
-        {
-            $requestParams[1] = 'login';
-        }
-        else
-        {
-            $requestParams = array('inscription', 'organisme'); 
-        }
+        $requestParams[1] = 'login';
     }
-
 }
+
+if (!isset($requestParams[1]) || empty($requestParams[1]))
+{
+    if ($requestParams[0] == 'admin')
+    {
+        $requestParams[1] = 'login';
+    }
+    else if ($maintenance_mode)
+    {
+        $requestParams = array('erreur', 'maintenance');
+    }
+    else
+    {
+        $requestParams = array('inscription', 'organisme'); 
+    }
+}
+
 
 
 

@@ -30,7 +30,14 @@ class ServicesErreur extends Main
         $this->setTemplate("tpl_error");
         $this->render('page500');
     }
-    
+
+
+
+    public function maintenance()
+    {
+        $this->setTemplate("tpl_maintenance");
+        $this->render('maintenance');
+    }
 }
 
 

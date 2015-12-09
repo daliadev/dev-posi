@@ -26,9 +26,9 @@ class Region
 
 			fclose($handle);
 
-			$this->regionFileToArray();
+			//$this->regionFileToArray();
 
-			var_dump($this->regions);
+			//var_dump($this->regions);
 		}
 		else
 		{
@@ -63,7 +63,7 @@ class Region
 
 	}
 	*/
-
+	/*
 	private function regionFileToArray()
 	{
 		if (!empty($this->contentText))
@@ -85,16 +85,11 @@ class Region
 					}
 				}
 				
-				/*
-				if (true)
-				{
 
-				}
-				*/
 			}
 		}
 	}
-
+	*/
 }
 
 ?>

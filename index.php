@@ -47,25 +47,35 @@ if (!isset($requestParams[0]) || empty($requestParams[0]))
 }
 
 
-if ($requestParams[0] == 'admin')
-{
-    if (!isset($requestParams[1]) || empty($requestParams[1]))
-    {
-        $requestParams[1] = 'login';
-    }
-}
 
-if (!isset($requestParams[1]) || empty($requestParams[1]))
+// Décommenter si en maintenance
+//$requestParams = array('erreur', 'maintenance'); 
+
+if ($requestParams[1] != 'maintenance')
 {
+
     if ($requestParams[0] == 'admin')
     {
-        $requestParams[1] = 'login';
+        if (!isset($requestParams[1]) || empty($requestParams[1]))
+        {
+            $requestParams[1] = 'login';
+        }
     }
-    else
+
+    if (!isset($requestParams[1]) || empty($requestParams[1]))
     {
-        $requestParams = array('inscription', 'organisme'); 
+        if ($requestParams[0] == 'admin')
+        {
+            $requestParams[1] = 'login';
+        }
+        else
+        {
+            $requestParams = array('inscription', 'organisme'); 
+        }
     }
+
 }
+
 
 
 // Le contrôleur se trouve dans le premier paramètre

@@ -28,6 +28,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 }
 
 //var_dump($formData['code_cat']);
+var_dump($formData['ordre_cat']);
 
 $form_url = WEBROOT."admin/categorie/";
 

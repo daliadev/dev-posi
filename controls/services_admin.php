@@ -475,9 +475,6 @@ class ServicesAdmin extends Main
 
 
 
-
-
-
 		/* ==========================================================================
 		   Requêtes ajax
 		   ========================================================================== */
@@ -712,7 +709,9 @@ class ServicesAdmin extends Main
 				
 				$catDetails = array();
 				$catDetails = $this->servicesCategorie->getCategorieDetails($code);
-				
+				var_dump($catDetails);
+				exit();
+
 				$this->formData = array_merge($this->formData, $catDetails);
 				
 				/*

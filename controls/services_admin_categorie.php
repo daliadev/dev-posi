@@ -59,11 +59,22 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-	public function getCategoriesByLevel($code, $level)
+	public function getCategoriesByLevel($parentCode, $level)
 	{
-		$levelCodes = $this->categorieDAO->findCodesByLevel($code, $level);
+		$levelCodes = $this->categorieDAO->selectCodesByLevel($parentCode, $level);
+		
+		if (!$this->filterDataErrors($levelCodes['response']))
+		{
+			if (!empty($levelCodes['response']['categorie']) && count($levelCodes['response']['categorie']) == 1)
+			{ 
+				$categorie = $levelCodes['response']['categorie'];
+				$levelCodes['response']['categorie'] = array($categorie);
+			}
 
-		return $levelCodes['response'];
+			return $levelCodes;
+		}
+
+		return false;
 	}
 	
 
@@ -93,6 +104,7 @@ class ServicesAdminCategorie extends Main
 		$catDetails['code_cat'] = "";
 		$catDetails['nom_cat'] = "";
 		$catDetails['descript_cat'] = "";
+		$catDetails['ordre_cat'] = "";
 		
 		$resultset = $this->categorieDAO->selectByCode($codeCat);
 		
@@ -102,6 +114,9 @@ class ServicesAdminCategorie extends Main
 			$catDetails['code_cat'] = $resultset['response']['categorie']->getCode();
 			$catDetails['nom_cat'] = $resultset['response']['categorie']->getNom();
 			$catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
+			$catDetails['ordre_cat'] = $this->getNumOrdre($catDetails['code_cat']);
+
+			//var_dump($this->getNumOrdre($catDetails['code_cat']));
 
 			$precos = $this->getCategoriePrecos($catDetails['code_cat']);
 
@@ -296,7 +311,7 @@ class ServicesAdminCategorie extends Main
 
 			$parentCodeLength = strlen($code) - 2;
 
-			if ($parentCodeLength > 2) {
+			if ($parentCodeLength >= 2) {
 
 				$parentCode = substr($code, 0, $parentCodeLength);
 			}
@@ -341,6 +356,65 @@ class ServicesAdminCategorie extends Main
 		else if ($ecart > 1)
 		{
 			return ($ecart / 2);
+		}
+
+		return false;
+	}
+
+
+
+	private function getNumOrdre($codeOrdre)
+	{
+		var_dump($codeOrdre);
+
+		$level = $this->getLevel($codeOrdre);
+		$parentCode = $this->getParentCode($codeOrdre);
+
+		$categories = $this->getCategoriesByLevel($parentCode, $level);
+
+		if (!empty($categories['response']['categorie']) && count($categories['response']['categorie'] > 1))
+		{
+			for ($i = 0; $i < count($categories['response']['categorie']); $i++) 
+			{
+				$code = $categories['response']['categorie'][$i]->getCode();
+				$ordre = null;
+
+				if ($i == 0) 
+				{
+					$previous = 0;
+					$next = $code;
+				}
+				else
+				{
+					$previous = $categories['response']['categorie'][($i -1)]->getCode();
+					$next = $code;
+				}
+				var_dump($previous, $next);
+				if (($codeOrdre > $previous && $code <= $next) || $code == $codeOrdre)
+				{
+					var_dump('$i', $i);
+					$ordre = $i;
+					break;
+				}
+				//}
+
+				
+				//var_dump($i, $ordre, $previous, $next, $code);
+				//exit();
+
+				if ($ordre != null)
+				{
+					//return $ordre;
+				}
+			}
+
+			var_dump('$ordre', $ordre);
+			exit();
+		}
+		else
+		{
+			$ordre = 0;
+			return $ordre;
 		}
 
 		return false;

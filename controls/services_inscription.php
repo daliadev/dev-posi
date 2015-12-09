@@ -102,14 +102,14 @@ class ServicesInscription extends Main
 
 
 		/* test region */
-
+		/*
 		$regionFile = ROOT.'database/regions/region2015.txt';
 
 		$regionsText = new Region($regionFile);
 
 		
 		exit();
-
+		*/
 		/*** Initialisation des données ***/
 
 		// Initialisation des tableaux de données qui seront inserés ou mis à jour dans la base.

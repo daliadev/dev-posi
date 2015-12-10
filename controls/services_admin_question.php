@@ -145,7 +145,6 @@ class ServicesAdminQuestion extends Main
                 $categories[$i]['code_cat'] = $cat->getCode();
                 $categories[$i]['nom_cat'] = $cat->getNom();
                 $categories[$i]['descript_cat'] = $cat->getDescription();
-                // $categories[$i]['type_lien_cat'] = $cat->getTypeLien();
                 
                 $i++;
             }

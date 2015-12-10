@@ -13,10 +13,13 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 {      
 	foreach($response['form_data'] as $key => $value)
 	{
+		//var_dump('key', $key, 'value', $value);
 		if (is_array($response['form_data'][$key]) && count($response['form_data'][$key]) > 0)
 		{
 			for ($i = 0; $i < count($response['form_data'][$key]); $i++)
 			{
+				//var_dump('$response["form_data"][$key][$i]', $key, $response['form_data'][$key][$i]);
+
 				$formData[$key][$i] = $response['form_data'][$key][$i];
 			}
 		}
@@ -28,7 +31,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 }
 
 //var_dump($formData['code_cat']);
-var_dump($formData['ordre_cat']);
+//var_dump($formData['ordre_cat']);
 
 $form_url = WEBROOT."admin/categorie/";
 
@@ -273,7 +276,6 @@ $form_url = WEBROOT."admin/categorie/";
 											?>
 										</select>
 									</div>
-					
 									
 									<div id="ordre-cat" class="block">
 										<label for="ordre-cat">Ordre (pour l'organisation des compétences de même niveau)</label>
@@ -340,7 +342,7 @@ $form_url = WEBROOT."admin/categorie/";
 									<div class="type-text">
 
 										<select id="type-preco-cbox" name="type_preco_cbox_edit" style="width: 200px;" <?php echo $formData['disabled']; ?>>
-											<option value="select-cbox">---</option>
+											<option value="select_cbox">---</option>
 											<?php
 											if (isset($response['type_preco']) && !empty($response['type_preco']))
 											{
@@ -358,7 +360,6 @@ $form_url = WEBROOT."admin/categorie/";
 											?>
 										</select>
 
-										
 										<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
 										<input type="text" id="type-preco" name="nom_type_preco" value="" placeholder="Ex: 10 heures" style="width: 100px; margin: 0 5px;" />
 
@@ -397,9 +398,13 @@ $form_url = WEBROOT."admin/categorie/";
 										
 										echo '<span class="anchor">::</span> ';
 
+
+
 										if (isset($formData['precos'][$i]) && !empty($formData['precos'][$i]))
 										{
-											if (!empty($formData['reponses'][$i]['ref_preco']))
+											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="1" />';
+
+											if (!empty($formData['precos'][$i]['ref_preco']))
 											{
 												echo '<input type="hidden" name="ref_preco[]" value="'.$formData['precos'][$i]['ref_preco'].'" />';
 											}
@@ -414,6 +419,7 @@ $form_url = WEBROOT."admin/categorie/";
 										}
 										else
 										{
+											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="0" />';
 											echo '<input type="hidden" name="ref_preco[]" value="" />';
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="1" />';
 											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />&nbsp;%';
@@ -422,8 +428,8 @@ $form_url = WEBROOT."admin/categorie/";
 
 										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>';
 
-										echo '<select class="type_preco_cbox" name="type_preco_cbox[]" '.$formData['disabled'].'>';
-											echo '<option value="select-cbox">---</option>';
+										echo '<select class="choix-type-preco-cbox" name="choix_type_preco_cbox[]" '.$formData['disabled'].'>';
+											echo '<option value="select_cbox">---</option>';
 
 											if (isset($response['type_preco']) && !empty($response['type_preco']))
 											{
@@ -458,7 +464,6 @@ $form_url = WEBROOT."admin/categorie/";
 										echo '<i class="fa fa-times"></i>';
 										echo '</span>';
 										
-											
 										echo '</li>';
 
 									} 
@@ -714,147 +719,165 @@ $form_url = WEBROOT."admin/categorie/";
 			
 			if (mode == 'edit' || mode == 'new') {
 
-				//if ($selected !== null) {
 
-					//$('#precos').fadeIn(500, function() {
+				// Rend les éléments de la liste des préconisations déplaçables et triables
+				//$(".preco-list").sortable();
 
-					// Rend les éléments de la liste des préconisations déplaçables et triables
-					$(".preco-list").sortable();
-
-					var i = 1;
-					var $item;
-					//$numItemPreco = 0;
+				var i = 1;
+				var $item;
 
 
-					$("#add-type-preco").on('click', function (event) {
+				$("#add-type-preco").on('click', function (event) {
 
-						event.preventDefault();
-						$('#type-preco').show();
-					});
+					event.preventDefault();
+					$('#type-preco').show();
+				});
 
 
-					$("#edit-type-preco").on('click', function (event) {
+				$("#edit-type-preco").on('click', function (event) {
 
-						event.preventDefault();
-					});
-					
+					event.preventDefault();
+				});
+				
 
-					$("#save-type-preco").on('click', function (event) {
+				$("#save-type-preco").on('click', function (event) {
 
-						event.preventDefault();
+					event.preventDefault();
 
-						var refType = null;
-						var nomType = '';
+					var refType = null;
+					var nomType = '';
 
+					<?php if (Config::ALLOW_AJAX) : ?>
+
+					if ($('#type-preco-cbox').val() !== '' && $('#type-preco-cbox').val() !== 'select_cbox')
+					{
+						refType = $('#type-preco-cbox').val();
+					}
+
+					console.log(refType);
+
+					nomType = $('#type-preco').val();
+
+					console.log(nomType);
+
+					if (nomType !== '' && nomType !== null)
+					{
+						$.post('<?php echo $form_url; ?>', {'ref_type': refType, 'nom_type': nomType}, function(data) {
+
+							if (data.error) {
+
+								alert(data.error);
+							}
+							else {
+
+								//var parentCode = self.getParentCode(code);
+								//console.log(parentCode);
+
+								//self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
+							}
+							
+						}, 'json');
+					}
+					else
+					{
+						alert('Vous devez saisir un type de préconisation pour pouvoir l\'enregistrer.');
+					}
+
+					<?php endif; ?>
+				});
+
+
+				$("#suppr-type-preco").on('click', function (event) {
+
+					event.preventDefault();
+				});
+				
+
+				$('.choix_type_preco_cbox').on('change', function(event) {
+
+					/*** Gestion de la requête pour éditer un type dans la liste des types ***/
+
+					if ($(this).val() == 'new') {
+						//console.log('onChangeParcours');
+						//var refParcours = $(this).val();
+						//console.log(refParcours);
+
+						//$('#type-preco-section').show();
+					}
+					else {
+
+						//$('#type-preco-section').hide();
+					}
+						/*
 						<?php if (Config::ALLOW_AJAX) : ?>
 
-						if ($('#type-preco-cbox').val() !== '' && $('#type-preco-cbox').val() !== 'select-cbox')
-						{
-							refType = $('#type-preco-cbox').val();
-						}
+							if (refParcours != 'select_cbox')
+							{
+								$.post('<?php echo $form_url; ?>', {'ref_type': refParcours}, function(data) {
 
-						console.log(refType);
+									if (data.error) {
 
-						nomType = $('#type-preco').val();
+										alert(data.error);
+									}
+									else if (data.results) {
 
-						console.log(nomType);
+										console.log(data.results);
+										$('#id-type').val(data.results.id_type);
+										$('#nom-type').val(data.results.nom_type);
+									}
 
-						if (nomType !== '' && nomType !== null)
-						{
-							$.post('<?php echo $form_url; ?>', {'ref_type': refType, 'nom_type': nomType}, function(data) {
-
-								if (data.error) {
-
-									alert(data.error);
-								}
-								else {
-
-									//var parentCode = self.getParentCode(code);
-									//console.log(parentCode);
-
-									//self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
-								}
-								
-							}, 'json');
-						}
-						else
-						{
-							alert('Vous devez saisir un type de préconisation pour pouvoir l\'enregistrer.');
-						}
+								}, 'json');
+							}
 
 						<?php endif; ?>
-					});
+						*/
+					//};
+					//});
+				});
 
 
-					$("#suppr-type-preco").on('click', function (event) {
+				// Ajout d'une nouvelle préconisation par duplication
+				$('#add-preco').on('click', function(event) {
 
-						event.preventDefault();
-					});
-					
+					//event.preventDefault();
+					$item = $('.preco-item:last').clone();
+					var num = $item.find('.num-ordre').val();
+					$(".preco-list").append($item);
 
-					$('.choix_type_preco_cbox').on('change', function(event) {
-
-						/*** Gestion de la requête pour éditer un type dans la liste des type ***/
-
-						if ($(this).val() == 'new') {
-							//console.log('onChangeParcours');
-							//var refParcours = $(this).val();
-							//console.log(refParcours);
-
-							//$('#type-preco-section').show();
-						}
-						else {
-
-							//$('#type-preco-section').hide();
-						}
-							/*
-							<?php if (Config::ALLOW_AJAX) : ?>
-
-								if (refParcours != 'select_cbox')
-								{
-									$.post('<?php echo $form_url; ?>', {'ref_type': refParcours}, function(data) {
-
-										if (data.error) {
-
-											alert(data.error);
-										}
-										else if (data.results) {
-
-											console.log(data.results);
-											$('#id-type').val(data.results.id_type);
-											$('#nom-type').val(data.results.nom_type);
-										}
-
-									}, 'json');
-								}
-
-							<?php endif; ?>
-							*/
-						//};
-						//});
-					});
+					num++;
+					$('.preco-item:last').find('.num-ordre').val(num);
+				});
 
 
-					// Ajout d'une nouvelle préconisation par duplication
-					$('#add-preco').on('click', function(event) {
+				$('.del-preco').on('click', function(event) {
 
-						//event.preventDefault();
-						$item = $('.preco-item:last').clone();
-						var num = $item.find('.num-ordre').val();
-						$(".preco-list").append($item);
+					var precoItem = $(this).parent();
+					precoItem.remove();
 
-						num++;
-						$('.preco-item:last').find('.num-ordre').val(num);
-					});
+				});
 
 
-					$('.del-preco').on('click', function(event) {
+				$('.choix-type-preco-cbox').on('change', function(event) {
 
-						var num = $(this).parent().find('.preco-item-num').val();
-						//var num = $(".preco-list:last", '.preco-item-num').val();
-						console.log(num);
-					});
-				//}
+					// if ($(this).val() != 'select_cbox') 
+					// {
+					// 	$(this).parent().find('.preco-active').val('1');
+					// }
+					// else
+					// {
+					// 	$(this).parent().find('.preco-active').val('0');
+					// }
+				}).each(function() {
+
+					if ($(this).val() != 'select_cbox') 
+					{
+						$(this).parent().find('.preco-active').val('1');
+					}
+					else
+					{
+						$(this).parent().find('.preco-active').val('0');
+					}
+				});
 			}
 
 			/*

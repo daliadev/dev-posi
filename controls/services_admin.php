@@ -709,8 +709,10 @@ class ServicesAdmin extends Main
 				
 				$catDetails = array();
 				$catDetails = $this->servicesCategorie->getCategorieDetails($code);
-				var_dump($catDetails);
-				exit();
+				//var_dump($catDetails);
+				//exit();
+
+
 
 				$this->formData = array_merge($this->formData, $catDetails);
 				
@@ -795,9 +797,9 @@ class ServicesAdmin extends Main
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
-			var_dump('formData', $this->formData);
-			var_dump('dataCategorie', $dataCategorie);
-			exit();
+			//var_dump('formData', $this->formData);
+			//var_dump('dataCategorie', $dataCategorie);
+			//exit();
 
 
 

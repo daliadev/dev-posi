@@ -116,7 +116,7 @@ class ServicesAdminCategorie extends Main
 			$catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
 			$catDetails['ordre_cat'] = $this->getNumOrdre($catDetails['code_cat']);
 
-			//var_dump($this->getNumOrdre($catDetails['code_cat']));
+			var_dump($this->getNumOrdre($catDetails['code_cat']));
 
 			$precos = $this->getCategoriePrecos($catDetails['code_cat']);
 
@@ -155,6 +155,8 @@ class ServicesAdminCategorie extends Main
 			
 			$resultsetCode = $this->getCategorie($formData['code_cat']);
 
+			var_dump($resultsetCode);
+			//exit();
 
 
 			if (!empty($resultsetCode['response']) && $resultsetCode !== false)
@@ -199,84 +201,89 @@ class ServicesAdminCategorie extends Main
 		
 		$dataCategorie['data_precos'] = array();
 
-		if (isset($postData['num_ordre_preco']) && is_array($postData['num_ordre_preco']) && count($postData['num_ordre_preco']) > 0)
+		if (isset($postData['preco_active']) && is_array($postData['preco_active']) && count($postData['preco_active']) > 0)
 		{
 			$dataPrecos = array();
 			$errorPreco = false;
 
 			for ($i = 0; $i < count($postData['num_ordre_preco']); $i++)
 			{
-				$dataPrecos[$i]['code_cat'] = $formData['code_cat'];
-
-				if (isset($postData['ref_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+				if ($postData['preco_active'][$i] == 1)
 				{
-					$formData['precos'][$i]['ref_preco'] = $postData['ref_preco'][$i];
-					$dataPrecos[$i]['ref_preco'] = $formData['precos'][$i]['ref_preco'];
-					//$formData['precos'][$i]['mode'] = 'update';
-				}
-				else
-				{
-					//$formData['precos'][$i]['mode'] = 'insert';
-				}
+					$formData['precos'][$i]['preco_active'] = $postData['preco_active'][$i];
+				
+					$dataPrecos[$i]['code_cat'] = $formData['code_cat'];
 
-				if (isset($postData['num_ordre_preco'][$i]) && !empty($postData['ref_preco'][$i]))
-				{
-					$formData['precos'][$i]['num_ordre_preco'] = $postData['num_ordre_preco'][$i];
-					$dataPrecos[$i]['num_ordre_preco'] = $formData['precos'][$i]['num_ordre_preco'];
-				}
-				else
-				{
-					$errorPreco = true;
-				}
-
-
-				if (isset($postData['preco_min'][$i]) && is_numeric($postData['preco_min'][$i]) && $postData['preco_min'][$i] >= 0)
-				{
-					$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
-
-					if ($precoMin != "empty" && $precoMin === true && $precoMin !== null)
+					if (isset($postData['ref_preco'][$i]) && !empty($postData['ref_preco'][$i]))
 					{
-						$formData['precos'][$i]['preco_min'] = $precoMin;
-						$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
+						$formData['precos'][$i]['ref_preco'] = $postData['ref_preco'][$i];
+						$dataPrecos[$i]['ref_preco'] = $formData['precos'][$i]['ref_preco'];
+						//$formData['precos'][$i]['mode'] = 'update';
+					}
+					else
+					{
+						//$formData['precos'][$i]['mode'] = 'insert';
+					}
+
+					if (isset($postData['num_ordre_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+					{
+						$formData['precos'][$i]['num_ordre_preco'] = $postData['num_ordre_preco'][$i];
+						$dataPrecos[$i]['num_ordre_preco'] = $formData['precos'][$i]['num_ordre_preco'];
 					}
 					else
 					{
 						$errorPreco = true;
-					}		
-				}
-				else
-				{
-					$errorPreco = true;
-				}
+					}
 
-				if (isset($postData['preco_max'][$i]) && is_numeric($postData['preco_max'][$i]) && $postData['preco_max'][$i] >= 0)
-				{
-					$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
 
-					if ($precoMax != "empty" && $precoMax === true && $precoMax !== null)
+					if (isset($postData['preco_min'][$i]) && is_numeric($postData['preco_min'][$i]) && $postData['preco_min'][$i] >= 0)
 					{
-						$formData['precos'][$i]['preco_max'] = $precoMax;
-						$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
+						$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
+
+						if ($precoMin != "empty" && $precoMin === true && $precoMin !== null)
+						{
+							$formData['precos'][$i]['preco_min'] = $precoMin;
+							$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
+						}
+						else
+						{
+							$errorPreco = true;
+						}		
 					}
 					else
 					{
 						$errorPreco = true;
-					}		
-				}
-				else
-				{
-					$errorPreco = true;
-				}
+					}
+
+					if (isset($postData['preco_max'][$i]) && is_numeric($postData['preco_max'][$i]) && $postData['preco_max'][$i] >= 0)
+					{
+						$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
+
+						if ($precoMax != "empty" && $precoMax === true && $precoMax !== null)
+						{
+							$formData['precos'][$i]['preco_max'] = $precoMax;
+							$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
+						}
+						else
+						{
+							$errorPreco = true;
+						}		
+					}
+					else
+					{
+						$errorPreco = true;
+					}
 
 
-				if (isset($postData['type_preco_cbox'][$i]) && $postData['type_preco_cbox'][$i] != 'select_cbox' && $postData['type_preco_cbox'][$i] != null)
-				{
-					$formData['precos'][$i]['ref_type_preco'] = $postData['type_preco_cbox'][$i];
-					$dataPrecos[$i]['ref_type_preco'] = $formData['precos'][$i]['ref_type_preco'];
-				}
-				else
-				{
-					$errorPreco = true;
+					if (isset($postData['choix_type_preco_cbox'][$i]) && $postData['choix_type_preco_cbox'][$i] != 'select_cbox' && $postData['choix_type_preco_cbox'][$i] != null)
+					{
+						$formData['precos'][$i]['ref_type_preco'] = $postData['choix_type_preco_cbox'][$i];
+						$dataPrecos[$i]['ref_type_preco'] = $formData['precos'][$i]['ref_type_preco'];
+					}
+					else
+					{
+						$errorPreco = true;
+					}
 				}
 			}
 
@@ -365,7 +372,7 @@ class ServicesAdminCategorie extends Main
 
 	private function getNumOrdre($codeOrdre)
 	{
-		var_dump($codeOrdre);
+		//var_dump($codeOrdre);
 
 		$level = $this->getLevel($codeOrdre);
 		$parentCode = $this->getParentCode($codeOrdre);
@@ -374,50 +381,55 @@ class ServicesAdminCategorie extends Main
 
 		if (!empty($categories['response']['categorie']) && count($categories['response']['categorie'] > 1))
 		{
+			$ordre = null;
+
 			for ($i = 0; $i < count($categories['response']['categorie']); $i++) 
 			{
-				$code = $categories['response']['categorie'][$i]->getCode();
-				$ordre = null;
 
-				if ($i == 0) 
+				$code = $categories['response']['categorie'][$i]->getCode();
+
+				if (($i - 1) < 0) 
 				{
 					$previous = 0;
 					$next = $code;
 				}
 				else
 				{
-					$previous = $categories['response']['categorie'][($i -1)]->getCode();
+					$previous = $categories['response']['categorie'][($i - 1)]->getCode();
 					$next = $code;
 				}
-				var_dump($previous, $next);
-				if (($codeOrdre > $previous && $code <= $next) || $code == $codeOrdre)
+
+				//var_dump('previous', $previous, 'next', $next);
+
+				if (($codeOrdre > $previous && $codeOrdre <= $next) || $code == $codeOrdre)
 				{
-					var_dump('$i', $i);
+					//var_dump('$i', $i);
 					$ordre = $i;
 					break;
 				}
 				//}
 
-				
 				//var_dump($i, $ordre, $previous, $next, $code);
 				//exit();
-
-				if ($ordre != null)
-				{
-					//return $ordre;
-				}
 			}
 
-			var_dump('$ordre', $ordre);
-			exit();
-		}
-		else
-		{
-			$ordre = 0;
-			return $ordre;
-		}
+			if ($ordre == 0)
+			{
+				return 0;
+			}
+			else if ($ordre != null)
+			{
+				return $ordre;
+			}
 
-		return false;
+
+
+			//var_dump('$ordre', $ordre);
+			//exit();
+		}
+		
+
+		return null;
 	}
 
 
@@ -626,7 +638,6 @@ class ServicesAdminCategorie extends Main
 			if (isset($resultsetCategorie['response']['categorie']) && $dataCategorie['code_cat'])
 			{
 
-
 				//$dataCategorie['code_cat'] = 
 				$formData['code_cat'] = $dataCategorie['code_cat'];
 				//$dataCategorie['code_cat'] = $formData['code_cat'];
@@ -645,6 +656,9 @@ class ServicesAdminCategorie extends Main
 
 				// Mise à jour de la catégorie
 				$resultsetCategorie = $this->setCategorie("update", $dataCategorie);
+
+				var_dump($dataCategorie['code_cat']);
+				exit();
 
 				// Traitement des erreurs de la requête
 				if ($resultsetCategorie['response'])

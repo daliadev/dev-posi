@@ -116,13 +116,17 @@ class ServicesAdminCategorie extends Main
 			$catDetails['descript_cat'] = $resultset['response']['categorie']->getDescription();
 			$catDetails['ordre_cat'] = $this->getNumOrdre($catDetails['code_cat']);
 
-			var_dump($this->getNumOrdre($catDetails['code_cat']));
+			//var_dump($this->getNumOrdre($catDetails['code_cat']));
 
 			$precos = $this->getCategoriePrecos($catDetails['code_cat']);
 
-			if ($precos)
+			if ($precos['response'] && count($precos['response']) > 0)
 			{
-				$catDetails['precos'] = $precos;
+				//var_dump($precos);
+				for ($i = 0; $i < count($precos); $i++) {
+
+					$catDetails['precos'][$i] = $precos['response']['cat_preco'][$i];
+				}	
 			}
 
 			return $catDetails;
@@ -143,31 +147,36 @@ class ServicesAdminCategorie extends Main
 			$formData['code_cat'] = $this->validatePostData($postData['code_cat'], "code_cat", "integer", true, "Aucun code de catégorie n'a été saisi.", "Le code n'est pas correctement saisi.");
 		}
 
-		$dataCategorie['code_cat'] = $formData['code_cat'];
-
-		// Il faut vérifier si le code est au bon format et si il n'existe pas déjà
+		
+		/*
+		// Il faut vérifier également si le code est au bon format et si il n'existe pas déjà
 		if (!empty($formData['code_cat']))
 		{
 			if (strlen($formData['code_cat']) % 2 != 0)
 			{
-				$this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir schéma explicatif).");
+				$this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir l'aide).");
 			}
+			
 			
 			$resultsetCode = $this->getCategorie($formData['code_cat']);
 
-			var_dump($resultsetCode);
+			//var_dump($resultsetCode);
+			//var_dump($postData);
 			//exit();
 
-
-			if (!empty($resultsetCode['response']) && $resultsetCode !== false)
+			if (!empty($resultsetCode['response']) && $resultsetCode !== false && $postData['mode'] != 'edit')
 			{
 				$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
 			}
-			else
-			{
-				$dataCategorie['code_cat'] = $formData['code_cat'];
-			}
+			//else
+			//{
+			//	$dataCategorie['code_cat'] = $formData['code_cat'];
+			//}
+			
 		}
+		*/
+		//$dataCategorie['code_cat'] = $formData['code_cat']; ??????
+
 
 
 		// Test catégorie parente existante
@@ -184,6 +193,8 @@ class ServicesAdminCategorie extends Main
 		}
 
 
+	
+
 		// Formatage du nom de la catégorie
 		$formData['nom_cat'] = $this->validatePostData($_POST['nom_cat'], "nom_cat", "string", true, "Aucun nom de catégorie n'a été saisi", "Le nom n'est pas correctement saisi.");
 		$dataCategorie['nom_cat'] = $formData['nom_cat'];
@@ -193,106 +204,170 @@ class ServicesAdminCategorie extends Main
 		$dataCategorie['descript_cat'] = $formData['descript_cat'];
 		
 		// Récupèration du numero d'ordre de la catégorie
-		$formData['ordre_cat'] = $this->validatePostData($postData['ordre_cat'], "ordre_cat", "string", false, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
-		$dataCategorie['ordre_cat'] = $formData['ordre_cat'];
+		$formData['ordre_cat'] = (int) $this->validatePostData($postData['ordre_cat'], "ordre_cat", "integer", false, "Aucun numéro d'ordre n'a été saisi.", "Le numéro d'ordre est incorrecte.");
+		//$dataCategorie['ordre_cat'] = $formData['ordre_cat'];
 		
 
-		/* Gestion des préconisations */
-		
-		$dataCategorie['data_precos'] = array();
-
-		if (isset($postData['preco_active']) && is_array($postData['preco_active']) && count($postData['preco_active']) > 0)
+		// Il faut vérifier également si le code est valable
+		if (!empty($formData['code_cat']))
 		{
-			$dataPrecos = array();
-			$errorPreco = false;
+			$error = false;
 
-			for ($i = 0; $i < count($postData['num_ordre_preco']); $i++)
+			if (strlen($formData['code_cat']) % 2 != 0)
 			{
-				if ($postData['preco_active'][$i] == 1)
+				$this->registerError("form_valid", "Le code de la catégorie doit être un multiple de 2 (voir l'aide).");
+				$error = false;
+			}
+			// Si c'est une mise à jour le code est peut-être différent -> on le génère et on compare avec le code actuel
+			else if ($dataCategorie['parent_code_cat'] !== null && $postData['mode'] == 'edit' && !empty($formData['ordre_cat']))
+			{
+				$newCode = $this->generateCode($formData['ordre_cat'], $dataCategorie['parent_code_cat']);
+
+				if ($newCode != $formData['code_cat'])
 				{
-					$formData['precos'][$i]['preco_active'] = $postData['preco_active'][$i];
-				
-					$dataPrecos[$i]['code_cat'] = $formData['code_cat'];
+					// On supprime l'ancienne entrée dans la bdd (effet cascade avec les précos)
+					$resultDelete = $this->deleteCategorie($formData['code_cat']);
 
-					if (isset($postData['ref_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+					if ($resultDelete)
 					{
-						$formData['precos'][$i]['ref_preco'] = $postData['ref_preco'][$i];
-						$dataPrecos[$i]['ref_preco'] = $formData['precos'][$i]['ref_preco'];
-						//$formData['precos'][$i]['mode'] = 'update';
+						$formData['code_cat'] = $newCode;
+						$formData['mode'] = 'new';
 					}
 					else
 					{
-						//$formData['precos'][$i]['mode'] = 'insert';
-					}
-
-					if (isset($postData['num_ordre_preco'][$i]) && !empty($postData['ref_preco'][$i]))
-					{
-						$formData['precos'][$i]['num_ordre_preco'] = $postData['num_ordre_preco'][$i];
-						$dataPrecos[$i]['num_ordre_preco'] = $formData['precos'][$i]['num_ordre_preco'];
-					}
-					else
-					{
-						$errorPreco = true;
-					}
-
-
-					if (isset($postData['preco_min'][$i]) && is_numeric($postData['preco_min'][$i]) && $postData['preco_min'][$i] >= 0)
-					{
-						$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
-
-						if ($precoMin != "empty" && $precoMin === true && $precoMin !== null)
-						{
-							$formData['precos'][$i]['preco_min'] = $precoMin;
-							$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
-						}
-						else
-						{
-							$errorPreco = true;
-						}		
-					}
-					else
-					{
-						$errorPreco = true;
-					}
-
-					if (isset($postData['preco_max'][$i]) && is_numeric($postData['preco_max'][$i]) && $postData['preco_max'][$i] >= 0)
-					{
-						$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
-
-						if ($precoMax != "empty" && $precoMax === true && $precoMax !== null)
-						{
-							$formData['precos'][$i]['preco_max'] = $precoMax;
-							$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
-						}
-						else
-						{
-							$errorPreco = true;
-						}		
-					}
-					else
-					{
-						$errorPreco = true;
-					}
-
-
-					if (isset($postData['choix_type_preco_cbox'][$i]) && $postData['choix_type_preco_cbox'][$i] != 'select_cbox' && $postData['choix_type_preco_cbox'][$i] != null)
-					{
-						$formData['precos'][$i]['ref_type_preco'] = $postData['choix_type_preco_cbox'][$i];
-						$dataPrecos[$i]['ref_type_preco'] = $formData['precos'][$i]['ref_type_preco'];
-					}
-					else
-					{
-						$errorPreco = true;
+						$this->registerError("form_valid", "La catégorie ne peut pas être mise à jour.");
+						$error = false;
 					}
 				}
 			}
 
-			if ($errorPreco)
+			// On vérifie que le code n'existe pas déjà
+			else
 			{
-				$this->registerError("form_valid", "Une préconisation n'est pas correctement renseignée.");
+				$resultsetCode = $this->getCategorie($formData['code_cat']);
+
+				//var_dump($resultsetCode);
+				//var_dump($postData);
+				//exit();
+
+				if (!empty($resultsetCode['response']) && $resultsetCode !== false)
+				{
+					$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
+					$error = false;
+				}
 			}
 
-			$dataCategorie['data_precos'] = $dataPrecos;
+
+			if (!$error)
+			{
+				$dataCategorie['code_cat'] = $formData['code_cat'];
+			}
+		}
+
+
+		/* Gestion des préconisations */
+		if (Config::ALLOW_PRECONISATION) {
+
+			
+			if (isset($postData['preco_active']) && is_array($postData['preco_active']) && count($postData['preco_active']) > 0)
+			{
+				$dataCategorie['data_precos'] = array();
+				$dataPrecos = array();
+				$errorPreco = false;
+
+				for ($i = 0; $i < count($postData['num_ordre_preco']); $i++)
+				{
+					if ($postData['preco_active'][$i] == 1)
+					{
+						$formData['precos'][$i]['preco_active'] = $postData['preco_active'][$i];
+					
+						$dataPrecos[$i]['code_cat'] = $formData['code_cat'];
+
+						if (isset($postData['ref_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+						{
+							$formData['precos'][$i]['ref_preco'] = $postData['ref_preco'][$i];
+							$dataPrecos[$i]['ref_preco'] = $formData['precos'][$i]['ref_preco'];
+							//$formData['precos'][$i]['mode'] = 'update';
+						}
+						else
+						{
+							//$formData['precos'][$i]['mode'] = 'insert';
+						}
+
+						if (isset($postData['num_ordre_preco'][$i]) && !empty($postData['ref_preco'][$i]))
+						{
+							$formData['precos'][$i]['num_ordre_preco'] = $postData['num_ordre_preco'][$i];
+							$dataPrecos[$i]['num_ordre_preco'] = $formData['precos'][$i]['num_ordre_preco'];
+						}
+						else
+						{
+							$errorPreco = true;
+						}
+
+
+						if (isset($postData['preco_min'][$i]) && is_numeric($postData['preco_min'][$i]) && $postData['preco_min'][$i] >= 0)
+						{
+							$precoMin = $this->filterData($postData['preco_min'][$i], "integer");
+
+							if ($precoMin != "empty" && $precoMin === true && $precoMin !== null)
+							{
+								$formData['precos'][$i]['preco_min'] = $precoMin;
+								$dataPrecos[$i]['preco_min'] = $formData['precos'][$i]['preco_min'];
+							}
+							else
+							{
+								$errorPreco = true;
+							}		
+						}
+						else
+						{
+							$errorPreco = true;
+						}
+
+						if (isset($postData['preco_max'][$i]) && is_numeric($postData['preco_max'][$i]) && $postData['preco_max'][$i] >= 0)
+						{
+							$precoMax = $this->filterData($postData['preco_max'][$i], "integer");
+
+							if ($precoMax != "empty" && $precoMax === true && $precoMax !== null)
+							{
+								$formData['precos'][$i]['preco_max'] = $precoMax;
+								$dataPrecos[$i]['preco_max'] = $formData['precos'][$i]['preco_max'];
+							}
+							else
+							{
+								$errorPreco = true;
+							}		
+						}
+						else
+						{
+							$errorPreco = true;
+						}
+
+
+						if (isset($postData['choix_type_preco_cbox'][$i]) && $postData['choix_type_preco_cbox'][$i] != 'select_cbox' && $postData['choix_type_preco_cbox'][$i] != null)
+						{
+							$formData['precos'][$i]['ref_type_preco'] = $postData['choix_type_preco_cbox'][$i];
+							$dataPrecos[$i]['ref_type_preco'] = $formData['precos'][$i]['ref_type_preco'];
+						}
+						else
+						{
+							$errorPreco = true;
+						}
+					}
+				}
+
+				if ($errorPreco)
+				{
+					$this->registerError("form_valid", "Une préconisation n'est pas correctement renseignée.");
+				}
+
+				$dataCategorie['data_precos'] = $dataPrecos;
+			}
+		}
+
+		if (isset($dataCategorie['data_precos']) && empty($dataCategorie['data_precos']))
+		{
+			unset($dataCategorie['data_precos']);
 		}
 
 		return $dataCategorie;
@@ -622,10 +697,12 @@ class ServicesAdminCategorie extends Main
 
 	public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
 	{
+		//var_dump('$previousMode', $previousMode);
+
 
 		$formData['code_cat'] = null;
 
-		if ($previousMode == "new")
+		if ($previousMode == "new" || (isset($formData['mode']) && $formData['mode'] == 'new'))
 		{
 			// Insertion de la catégorie dans la bdd
 			$resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
@@ -648,7 +725,7 @@ class ServicesAdminCategorie extends Main
 				$this->registerError("form_valid", "L'enregistrement de la catégorie a échouée.");
 			}
 		}
-		else if ($previousMode == "edit"  || $previousMode == "save")
+		else if ($previousMode == "edit" || $previousMode == "save")
 		{
 			if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
 			{
@@ -657,8 +734,8 @@ class ServicesAdminCategorie extends Main
 				// Mise à jour de la catégorie
 				$resultsetCategorie = $this->setCategorie("update", $dataCategorie);
 
-				var_dump($dataCategorie['code_cat']);
-				exit();
+				//var_dump($dataCategorie);
+				//exit();
 
 				// Traitement des erreurs de la requête
 				if ($resultsetCategorie['response'])
@@ -778,8 +855,7 @@ class ServicesAdminCategorie extends Main
 				if ($modeCategorie == "insert")
 				{
 					$resultset = $this->categorieDAO->insert($dataCategorie);
-					//var_dump($resultset);
-					//exit();
+					
 					// Traitement des erreurs de la requête
 					if (!$this->filterDataErrors($resultset['response']))
 					{
@@ -794,6 +870,8 @@ class ServicesAdminCategorie extends Main
 				else if ($modeCategorie == "update")
 				{ 
 					$resultset = $this->categorieDAO->update($dataCategorie);
+					//var_dump($resultset);
+					//exit();
 
 					// Traitement des erreurs de la requête
 					if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['categorie']['row_count']) && !empty($resultset['response']['categorie']['row_count']))

@@ -3,9 +3,11 @@
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
 
-//$formData['code_cat'] = "";
-//$formData['nom_cat'] = "";
-//$formData['descript_cat'] = "";
+$formData['code_cat'] = "";
+$formData['nom_cat'] = "";
+$formData['descript_cat'] = "";
+
+var_dump($response['form_data']);
 
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -13,13 +15,10 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 {      
 	foreach($response['form_data'] as $key => $value)
 	{
-		//var_dump('key', $key, 'value', $value);
 		if (is_array($response['form_data'][$key]) && count($response['form_data'][$key]) > 0)
 		{
 			for ($i = 0; $i < count($response['form_data'][$key]); $i++)
 			{
-				//var_dump('$response["form_data"][$key][$i]', $key, $response['form_data'][$key][$i]);
-
 				$formData[$key][$i] = $response['form_data'][$key][$i];
 			}
 		}
@@ -707,7 +706,7 @@ $form_url = WEBROOT."admin/categorie/";
 					}
 					*/
 
-					$(this).blur();
+					//$(this).blur();
 				});
 			}
 
@@ -792,22 +791,22 @@ $form_url = WEBROOT."admin/categorie/";
 					event.preventDefault();
 				});
 				
-
-				$('.choix_type_preco_cbox').on('change', function(event) {
+				
+				//$('.choix_type_preco_cbox').on('change', function(event) {
 
 					/*** Gestion de la requête pour éditer un type dans la liste des types ***/
 
-					if ($(this).val() == 'new') {
+					//if ($(this).val() == 'new') {
 						//console.log('onChangeParcours');
 						//var refParcours = $(this).val();
 						//console.log(refParcours);
 
 						//$('#type-preco-section').show();
-					}
-					else {
+					//}
+					//else {
 
 						//$('#type-preco-section').hide();
-					}
+					//}
 						/*
 						<?php if (Config::ALLOW_AJAX) : ?>
 
@@ -833,8 +832,8 @@ $form_url = WEBROOT."admin/categorie/";
 						*/
 					//};
 					//});
-				});
-
+				//});
+				
 
 				// Ajout d'une nouvelle préconisation par duplication
 				$('#add-preco').on('click', function(event) {
@@ -857,7 +856,7 @@ $form_url = WEBROOT."admin/categorie/";
 				});
 
 
-				$('.choix-type-preco-cbox').on('change', function(event) {
+				//$('.choix-type-preco-cbox').on('change', function(event) {
 
 					// if ($(this).val() != 'select_cbox') 
 					// {
@@ -867,16 +866,19 @@ $form_url = WEBROOT."admin/categorie/";
 					// {
 					// 	$(this).parent().find('.preco-active').val('0');
 					// }
-				}).each(function() {
+				$('.choix-type-preco-cbox').each(function() {
 
-					if ($(this).val() != 'select_cbox') 
-					{
-						$(this).parent().find('.preco-active').val('1');
-					}
-					else
-					{
-						$(this).parent().find('.preco-active').val('0');
-					}
+					$(this).on('change', function(event) {
+
+						if ($(this).val() != 'select_cbox') 
+						{
+							$(this).parent().find('.preco-active').val('1');
+						}
+						else
+						{
+							$(this).parent().find('.preco-active').val('0');
+						}
+					});
 				});
 			}
 

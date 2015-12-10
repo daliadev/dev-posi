@@ -764,6 +764,7 @@ class ServicesAdmin extends Main
 			// Verrouillage des boutons.
 			$this->servicesGestion->switchFormButtons($this->formData, "save");
 
+			$this->formData['previous_mode'] = $previousMode;
 
 			// Récupération du code de la catégorie s'il y en a un.
 
@@ -793,6 +794,7 @@ class ServicesAdmin extends Main
 			}
 
 			
+			//var_dump('$_POST', $_POST);
 
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);

@@ -306,6 +306,8 @@
 			var controlsEnabled = false;
 
 
+			var navAgent = new NavigatorAgent();
+
 
 			// Variables état/statut des médias
 			
@@ -357,6 +359,7 @@
 			// Conteneur et icône animée de chargement de l'image
 			imageContainer = $('#visuel');
 
+			//console.log(navAgent.isCSSAnimateSupported());
 
 			if (navAgent.isCSSAnimateSupported()) {
 				

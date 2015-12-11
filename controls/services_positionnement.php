@@ -121,7 +121,7 @@ class ServicesPositionnement extends Main
 				ServicesAuth::setSessionData("nbre_questions", $total);
 			}
 			
-
+			
 			/*-----   Enregistrement des infos de départ de la session : ref_user, date, validation  -----*/
 
 			// Récupération des infos necéssaires
@@ -136,13 +136,14 @@ class ServicesPositionnement extends Main
 				'ref_intervenant' => $refIntervenant,
 				'date_session' => $dateSession,
 				'session_accomplie' => 0,
-				'temps_total' => "0",
-				'validation' => 0
+				'temps_total' => "0"
 			);
+
 
 			// Insertion dans la table session
 			$resultset = $this->sessionDAO->insert($dataSession);
-			
+
+
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['session']['last_insert_id']) && !empty($resultset['response']['session']['last_insert_id']))
 			{

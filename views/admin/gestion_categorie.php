@@ -7,7 +7,6 @@ $formData['code_cat'] = "";
 $formData['nom_cat'] = "";
 $formData['descript_cat'] = "";
 
-var_dump($response['form_data']);
 
 
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
@@ -276,7 +275,7 @@ $form_url = WEBROOT."admin/categorie/";
 										</select>
 									</div>
 									
-									<div id="ordre-cat" class="block">
+									<div id="ordre-cat-block" class="block">
 										<label for="ordre-cat">Ordre (pour l'organisation des compétences de même niveau)</label>
 										<input type="text" name="ordre_cat" id="ordre-cat" value="<?php echo $formData['ordre_cat']; ?>" <?php echo $formData['disabled']; ?> style="width: 80px !important;" />
 									</div>
@@ -613,7 +612,7 @@ $form_url = WEBROOT."admin/categorie/";
 
 			
 			
-			if (mode == 'edit' || mode == 'del' || mode == 'del')
+			if (mode == 'edit' || mode == 'del')
 			{
 				$('#del').val('Supprimer');
 			}
@@ -624,9 +623,6 @@ $form_url = WEBROOT."admin/categorie/";
 
 
 			/*  Système de sélection de la liste des catégories à gauche */
-
-			
-				
 
 			if (mode != 'edit' && mode != 'delete')
 			{	
@@ -675,7 +671,7 @@ $form_url = WEBROOT."admin/categorie/";
 									var parentCode = self.getParentCode(code);
 									//console.log(parentCode);
 
-									self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
+									self.setFieldsValues(code, data.results.nom_cat, parentCode, data.results.ordre_cat, data.results.descript_cat)
 								}
 								
 							}, 'json');

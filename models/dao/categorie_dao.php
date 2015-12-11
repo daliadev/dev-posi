@@ -254,8 +254,8 @@ class CategorieDAO extends ModelDAO
 		
 		if (!empty($values))
 		{
-			var_dump($values);
-			exit();
+			//var_dump($values);
+			//exit();
 			if (isset($values['code_cat']) && !empty($values['code_cat']))
 			{
 				$codeCat = $values['code_cat'];

@@ -19,6 +19,7 @@ class ServicesAdminCategorie extends Main
 	private $preconisationDAO = null;
 	private $typePrecoDAO = null;
 	
+	
 	public function __construct() 
 	{
 

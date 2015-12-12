@@ -64,7 +64,7 @@ class Region
 	}
 	*/
 	/*
-	private function regionFileToArray()
+	private function regionFileToObject()
 	{
 		if (!empty($this->contentText))
 		{

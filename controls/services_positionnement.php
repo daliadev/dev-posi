@@ -3,14 +3,16 @@
 
 require_once(ROOT.'controls/authentication.php');
 
+require_once(ROOT.'controls/services_posi_resultats.php');
+
 require_once(ROOT.'models/dao/session_dao.php');
 require_once(ROOT.'models/dao/utilisateur_dao.php');
 require_once(ROOT.'models/dao/intervenant_dao.php');
 require_once(ROOT.'models/dao/question_dao.php');
 require_once(ROOT.'models/dao/reponse_dao.php');
 require_once(ROOT.'models/dao/resultat_dao.php');
-require_once(ROOT.'models/dao/question_cat_dao.php');
-require_once(ROOT.'models/dao/categorie_dao.php');
+//require_once(ROOT.'models/dao/question_cat_dao.php');
+//require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/organisme_dao.php');
 
 require_once(ROOT.'utils/mailsender.php');
@@ -28,9 +30,11 @@ class ServicesPositionnement extends Main
 	private $questionDAO = null;
 	private $reponseDAO = null;
 	private $resultatDAO = null;
-	private $questionCatDAO = null;
-	private $categorieDAO = null;
+	//private $questionCatDAO = null;
+	//private $categorieDAO = null;
 	private $organismeDAO = null;
+
+	private $servicesResultats = null;
 	
 	
 	
@@ -45,9 +49,11 @@ class ServicesPositionnement extends Main
 		$this->questionDAO = new QuestionDAO();
 		$this->reponseDAO = new ReponseDAO();
 		$this->resultatDAO = new ResultatDAO();
-		$this->questionCatDAO = new QuestionCategorieDAO();
-		$this->categorieDAO = new CategorieDAO();
+		//$this->questionCatDAO = new QuestionCategorieDAO();
+		//$this->categorieDAO = new CategorieDAO();
 		$this->organismeDAO = new OrganismeDAO();
+
+		$this->servicesResultats = new ServicesPosiResultats();
 	}
 	
 	
@@ -380,7 +386,7 @@ class ServicesPositionnement extends Main
 		{
 			// Redirection vers la page d'erreur interne
 
-			//header("Location: ".SERVER_URL."erreur/page500");
+			header("Location: ".SERVER_URL."erreur/page500");
 			exit();
 		}
 	  
@@ -395,9 +401,267 @@ class ServicesPositionnement extends Main
 	
 	
 	
-	
-	
+
+
+
+	/**
+     * resultat() - Traite et formate l'ensemble des données des résultats concernant le positionnement de la session en cours.
+     * Renvoie la pge résultat.
+     */
+
 	public function resultat()
+	{
+
+		/*** Test d'authentification de l'intervenant/utilisateur ***/
+		//ServicesAuth::checkAuthentication("user");
+
+
+
+		/* Listing des categories
+		   ========================================================================== */
+
+
+		$categories = array();
+
+		$resultset = $this->servicesResultats->getCategories();
+
+		if ($resultset && !empty($resultset['response']['categorie']))
+		{
+			$categories = $resultset['response']['categorie'];
+		}
+
+
+		/* Fin listing des categories */
+
+
+
+		/* Récupération du détail des résultats pour la session en cours
+		   ========================================================================== */
+		
+		$resultats = array();
+		
+		$refSession = ServicesAuth::getSessionData("ref_session");
+
+		if ($refSession)
+		{
+			$resultset = $this->servicesResultats->getResultats($refSession);
+
+			if ($resultset && !empty($resultset['response']['resultat']))
+			{
+				$resultats = $resultset['response']['resultat'];
+			}
+		}
+
+
+		// Boucle sur tout les résultats de chaque question de la session ppur obtenir les détails utiles
+
+		$resultsDetails = array();
+		$resultatTime = 0;
+		$totalTime = 0;
+		$i = 0;
+
+
+		foreach ($resultats as $resultat)
+		{ 
+
+			// On ajoute le temps du résultat au temps total.
+			$resultatTime = $resultat->getTempsReponse();
+			$totalTime += $resultatTime;
+
+
+			if ($resultat->getRefReponseQcm() !== null && $resultat->getRefReponseQcmCorrecte() !== null)
+			{
+				// Test si bonne réponse ou non
+
+				if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
+				{
+					$resultsDetails[$i]['correct'] = true;
+				}
+				else 
+				{
+					$resultsDetails[$i]['correct'] = false;
+				}
+
+
+				// Ensuite on va chercher les données sur la question correspondant au résultat
+
+				$resultatCat = null;
+
+				$resultset = $this->getCategorieByQuestion($resultat->getRefQuestion());
+
+				if ($resultset && !empty($resultset['response']['resultat']))
+				{
+					$resultatCat = $resultset['response']['question_cat'];
+				}
+
+				$resultsDetails[$i]['code_cat'] = $resultatCat;
+
+			}
+			else
+			{
+				$resultsDetails[$i] = null;
+			}
+
+			$i++;
+		}
+
+		/* Fin récupération du détail des résultats */
+
+
+
+		/* comment
+		   ========================================================================== */
+
+		/*** Calcul du nombre total de questions par catégories et déduction du nombre de bonnes réponses pour chaque catégorie.  ***/
+
+
+
+
+
+
+		/*
+		$tabCorrection = array();
+		$totalGlobal = 0;
+		$totalCorrectGlobal = 0;
+		$percentGlobal = 0;
+		$j = 0;
+				
+		foreach ($categories as $categorie)
+		{
+			$codeCat = $categorie->getCode();
+			
+			$tabCorrection[$j]['code_cat'] = $codeCat;
+			$tabCorrection[$j]['total'] = 0;
+			$tabCorrection[$j]['total_correct'] = 0;
+			$tabCorrection[$j]['nom'] = $categorie->getNom();
+			$tabCorrection[$j]['description'] = $categorie->getDescription();
+			$tabCorrection[$j]['type_lien'] = $categorie->getTypeLien();
+
+			for ($i = 0; $i < count($tabResultats); $i++)
+			{
+				if ($tabResultats[$i]['code_cat'] == $codeCat)
+				{
+					$tabCorrection[$j]['total']++;
+					$totalGlobal++;
+
+					if ($tabResultats[$i]['correct'])
+					{
+						$tabCorrection[$j]['total_correct']++;
+						$totalCorrectGlobal++;
+					}
+				}
+				
+			}
+			
+			
+			$j++;
+		}
+		*/
+		
+		
+		/*** Intégration du système d'héritage des résultats ***/
+		/*
+		for ($i = 0; $i < count($tabCorrection); $i++)
+		{
+			// On détermine si c'est une categorie principale ou une sous-categorie
+			if (strlen($tabCorrection[$i]['code_cat']) == 2)
+			{
+				// Catégorie parent
+				
+				if ($tabCorrection[$i]['type_lien'] == "dynamic")
+				{
+					$tabCorrection[$i]['parent'] = true;
+					$parentCode = $tabCorrection[$i]['code_cat'];
+					$tabCorrection[$i]['total'] = 0;
+					$tabCorrection[$i]['total_correct'] = 0;
+					$tabCorrection[$i]['children'] = array();
+
+					for ($j = 0; $j < count($tabCorrection); $j++)
+					{ 
+						if (strlen($tabCorrection[$j]['code_cat']) > 2 && substr($tabCorrection[$j]['code_cat'], 0, 2) == $parentCode)
+						{
+							$tabCorrection[$i]['total'] += $tabCorrection[$j]['total'];
+							$tabCorrection[$i]['total_correct'] += $tabCorrection[$j]['total_correct'];
+							$tabCorrection[$i]['children'][] = $tabCorrection[$j];
+						}
+					}
+				}
+				else if ($tabCorrection[$i]['type_lien'] == "static")
+				{
+					$tabCorrection[$i]['parent'] = true;
+					$parentCode = $tabCorrection[$i]['code_cat'];
+					$tabCorrection[$i]['children'] = false;
+				}
+				
+			}
+			else 
+			{
+				$tabCorrection[$i]['parent'] = false;
+				$tabCorrection[$i]['children'] = false;
+			}
+		}
+		*/
+		
+		/*** Données envoyées à la page de résultat ***/
+		/*
+		$dataPage = array();
+		$dataPage['response'] = array();
+		$dataPage['response']['correction'] = array();
+		$k = 0;
+		
+		foreach ($tabCorrection as $correction)
+		{
+			$dataPage['response']['correction'][$k]['parent'] = $correction['parent'];
+			$dataPage['response']['correction'][$k]['children'] = $correction['children'];
+			$dataPage['response']['correction'][$k]['nom_categorie'] = $correction['nom'];
+			$dataPage['response']['correction'][$k]['descript_categorie'] = $correction['description'];
+			$dataPage['response']['correction'][$k]['total'] = $correction['total'];
+			$dataPage['response']['correction'][$k]['total_correct'] = $correction['total_correct'];
+
+			if ($correction['total'] > 0)
+			{
+				$dataPage['response']['correction'][$k]['percent'] = round(($correction['total_correct'] * 100) / $correction['total']);
+			}
+			else 
+			{
+				$dataPage['response']['correction'][$k]['percent'] = 0;
+			}
+			
+			$k++;
+		}
+		*/
+		
+		/*** Gestion du temps ***/
+		/*
+		$stringTime = Tools::timeToString($totalTime);
+		$dataPage['response']['temps'] = $stringTime;
+		*/
+		
+		/*** Injection des stats globales dans la réponse ***/
+		/*
+		$percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
+		$dataPage['response']['percent_global'] = $percentGlobal;
+		$dataPage['response']['total_global'] = $totalGlobal;
+		$dataPage['response']['total_correct_global'] = $totalCorrectGlobal;
+		*/
+
+		/*** Mise à jour de la session  ***/
+		/*
+		$dataSession['score_pourcent'] = $percentGlobal;
+
+		$resultset = $this->sessionDAO->update($dataSession, $idSession);
+
+		// Traitement des erreurs de la requête
+		if ($this->filterDataErrors($resultset['response']) || !isset($resultset['response']['session']['row_count']) || empty($resultset['response']['session']['row_count']))
+		{
+			$this->registerError("form_request", "La session n'a pu être mise à jour.");
+		}
+
+		*/
+	}
+	
+	
+	public function resultat_old()
 	{
 		/*** Test d'authentification de l'intervenant/utilisateur ***/
 		//ServicesAuth::checkAuthentication("user");

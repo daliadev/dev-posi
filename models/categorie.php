@@ -8,11 +8,11 @@ class Categorie
 	public $code_cat = null;
 	public $nom_cat = null;
 	public $descript_cat = null;
-	public $temps = null;
-	public $total_reponses = null;
-	public $total_reponses_correctes = null;
-	public $score_percent = null;
-	public $has_results = false;
+	//private $temps = null;
+	private $total_reponses = 0;
+	private $total_reponses_correctes = 0;
+	private $score_percent = 0;
+	private $children_cat = array();
 
 	
 	public function getCode()
@@ -33,7 +33,7 @@ class Categorie
 	}
 	
 
-	public function getParent()
+	public function getParentCode()
 	{
 		$parentCode = 0;
 
@@ -46,7 +46,7 @@ class Categorie
 		return $parentCode;
 	}
 
-
+	/*
 	public function getTemps()
 	{
 		return $this->temps;
@@ -56,7 +56,7 @@ class Categorie
 	{
 		$this->temps = $time;
 	}
-
+	*/
 
 	public function getTotalReponses()
 	{
@@ -91,16 +91,50 @@ class Categorie
 	}
 
 
-	public function getHasResult()
+	public function getChildren()
 	{
-		return $this->has_results;
+		return $this->children_cat;
 	}
 
-	public function setHasResult($result)
+	public function getChild($childCatcode)
 	{
-		$this->has_results = $result;
+		if ($childCatcode !== null && !empty($childCatcode) && is_numeric($childCatcode) && strlen($childCatcode) % 2 == 0)
+		{
+			for ($i = 0; $i < count($this->children_cat); $i++) 
+			{ 
+				if ($this->children_cat[$i]->getCode() == $childCatcode)
+				{
+					return $this->children_cat;
+				}
+			}
+		}
+
+		return null;
 	}
 
+	public function addChild($childCat)
+	{
+		if ($childCat !== null && $childCat instanceof Categorie)
+		{
+			array_push($this->children_cat, $childCat);
+		}
+	}
+
+	public function removeChild($childCatcode)
+	{
+		if ($childCatcode !== null && !empty($childCatcode) && is_numeric($childCatcode) && strlen($childCatcode) % 2 == 0)
+		{
+			for ($i = 0; $i < count($this->children_cat); $i++) 
+			{ 
+				if ($this->children_cat[$i]->getCode() == $childCatcode)
+				{
+					array_splice($this->children_cat, $i, 1);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }
 
 ?>

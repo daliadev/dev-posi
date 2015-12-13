@@ -42,7 +42,7 @@ if (isset($_GET['p']) && (!empty($_GET['p'])))
 
 
 // Si maintenance => true
-$maintenance_mode = true;
+$maintenance_mode = false;
 
 
 if (!isset($requestParams[0]) || empty($requestParams[0]))

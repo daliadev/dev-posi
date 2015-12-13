@@ -4,6 +4,7 @@
 require_once(ROOT.'controls/authentication.php');
 
 require_once(ROOT.'controls/services_posi_resultats.php');
+require_once(ROOT.'controls/services_admin_categorie.php');
 
 require_once(ROOT.'models/dao/session_dao.php');
 require_once(ROOT.'models/dao/utilisateur_dao.php');
@@ -35,6 +36,7 @@ class ServicesPositionnement extends Main
 	private $organismeDAO = null;
 
 	private $servicesResultats = null;
+	private $servicesCategories = null;
 	
 	
 	
@@ -54,6 +56,7 @@ class ServicesPositionnement extends Main
 		$this->organismeDAO = new OrganismeDAO();
 
 		$this->servicesResultats = new ServicesPosiResultats();
+		$this->servicesCategories = new ServicesAdminCategorie();
 	}
 	
 	
@@ -453,11 +456,13 @@ class ServicesPositionnement extends Main
 		}
 
 
-		// Boucle sur tout les résultats de chaque question de la session ppur obtenir les détails utiles
+		// Boucle sur tout les résultats de chaque question de la session pour en obtenir les détails utiles
 
 		$resultsDetails = array();
 		$resultatTime = 0;
 		$totalTime = 0;
+		$totalReponses = 0;
+		$totalReponsesCorrectes = 0;
 		$i = 0;
 
 
@@ -468,38 +473,54 @@ class ServicesPositionnement extends Main
 			$resultatTime = $resultat->getTempsReponse();
 			$totalTime += $resultatTime;
 
-
+			// Test type de question -> enregistrement des réponses correctes
 			if ($resultat->getRefReponseQcm() !== null && $resultat->getRefReponseQcmCorrecte() !== null)
 			{
+				$totalReponses++;
+
 				// Test si bonne réponse ou non
 
 				if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
 				{
 					$resultsDetails[$i]['correct'] = true;
+					$totalReponsesCorrectes++;
 				}
 				else 
 				{
 					$resultsDetails[$i]['correct'] = false;
 				}
+			}
+			else if ($resultat->getReponseChamp() !== null && !empty($resultat->getReponseChamp()))
+			{
+				$totalReponses++;
 
-
-				// Ensuite on va chercher les données sur la question correspondant au résultat
-
-				$resultatCat = null;
-
-				$resultset = $this->getCategorieByQuestion($resultat->getRefQuestion());
-
-				if ($resultset && !empty($resultset['response']['resultat']))
-				{
-					$resultatCat = $resultset['response']['question_cat'];
-				}
-
-				$resultsDetails[$i]['code_cat'] = $resultatCat;
-
+				$resultsDetails[$i]['correct'] = true;
+				$totalReponsesCorrectes++;
 			}
 			else
 			{
 				$resultsDetails[$i] = null;
+			}
+
+			// Ensuite on va chercher les données sur la question correspondant au résultat
+
+			$resultatCats = null;
+			$resultsDetails[$i]['codes_cat'] = array();
+
+			$resultset = $this->servicesResultats->getCategorieByQuestion($resultat->getRefQuestion());
+
+			if ($resultset && !empty($resultset['response']['question_cat']))
+			{
+				$resultatCats = $resultset['response']['question_cat'];
+			}
+			//var_dump($resultatCats);
+			//exit();
+			foreach ($resultatCats as $resultatCat) 
+			{
+				if ($resultatCat->getCodeCat() !== null)
+				{
+					$resultsDetails[$i]['codes_cat'][] = $resultatCat->getCodeCat();
+				}
 			}
 
 			$i++;
@@ -507,15 +528,135 @@ class ServicesPositionnement extends Main
 
 		/* Fin récupération du détail des résultats */
 
+		//var_dump('$resultsDetails init', $resultsDetails);
+		//exit();
 
-
-		/* comment
+		/* Assignation des resultats au catégories
 		   ========================================================================== */
 
 		/*** Calcul du nombre total de questions par catégories et déduction du nombre de bonnes réponses pour chaque catégorie.  ***/
 
+		/**
+		 * TODO :
+		 *
+		 * 
+		 * 	Pour chaque catégories
+		 * 
+		 * 		calcul du niveau de la categorie
+		 * 		calcul de la categorie parente
+		 * 		
+		 * 		Pour chaque resultat
+		 * 			categorie courante resultats +1
+		 * 			categorie courante temps = temps resultats
+		 * 			si code cat resultat = vrai et resultat = correct alors
+		 * 				categorie courante resultats corrects += 1
+		 * 				//pour chaque categories parente on ajoute +1 au resultat
+		 * 				
+		 * 			finsi
+		 * 		Fin pour
+		 * 
+		 * 	Fin Pour
+		 */
 
 
+
+		foreach ($categories as $categorie)
+		{
+			//$currentCat = $categorie;
+			//$codeCat = $categorie->getCode();
+			
+			// On récupére le niveau de la catégorie dans la hiérarchie
+			$level = $this->servicesCategories->getLevel($categorie->getCode());
+			
+			// Test d'existence d'une catégorie parente
+			if ($level > 1)
+			{
+				foreach ($categories as $searchParentCat)
+				{
+					if ($searchParentCat->getCode() == $categorie->getParentCode())
+					{
+						// Si catégorie parente, la courante devient son enfant
+						$searchParentCat->addChild($categorie);
+					}
+				}
+			}
+
+
+			//On attribut à chaque catégories, les réponses et les scores à partir des résultats
+			for ($i = 0; $i < count($resultsDetails); $i++)  
+			{
+				
+				//$j = 0;
+
+				foreach ($resultsDetails[$i]['codes_cat'] as $code_cat) 
+				{
+					if ($code_cat == $categorie->getCode())
+					{
+						$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
+						$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
+						//$scoreCat = ($categorie->getScorePercent() !== null) ? $categorie->getScorePercent() : 0;
+
+						$nbreReponses++;
+
+						$categorie->setTotalReponses($nbreReponses);
+
+						if ($resultsDetails[$i]['correct'])
+						{
+							$nbreReponsesCorrectes++;
+						}
+						$categorie->setTotalReponsesCorrectes($nbreReponsesCorrectes);
+
+						// Calcul du score
+						if ($nbreReponsesCorrectes != 0)
+						{	
+							$scoreCat = ($nbreReponsesCorrectes / $nbreReponses) * 100;
+							$categorie->setScorePercent($scoreCat);
+						}
+						else
+						{
+							$categorie->setScorePercent(0);
+						}
+
+						//$resultsDetails[$i]['categories'][$j] = $categorie;
+						//unset($resultsDetails[$i]['codes_cat'][$j]);
+
+						//$j++;
+					}
+				}
+
+				//unset($resultsDetails[$i]['codes_cat']);
+			}
+		}
+
+
+		// Enfin, on attribut aux resultats les catégories détaillées correspondantes
+		foreach ($categories as $categorie)
+		{
+			for ($i = 0; $i < count($resultsDetails); $i++)  
+			{
+				$resultsDetails[$i]['categories'] = array();
+				//var_dump($resultsDetails[$i]['codes_cat']);
+
+				for ($j = 0; $j < count($resultsDetails[$i]['codes_cat']); $j++)  
+				{
+					
+					if ($resultsDetails[$i]['codes_cat'][$j] == $categorie->getCode()) 
+					{
+						array_push($resultsDetails[$i]['categories'], $categorie);
+					}
+					
+				}
+			}
+		}
+
+
+		/* Fin assignation des resultats au catégories */
+
+
+		//var_dump('$categories', $categories);
+		var_dump('$resultsDetails', $resultsDetails);
+
+		exit();
 
 
 

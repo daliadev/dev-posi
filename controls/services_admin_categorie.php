@@ -404,7 +404,7 @@ class ServicesAdminCategorie extends Main
 	}
 
 
-	private function getLevel($code) {
+	public function getLevel($code) {
 
 		$level = null;
 

@@ -3,22 +3,25 @@
 
 require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
+require_once(ROOT.'models/dao/resultat_dao.php');
 
 
 
 class ServicesPosiResultats extends Main
 {
 	
-	private $validAcquisDAO = null;
+	private $categorieDAO = null;
 	private $questionCatDAO = null;
+	private $resultatDAO = null;
 	
 	
 	public function __construct() 
 	{
 		$this->controllerName = "positionnementResults";
 
-		$this->validAcquisDAO = new ValidAcquisDAO();
+		$this->categorieDAO = new CategorieDAO();
 		$this->questionCatDAO = new QuestionCategorieDAO();
+		$this->resultatDAO = new ResultatDAO();
 	}
 
 	

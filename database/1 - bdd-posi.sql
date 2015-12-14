@@ -88,8 +88,8 @@ CREATE TABLE organisme
 	tel_organ CHAR(10) NULL,
 	fax_organ CHAR(10) NULL,
 	email_organ VARCHAR(100) NULL,
-	nbre_posi_total INT(8) UNSIGNED NOT NULL DEFAULT 0,
-	nbre_posi_max INT(8) UNSIGNED NOT NULL DEFAULT 0
+	nbre_posi_total INT(10) UNSIGNED NOT NULL DEFAULT 0,
+	nbre_posi_max INT(10) UNSIGNED NOT NULL DEFAULT 0
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -433,7 +433,7 @@ class ServicesPublic extends Main
 		else
 		{
 			$this->setTemplate("tpl_public");
-			$this->render("restitution");
+			$this->render("restitution_new");
 		}
 
 	}

@@ -3,7 +3,7 @@
 
 require_once(ROOT.'controls/authentication.php');
 
-require_once(ROOT.'controls/services_posi_resultats.php');
+require_once(ROOT.'controls/services_resultats.php');
 require_once(ROOT.'controls/services_admin_categorie.php');
 
 require_once(ROOT.'models/dao/session_dao.php');
@@ -409,7 +409,7 @@ class ServicesPositionnement extends Main
 
 	/**
      * resultat - Traite et formate l'ensemble des données des résultats concernant le positionnement de la session en cours.
-     * Renvoie la page résultat et envoie un emeil avec les résultats à l'intervenant.
+     * Renvoie la page résultat et envoie un email avec les résultats à l'intervenant.
      */
 
 	public function resultat()

@@ -304,6 +304,21 @@ class ModelDAO
     
     
 
+    public function filterResultToArray($resultset, $objectName)
+    {
+        if (!$this->filterDataErrors($resultset['response']))
+        {
+            if (!empty($resultset['response'][$objectName]) && count($resultset['response'][$objectName]) == 1)
+            { 
+                $resultLine = $resultset['response'][$objectName];
+                $resultset['response'][$objectName] = array($resultLine);
+            }
+
+            return $resultset;
+        }
+        
+        return false;
+    }
 
 
     

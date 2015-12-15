@@ -47,7 +47,7 @@ $form_url = $response['url'];
 ?>
 
 	
-	<div id="posi-inscript" class="main">
+	<!-- <div id="posi-inscript" class="main"> -->
 		
 		<div class="header">
 

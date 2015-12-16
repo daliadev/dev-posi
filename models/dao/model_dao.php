@@ -46,9 +46,9 @@ class ModelDAO
     
     
     
-    public function prepareStatement($requestString)
+    public function prepareStatement($queryString)
     {
-        $this->callStatement = $this->dbConnect->prepare($requestString);
+        $this->callStatement = $this->dbConnect->prepare($queryString);
     }
     
     
@@ -111,14 +111,25 @@ class ModelDAO
     }
 
 
+
     
-    public function createQueryString($mode, $fieldsvalues, $table, $whereStmt = "")
+
+    public function createQueryString($mode, $fieldsvalues, $table, $whereStmt = '', $orderByFields = '')
     {
-        $requestString = "";
+        $queryString = "";
         
-        if (!empty($mode) && !empty($fieldsvalues) && !empty($table))
-        {      
-            if ($mode == "insert")
+        if (!empty($mode) && !empty($table))
+        {    
+            if ($mode == 'select')
+            {
+                if (!empty($orderByFields))
+                {
+                    $orderByFields = "ORDER BY ".$orderByFields;
+                }
+                $queryString = "SELECT * FROM ".$table." WHERE ".$whereStmt." ".$orderByFields;
+
+            }  
+            else if ($mode == "insert" && !empty($fieldsvalues))
             {
                 $fields = "";
                 $insertString = "";
@@ -154,10 +165,10 @@ class ModelDAO
                     $i++;
                 }
 
-                $requestString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertString.") ".$whereStmt;
+                $queryString = "INSERT INTO ".$table." (".$fields.") VALUES (".$insertString.") ".$whereStmt;
                 
             }
-            else if ($mode == "update")
+            else if ($mode == "update" && !empty($fieldsvalues))
             {
                 $updateString = "";
 
@@ -192,18 +203,18 @@ class ModelDAO
                     $i++;
                 }
 
-                $requestString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt;
+                $queryString = "UPDATE ".$table." SET ".$updateString." ".$whereStmt;
             } 
         }
 
-        return $requestString;
+        return $queryString;
     }
     
     
     
     
     
-    public function executeRequest($mode, $request, $tableName, $objectName = null)
+    public function executeRequest($mode, $query, $tableName, $objectName = null)
     {
         $resultset = array();
         
@@ -213,7 +224,7 @@ class ModelDAO
             $this->connectDB();
 
             // Création de l'appel à la requête préparée.
-            $this->prepareStatement($request);
+            $this->prepareStatement($query);
 
             // Execution de la requête préparée.
             $this->executeStatement();
@@ -241,7 +252,7 @@ class ModelDAO
                             }
                             
                             // Construction dynamique de l'objet demandé.
-                            $object = $this->constructObject($objectName, $tabChamps);
+                            $object = $this->buildModel($objectName, $tabChamps);
                             
                             // Ajout de l'objet au tableau de sortie.
                             array_push($resultset[$tableName], $object);
@@ -253,7 +264,7 @@ class ModelDAO
                         $tabChamps = $this->getStatementFetch();
                         
                         // Construction dynamique de l'objet.
-                        $object = $this->constructObject($objectName, $tabChamps);
+                        $object = $this->buildModel($objectName, $tabChamps);
                         
                         // On renvoi l'objet directement (non dans un tableau).
                         $resultset[$tableName] = $object; 
@@ -302,13 +313,20 @@ class ModelDAO
         return $resultset;
     }
     
+
+    /*
+    public function requestModel($requestType, $objectName, $data, $clause)
+    {
+
+    }
+    */
     
 
     public function filterResultToArray($resultset, $objectName)
     {
-        if (!$this->filterDataErrors($resultset['response']))
+        if (isset($resultset['response']['errors']) && !empty($resultset['response']['errors']))
         {
-            if (!empty($resultset['response'][$objectName]) && count($resultset['response'][$objectName]) == 1)
+            if (isset($resultset['response'][$objectName]) && !empty($resultset['response'][$objectName]) && count($resultset['response'][$objectName]) == 1)
             { 
                 $resultLine = $resultset['response'][$objectName];
                 $resultset['response'][$objectName] = array($resultLine);
@@ -322,7 +340,7 @@ class ModelDAO
 
 
     
-    private function constructObject($objectName, $data)
+    private function buildModel($objectName, $data)
     {
         $object = new $objectName();
         

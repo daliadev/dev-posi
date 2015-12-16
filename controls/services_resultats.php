@@ -101,10 +101,10 @@ class ServicesPosiResultats extends Main
 
 	public function getUser($refUser)
 	{
-		$resultset = $this->utilisateurDAO->selectById($refUser);
+		//$resultset = $this->utilisateurDAO->selectById($refUser);
 		
-		// return $this->utilisateurDAO->filterResultToArray($resultset);
-
+		return $this->utilisateurDAO->selectById($refUser);
+		/*
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
@@ -117,24 +117,86 @@ class ServicesPosiResultats extends Main
 		}
 		
 		return false;
+		*/
 	}
 
 
 	public function updateUser($dataUser)
 	{
-		$resultset = $this->utilisateurDAO->updateModel($dataUser);
+		//return $this->utilisateurDAO->updateModel('utilisateur', $dataUser);
+		return $this->utilisateurDAO->update($dataUser);
 
+		//$resultset = $this->utilisateurDAO->updateModel($dataUser);
+
+		//return $this->utilisateurDAO->filterResultToArray($resultset, 'utilisateur');
+
+		/*
 		// Traitement des erreurs de la requête
-        if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['row_count']) && !empty($resultset['response']['utilisateur']['row_count']))
-        {
-            return $resultset;
-        } 
-        else 
-        {
-            $this->registerError("form_request", "L'utilisateur n'a pas été mis à jour.");
-        }
+		if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['utilisateur']['row_count']) && !empty($resultset['response']['utilisateur']['row_count']))
+		{
+			return $resultset;
+		} 
+		else 
+		{
+			$this->registerError("form_request", "L'utilisateur n'a pas été mis à jour.");
+		}
+		*/
+		//return false;
+	}
 
-        return false;
+
+
+	public function getOrganisme($refOrgan)
+	{
+		return $this->organismeDAO->selectById($refOrgan);
+
+		/*
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+			{ 
+				$utilisateur = $resultset['response']['utilisateur'];
+				$resultset['response']['utilisateur'] = array($utilisateur);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+		*/
+	}
+
+	public function updateOrganisme($dataOrgan)
+	{
+		return $this->organismeDAO->update($dataOrgan);
+	}
+
+
+
+	public function getSession($refSession)
+	{
+		return $this->sessionDAO->selectById($refSession);
+
+		/*
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+			{ 
+				$utilisateur = $resultset['response']['utilisateur'];
+				$resultset['response']['utilisateur'] = array($utilisateur);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+		*/
+	}
+
+
+	public function updateSession($dataSession, $refSession)
+	{
+		return $this->sessionDAO->update($dataSession, $refSession);
 	}
 
 

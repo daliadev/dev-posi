@@ -42,7 +42,8 @@ class ServicesPositionnement extends Main
 	
 	public function __construct()
 	{
-		$this->errors = array();
+		$this->initialize();
+		//$this->errors = array();
 		$this->controllerName = "positionnement";
 		
 		$this->sessionDAO = new SessionDAO();
@@ -418,7 +419,7 @@ class ServicesPositionnement extends Main
 		/*** Test d'authentification de l'utilisateur ***/
 		//ServicesAuth::checkAuthentication("user");
 
-		$this->initialize();
+		
 
 		/**
 		 * Description: Gestion et génération de la page résultat et de l'envoi d'email à l'intervenant.
@@ -808,7 +809,7 @@ class ServicesPositionnement extends Main
 				// Sauvegarde de la session pour l'envoi du mail
 				$infosSession = $resultset['response']['session'];
 
-				$resultsetUpdate = $this->servicesResultats->updateSession($dataSession, $ref_session);
+				$resultsetUpdate = $this->servicesResultats->updateSession($dataSession, $refSession);
 
 				if (!$resultsetUpdate)
 				{
@@ -827,7 +828,7 @@ class ServicesPositionnement extends Main
 
 
 		/*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
-
+		/*
 		$emailInfos = array();
 
 		$emailInfos['nom_organ'] = "";
@@ -916,11 +917,11 @@ class ServicesPositionnement extends Main
 		$emailInfos['temps_posi'] = $stringTime;
 
 
-		//$dataPage['response']['email_infos'] = $emailInfos;
-
+		//$dataView['response']['email_infos'] = $emailInfos;
+		*/
 
 		/* Configuration du mail */
-
+		/*
 		$destinataires = array();
 
 		if (!empty(Config::$main_email_admin)) 
@@ -950,10 +951,10 @@ class ServicesPositionnement extends Main
 
 		$mail = new MailSender($destinataires, $from, $subject);
 		$mail->setHeader();
-
+		*/
 
 		/* Création du mail */
-
+		/*
 		$messageBody = '';
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
@@ -969,13 +970,13 @@ class ServicesPositionnement extends Main
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br />';
-		$messageBody .= 'Score globale : <strong>'.$dataPage['response']['percent_global'].' %</strong>';
+		$messageBody .= 'Score globale : <strong>'.$dataView['response']['percent_global'].' %</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Score détaillé : <br />';
 
 		//$results = "";
-		foreach ($dataPage['response']['correction'] as $correction)
+		foreach ($dataView['response']['correction'] as $correction)
 		{
 			if ($correction['parent'])
 			{         
@@ -998,11 +999,11 @@ class ServicesPositionnement extends Main
 
 
 		$mail->setMessage($messageBody, 'html', Config::POSI_NAME, $style);
-
+		*/
 
 		/*** Envoi du mail ***/
 
-		$mail->send();
+		//$mail->send();
 
 
 
@@ -1010,19 +1011,8 @@ class ServicesPositionnement extends Main
 		   4. Synthèse des éléments à injecter dans la page
 		   ========================================================================== */
 
-		/*
-		$resultsetUpdate = $this->sessionDAO->update($dataSession, $idSession);
-
-		// Traitement des erreurs de la requête
-		if ($this->filterDataErrors($resultset['response']) || !isset($resultset['response']['session']['row_count']) || empty($resultset['response']['session']['row_count']))
-		{
-			$this->registerError("form_request", "La session n'a pu être mise à jour.");
-		}
-		*/
-		/* Fin mise à jour de la session */
-
-
-
+		$dataView = array('response');
+		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
 		/*
 		if ((!empty($this->servicesQuestion->errors) && count($this->servicesQuestion->errors) > 0) || !empty($this->errors))
@@ -1047,16 +1037,14 @@ class ServicesPositionnement extends Main
 		/* Assemblage des données de la réponse à envoyer à la page de résultats
 		   ========================================================================== */
 
-		//$this->returnData['response'] = array_merge($listeQuestions['response'], $this->returnData['response']);
-
-
+		$this->returnData['response'] = array_merge($dataView['response'], $this->returnData['response']);
 
 		/*** Gestion des erreurs ***/
 		
 		if (!empty($this->errors))
 		{
 			// S'il y a eu des erreurs, on les affiche dans la page "résultat".
-			$dataPage['response']['errors'] = $this->errors;
+			$this->returnData['response']['errors'] = $this->errors;
 		}
 		
 
@@ -1065,7 +1053,7 @@ class ServicesPositionnement extends Main
 		
 
 		/*** Affichage de la page de résultat ***/
-		$this->setResponse($dataPage);
+		$this->setResponse($this->returnData);
 		
 		$this->setTemplate("tpl_results");
 		//$this->setTemplate("tpl_inscript");
@@ -1294,27 +1282,27 @@ class ServicesPositionnement extends Main
 		
 		/*** Données envoyées à la page de résultat ***/
 		
-		$dataPage = array();
-		$dataPage['response'] = array();
-		$dataPage['response']['correction'] = array();
+		$dataView = array();
+		$dataView['response'] = array();
+		$dataView['response']['correction'] = array();
 		$k = 0;
 		
 		foreach ($tabCorrection as $correction)
 		{
-			$dataPage['response']['correction'][$k]['parent'] = $correction['parent'];
-			$dataPage['response']['correction'][$k]['children'] = $correction['children'];
-			$dataPage['response']['correction'][$k]['nom_categorie'] = $correction['nom'];
-			$dataPage['response']['correction'][$k]['descript_categorie'] = $correction['description'];
-			$dataPage['response']['correction'][$k]['total'] = $correction['total'];
-			$dataPage['response']['correction'][$k]['total_correct'] = $correction['total_correct'];
+			$dataView['response']['correction'][$k]['parent'] = $correction['parent'];
+			$dataView['response']['correction'][$k]['children'] = $correction['children'];
+			$dataView['response']['correction'][$k]['nom_categorie'] = $correction['nom'];
+			$dataView['response']['correction'][$k]['descript_categorie'] = $correction['description'];
+			$dataView['response']['correction'][$k]['total'] = $correction['total'];
+			$dataView['response']['correction'][$k]['total_correct'] = $correction['total_correct'];
 
 			if ($correction['total'] > 0)
 			{
-				$dataPage['response']['correction'][$k]['percent'] = round(($correction['total_correct'] * 100) / $correction['total']);
+				$dataView['response']['correction'][$k]['percent'] = round(($correction['total_correct'] * 100) / $correction['total']);
 			}
 			else 
 			{
-				$dataPage['response']['correction'][$k]['percent'] = 0;
+				$dataView['response']['correction'][$k]['percent'] = 0;
 			}
 			
 			$k++;
@@ -1324,15 +1312,15 @@ class ServicesPositionnement extends Main
 		/*** Gestion du temps ***/
 		
 		$stringTime = Tools::timeToString($totalTime);
-		$dataPage['response']['temps'] = $stringTime;
+		$dataView['response']['temps'] = $stringTime;
 		
 		
 		/*** Injection des stats globales dans la réponse ***/
 		
 		$percentGlobal = round(($totalCorrectGlobal / $totalGlobal) * 100);
-		$dataPage['response']['percent_global'] = $percentGlobal;
-		$dataPage['response']['total_global'] = $totalGlobal;
-		$dataPage['response']['total_correct_global'] = $totalCorrectGlobal;
+		$dataView['response']['percent_global'] = $percentGlobal;
+		$dataView['response']['total_global'] = $totalGlobal;
+		$dataView['response']['total_correct_global'] = $totalCorrectGlobal;
 		
 
 		/*** Mise à jour de la session  ***/
@@ -1442,7 +1430,7 @@ class ServicesPositionnement extends Main
 		$emailInfos['temps_posi'] = $stringTime;
 
 
-		//$dataPage['response']['email_infos'] = $emailInfos;
+		//$dataView['response']['email_infos'] = $emailInfos;
 
 
 		/* Configuration du mail */
@@ -1495,13 +1483,13 @@ class ServicesPositionnement extends Main
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br />';
-		$messageBody .= 'Score globale : <strong>'.$dataPage['response']['percent_global'].' %</strong>';
+		$messageBody .= 'Score globale : <strong>'.$dataView['response']['percent_global'].' %</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Score détaillé : <br />';
 
 		//$results = "";
-		foreach ($dataPage['response']['correction'] as $correction)
+		foreach ($dataView['response']['correction'] as $correction)
 		{
 			if ($correction['parent'])
 			{         
@@ -1537,7 +1525,7 @@ class ServicesPositionnement extends Main
 		if (!empty($this->errors))
 		{
 			// S'il y a eu des erreurs, on les affiche dans la page "résultat".
-			$dataPage['response']['errors'] = $this->errors;
+			$dataView['response']['errors'] = $this->errors;
 		}
 		
 
@@ -1546,7 +1534,7 @@ class ServicesPositionnement extends Main
 		
 
 		/*** Affichage de la page de résultat ***/
-		$this->setResponse($dataPage);
+		$this->setResponse($dataView);
 		
 		//$this->setTemplate("tpl_results");
 		$this->setTemplate("tpl_inscript");

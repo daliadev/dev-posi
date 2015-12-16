@@ -63,13 +63,13 @@ class UtilisateurDAO extends ModelDAO
      * @param int Identifiant utilisateur
      * @return array Utilisateur correspondant à l'identifiant sinon erreurs
      */
-    public function selectById($idUtilisateur) 
+    public function selectById($refUtilisateur) 
     {
-        $this->initialize();
+        //$this->initialize();
         
-        if (!empty($idUtilisateur))
+        if (!empty($refUtilisateur))
         {
-            $request = "SELECT * FROM utilisateur WHERE id_user = ".$idUtilisateur;
+            $request = "SELECT * FROM utilisateur WHERE id_user = ".$refUtilisateur;
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "utilisateur", "Utilisateur");
         }
@@ -78,7 +78,8 @@ class UtilisateurDAO extends ModelDAO
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }
         
-        return $this->resultset;
+        //return $this->resultset;
+        return $this->filterResultToArray($this->resultset, 'utilisateur');
     }
 
     
@@ -246,9 +247,8 @@ class UtilisateurDAO extends ModelDAO
      */
     public function update($values) 
     {
-        $this->initialize();
+        //$this->initialize();
         
-
         if (!empty($values) && isset($values['ref_user']) && !empty($values['ref_user']))
         {
             $refUser = $values['ref_user'];
@@ -263,7 +263,8 @@ class UtilisateurDAO extends ModelDAO
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }   
         
-        return $this->resultset;
+        return $this->filterResultToArray($this->resultset, 'utilisateur');
+        //return $this->resultset;
     }
 
 

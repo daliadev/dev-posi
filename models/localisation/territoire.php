@@ -1,5 +1,8 @@
+
+
 <?php
 
+require_once(ROOT.'models/localisation/region.php');
 require_once(ROOT.'models/localisation/departement.php');
 
 
@@ -7,21 +10,9 @@ class Region
 {
 	
 	private $num_region = null;
-	private $nom_region = null;
-	private $descript_region = null;
-	private $departements = null;
-
-	
-	
-	public function getNum()
-	{
-		return $this->num_region;
-	}
-
-	public function setNum($numRegion)
-	{
-		$this->num_region = $numRegion;
-	}
+	private $nom_territoire = null;
+	private $descript_territoire = null;
+	private $regions = array();
 
 
 	public function getNom()
@@ -46,12 +37,22 @@ class Region
 	}
 
 
-	public function getByDepartementNum($departementNum)
+	public function getRegionByCode($region_code)
 	{
 
 	}
 
-	public function getByDepartementName($departementName)
+	public function getRegionByName($region_name)
+	{
+
+	}
+
+	public function getDepartmntByCode($departmnt_code)
+	{
+
+	}
+
+	public function getDepartmntByName($departmnt_name)
 	{
 
 	}

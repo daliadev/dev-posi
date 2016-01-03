@@ -1,20 +1,21 @@
 
-    
-    <div id="content">
+	
+	<div class="content-form-small" id="admin-menu">
 
-        <?php
-            // Inclusion du header
-            require_once(ROOT.'views/templates/header_admin.php');
-        ?>
-        
-        
-        <div id="administrateur-login">
-            <div class="zone-formu">
-            	
-                <div class="titre-form" id="titre-menu">Administration</div>
+		<div class="form-header">
+			<h2>Interface administration</h2>
+			<i></i>
+			<div class="clear"></div>
+		</div>
+		
+		<!-- <form> -->
 
-                <div id="menu-admin">
-
+			<fieldset>
+				
+				<div class="fieldset-header" id="titre-organ">
+					<i class="fa fa-compass"></i><h2 class="fieldset-title">Menu</h2>
+				</div>
+				
 				<?php
 				
 					$authType = ServicesAuth::getAuthenticationRight();
@@ -24,7 +25,7 @@
 						$title = $menu['title'];
 						unset($menu['title']);
 
-						echo '<div class="main-menu-title">'.$title.'</div>';
+						echo '<div class="admin-menu-title">'.$title.'</div>';
 						echo '<hr>';
 
 						for ($i = 0; $i < count($menu); $i++)
@@ -35,27 +36,23 @@
 
 							if ($menuItem['display'] == true && in_array($authType, $requiredAuth))
 							{
-								echo '<a href="'.SERVER_URL.'admin/'.$menuItem['url_menu'].'">';
-								echo '<div class="main-menu-btn">'.$menuItem['label_menu'].'</div>';
-								echo '</a>';
+								
+								echo '<button type="submit" name="submit_menu_'.$i.'" class="btn btn-primary" id="submit-menu-'.$i.'">';
+									echo '<a class="menu-link" href="'.SERVER_URL.'admin/'.$menuItem['url_menu'].'">'.$menuItem['label_menu'].'</a>';
+								echo '</button>';
+								
+								//echo '<a href="'.SERVER_URL.'admin/'.$menuItem['url_menu'].'">';
+								//echo '<div class="main-menu-btn">'.$menuItem['label_menu'].'</div>';
+								//echo '</a>';
 							}
 						}
 					}
 
 				?>
 
-                </div>
-            </div>
-        </div>
- 
+			</fieldset>
 
-        <div style="clear:both;"></div>
+		<!-- </form> -->
 
-
-        <?php
-            // Inclusion du footer
-            require_once(ROOT.'views/templates/footer_old.php');
-        ?>
-
-    </div>
-    
+	</div>
+	

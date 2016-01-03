@@ -63,7 +63,10 @@ class ServicesAdmin extends Main
 		ServicesAuth::logout();
 
 		$this->initialize();
- 
+ 		
+ 		$this->url = SERVER_URL."admin/login";
+
+
 		// Récupération des identifiants s'ils ont été saisis.
 		if (isset($_POST['login']) && !empty($_POST['login']) && isset($_POST['password']) && !empty($_POST['password']))
 		{
@@ -91,6 +94,8 @@ class ServicesAdmin extends Main
 				$this->registerError("form_valid", "Identifiants non valides.");
 			}
 		}
+
+		$this->returnData['response']['url'] = $this->url;
 		
 			 
 		if (!empty($this->errors) && count($this->errors) > 0)
@@ -103,11 +108,14 @@ class ServicesAdmin extends Main
 		
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_form");
-		$this->render("form_login");
-		
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->render("login");
 	}
-	
+
 	
 	
 	
@@ -134,8 +142,12 @@ class ServicesAdmin extends Main
 		}
 
 		$this->setResponse($menuList);
-		$this->setTemplate("tpl_admin_form");
-		$this->render("menu"); 
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->render("menu");
 	}
 	
 	
@@ -396,6 +408,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
+		$this->returnData['response']['url'] = $this->url;
 
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
@@ -883,7 +896,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
-
+		$this->returnData['response']['url'] = $this->url;
 
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
@@ -1145,6 +1158,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
+		$this->returnData['response']['url'] = $this->url;
 
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
@@ -1176,7 +1190,13 @@ class ServicesAdmin extends Main
 		/*** Envoi des données et rendu de la vue ***/
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_form");
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->enqueueScript("pages/admin_form");
+
 		$this->render("gestion_degre");
 		
 	}
@@ -1395,6 +1415,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
+		$this->returnData['response']['url'] = $this->url;
 
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
@@ -1426,7 +1447,11 @@ class ServicesAdmin extends Main
 		/*** Envoi des données et rendu de la vue ***/
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_form");
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
 		$this->render("gestion_valid_acquis");
 		
 	}
@@ -1650,7 +1675,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
-
+		$this->returnData['response']['url'] = $this->url;
 
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
@@ -1685,8 +1710,12 @@ class ServicesAdmin extends Main
 		/*** Envoi des données et rendu de la vue ***/
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_form");
-		$this->render("gestion_organisme"); 
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->render("gestion_organisme");
 		
 	}
 
@@ -1910,7 +1939,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
-
+		$this->returnData['response']['url'] = $this->url;
 
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
@@ -1985,8 +2014,12 @@ class ServicesAdmin extends Main
 		/*** Envoi des données et rendu de la vue ***/
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_form");
-		$this->render("gestion_utilisateur"); 
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->render("gestion_utilisateur");
 		
 	}
 
@@ -2004,10 +2037,10 @@ class ServicesAdmin extends Main
 	{
 		
 		// Authentification
-		ServicesAuth::checkAuthentication("admin");
+		//ServicesAuth::checkAuthentication("admin");
 		
-		$this->setTemplate("tpl_admin_form");
-		$this->render("gestion_activite"); 
+		//$this->setTemplate("tpl_admin_form");
+		//$this->render("gestion_activite"); 
 		
 	}
 	
@@ -2240,7 +2273,7 @@ class ServicesAdmin extends Main
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
-
+		$this->returnData['response']['url'] = $this->url;
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
 		
@@ -2274,8 +2307,12 @@ class ServicesAdmin extends Main
 		/*** Envoi des données et rendu de la vue ***/
 		
 		$this->setResponse($this->returnData);
-		$this->setTemplate("tpl_admin_form");
-		$this->render("gestion_compte");    
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->render("gestion_compte");   
 	}
 
 

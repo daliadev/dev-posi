@@ -279,15 +279,18 @@ class ServicesInscription extends Main
 		{
 			$this->setResponse($this->returnData);
 			
-			//$this->setTemplate("basics/tpl_basic_page");
+			$this->setTemplate("tpl_basic_page");
+			$this->setHeader("header_form_small");
+			$this->setFooter("footer");
 
-			//$this->addStyleSheet("lightbox");
-			//$this->addStyleSheet("jquery-ui");
-			//$this->addScript("lightbox-2.6.min");
-			//$this->addScript("jquery-ui-1.10.3.custom.all");
-			//$this->enqueueScript("loader");
+			// $this->addStyleSheet("bootstrap-select");
+			// $this->addScript("lightbox-2.6.min");
+			// $this->enqueueScript("bootstrap-select.min");
+			$this->enqueueScript("pages/inscription");
+			
+			
 
-			$this->setTemplate("tpl_inscript");
+			//$this->setTemplate("tpl_inscript");
 			$this->render("organisme");
 		}
 
@@ -430,7 +433,13 @@ class ServicesInscription extends Main
 		{
 			$this->setResponse($this->returnData);
 			
-			$this->setTemplate("tpl_inscript");
+			$this->setTemplate("tpl_basic_page");
+			$this->setHeader("header_form_small");
+			$this->setFooter("footer");
+
+			$this->enqueueScript("message-box");
+			$this->enqueueScript("pages/inscription");
+			
 			$this->render("utilisateur");
 		}
 	}

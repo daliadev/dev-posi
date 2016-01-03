@@ -2,7 +2,7 @@
 
 
 
-require_once('models/dao/pbo_connect_db.php');
+require_once('models/drivers/pdo_mysql_db.php');
 
 
 class ModelDAO 

@@ -83,12 +83,12 @@ class ServicesPositionnement extends Main
 		}
 		
 		
-		$returnData = array();
-		$returnData['response'] = array();
-		$returnData['response']['errors'] = array();
+		// $returnData = array();
+		// $returnData['response'] = array();
+		// $returnData['response']['errors'] = array();
 		
-		$url = WEBROOT."positionnement/session";
-		$returnData['response'] = array('url' => $url);
+		$this->url = SERVER_URL."positionnement/session";
+		//$returnData['response'] = array('url' => $url);
 		
 		
 		/*** Il faut récupérer le nombre de questions ***/
@@ -98,11 +98,26 @@ class ServicesPositionnement extends Main
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			// Le nombre est enregistré dans la session
-			$returnData['response']['nbre_questions'] = count($resultset['response']['question']);
+			$this->returnData['response']['nbre_questions'] = count($resultset['response']['question']);
 		}
 
-		$this->setResponse($returnData);
-		$this->setTemplate("tpl_inscript");
+		$this->returnData['response']['url'] = $this->url;
+		//$this->setResponse($returnData);
+		//$this->setTemplate("tpl_inscript");
+		//$this->render("intro");
+
+		$this->setResponse($this->returnData);
+			
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form_small");
+		$this->setFooter("footer");
+
+		$this->enqueueScript("flash_detect");
+		$this->enqueueScript("navigator-agent");
+		$this->enqueueScript("swfobject");
+		$this->enqueueScript("audio-player");
+		$this->enqueueScript("pages/intro");
+		
 		$this->render("intro");
 	}
 	
@@ -167,10 +182,11 @@ class ServicesPositionnement extends Main
 			
 			// Mise à jour du nbre de sessions de l'utilisateur
 
+
 			$resultsetUser = $this->utilisateurDAO->selectById($refUser);
 			
 			if (!$this->filterDataErrors($resultsetUser['response']))
-			{
+			{	
 				$nbreUserSession = $resultsetUser['response']['utilisateur']->getSessionsTotales();
 				$dataUser['nbre_sessions_totales'] = intval($nbreUserSession) + 1;
 				$dataUser['ref_user'] = $refUser;
@@ -377,7 +393,7 @@ class ServicesPositionnement extends Main
 			// On passe à la page suivante
 			if ($dataPage['response']['question']->getNumeroOrdre() <= $nbreQuestions)
 			{
-				$dataPage['response']['url'] = WEBROOT."positionnement/page";
+				$dataPage['response']['url'] = SERVER_URL."positionnement/page";
 			}
 			else
 			{
@@ -399,7 +415,28 @@ class ServicesPositionnement extends Main
 		
 		$this->setResponse($dataPage);
 		
-		$this->setTemplate("tpl_page");
+		//$this->setTemplate("tpl_page");
+		//$this->render("page");
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form");
+		$this->setFooter("footer");
+
+		$this->addStyleSheet("projekktor-dalia.style", SERVER_URL."media/projekktor/themes/dalia");
+
+		// Outils
+		//$this->enqueueScript("placeholders.min");
+		$this->enqueueScript("flash_detect");
+		$this->enqueueScript("navigator-agent");
+
+		// Medias
+		$this->enqueueScript("swfobject");
+		$this->enqueueScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
+		$this->enqueueScript("image-controller");
+		$this->enqueueScript("audio-player");
+
+		$this->enqueueScript("pages/page");
+
 		$this->render("page");
 	}
 	
@@ -409,9 +446,9 @@ class ServicesPositionnement extends Main
 
 
 	/**
-     * resultat - Traite et formate l'ensemble des données des résultats concernant le positionnement de la session en cours.
-     * Renvoie la page résultat et envoie un email avec les résultats à l'intervenant.
-     */
+	 * resultat - Traite et formate l'ensemble des données des résultats concernant le positionnement de la session en cours.
+	 * Renvoie la page résultat et envoie un email avec les résultats à l'intervenant.
+	 */
 
 	public function resultat()
 	{
@@ -468,7 +505,11 @@ class ServicesPositionnement extends Main
 
 		if ($resultset && !empty($resultset['response']['categorie']))
 		{
+			//$categoriesList = $resultset['response']['categorie'];
 			$categories = $resultset['response']['categorie'];
+			
+			//$this->returnData['response'] = array_merge($resultset['response'], $this->returnData['response']);
+			$this->returnData['response']['categorie'] = $categories;
 		}
 
 
@@ -559,8 +600,7 @@ class ServicesPositionnement extends Main
 			{
 				$resultatCats = $resultset['response']['question_cat'];
 			}
-			//var_dump($resultatCats);
-			//exit();
+			
 			foreach ($resultatCats as $resultatCat) 
 			{
 				if ($resultatCat->getCodeCat() !== null)
@@ -609,6 +649,7 @@ class ServicesPositionnement extends Main
 			$level = $this->servicesCategories->getLevel($categorie->getCode());
 			
 			// Test d'existence d'une catégorie parente
+			/*
 			if ($level > 1)
 			{
 				foreach ($categories as $searchParentCat)
@@ -620,7 +661,7 @@ class ServicesPositionnement extends Main
 					}
 				}
 			}
-
+			*/
 			// On attribut à chaque catégories, les réponses et les scores à partir des résultats
 			for ($i = 0; $i < count($resultsDetails); $i++)  
 			{
@@ -695,20 +736,7 @@ class ServicesPositionnement extends Main
 
 		/* 2.1. Mise à jour du nbre de sessions accomplies ds la table "utilisateur"
 		   ========================================================================== */
-		/*
-		$dataUser = array();
-		$resultsetUser = $this->utilisateurDAO->selectById(ServicesAuth::getSessionData("ref_user"));
 
-		if (!$this->filterDataErrors($resultsetUser['response']))
-		{
-			$nbreUserSession = $resultsetUser['response']['utilisateur']->getSessionsAccomplies();
-			$dataUser['nbre_sessions_accomplies'] = intval($nbreUserSession) + 1;
-			$dataUser['ref_user'] = ServicesAuth::getSessionData("ref_user");
-
-			// On met a jour la table "utilisateur"
-			$resultset = $this->utilisateurDAO->update($dataUser);
-		}
-		*/
 
 		$dataUser = array();
 		$refUser = ServicesAuth::getSessionData('ref_user');
@@ -721,7 +749,7 @@ class ServicesPositionnement extends Main
 			if ($resultset && !empty($resultset['response']['utilisateur']))
 			{
 				$dataUser['ref_user'] = $refUser;
-				$nbrePosiUser = $resultset['response']['utilisateur']->getSessionsAccomplies();
+				$nbrePosiUser = $resultset['response']['utilisateur'][0]->getSessionsAccomplies();
 				$dataUser['nbre_sessions_accomplies'] = intval($nbrePosiUser) + 1;
 
 				// Sauvegarde de l'utilisateur pour l'envoi du mail
@@ -743,20 +771,7 @@ class ServicesPositionnement extends Main
 
 		/* 2.2. Mise à jour du nbre de sessions accomplies ds la table "organisme"
 		   ========================================================================== */
-		/*
-		$dataOrgan = array();
-		$resultsetOrgan = $this->organismeDAO->selectById(ServicesAuth::getSessionData('ref_organ'));
-
-		if (!$this->filterDataErrors($resultsetOrgan['response']))
-		{
-			$nbrePosiTotal = $resultsetOrgan['response']['organisme']->getNbrePosiTotal();
-			$dataOrgan['nbre_posi_total'] = intval($nbrePosiTotal) + 1;
-			$dataOrgan['ref_organ'] = ServicesAuth::getSessionData('ref_organ');
-
-			// On met a jour la table "organisme"
-			$resultset = $this->organismeDAO->update($dataOrgan);
-		}
-		*/
+		
 
 		$dataOrgan = array();
 		$refOrgan = ServicesAuth::getSessionData('ref_organ');
@@ -769,7 +784,7 @@ class ServicesPositionnement extends Main
 			if ($resultset && !empty($resultset['response']['organisme']))
 			{
 				$dataOrgan['ref_organ'] = $refOrgan;
-				$nbrePosiOrgan = $resultset['response']['organisme']->getNbrePosiTotal();
+				$nbrePosiOrgan = $resultset['response']['organisme'][0]->getNbrePosiTotal();
 				$dataOrgan['nbre_posi_total'] = intval($nbrePosiOrgan) + 1;
 
 				// Sauvegarde de l'organisme pour l'envoi du mail
@@ -1011,7 +1026,7 @@ class ServicesPositionnement extends Main
 		   4. Synthèse des éléments à injecter dans la page
 		   ========================================================================== */
 
-		$dataView = array('response');
+		//$dataView = array('response');
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
 		/*
@@ -1037,10 +1052,10 @@ class ServicesPositionnement extends Main
 		/* Assemblage des données de la réponse à envoyer à la page de résultats
 		   ========================================================================== */
 
-		$this->returnData['response'] = array_merge($dataView['response'], $this->returnData['response']);
+		//$this->returnData['response'] = array_merge($dataView['response'], $this->returnData['response']);
 
-		/*** Gestion des erreurs ***/
-		
+		/*** Gestion des erreurs ***/		
+
 		if (!empty($this->errors))
 		{
 			// S'il y a eu des erreurs, on les affiche dans la page "résultat".
@@ -1053,10 +1068,26 @@ class ServicesPositionnement extends Main
 		
 
 		/*** Affichage de la page de résultat ***/
+		//$this->setResponse($this->returnData);
+		
+		//$this->setTemplate("tpl_results");
+		//$this->render("resultat");
+
+
 		$this->setResponse($this->returnData);
 		
-		$this->setTemplate("tpl_results");
-		//$this->setTemplate("tpl_inscript");
+		//$this->setTemplate("tpl_page");
+		//$this->render("page");
+
+		$this->setTemplate("tpl_basic_page");
+		$this->setHeader("header_form");
+		$this->setFooter("footer");
+
+		// Outils
+		//$this->enqueueScript("navigator-agent");
+
+		//$this->enqueueScript("pages/results");
+
 		$this->render("resultat");
 	}
 	

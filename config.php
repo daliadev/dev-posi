@@ -26,7 +26,7 @@ class Config
     // Titre de la partie admin.
     const ADMIN_TITLE = "Gestion du positionnement";
 
-    const CLIENT_NAME = ""; /*"Uniformation";*/
+    const CLIENT_NAME = "Uniformation"; /*"Uniformation";*/
     const CLIENT_NAME_LONG = "Uniformation";
     
     
@@ -48,7 +48,7 @@ class Config
     // Autorise le lecteur audio au format flash (non implémenté).
     const ALLOW_VIDEO = 1; // Activer (1) / désactiver (0)
 
-    // Permet d'obtenir des requêtes instantanées (listes déroulantes lièes...) dans la restitution des résultats.
+    // Permet d'obtenir des requêtes instantanées (listes déroulantes lièes...).
     const ALLOW_AJAX = 1; // Activer (1) / désactiver (0) 
     
 
@@ -101,8 +101,6 @@ class Config
     const ALLOW_PRECONISATION = 1; // autorisé (1) / non autorisé (0)
 
 
-
-
     /* Infos de connexion de la base de données*/
 
     public static $database = array(
@@ -122,7 +120,7 @@ class Config
         // Partie "Gestion du positionnement" du menu
         array(
 
-            'title' =>"Gestion",
+            'title' =>"Gestion des données",
 
             array(
                 'code_menu' => "10",

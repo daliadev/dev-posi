@@ -18,7 +18,11 @@ class Main
 	public $returnData = array();
 	
 	private $data = array();
+
+	private $pageTitle = null;
 	private $template = null;
+	private $header = null;
+	private $footer = null;
 
 	private $styles = array();
 	private $headScripts = array();
@@ -42,6 +46,8 @@ class Main
 		$this->errors = array();
 		
 		$this->url = null;
+
+		$this->pageTitle = Config::POSI_TITLE.' '.Config::CLIENT_NAME;
 	}
 
 	
@@ -53,40 +59,72 @@ class Main
 	
 
 
+	public function setPageTitle($title)
+	{
+		$this->pageTitle = $title;
+	}
+
 	public function setHeader($filename)
 	{
-
+		$this->header = ROOT.'views/templates/headers/'.$filename.'.php';
 	}
 
 	public function setFooter($filename)
 	{
-
+		$this->footer = ROOT.'views/templates/footers/'.$filename.'.php';
 	}
 
 
 
-	public function addStyleSheet($filename)
+	public function addStyleSheet($filename, $path = null)
 	{
 		if (!empty($filename) && $filename !== null)
 		{
-			array_push($this->styles, '<link type="text/css" rel="stylesheet" media="all" href="'.SERVER_URL.'media/css/'.$filename.'.css" />');
+			if ($path !== null)
+			{
+				$file = $path.'/'.$filename.'.css';
+			}
+			else
+			{
+				$file = SERVER_URL.'media/css/'.$filename.'.css';
+			}
+
+			array_push($this->styles, '<link type="text/css" rel="stylesheet" media="all" href="'.$file.'" />');
 		}
 	}
 
-	public function addScript($filename)
+	public function addScript($filename, $path = null)
 	{
 		if (!empty($filename) && $filename !== null)
 		{
-			array_push($this->headScripts, '<script src="'.SERVER_URL.'media/js/'.$filename.'.js" type="text/javascript"></script>');
+			if ($path !== null)
+			{
+				$file = $path.'/'.$filename.'.js';
+			}
+			else
+			{
+				$file = SERVER_URL.'media/js/'.$filename.'.js';
+			}
 
+			array_push($this->headScripts, '<script src="'.$file.'" type="text/javascript"></script>');
 		}
 	}
 
-	public function enqueueScript($filename)
+	public function enqueueScript($filename, $path = null)
 	{
 		if (!empty($filename) && $filename !== null)
 		{
-			array_push($this->queueScripts, '<script src="'.SERVER_URL.'media/js/'.$filename.'.js" type="text/javascript"></script>');
+
+			if ($path !== null)
+			{
+				$file = $path.'/'.$filename.'.js';
+			}
+			else
+			{
+				$file = SERVER_URL.'media/js/'.$filename.'.js';
+			}
+
+			array_push($this->queueScripts, '<script src="'.$file.'" type="text/javascript"></script>');
 		}
 	}
 	
@@ -94,7 +132,7 @@ class Main
 
 	public function setTemplate($requestTemplate)
 	{
-		$this->template = $requestTemplate;
+		$this->template = ROOT.'views/templates/pages/'.$requestTemplate.'.php';
 	}
 
 
@@ -132,15 +170,19 @@ class Main
 			$queue_script_files .= $this->queueScripts[$i];
 		}
 
+		$page_title = $this->pageTitle;
+		$header_content = $this->header;
+		$footer_content = $this->footer;
+
 
 		// Injection du template de la page
 		if ($this->template)
 		{
-			require(ROOT.'views/templates/'.$this->template.'.php');
+			require($this->template);
 		}
 		else
 		{
-			require(ROOT.'views/templates/basics/tpl_basic_page.php');
+			require(ROOT.'views/templates/pages/tpl_basic_page.php');
 			//echo $template_content;
 		}
 	}

@@ -192,36 +192,93 @@ $form_url = $response['url'];
 
 
 
-	<div id="content-large">
-
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
-		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
-
-		<div style="clear:both;"></div>
-		<?php endif; ?>
+	<div class="content-form-large">
 		
-		<!-- Header -->
-		<div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?></div>
+		<div class="form-header">
+			<h2>Restitution des résultats</h2>
+			<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+				<a href="<?php echo SERVER_URL; ?>admin/menu" class="form-header-back">
+				<i class="fa fa-bars"></i>
+			</a>
+			<?php endif; ?>
+			<div class="clear"></div>
+		</div>
+		
+		
+		<form class="form-admin-large" id="form-admin" name="form_restitution" action="<?php echo $form_url; ?>" method="post">
 
+			<fieldset>
 
-		<?php
+				<div class="fieldset-header" id="titre-organ">
+					<i class="fa fa-cube"></i> <h2 class="fieldset-title">Filtre de sélection</h2>
+				</div>
 
-			if (isset($response['errors']) && !empty($response['errors']))
-			{
-				echo '<div id="zone-erreur">';
-				echo '<ul>';
-				foreach($response['errors'] as $error)
-				{
-					if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-					{
-						echo '<li>'.$error['message'].'</li>';
+				<?php
+						
+					if (isset($response['errors']) && !empty($response['errors']))
+					{ 
+						echo '<div class="alert alert-danger">';
+							echo '<ul>';
+							foreach($response['errors'] as $error)
+							{
+								if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+								{
+									echo '<li>'.$error['message'].'</li>';
+
+								}
+							}
+							echo '</ul>';
+						echo '</div>';
 					}
-				}
-				echo '</ul>';
-				echo '</div>';
-			}
+					else if (isset($response['success']) && !empty($response['success']))
+					{
+						echo '<div class="alert alert-success">';
+							echo '<ul>';
+							foreach($response['success'] as $message)
+							{
+								echo '<li>'.$message.'</li>';
+							}
+							echo '</ul>';
+						echo '</div>';
+					}
+				?>
 
-		?>
+				<div class="fieldset-header" id="titre-organ">
+					<i class="fa fa-cube"></i> <h2 class="fieldset-title">Résultats de la sélection</h2>
+				</div>
+				
+				<ul class="tabs">
+					<li class="active">
+						<a href="#infos">Informations utilisateur</a>
+					</li>
+					<li>
+						<a href="#global">Synthèse des résultats</a>
+					</li>
+					<li>
+						<a href="#details">Détails des résultats</a>
+					</li>
+					<li>
+						<a href="#parcours">Parcours de formation</a>
+					</li>
+					<li>
+						<a href="#exports">Exports</a>
+					</li>
+					<!-- <div class="clear"></div> -->
+				</ul>
+				
+
+			</fieldset>
+			
+		</form>
+	<!-- </div> -->
+
+
+
+
+
+
+
+
 
 
 		<div id="main-form">
@@ -340,12 +397,12 @@ $form_url = $response['url'];
 
 							<legend>Informations du positionnement</legend>
 
-							<ul>
+							<!-- <ul>
 								<li><a href="#infos">1 - Informations utilisateur</a></li>
 								<li><a href="#stats">2 - Les résultats</a></li>
 								<li><a href="#details">3 - Détails des résultats</a></li>
 								<li><a href="#exports">4 - Exports</a></li>
-							</ul>
+							</ul> -->
 
 							<div id="infos" class="zone-liste-restitution">
 
@@ -620,220 +677,5 @@ $form_url = $response['url'];
 			</form>
 
 		</div>
-		
-		
-		<div style="clear:both;"></div>
-
-
-		<?php
-			// Inclusion du footer
-			require_once(ROOT.'views/templates/footer_old.php');
-		?>
 
 	</div>
-	
-
-
-
-	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
-	<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
-
-	<script src="<?php echo SERVER_URL; ?>media/js/lightbox-2.6.min.js" type="text/javascript"></script>
-	<script src="<?php echo SERVER_URL; ?>media/js/jquery.tablesorter.js" type="text/javascript"></script>
-
-
-	<script type="text/javascript">
-	   
-		$(function() { 
-			
-			$("#infos-posi").tabs();
-
-			$("#infos-posi").tooltip();
-
-			$("#table-resultats").tablesorter();
-
-			//$('.categories-list ul li').get(0).addClass('active)';
-
-
-
-			// Liste des résultats par catégories interactives
-			$('.categories-list a').on('click', function() {
-
-				var link = $(this);
-				var closest_ul = link.closest('ul');
-				//var ul_children = $(this).closest('ul').find('ul');
-				//var ul_children = link.closest('ul');
-				//var active_links = closest_ul.find('.active');
-				var closest_li = link.closest('li');
-				//var closest_active_li = closest_li.hasClass('.active');
-				var count = 0;
-
-				/* Slide up all the link lists not marked has active */
-				closest_ul.find('ul').slideUp(function() {
-
-					if (++count == closest_ul.find('ul').length) {
-
-						closest_ul.find('.active').removeClass('active');
-					}
-				});
-
-				/* Slide down the link list below the link clicked, only if it is closed */
-				if (!closest_li.hasClass('active')) {
-
-					closest_li.children('ul').slideDown();
-					closest_li.addClass('active');
-				}
-
-			});
-		
-
-
-
-			// Validation des acquis : le select et le bouton "Enregistrer sont désactivés par défaut
-			var selectedAcquis = $("#ref_valid_cbox").val();
-			//console.log(selectedAcquis);
-			$("#ref_valid_cbox").attr("disabled", true);
-			$("#submit-acquis").attr("disabled", true);
-			$("#clear-acquis").attr("disabled", true);
-			$("#submit-acquis").hide();
-			$("#clear-acquis").hide();
-
-			// Gestion de la validation des acquis
-			$('#modif-acquis').click(function(event) {
-				$(this).hide();
-				$('#submit-acquis').show();
-				$('#clear-acquis').show();
-				$("#submit-acquis").attr("disabled", false);
-				$("#clear-acquis").attr("disabled", false);
-				$("#ref_valid_cbox").attr("disabled", false);
-				return false;
-			});
-
-			$('#submit-acquis').click(function(event) {
-				$(this).hide();
-				$("#clear-acquis").hide();
-				$('#modif-acquis').show();
-				$('#form-posi').submit();
-				return false;
-			});
-
-			$('#clear-acquis').click(function(event) {
-				$(this).hide();
-				$('#submit-acquis').hide();
-				$('#modif-acquis').show();
-				$("#ref_valid_cbox").attr("disabled", true);
-				$("#ref_valid_cbox").val(selectedAcquis);
-				return false;
-			});
-
-
-
-			<?php if (Config::ALLOW_AJAX) : ?>
-
-				//console.log('Ajax allowed');
-				/* Listes dynamiques en ajax */
-			   
-				$('.ajax-list').change(function(event) {
-
-
-					var select = $(this);
-					var target = '#' + select.data('target');
-					var url = select.data('url');
-					var sortOf = select.data('sort');
-					
-					var refOrgan = null;
-					var refUser = null;
-
-					if (sortOf === "user") {
-
-						$("#ref_session_cbox").parents('.filter-item').hide();
-
-						refOrgan = $("#ref_organ_cbox").val();
-					}
-					else if (sortOf === "session") {
-
-						//$('#ref_session_cbox').show();
-
-						$('.organ-option').each(function() {
-
-							var option = $(this)[0];
-							
-							if ($(option).prop('selected')) {
-
-								refOrgan = $(option).val();
-							}
-						});
-
-						refUser = $('#ref_user_cbox').val();
-
-
-						var cbox = $('#ref_session_cbox').get(0);
-
-						if (cbox.options.length > 1) {
-	
-							cbox.options.length = 1;
-							
-						}
-					}
-
-
-					$.post(url, {"ref_organ":refOrgan,"ref_user":refUser,"sort":sortOf}, function(data) {
-						
-						if (data.error) {
-
-							alert(data.error);
-						}
-						else {
-
-							$(target).parents('.filter-item').show();
-							var $target = $(target).get(0);
-							$target.options.length = 1;
-							
-							if (data.results.utilisateur) {
-								
-								var i = 1;
-								for (var prop in data.results.utilisateur) {
-								
-									var result = data.results.utilisateur[prop];
-
-									$target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
-
-									i++;
-								}
-							}
-							else if (data.results.session) {
-
-								var i = 1;
-								for (var prop in data.results.session) {
-								
-									var result = data.results.session[prop];
-
-									$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
-
-									i++;
-								}
-							}
-							
-						}
-
-					}, 'json');
-					
-
-				}).each(function() {
-
-					var select = $(this);
-					if (select.val() == "select_cbox")
-					{
-						var target = $('#' + select.data('target'));
-						target.parents('.filter-item').hide();
-					}
-					
-				});
-
-
-			<?php endif; ?>
-
-
-		});
-
-	</script>

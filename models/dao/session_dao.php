@@ -29,7 +29,7 @@ class SessionDAO extends ModelDAO
      */
     public function selectById($refSession) 
     {
-        //$this->initialize();
+        $this->initialize();
         
         if (!empty($refSession))
         {
@@ -42,8 +42,8 @@ class SessionDAO extends ModelDAO
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }
         
-        //return $this->resultset;
-        return $this->filterResultToArray($this->resultset, 'session');
+        return $this->resultset;
+        //return $this->filterResultToArray($this->resultset, 'session');
     }
     
     
@@ -198,7 +198,7 @@ class SessionDAO extends ModelDAO
      */
     public function update($values, $idSession) 
     {
-        //$this->initialize();
+        $this->initialize();
         
         if (!empty($values))
         {
@@ -211,8 +211,8 @@ class SessionDAO extends ModelDAO
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }
 
-        //return $this->resultset;
-        return $this->filterResultToArray($this->resultset, 'session');
+        return $this->resultset;
+        //return $this->filterResultToArray($this->resultset, 'session');
     }
 
 

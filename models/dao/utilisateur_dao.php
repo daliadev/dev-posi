@@ -65,7 +65,7 @@ class UtilisateurDAO extends ModelDAO
      */
     public function selectById($refUtilisateur) 
     {
-        //$this->initialize();
+        $this->initialize();
         
         if (!empty($refUtilisateur))
         {
@@ -78,8 +78,8 @@ class UtilisateurDAO extends ModelDAO
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }
         
-        //return $this->resultset;
-        return $this->filterResultToArray($this->resultset, 'utilisateur');
+        return $this->resultset;
+        //return $this->filterResultToArray($this->resultset, 'utilisateur');
     }
 
     
@@ -247,7 +247,7 @@ class UtilisateurDAO extends ModelDAO
      */
     public function update($values) 
     {
-        //$this->initialize();
+        $this->initialize();
         
         if (!empty($values) && isset($values['ref_user']) && !empty($values['ref_user']))
         {
@@ -263,8 +263,8 @@ class UtilisateurDAO extends ModelDAO
             $this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
         }   
         
-        return $this->filterResultToArray($this->resultset, 'utilisateur');
-        //return $this->resultset;
+        //return $this->filterResultToArray($this->resultset, 'utilisateur');
+        return $this->resultset;
     }
 
 

@@ -28,7 +28,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 }
 
 
-$form_url = WEBROOT."admin/compte/";
+$form_url = $response['url'];
 
 ?>
     

@@ -432,11 +432,32 @@ class ServicesPublic extends Main
 		}
 		else
 		{
-			$this->setTemplate("tpl_public");
-			$this->render("restitution_new");
+			//$this->setTemplate("tpl_public");
+			//$this->render("restitution_new");
+
+
+			$this->setTemplate("tpl_basic_page");
+			$this->setHeader("header_admin_large");
+			$this->setFooter("footer");
+
+
+			$this->enqueueScript("lightbox-2.6.min");
+			$this->enqueueScript("jquery.tablesorter");
+
+			$this->enqueueScript("pages/restitution");
+
+			$this->render("restitution");
 		}
 
 	}
+
+
+
+
+
+
+
+
 
 
 

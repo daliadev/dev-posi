@@ -295,7 +295,7 @@ body {
 				}
 		
 
-		.content .fieldsets-parts {
+		.fieldsets-parts {
 			/*display: block;*/
 			/*width: 100%;*/
 			/*position: relative;*/
@@ -303,7 +303,7 @@ body {
 			/*overflow: hidden;*/
 		}
 
-			.content fieldset {
+			fieldset {
 				/*display: block;*/
 				/* Stacking fieldsets above each other */
 				/*position: relative;*/
@@ -316,32 +316,32 @@ body {
 			}
 
 			/* Hide all except first fieldset */
-			/*.content fieldset:not(:first-of-type) {*/
+			/*fieldset:not(:first-of-type) {*/
 				/*display: none;*/
 				/*position: absolute;*/
 			/*}*/
 				
-				.content fieldset .fieldset-title {
+				fieldset .fieldset-title {
 					border-bottom: 2px solid #bdbdbd;
 					padding-bottom: 0.5em;
 					margin-bottom: 1em;
 					color: #757575;
 				}
 
-					.content fieldset .fieldset-title i {
+					fieldset .fieldset-title i {
 						padding-right: 0.5em;
 						font-size: 1.4em;
 						line-height: 1em;
 					}
 
-					.content fieldset .fieldset-title h2 {
+					fieldset .fieldset-title h2 {
 						display: inline;
 						font-weight: 600;
 						line-height: 1em;
 					}
 
 
-				.content fieldset .error-zone {
+				fieldset .error-zone {
 					/*background: #fce3e0;*/
 					/*border: 1px solid #ff786a;*/
 				    width: 100%;
@@ -361,7 +361,7 @@ body {
 					vertical-align: middle;
 				}
 
-					.content fieldset .error-zone li {
+					fieldset .error-zone li {
 						/*margin-left: -30px;
 						margin-bottom: 5px; 
 						list-style: disc outside none;*/
@@ -369,7 +369,7 @@ body {
 					}
 
 				/*
-				.content fieldset .zone-success{
+				fieldset .zone-success{
 				    background: #bcede6;
 				    margin: 20px 0 0 0;
 				    padding: 10px;
@@ -379,7 +379,7 @@ body {
 				    font-size: 12px;
 				}
 
-					.content fieldset .zone-success li {
+					fieldset .zone-success li {
 					    margin-left: -30px;
 					    list-style: none;
 					}
@@ -387,7 +387,7 @@ body {
 
 
 				
-				.content fieldset .sub-form {
+				fieldset .sub-form {
 					padding: 5px 15px 15px 15px;
 					margin-bottom: 10px;
 					background-color: #F4F4F4;
@@ -397,36 +397,36 @@ body {
 					border-radius: 5px;
 				}
 
-				.content fieldset .form-hint {
+				fieldset .form-hint {
 					/*padding-left: 8px;*/
 					/*padding: 1px 6px;*/
 					display: none;
 				}
 
-				/*.content fieldset .form-hint::before {
+				/*fieldset .form-hint::before {
 					content: '\25B2';
 					color: #d45252;
 					padding-right: 8px;
 				}*/
 
-				.content fieldset input:focus + .form-hint {
+				fieldset input:focus + .form-hint {
 					/*display: none;*/
 				}
 				
-				.content fieldset input:invalid + .form-hint {
+				fieldset input:invalid + .form-hint {
 					/*background: #28921f;*/ /* Change form hint color when valid */
 					/*display: inline;*/
 				}
 
-				.content fieldset input:required:valid + .form-hint {
+				fieldset input:required:valid + .form-hint {
 					/*background: #28921f;*/ /* Change form hint color when valid */
 				}
 
-				.content fieldset input:required:valid + .form-hint::before {
+				fieldset input:required:valid + .form-hint::before {
 					/*color: #28921f;*/ /* Change form hint arrow color when valid */
 				}
 
-				.content fieldset .dropdown-menu.inner {
+				fieldset .dropdown-menu.inner {
 					/*margin: 0 auto;*/
 					width: 100%;
 					max-width: 100px;
@@ -437,16 +437,16 @@ body {
 				}
 				
 
-				.content fieldset #email-intervenant {
+				fieldset #email-intervenant {
 					/*position: relative;*/
 				}
 
-				.content fieldset .interv-container {
+				fieldset .interv-container {
 					position: relative;
 					width: 100%;
 				}
 
-				.content fieldset #interv-results {
+				fieldset #interv-results {
 					display: none;
 					position: absolute;
 					/*float: left;*/
@@ -468,17 +468,17 @@ body {
 					overflow: hidden;
 				}
 
-					.content fieldset #interv-results ul {
+					fieldset #interv-results ul {
 						/*list-style: outside none none;*/
 						margin: 0;
 					}
 
-					.content fieldset #interv-results .result {
+					fieldset #interv-results .result {
 
 						
 					}
 					
-					.content fieldset #interv-results li > a {
+					fieldset #interv-results li > a {
 						/*clear: both;*/
 						display: block;
 						padding: 10px;
@@ -490,14 +490,14 @@ body {
 						white-space: nowrap;
 					}
 					
-					.content fieldset #interv-results li a:hover, .content fieldset #interv-results li a:active, .content fieldset #interv-results li.selected a:hover, .content fieldset #interv-results li.selected a:active {
+					fieldset #interv-results li a:hover, fieldset #interv-results li a:active, fieldset #interv-results li.selected a:hover, fieldset #interv-results li.selected a:active {
 						background-color: #00bfa5;
 						color: #fff;
 						font-weight: 600;
 						cursor: pointer;
 					}
 
-					.content fieldset #interv-results li.selected a {
+					fieldset #interv-results li.selected a {
 						background-color: #fff;
 						color: #00bfa5;
 						font-weight: 600;
@@ -507,33 +507,33 @@ body {
 
 			
 
-				.content fieldset .label-title {
+				fieldset .label-title {
 					margin: 0;
 					padding: 5px 0 5px 0;
 					/*color: #677273;*/
 				}
 				
 			
-				.content fieldset .next {
+				fieldset .next {
 					float: right;
 					width: 46%;
 					margin: 30px 0 0 0;
 				}
 
-				.content fieldset .next#next1 {
+				fieldset .next#next1 {
 
 				}
 
-				.content fieldset .previous {
+				fieldset .previous {
 					float: left;
 					width: 46%;
 					margin: 30px 0 0 0;
 				}
 
-				.content fieldset #submit {
+				fieldset #submit {
 					float: right;
 					width: 46%;
-					margin: 30px 0 0 0;
+					margin: 16px 0 0 0;
 				}
 		
 		
@@ -1017,6 +1017,14 @@ body {
 			margin-top: 0;
 			width: 100px;
 		}*/
+
+
+
+
+	
+
+
+
 	
 
 

@@ -110,6 +110,8 @@ class ServicesInscription extends Main
 		
 		exit();
 		*/
+
+		
 		/*** Initialisation des données ***/
 
 		// Initialisation des tableaux de données qui seront inserés ou mis à jour dans la base.

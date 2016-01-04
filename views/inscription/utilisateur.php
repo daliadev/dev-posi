@@ -235,7 +235,7 @@ $form_url = $response['url'];
 						<span class="help-block">Sélectionnez votre niveau d'étude dans la liste</span>
 					</div>
 
-					<button type="submit" name="submit_user" class="btn btn-primary" id="submit" title="Cliquez sur ce bouton pour continuer">Continuer</button>
+					<button type="submit" name="submit_user" class="btn btn-primary" id="submit-user" title="Cliquez sur ce bouton pour continuer">Continuer</button>
 					<!-- <div class="clear"></div> -->
 
 				</fieldset>

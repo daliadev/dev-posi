@@ -78,12 +78,25 @@
 
 
 
+	$firstLevelCat = array();
+
+	foreach ($response['categorie'] as $categorie)
+	{
+		if ($categorie->getCode() && strlen($categorie->getCode()) <= 2)
+		{
+			array_push($firstLevelCat, $categorie);
+		}
+
+	}
+
+
+
 	$time = $response['temps_total'];
 	$percentGlobal = $response['total_score'];
 	$totalGlobal = $response['total_reponses'];
 	$totalCorrectGlobal = $response['total_reponses_correctes'];
 
-	//var_dump('$response', $response);
+	var_dump($response['categorie']);
 
 ?>
 	
@@ -218,63 +231,92 @@
 						<text class="text-percent" x="708" y="500">100%</text> -->
 					</g>
 					
+
 					<g class="cat-bars">
-						<!-- <use xlink:href="#cat-bar" x="0" y="0" /> -->
+
 						<?php 
-							$catList = recursiveCategories(0, 0, $response['categorie']);
-							//echo $catList;
+							//$catList = recursiveCategories(0, 0, $response['categorie']);
+
+							$i = 0;
+							
+							foreach ($firstLevelCat as $categorie)
+							{
+								$code_cat = $categorie->getCode();
+								$name = $categorie->getNom();
+								$descript = $categorie->getDescription();
+								$nbre_reponses = $categorie->getTotalReponses();
+								$nbre_reponses_ok = $categorie->getTotalReponsesCorrectes();
+								$score_percent = $categorie->getScorePercent();
+
+								$vert_line_y1 = $i * 100;
+								$vert_line_y2 = ($i * 100) + 56;
+
+								$name_y = $i * 100;
+
+								$reponse_x = ((701 / 100) * $score_percent) + 8;
+								$reponse_y = $i * 100;
+
+								$bar_y = ($i * 100) + 24;
+
+								$front_bar_width = (701 / 100) * $score_percent;
+
+								$percent_x = (701 / 100) * $score_percent;
+								$percent_y = ($i * 100) + 56;
+
+								var_dump($score_percent);
+
+								echo '<g class="cat-bar">';
+									echo '<line class="cat-line" x1="1" y1="'.$vert_line_y1.'" x2="1" y2="'.$vert_line_y2.'" />';
+									echo '<text class="cat-text" x="9" y="'.$name_y.'" title="'.$descript.'">'.$name.'</text>';
+									echo '<text class="reponses" x="'.$reponse_x.'" y="'.$reponse_y.'">'.$nbre_reponses_ok.'/'.$nbre_reponses.'</text>';
+									echo '<rect class="back" x="9" y="'.$bar_y.'" width="701" height="32" />';
+									echo '<rect class="front" x="9" y="'.$bar_y.'" width="'.$front_bar_width.'" height="32" />';
+									echo '<text class="percent-cat" x="'.$percent_x.'" y="'.$percent_y.'">'.$score_percent.'<tspan class="percent">%<tspan></text>';
+								echo '</g>';
+
+								$i++;
+							}
+
+
 						?>
 
 
-						<?php foreach ($variable as $key => $value) : ?>
-							
-							<g class="cat-bar">
-								<line class="cat-line" x1="1" y1="0" x2="1" y2="56"/>
-								<text class="cat-text" x="9" y="0">Ecrit</text>
-								<text class="reponses" x="505" y="0">14/24</text>
-								<rect class="back" x="9" y="24" width="701" height="32" />
-								<rect class="front" x="9" y="24" width="500" height="32" />
-								<text class="percent-cat" x="497" y="41">72<tspan class="percent">%<tspan></text>
-							</g>
 
-
-
-						<?php //endforeach; ?>
-						<g class="cat-bar">
+						<!-- <g class="cat-bar">
 							<line class="cat-line" x1="1" y1="0" x2="1" y2="56"/>
 							<text class="cat-text" x="9" y="0">Ecrit</text>
 							<text class="reponses" x="505" y="0">14/24</text>
 							<rect class="back" x="9" y="24" width="701" height="32" />
 							<rect class="front" x="9" y="24" width="500" height="32" />
 							<text class="percent-cat" x="497" y="41">72<tspan class="percent">%<tspan></text>
-						</g>
+						</g> -->
 
-						<g class="cat-bar">
+						<!-- <g class="cat-bar">
 							<line class="cat-line" x1="1" y1="100" x2="1" y2="156"/>
 							<text class="cat-text" x="9" y="100">Oral</text>
 							<text class="reponses" x="404" y="100">14/24</text>
 							<rect class="back" x="9" y="124" width="701" height="32" />
 							<rect class="front" x="9" y="124" width="399" height="32" />
 							<text class="percent-cat" x="397" y="141">57<tspan class="percent">%<tspan></text>
-						</g>
+						</g> -->
 
-						<g class="cat-bar">
+						<!-- <g class="cat-bar">
 							<line class="cat-line" x1="1" y1="200" x2="1" y2="256"/>
 							<text class="cat-text" x="9" y="200">Calcul</text>
 							<text class="reponses" x="306" y="200">14/24</text>
 							<rect class="back" x="9" y="224" width="701" height="32" />
 							<rect class="front" x="9" y="224" width="301" height="32" />
 							<text class="percent-cat" x="299" y="241">43<tspan class="percent">%<tspan></text>
-						</g>
+						</g> -->
 
-						<g class="cat-bar">
+						<!-- <g class="cat-bar">
 							<line class="cat-line" x1="1" y1="300" x2="1" y2="356"/>
 							<text class="cat-text" x="9" y="300">Geste/posture/orientation</text>
 							<text class="reponses" x="628" y="300">14/24</text>
 							<rect class="back" x="9" y="324" width="701" height="32" />
 							<rect class="front" x="9" y="324" width="623" height="32" />
 							<text class="percent-cat" x="621" y="341">89<tspan class="percent">%<tspan></text>
-						</g>
+						</g> -->
 					
 						<!-- <g class="cat-bar">
 							<line class="cat-line" x1="1" y1="400" x2="1" y2="456"/>
@@ -287,19 +329,6 @@
 					</g>
 				</svg>
 
-				<!-- 
-				<div id="speaker">
-						
-					<svg id="svg-speaker-bg" version="1.1" viewBox="0 0 52 52" preserveAspectRatio="xMinYMin meet">
-						<circle id="speaker-bg" r="24" transform="translate(26.5, 26) rotate(-90)"></circle>
-					</svg>
-
-					<svg id="svg-speaker-progress" version="1.1" viewBox="0 0 52 52" preserveAspectRatio="xMinYMin meet">
-						<circle id="speaker-loader" r="24" transform="translate(26.5, 26) rotate(-90)"></circle>
-						<circle id="speaker-progress" r="24" transform="translate(26.5, 26) rotate(-90)"></circle>
-					</svg>
-
-				</div>
-				-->
 			</div>
+
 		</div>

@@ -136,9 +136,9 @@ $(function() {
 
 
 
-	$('#submit[name=submit_organ]').on('click', function(event) {
+	$('#submit-organ').on('click', function(event) {
 
-		event.preventDefault();
+		// event.preventDefault();
 		
 		var valid = true;
 
@@ -250,7 +250,7 @@ $(function() {
 
 	/*** Soumission du formulaire utilisateur ***/
 
-	$('#submit[name=submit_user]').on('click', function(event) {
+	$('#submit-user').on('click', function(event) {
 
 		var valid = true;
 

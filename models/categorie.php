@@ -8,11 +8,13 @@ class Categorie
 	public $code_cat = null;
 	public $nom_cat = null;
 	public $descript_cat = null;
-	//private $temps = null;
+	private $temps = null;
 	private $total_reponses = 0;
 	private $total_reponses_correctes = 0;
 	private $score_percent = 0;
+	private $has_results = false;
 	private $children_cat = array();
+	private $parent_cat = null;
 
 	
 	public function getCode()
@@ -46,7 +48,7 @@ class Categorie
 		return $parentCode;
 	}
 
-	/*
+	
 	public function getTemps()
 	{
 		return $this->temps;
@@ -56,7 +58,8 @@ class Categorie
 	{
 		$this->temps = $time;
 	}
-	*/
+	
+
 
 	public function getTotalReponses()
 	{
@@ -89,6 +92,30 @@ class Categorie
 	{
 		$this->score_percent = $percent;
 	}
+
+
+	public function getHasResult()
+	{
+		return $this->has_results;
+	}
+
+	public function setHasResult($result)
+	{
+		$this->has_results = $result;
+	}
+
+
+
+	public function getParent()
+	{
+		return $this->parent_cat;
+	}
+
+	public function setParent($parent)
+	{
+		$this->parent_cat = $parent;
+	}
+
 
 
 	public function getChildren()

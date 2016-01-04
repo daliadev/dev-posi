@@ -187,7 +187,7 @@ class ServicesPosiResultats extends Main
 	{
 		//return $this->sessionDAO->selectById($refSession);
 		
-		$resultset = $this->sessionDAO->selectById($refOrgan);
+		$resultset = $this->sessionDAO->selectById($refSession);
 		
 		if (!$this->filterDataErrors($resultset['response']))
 		{
@@ -209,7 +209,7 @@ class ServicesPosiResultats extends Main
 	{
 		//return $this->sessionDAO->update($dataSession, $refSession);
 
-		$resultset = $this->utilisateurDAO->update($dataUser);
+		$resultset = $this->sessionDAO->update($dataSession, $refSession);
 
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['session']['row_count']) && !empty($resultset['response']['session']['row_count']))

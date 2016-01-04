@@ -516,7 +516,6 @@ class ServicesPositionnement extends Main
 		/* Fin listing des categories */
 
 
-
 		/* 1.2. Récupération du détail des résultats pour la session en cours
 		   ========================================================================== */
 		
@@ -535,7 +534,7 @@ class ServicesPositionnement extends Main
 		}
 
 
-		// Boucle sur tout les résultats de chaque question de la session pour en obtenir les détails utiles
+		// Boucle sur tous les résultats de chaque question de la session pour en obtenir les détails utiles
 
 		$resultsDetails = array();
 		$resultatTime = 0;
@@ -612,6 +611,7 @@ class ServicesPositionnement extends Main
 			$i++;
 		}
 
+
 		/* Fin récupération du détail des résultats */
 
 
@@ -631,6 +631,7 @@ class ServicesPositionnement extends Main
 		/* 1.4. Gestion du temps de passation
 		   ========================================================================== */
 		
+
 		$stringTime = Tools::timeToString($totalTime);
 		$this->returnData['response']['temps_total'] = $stringTime;
 
@@ -641,6 +642,7 @@ class ServicesPositionnement extends Main
 		/* 1.5. Assignation des resultats au catégories
 		   ========================================================================== */
 
+
 		/*** Calcul du nombre total de questions par catégories et déduction du nombre de bonnes réponses pour chaque catégorie.  ***/
 
 		foreach ($categories as $categorie)
@@ -649,7 +651,7 @@ class ServicesPositionnement extends Main
 			$level = $this->servicesCategories->getLevel($categorie->getCode());
 			
 			// Test d'existence d'une catégorie parente
-			/*
+			
 			if ($level > 1)
 			{
 				foreach ($categories as $searchParentCat)
@@ -657,12 +659,16 @@ class ServicesPositionnement extends Main
 					if ($searchParentCat->getCode() == $categorie->getParentCode())
 					{
 						// Si catégorie parente, la courante devient son enfant
-						$searchParentCat->addChild($categorie);
+						//$searchParentCat->addChild($categorie);
+
+						$categorie->setParent($searchParentCat);
 					}
 				}
 			}
-			*/
-			// On attribut à chaque catégories, les réponses et les scores à partir des résultats
+			
+			
+			// On attribut à chaque catégorie, les réponses et les scores à partir des résultats
+			
 			for ($i = 0; $i < count($resultsDetails); $i++)  
 			{
 				foreach ($resultsDetails[$i]['codes_cat'] as $code_cat) 
@@ -692,10 +698,54 @@ class ServicesPositionnement extends Main
 						{
 							$categorie->setScorePercent(0);
 						}
+
+						$categorie->setHasResult(true);
 					}
+					
+				}
+			}
+			
+			//unset($categorie);
+		}
+		//var_dump($categories);
+		//exit();
+
+		// Cette fois-ci, il s'agit de répercuter les résultats de chaque catégorie sur sa propre catégorie parente
+
+		//end($categories);
+
+		foreach ($categories as $categorie)
+		{
+			if ($categorie->getHasResult(true) && $categorie->getParent() !== null) 
+			{
+				$parentCat = $categorie->getParent();
+				$parentCat->setHasResult(true);
+
+				$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
+				$nbreReponsesParent = ($parentCat->getTotalReponses() !== null) ? $parentCat->getTotalReponses() : 0;
+				$nbreReponsesParent += $nbreReponses;
+				$parentCat->setTotalReponses($nbreReponsesParent);
+
+				$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
+				$nbreReponsesCorrectesParent = ($parentCat->getTotalReponsesCorrectes() !== null) ? $parentCat->getTotalReponsesCorrectes() : 0;
+				$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
+				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
+
+				// Calcul du score
+				if ($nbreReponsesCorrectesParent != 0)
+				{	
+					$scoreParentCat = round(($nbreReponsesCorrectesParent / $nbreReponsesParent) * 100);
+					$parentCat->setScorePercent($scoreParentCat);
+				}
+				else
+				{
+					$categorie->setScorePercent(0);
 				}
 			}
 		}
+
+		//var_dump($categories);
+		//exit();
 
 
 		// Enfin, on attribue aux resultats les catégories détaillées correspondantes
@@ -719,6 +769,9 @@ class ServicesPositionnement extends Main
 			}
 			unset($resultsDetails[$i]['codes_cat']);
 		}
+
+		var_dump($resultsDetails);
+		exit();
 
 
 		// On injecte le tout dans la réponse

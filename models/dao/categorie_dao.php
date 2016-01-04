@@ -123,6 +123,7 @@ class CategorieDAO extends ModelDAO
 			//var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 			//var_dump($this->resultset['response']);
+			//exit();
 		}
 		else
 		{

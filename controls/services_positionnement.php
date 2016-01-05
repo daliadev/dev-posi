@@ -713,7 +713,7 @@ class ServicesPositionnement extends Main
 		// Cette fois-ci, il s'agit de répercuter les résultats de chaque catégorie sur sa propre catégorie parente
 
 		//end($categories);
-
+		/*
 		foreach ($categories as $categorie)
 		{
 			if ($categorie->getHasResult(true) && $categorie->getParent() !== null) 
@@ -743,9 +743,23 @@ class ServicesPositionnement extends Main
 				}
 			}
 		}
+		*/
+		$maxLevel = 0;
 
-		//var_dump($categories);
-		//exit();
+		foreach ($categories as $categorie)
+		{
+			$level = $this->servicesCategories->getLevel($categorie->getCode());
+
+			if ($level > $maxLevel)
+			{
+				$maxLevel = $level;
+			}
+		}
+
+		$categoriesResults = $this->servicesResultats->getCategoriesResults($maxLevel, $categories);
+
+		var_dump($categoriesResults);
+		exit();
 
 
 		// Enfin, on attribue aux resultats les catégories détaillées correspondantes

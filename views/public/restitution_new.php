@@ -344,7 +344,8 @@ $form_url = $response['url'];
 								<li><a href="#infos">1 - Informations utilisateur</a></li>
 								<li><a href="#stats">2 - Les résultats</a></li>
 								<li><a href="#details">3 - Détails des résultats</a></li>
-								<li><a href="#exports">4 - Exports</a></li>
+								<li><a href="#parcours">4 - Parcours de formation</a></li>
+								<li><a href="#exports">5 - Exports</a></li>
 							</ul>
 
 							<div id="infos" class="zone-liste-restitution">
@@ -593,11 +594,24 @@ $form_url = $response['url'];
 								</div>
 
 							</div>
+							
+
+
+							<div id="parcours" class="zone-liste-restitution">
+
+								<div id="parcours-formation" class="tab-block">
+									
+									<div class="info">Service non disponible.</div>
+
+								</div>
+
+							</div>
+
 
 
 							<div id="exports" class="zone-liste-restitution">
 
-								<div class="export-files" class="tab-block">
+								<div id="export-files" class="tab-block">
 
 									<?php if (!empty($response['details']['questions'])) : ?>
 
@@ -652,7 +666,7 @@ $form_url = $response['url'];
 
 			$("#table-resultats").tablesorter();
 
-			//$('.categories-list ul li').get(0).addClass('active)';
+			//$('.categories-list ul li').get(0).addClass('active');
 
 
 

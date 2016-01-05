@@ -416,7 +416,7 @@ class ServicesAdminStat extends Main
 				$tabCategoriesStats[$i]['code_cat'] = $codeCat;
 				$tabCategoriesStats[$i]['nom'] = $categorie->getNom();
 				$tabCategoriesStats[$i]['description'] = $categorie->getDescription();
-				$tabCategoriesStats[$i]['type_lien'] = $categorie->getTypeLien();
+				//$tabCategoriesStats[$i]['type_lien'] = $categorie->getTypeLien();
 				$tabCategoriesStats[$i]['total'] = 0;
 				$tabCategoriesStats[$i]['total_correct'] = 0;
 

@@ -79,7 +79,7 @@ function recursiveCategories($parent, $level, $datas)
 
 	foreach ($datas as $cat) 
 	{
-		if ($parent == $cat->getParent()) 
+		if ($parent == $cat->getParentCode()) 
 		{
 			if ($previous_level < $level) 
 			{

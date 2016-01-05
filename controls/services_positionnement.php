@@ -619,10 +619,12 @@ class ServicesPositionnement extends Main
 		/* 1.3. Score global
 		   ========================================================================== */
 
+
 		$scoreGlobal = round(($totalReponsesCorrectesGlobal / $totalReponsesGlobal) * 100);
 		$this->returnData['response']['total_reponses'] = $totalReponsesGlobal;
 		$this->returnData['response']['total_reponses_correctes'] = $totalReponsesCorrectesGlobal;
 		$this->returnData['response']['total_score'] = $scoreGlobal;
+
 
 		/* Fin score global */
 
@@ -634,6 +636,7 @@ class ServicesPositionnement extends Main
 
 		$stringTime = Tools::timeToString($totalTime);
 		$this->returnData['response']['temps_total'] = $stringTime;
+
 
 		/* Fin gestion du temps */
 
@@ -758,8 +761,8 @@ class ServicesPositionnement extends Main
 
 		$categoriesResults = $this->servicesResultats->getCategoriesResults($maxLevel, $categories);
 
-		var_dump($categoriesResults);
-		exit();
+		//var_dump($categoriesResults);
+		//exit();
 
 
 		// Enfin, on attribue aux resultats les catégories détaillées correspondantes
@@ -784,8 +787,8 @@ class ServicesPositionnement extends Main
 			unset($resultsDetails[$i]['codes_cat']);
 		}
 
-		var_dump($resultsDetails);
-		exit();
+		//var_dump($resultsDetails);
+		//exit();
 
 
 		// On injecte le tout dans la réponse

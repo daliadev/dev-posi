@@ -249,6 +249,12 @@ label {
 	line-height: 1.125em;
 }
 
+textarea.form-control {
+
+	color: #757575;
+}
+
+
 
 
 

@@ -230,24 +230,10 @@ class ServicesPosiResultats extends Main
 
 	public function getCategoriesResults($level, $categories)
 	{
-		//$list = '';
-		//$previous_level = 0;
-		//$isMainListOpen = false;
-		//$isListOpen = false;
 		
-		/*
-		if ($level > 0) 
-		{
-			//$list .= '<ul>';
-		}
-		*/
-
-		//var_dump($level);
-
 		foreach ($categories as $categorie) 
 		{	
 			$levelCat = strlen($categorie->getCode()) / 2;
-			//$catLevel = $categorie->getCode;
 
 			if ($levelCat == $level && $levelCat > 1)
 			{
@@ -276,73 +262,21 @@ class ServicesPosiResultats extends Main
 					{
 						$parentCat->setScorePercent(0);
 					}
-					/*
-					if ($previous_level < $level) 
+
+					$level--;
+
+					if ($level > 1) 
 					{
-						$list .= '<ul>';
+						$categories = $this->getCategoriesResults($level, $categories);
 					}
-
-					if ($level == 0)
-					{
-						$list .= '<li>';
-						$list .= $cat->getDescription().' / '.$cat->getNom().' / '.$cat->getScorePercent().'%';
-						//$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
-						//$list .= '<div class="progress">';
-						//$list .= getProgressBar($cat->getScorePercent());
-						//$list .= '</div>';
-
-						$list .= '<g class="cat-bar">';
-							$list .= '<line class="cat-line" x1="1" y1="0" x2="1" y2="56"/>';
-							$list .= '<text class="cat-text" x="9" y="0">Ecrit</text>';
-							$list .= '<text class="reponses" x="505" y="0">14/24</text>';
-							$list .= '<rect class="back" x="9" y="24" width="701" height="32" />';
-							$list .= '<rect class="front" x="9" y="24" width="500" height="32" />';
-							$list .= '<text class="percent-cat" x="497" y="41">72<tspan class="percent">%<tspan></text>';
-						$list .= '</g>';
-
-						$isMainListOpen = true;
-					}
-					else
-					{
-						if ($isListOpen) 
-						{
-							$list .= '</li>';
-						}
-						$list .= '<li>';
-						$list .= $cat->getDescription().' / '.$cat->getNom().' / '.$cat->getScorePercent().'%';
-						//$list .= '<div class="progress-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
-						//$list .= '<div class="progress">';
-						//$list .= getProgressBar($cat->getScorePercent());
-						//$list .= '</div>';
-
-						$isListOpen = true;
-					}
-
-					$previous_level = $level;
-
-					*/
 				}
 
-				$level--;
-
-				if ($level > 1) 
-				{
-					$categories = $this->getCategoriesResults($level, $categories);
-				}
+				
 			}
 
 				
 		}
-		/*
-		if ($previous_level == $level && $previous_level != 0) 
-		{
-			if ($isMainListOpen || $isListOpen)
-			{
-				$list .= '</li>';
-			}
-			$list .= '</ul>';
-		}
-		*/
+
 		return $categories;
 	}
 

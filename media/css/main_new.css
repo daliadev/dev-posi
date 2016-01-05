@@ -1062,7 +1062,7 @@ body {
 			
 			.content-form .stats .global-text {
 				float: left;
-				width: 73%;
+				width: 72%;
 				/*padding-bottom: 8px;*/
 				margin-right: 2%;
 				/*border-bottom: 1px solid #bdbdbd;*/
@@ -1076,7 +1076,8 @@ body {
 				}
 					
 					.content-form .global-text .time-title {
-						/*width: 100%;*/
+						display: block;
+						/*float: left;*/
 						font-size: 1.25em;
 						font-weight: 400;
 						text-align: left;
@@ -1088,9 +1089,9 @@ body {
 						}
 
 					.content-form .global-text .time {
-						/*display: inline-block;
-						float: left;*/
-						width: 50%;
+						/*display: block;*/
+						/*float: left;*/
+						/*width: 50%;*/
 						color: #757575;
 						font-size: 1.5em;
 						font-weight: 600;
@@ -1104,9 +1105,9 @@ body {
 						}
 
 					.content-form .global-text .result-title {
-						/*display: inline-block;
-						float: right;*/
-						width: 50%;
+						display: block;
+						float: right;
+						/*width: 50%;*/
 						padding-top: 8px;
 						font-size: 1.25em;
 						font-weight: 400;
@@ -1147,14 +1148,14 @@ body {
 				.content-form .stats .reponses {
 					/*border-top: 1px solid #bdbdbd;*/
 					padding-top: 2%;
-					font-size: 1em;
+					font-size: 0.9375em;
 					font-weight: 400;
 					text-align: right;
 				}
 
 					.content-form .stats .reponses .score {
 						font-weight: 600;
-						font-size: 1.25em;
+						font-size: 1.35em;
 					}
 
 
@@ -1270,7 +1271,7 @@ body {
 						}
 
 						.content-form .cat-bar .cat-text { 
-							font-size: 1em;
+							font-size: 1.15em;
 							fill: #757575;
 							font-weight: 600;
 							text-anchor: start;
@@ -1460,12 +1461,18 @@ body {
 		#admin-menu button {
 			width: 100%;
 			margin-top: 16px;
+			padding: 0;
 		}
 
 			#admin-menu .menu-link {
+				display: block;
+				width: 100%;
+				height: 100%;
+				padding: 0;
 				color: #fff;
 				font-size: 0.875em;
 				text-decoration: none;
+				line-height: 45px;
 			}
 
 			

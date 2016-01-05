@@ -1,6 +1,6 @@
 <?php
 
-
+	/*
 	function recursiveCategories($parent, $level, $datas, $level_max = null)
 	{
 		$list = '';
@@ -75,28 +75,49 @@
 
 		return $list;
 	}
+	*/
+	//var_dump($response['resultats']);
 
 
 
+	// Tableau des catégories de niveau 1
 	$firstLevelCat = array();
 
 	foreach ($response['categorie'] as $categorie)
-	{
-		if ($categorie->getCode() && strlen($categorie->getCode()) <= 2)
+	{	
+		if (strlen($categorie->getCode()) == 2)
 		{
 			array_push($firstLevelCat, $categorie);
 		}
+	}
 
+	//Estimation de la hauteur pour le graphique des catégories
+
+	$height = 3 * 100 + 86;
+
+	for ($i = 0; $i < count($firstLevelCat); $i++)
+	{
+		$height = $i * 100 + 86;
+		//var_dump($firstLevelCat[$i]->getScorePercent());
 	}
 
 
-
+	// Résultat global
 	$time = $response['temps_total'];
 	$percentGlobal = $response['total_score'];
 	$totalGlobal = $response['total_reponses'];
 	$totalCorrectGlobal = $response['total_reponses_correctes'];
 
-	var_dump($response['categorie']);
+	//var_dump($response['categorie']);
+
+	// Cercle pourcentage global
+	// circumference =  2 * Math.PI * radius + 1 // en radians
+	// soit 2 * PI * 60 = 377
+
+	// Partie pleine
+	$scoreStrokeArray = 377;
+	// Partie vide
+	$scoreStrokeOffset = 377 - (377 * ($percentGlobal / 100));
 
 ?>
 	
@@ -117,10 +138,10 @@
 					<div class="titles">
 						<span class="time-title"><p>Temps total</p></span>
 						<span class="time"><i class="fa fa-clock-o"></i>&nbsp;<?php echo $time; ?></span>
-						<span class="result-title"><i></i>Score global</span>
-						<!-- <div class="clear"></div> -->
+						<span class="result-title">Score global</span>
+						<div class="clear"></div>
 					</div>
-					<div class="reponses">Nombre de bonnes réponses : <span class="score"><?php echo $totalCorrectGlobal; ?></span> sur <?php echo $totalGlobal; ?></div>
+					<div class="reponses">Nombre de bonnes réponses : <span class="score"><?php echo $totalCorrectGlobal; ?></span> sur <span class="score" style="font-size: 1em;"><?php echo $totalGlobal; ?></span></div>
 				</div>
 					
 				
@@ -131,11 +152,13 @@
 						
 						<g transform="translate(70, 70)">
 							<circle r="60" class="circle-back" />
-							<circle r="60" class="circle-front" transform="rotate(270.1)" style="stroke-dasharray: 349px; stroke-dashoffset: 349px;" />
+							<!-- circumference =  2 * Math.PI * radius + 1 // en radians  -->
+							<circle r="60" class="circle-front" transform="rotate(270.1)" style="stroke-dasharray: <?php echo $scoreStrokeArray; ?>; stroke-dashoffset: <?php echo $scoreStrokeOffset; ?>;" />
+
 						</g>
 
 						<g>
-						  <text x="73" y="75" class="text-percent"><?php echo $percentGlobal; ?><tspan class="percent">%<tspan></text>
+						  <text x="74" y="74" class="text-percent"><?php echo $percentGlobal; ?><tspan class="percent">%<tspan></text>
 						</g>
 
 					</svg>
@@ -149,20 +172,12 @@
 
 
 			<div class="main-graph" id="main-graph">
+				
 
-				<svg id="graph-svg" class="graph-svg" version="1.1" viewBox="0 0 720 500" preserveAspectRatio="none">
+				<svg id="graph-svg" class="graph-svg" version="1.1" viewBox="0 0 720 <?php echo $height; ?>" preserveAspectRatio="none">
 					
 					<defs> 
 						<polygon id="arrow" class="arrow" points="-3.5,5 0,0 3.5,5" />
-
-						<!-- <g id="cat-bar" class="cat-bar">
-							<line class="cat-line" x1="1" y1="0" x2="1" y2="56"/>
-							<text class="cat-text" x="9" y="0">Ecrit</text>
-							<text class="reponses" x="505" y="0">14/24</text>
-							<rect class="back" x="9" y="24" width="700" height="32" />
-							<rect class="front" x="9" y="24" width="500" height="32" />
-							<text class="percent-cat" x="497" y="41">72<tspan class="percent">%<tspan></text>
-						</g> -->
 					</defs>
 
 					<g class="bg-grid">
@@ -170,7 +185,7 @@
 							for ($i = 0; $i <= 10; $i++) { 
 								$x1 = ($i * 70) + 10;
 								$x2 = $x1;
-								echo '<line class="bg-line" x1="'.$x1.'" y1="485" x2="'.$x2.'" y2="0" />';
+								echo '<line class="bg-line" x1="'.$x1.'" y1="'.($height - 15).'" x2="'.$x2.'" y2="0" />';
 							}
 						?>
 						<!-- <line class="bg-line" x1="10" y1="485" x2="10" y2="0" />
@@ -190,7 +205,7 @@
 						<?php 
 							for ($i = 0; $i <= 10; $i++) { 
 								$x = ($i * 70) + 10;
-								echo '<use xlink:href="#arrow" x="'.$x.'" y="484" />';
+								echo '<use xlink:href="#arrow" x="'.$x.'" y="'.($height - 16).'" />';
 							}
 						?>
 						<!-- <use xlink:href="#arrow" x="10" y="484" />
@@ -215,7 +230,7 @@
 									$x -= 2;
 								}
 								$percent = $i * 10;
-								echo '<text class="text-percent" x="'.$x.'" y="500">'.$percent.'%</text>';
+								echo '<text class="text-percent" x="'.$x.'" y="'.$height.'">'.$percent.'%</text>';
 							}
 						?>
 						<!-- <text class="text-percent" x="10" y="500">0%</text>
@@ -247,13 +262,12 @@
 								$nbre_reponses = $categorie->getTotalReponses();
 								$nbre_reponses_ok = $categorie->getTotalReponsesCorrectes();
 								$score_percent = $categorie->getScorePercent();
-
 								$vert_line_y1 = $i * 100;
 								$vert_line_y2 = ($i * 100) + 56;
 
 								$name_y = $i * 100;
 
-								$reponse_x = ((701 / 100) * $score_percent) + 8;
+								$reponse_x = 701; //((701 / 100) * $score_percent) + 8;
 								$reponse_y = $i * 100;
 
 								$bar_y = ($i * 100) + 24;
@@ -261,14 +275,14 @@
 								$front_bar_width = (701 / 100) * $score_percent;
 
 								$percent_x = (701 / 100) * $score_percent;
-								$percent_y = ($i * 100) + 56;
+								$percent_y = ($i * 100) + 42;
 
-								var_dump($score_percent);
+								//var_dump($score_percent);
 
 								echo '<g class="cat-bar">';
 									echo '<line class="cat-line" x1="1" y1="'.$vert_line_y1.'" x2="1" y2="'.$vert_line_y2.'" />';
 									echo '<text class="cat-text" x="9" y="'.$name_y.'" title="'.$descript.'">'.$name.'</text>';
-									echo '<text class="reponses" x="'.$reponse_x.'" y="'.$reponse_y.'">'.$nbre_reponses_ok.'/'.$nbre_reponses.'</text>';
+									echo '<text class="reponses" x="'.$reponse_x.'" y="'.$reponse_y.'">Réponses : '.$nbre_reponses_ok.'/'.$nbre_reponses.'</text>';
 									echo '<rect class="back" x="9" y="'.$bar_y.'" width="701" height="32" />';
 									echo '<rect class="front" x="9" y="'.$bar_y.'" width="'.$front_bar_width.'" height="32" />';
 									echo '<text class="percent-cat" x="'.$percent_x.'" y="'.$percent_y.'">'.$score_percent.'<tspan class="percent">%<tspan></text>';

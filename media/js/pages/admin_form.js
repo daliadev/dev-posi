@@ -71,7 +71,8 @@ $(function() {
 		else {
 			return false;
 		}
-	}
+
+	});
 
 
 

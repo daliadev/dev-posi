@@ -1249,8 +1249,9 @@ class ServicesAdmin extends Main
 		
 		$this->formData['mode'] = $this->servicesGestion->getFormMode($_POST);
 
+
 		
-		/*** On récupère la référence de la validation des acquis et on initialise les données qui vont être validées et renvoyées au formulaire ***/
+		/*** On récupère la référence du degré et on initialise les données qui vont être validées et renvoyées au formulaire ***/
 
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, array("ref_valid_cbox" => "select", "nom_acquis" => "text", "descript_acquis" => "text"));
 		
@@ -1265,7 +1266,7 @@ class ServicesAdmin extends Main
 		/*** Initialisation des données qui vont être validées et renvoyées au formulaire ***/
 
 		$this->servicesGestion->switchFormButtons($this->formData, "init");
-  
+  		
 		
 		
 		/*-----   Mode "visualisation" et "edition"   -----*/
@@ -1309,7 +1310,7 @@ class ServicesAdmin extends Main
 		}
   
 		
-		
+
 		/*-----   Mode "enregistrement"   -----*/
 		
 		else if ($this->formData['mode'] == "save")
@@ -1394,10 +1395,6 @@ class ServicesAdmin extends Main
 			{
 				$this->registerError("form_data", "Le degré n'existe pas.");
 			}
-			
-			// On recharge la page (sans aucune information).
-			//header("Location: ".$this->url);
-			//exit();
 		}
 
 
@@ -1406,17 +1403,15 @@ class ServicesAdmin extends Main
 			// Sinon, renvoi vers la page inconnue (404)
 			header("Location: ".SERVER_URL."erreur/page404");
 			exit();
-		}   
-
-		
+		}
 
 		/*-----   Retour des données traitées du formulaire   -----*/
 
 
 		$this->returnData['response']['form_data'] = array();
 		$this->returnData['response']['form_data'] = $this->formData;
-		$this->returnData['response']['url'] = $this->url;
-
+		$this->returnData['response']['url'] = $this->url;		
+		
 		
 		/*** S'il y a des erreurs ou des succès, on les injecte dans la réponse ***/
 		
@@ -1443,6 +1438,7 @@ class ServicesAdmin extends Main
 		// Requete pour obtenir la liste des degrés
 		$listeDegres = $this->servicesValidation->getValidList();
 		$this->returnData['response'] = array_merge($listeDegres['response'], $this->returnData['response']);
+		
 
 		/*** Envoi des données et rendu de la vue ***/
 		
@@ -1452,9 +1448,12 @@ class ServicesAdmin extends Main
 		$this->setHeader("header_form_small");
 		$this->setFooter("footer");
 
+		$this->enqueueScript("pages/admin_form");
+
 		$this->render("gestion_valid_acquis");
 		
 	}
+
 
 
 

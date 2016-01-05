@@ -40,37 +40,43 @@ body {
 	}
 
 		.header .header-wrapper {
-			padding: 0 24px;
+			max-width: 412px;
+			margin: 0 auto;
+			padding: 0 32px;
 		}
 
 			.header .logo {
 				display: none;
 			}
 				
-				.header .header-title {
-					width: 100%;
-					padding: 0;
-					line-height: 1.75em;
-					text-align: left;
-				}
-	
-				.header .header-title i {
-					padding-right: 0.25em;
-					color: #b3e0db;
-					font-size: 0.875em;
-					display: none;
-				}
+			.header .header-title {
+				height: 32px;
+				line-height: 28px;
+			}
+				
 
 				.header .header-title h1 {
-					display: inline;
+					display: inline-block;
+					vertical-align: middle;
 					margin: 0;
 					color: #fff;
 					font-size: 0.75em;
 					font-weight: 600;
+					line-height: 1em;
+					text-align: left;
 				}
 
-			
-		
+				/*.header .header-title i {
+					display: inline-block;
+					float: right;
+					vertical-align: middle;
+					padding-right: 4px;
+					color: #b3e6e1;
+					font-size: 1em;
+					line-height: 32px;
+					text-align: right;
+				}*/
+
 			/*
 			.header .header-menu {
 				position: absolute;
@@ -134,16 +140,15 @@ body {
 		padding: 0 24px 24px 24px;
 
 	}
-		
-			
+				
 		.form-header {
-			/*display: block;*/
 			width: 100%;
 			height: 64px;
 			margin: 0;
-			padding: 12px 24px;
+			padding: 0 24px;
 			background-color: #00bfa5;
 			color: #fff;
+			line-height: 64px;
 			overflow: hidden;
 		}
 
@@ -153,19 +158,28 @@ body {
 			}
 		
 			.form-header h2 {
-				float: left;                   
+				display: inline-block;
+				/*float: left; */
+				vertical-align: middle;
+				width: 90%;
+				height: 100%;
+				margin: 0;
 				font-size: 1.5em;
 				font-weight: 400;
-				line-height: 40px;
+				text-align: left;
+				line-height: 60px;
 			}
 
 			.form-header i {
-				float: right;                   
-				display: block;
-				color: #b3e0db;
+				display: inline-block;
+				float: right;
+				vertical-align: middle;
+				width: 10%;
+				/*color: #b3e0db;*/
+				color: #c4eae7;
 				font-size: 1.25em;
 				text-align: right;
-				line-height: 40px;
+				line-height: 64px;
 			}
 		
 		
@@ -1539,26 +1553,33 @@ body {
 
 	/*-----  Footer  ------*/
 
-	.footer {
+	.footer {	
 		width: 100%;
 		max-width: 364px;
+		/*max-width: 412px;*/
 		margin: 0 auto;
-		border: 0 none;
+		padding: 16px 24px 0 24px;
 		border-top: 1px solid #bdbdbd;
-		/*color: #bdbdbd;*/
-		font-size: 0.75em;
-		line-height: 0.75em;
-		text-align: center; 
 	}
 
-		.footer .txt-footer {
-			color: #999999;
+		.footer p, .footer p a {
+			color: #a5a5a5;
+			font-size: 0.75em;
+			line-height: 1em;
+			text-align: center; 
 		}
+
+			.footer p a {
+				font-size: 1em;
+				font-weight: 400;
+				text-decoration: none;
+			}
+
+			.footer p a:hover {
+				color: #f57c00;
+			}
+		
 	
-	
-
-
-
 
 
 	/*** Autres ***/
@@ -1712,10 +1733,6 @@ body {
 	margin: 0 auto;
 }
 
-/*.main<.content-form {
-	max-width: 100%;
-	margin: 0 auto 0 auto;
-}*/
 
 	.content-form-small {
 		margin: 40px 0 0 0 !important;
@@ -1730,31 +1747,19 @@ body {
 			max-width: 240px;
 			height: 100%;
 			margin: 40px 0 0 24px;
-			/*margin-left: 24px;
-			margin-top: 40px;*/
-			/*background-color: #009688;*/
 		}
 
 		#header-form.header {
-			/*width: 100%;*/
 			height: 32px;
 			margin: 0 24px 24px 24px;
 			background-color: #009688;
 		}
 			
 			#header-form-small .header-wrapper {
-				/*position: static;*/
 				max-width: 100%;
 				height: 100%;
-				/*margin: 0;*/
 				padding: 0;
 			}
-
-			/*#form.header .header-wrapper {
-				max-width: 100%;
-				height: 100%;
-				padding: 0;
-			}*/
 
 				#header-form-small.header .logo {
 					display: block;
@@ -1764,74 +1769,29 @@ body {
 					background-color: #fff;
 				}
 					
-					#header-form-small.header .header-title {
-						width: 100%;
-						height: 64px;
-						padding: 24px 16px;
-						line-height: 1.25em;
-						text-align: center;
-					}
-		
-					#header-form-small.header .header-title i {
-						display: none;
-					}
+				#header-form-small.header .header-title {
+					width: 100%;
+					height: 64px;
+					padding: 0 24px;
+					line-height: 64px;
+					text-align: center;
+				}	
 
 					#header-form-small.header .header-title h1 {
-
+						display: inline-block;
+						vertical-align: middle;
 						font-size: 0.8125em;
+						font-weight: 600;
+						line-height: 20px;
 						text-align: center;
+						padding-bottom: 4px;
 					}
-	
 
-	
+					#header-form-small.header .header-title i {
+						display: none;				
+					}
 
 
-	/*
-	.content-form .header {
-		float: left;
-		max-width: 240px;
-		height: 100%;
-		margin-left: 24px;
-	}
-  
-		.content-form .header .header-wrapper {
-			position: static;
-			max-width: 100%;
-			height: 100%;
-			margin: 0;
-			padding: 0;
-		}
-
-			.content-form .header .logo {
-				display: block;
-				position: static;
-				width: 240px;
-				height: 200px;
-				background: url(../images/logo-240x200.png) no-repeat 50% 50%;
-				background-color: #fff;
-			}
-
-	
-			.content-form .header .header-title {
-				position: static;
-				width: 100%;
-				height: 64px;
-				padding: 20px 20px;
-				text-align: center;
-			}
-
-				.content-form .header .header-title i {
-					display: none;
-				}
-
-				.content-form .header .header-title h1 {
-					color: #ffffff;
-					font-size: 0.8125em;
-					font-weight: 400;
-					text-align: center;
-					line-height: 24px;
-				}
-				*/
 
 			/*
 			#posi-page .header .header-menu {
@@ -1923,50 +1883,15 @@ body {
 			*/
 
 
-	/*-----  Content Inscription  ------*/
+	/*-----  Content small  ------*/
 	
 	.content-form-small {
 		float: left;
 		margin: 0;
 	}
 
-		.content-form-small .form-header {
-			height: 64px;
-		}
-		
-		/*	
-		.content .form-header {
-			width: 100%;
-			height: 48px;
-			margin: 0;
-			padding: 10px 24px;
-		}*/
-		
-			.content-form-small .form-header h2 {
-				/*float: left;*/                   
-				/*display: block;*/
-				/*font-size: 1.5em;
-				font-weight: 400;*/
-				line-height: 44px;
-			}
 
-			.content-form-small .form-header i {
-				/*float: right;                   
-				display: block;
-				width: 24px;
-				height: 28px;
-				color: #b3e0db;
-				font-size: 24px;
-				text-align: center;
-				line-height: 24px;
-				text-decoration: none;*/
-				color: #fff;
-				line-height: 44px;
-			}
-
-
-
-	/*-----  Content Page  ------*/
+	/*-----  Content medium  ------*/
 
 		.media-display {
 			max-width: 100%;
@@ -1982,17 +1907,12 @@ body {
 
 
 
-	/* Footer */
-	
-	.content-form-small .footer {
-		max-width: 628px;
-		/*padding: 0 24px;*/
-	}
+	/*-----  Footer  ------*/
 
-	.content-form .footer {
-		width: 100%;
-		max-width: 750px;
+	.footer {
+		max-width: 632px;
 	}
+	
 }
 
 

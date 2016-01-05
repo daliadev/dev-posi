@@ -1,7 +1,7 @@
 		
 		<div class="footer" id="footer">
-			<p class="txt-footer">© Education et formation 2014-<?php echo date("Y"); ?> &nbsp;- &nbsp;v<?php echo Config::POSI_VERSION; ?></p>
-			<!-- <p></p> -->
+			<p><a href="#">A propos </a> - &nbsp;© Education et formation 2014-<?php echo date("Y"); ?></p>
+			<p>v<?php echo Config::POSI_VERSION; ?></p>
 		</div>
 
 

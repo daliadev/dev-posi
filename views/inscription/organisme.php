@@ -256,4 +256,4 @@ $form_url = $response['url'];
 
 		</div>
 		 
-		<!-- <div class="clear"></div> -->
+		<div class="clear"></div>

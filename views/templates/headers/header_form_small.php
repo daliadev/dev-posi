@@ -8,6 +8,7 @@
 
 			<div class="header-title">
 				<h1><?php echo Config::POSI_TITLE.' '.Config::CLIENT_NAME; ?></h1>
+				<!-- <i class="fa fa-bars"></i> -->
 			</div>
 		</div>
 

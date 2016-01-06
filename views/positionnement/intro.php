@@ -18,7 +18,7 @@
 
 			<form class="form-intro" id="form-intro" name="form_intro" action="<?php echo $form_url; ?>" method="post">
 				
-				<input type="hidden" id="audio-filename" name="audio-filename" value="<?php ROOT; ?>/media/mp3/intro.mp3" />
+				<input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo SERVER_URL; ?>/media/mp3/intro.mp3" />
 
 				<fieldset>
 

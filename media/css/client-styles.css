@@ -2,11 +2,11 @@
 
 /* Identité visuelle du client */
 
-#posi-inscript .header .logo {
-	width: 240px;
-	height: 200px;
+#header-form-small.header .logo {
+	/*width: 240px;*/
+	/*height: 200px;*/
 	background: url(../images/logo-uniformation.png) no-repeat 50% 50%;
-	background-color: #fff;
+	/*background-color: #fff;*/
 }
 
 #logo{

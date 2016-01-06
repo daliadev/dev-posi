@@ -98,7 +98,6 @@
 	for ($i = 0; $i < count($firstLevelCat); $i++)
 	{
 		$height = $i * 100 + 86;
-		//var_dump($firstLevelCat[$i]->getScorePercent());
 	}
 
 
@@ -108,9 +107,8 @@
 	$totalGlobal = $response['total_reponses'];
 	$totalCorrectGlobal = $response['total_reponses_correctes'];
 
-	//var_dump($response['categorie']);
 
-	// Cercle pourcentage global
+	/* Cercle pourcentage global */
 	// circumference =  2 * Math.PI * radius + 1 // en radians
 	// soit 2 * PI * 60 = 377
 
@@ -141,7 +139,7 @@
 						<span class="result-title">Score global</span>
 						<div class="clear"></div>
 					</div>
-					<div class="reponses">Nombre de bonnes réponses : <span class="score"><?php echo $totalCorrectGlobal; ?></span> sur <span class="score" style="font-size: 1em;"><?php echo $totalGlobal; ?></span></div>
+					<div class="reponses">Nombre de bonnes réponses : <span id="reponses-ok" class="score"><?php echo $totalCorrectGlobal; ?></span> sur <span id="reponses-global" class="score" style="font-size: 1em;"><?php echo $totalGlobal; ?></span></div>
 				</div>
 					
 				
@@ -153,7 +151,7 @@
 						<g transform="translate(70, 70)">
 							<circle r="60" class="circle-back" />
 							<!-- circumference =  2 * Math.PI * radius + 1 // en radians  -->
-							<circle r="60" class="circle-front" transform="rotate(270.1)" style="stroke-dasharray: <?php echo $scoreStrokeArray; ?>; stroke-dashoffset: <?php echo $scoreStrokeOffset; ?>;" />
+							<circle r="60" id="circle-percent" class="circle-front" transform="rotate(270.1)" style="stroke-dasharray: <?php echo $scoreStrokeArray; ?>; stroke-dashoffset: <?php echo $scoreStrokeOffset; ?>;" />
 
 						</g>
 

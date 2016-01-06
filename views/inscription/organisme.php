@@ -45,41 +45,23 @@ $form_url = $response['url'];
 ?>
 
 	
-	<!-- <div id="posi-inscript" class="main"> -->
-		<!--
-		<div class="header">
+		<!-- 
+		<div class="header-menu">
 
-			<div class="header-wrapper">
-
-				<div class="logo">
-				</div>
-
-				<div class="header-title">
-					<h1>Test de positionnement <?php //echo Config::CLIENT_NAME; ?></h1>
-				</div>-->
-
-
-				<!--  
-				<div class="header-menu">
-
-					<a href="#" class="menu-btn">
-					   <i class="fa fa-bars"></i>
-					</a>
-					<ul class="menu-list">
-						<li><span>Organisme</span></li>
-						<li><span>Profil</span></li>
-						<li><span>Parcours</span></li>
-					</ul>
-					<div class="clear"></div>
-				</div>
-				
-				<div class="clear"></div>
-				 -->
-			<!-- </div>
-
-		</div> -->
+			<a href="#" class="menu-btn">
+			   <i class="fa fa-bars"></i>
+			</a>
+			<ul class="menu-list">
+				<li><span>Organisme</span></li>
+				<li><span>Profil</span></li>
+				<li><span>Parcours</span></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
 		
-		<!-- <div class="clear"></div> -->
+		<div class="clear"></div>-->
+
+		
 	
 		<div class="content-form-small">
 			
@@ -133,8 +115,7 @@ $form_url = $response['url'];
 					<div id="first-part">
 						
 						<div class="form-group">
-							<label for="code_identification">Code organisme<!--  <span class="asterix">*</span> --></label>
-							<!-- <br/> -->
+							<label for="code_identification">Code organisme</label>
 							<input type="password" name="code_identification" class="form-control" id="code_identification" title="Entrer votre code organisme" value="" />
 							<span id="code-help" class="help-block">Le code n'a pas été correctement saisi</span>
 						</div>
@@ -143,7 +124,7 @@ $form_url = $response['url'];
 					<div id="second-part">
 						
 						<div class="form-group">
-							<label for="ref_organ_cbox">Sélectionnez votre organisme<!--  <span class="asterix">*</span> --></label><!-- <br/> -->
+							<label for="ref_organ_cbox">Sélectionnez votre organisme</label>
 							<select name="ref_organ_cbox" id="ref_organ_cbox" class="form-control">
 								<option value="select_cbox">---</option>
 
@@ -182,17 +163,17 @@ $form_url = $response['url'];
 					<div id="third-part" class="sub-form">
 						
 						<div class="form-group">
-							<label for="nom_organ">Nom de votre organisme<!--  <span class="asterix">*</span> --></label><!-- <br/> -->
+							<label for="nom_organ">Nom de votre organisme</label>
 							<input type="text" name="nom_organ" id="nom_organ" class="form-control" value="<?php echo $formData['nom_organ']; ?>" />
 							<span id="organ-name-help" class="help-block">Veuillez saisir le nom de l'organisme</span>
 						</div>
 						<div class="form-group">
-							<label for="code_postal_organ">Code postal<!--  <span class="asterix">*</span> --></label><!-- <br/> -->
+							<label for="code_postal_organ">Code postal</label>
 							<input type="tel" name="code_postal_organ" id="code_postal_organ" class="form-control" value="<?php echo $formData['code_postal_organ']; ?>" title="Ex:76000" />
 							<span id="organ-postal-help" class="help-block">Le code postal est incorrect</span>
 						</div>
 						<div class="form-group">
-							<label for="tel_organ">Téléphone<!--  <span class="asterix">*</span> --></label><!-- <br/> -->
+							<label for="tel_organ">Téléphone</label>
 							<input type="tel" name="tel_organ" id="tel_organ" class="form-control" value="<?php echo $formData['tel_organ']; ?>" />
 							<span id="organ-tel-help" class="help-block">Le numéro de téléphone n'a pas été correctement saisi</span>
 						</div>
@@ -204,7 +185,7 @@ $form_url = $response['url'];
 						<?php if (Config::ALLOW_REFERENT_INPUT == 1 || count(Config::$emails_referent) == 0) : ?>
 						
 						<div class="form-group">		
-							<label for="email_intervenant">Email formateur<!--  <span class="asterix">*</span> --></label><!-- <br/> -->
+							<label for="email_intervenant">Email formateur</label>
 							<input type="email" name="email_intervenant" id="email-intervenant" class="form-control"  value="<?php echo $formData['email_intervenant']; ?>" title="Format email requis(exemple@xxx.yy)" placeholder="exemple@xxx.yy" autocomplete="off" />
 							<!-- Autocompletion -->
 							<!-- <div class="interv-container">
@@ -216,7 +197,7 @@ $form_url = $response['url'];
 						<?php elseif (isset(Config::$emails_referent) && is_array(Config::$emails_referent) && count(Config::$emails_referent) > 0) : ?>
 						
 						<div class="form-group">	
-							<label for="ref_inter_cbox">Email formateur<!--  <span class="asterix">*</span> --></label><!-- <br/> -->
+							<label for="ref_inter_cbox">Email formateur</label>
 							<select name="ref_inter_cbox" id="ref_inter_cbox" class="form-control">
 								<option value="select_cbox">---</option>
 
@@ -246,11 +227,8 @@ $form_url = $response['url'];
 
 
 					<button type="submit" name="submit_organ" class="btn btn-primary" id="submit-organ" title="Cliquez sur ce bouton pour continuer">Continuer</button>
-					<!-- <div class="clear"></div> -->
 
 				</fieldset>
-
-				<!-- </div> -->
 
 			</form>
 

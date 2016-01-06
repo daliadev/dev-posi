@@ -555,6 +555,7 @@ class ServicesPositionnement extends Main
 			$resultatTime = $resultat->getTempsReponse();
 			$totalTime += $resultatTime;
 
+
 			// Test type de question -> enregistrement des réponses correctes
 			if ($resultat->getRefReponseQcm() !== null && $resultat->getRefReponseQcmCorrecte() !== null)
 			{
@@ -574,7 +575,7 @@ class ServicesPositionnement extends Main
 					$resultsDetails[$i]['correct'] = false;
 				}
 			}
-			else if ($resultat->getReponseChamp() !== null && !empty($resultat->getReponseChamp()))
+			else if ($resultat->getReponseChamp() !== null)
 			{
 				$totalReponses++;
 				$totalReponsesGlobal++;
@@ -1156,7 +1157,7 @@ class ServicesPositionnement extends Main
 		// Outils
 		//$this->enqueueScript("navigator-agent");
 
-		//$this->enqueueScript("pages/results");
+		$this->enqueueScript("pages/resultat");
 
 		$this->render("resultat");
 	}

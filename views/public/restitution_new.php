@@ -90,12 +90,11 @@ function recursiveCategories($parent, $level, $datas)
 			{
 				$list .= '<li>'; //<h3><a>'.$cat->getNom().'</a></h3>';
 
-				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
+				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
+				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3><span>Réponses 12/24</span><div class="clear"></div>';
+				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= getProgressBar($cat->getScorePercent());
-				//$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
-				//$list .= '<a>'.$cat->getNom().'</a> / <strong>'.$cat->getScorePercent().'</strong>%';
-				//$list .= '<div class="progressbar-bg">';
 
 
 				//$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';

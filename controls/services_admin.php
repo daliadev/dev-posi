@@ -1191,11 +1191,12 @@ class ServicesAdmin extends Main
 		
 		$this->setResponse($this->returnData);
 
-		$this->setTemplate("tpl_basic_page");
-		$this->setHeader("header_form_small");
-		$this->setFooter("footer");
+		$this->setTemplate("tpl_admin_form");
+		// $this->setTemplate("tpl_basic_page");
+		// $this->setHeader("header_form_small");
+		// $this->setFooter("footer");
 
-		$this->enqueueScript("pages/admin_form");
+		//$this->enqueueScript("pages/admin_form");
 
 		$this->render("gestion_degre");
 		
@@ -1444,11 +1445,12 @@ class ServicesAdmin extends Main
 		
 		$this->setResponse($this->returnData);
 
-		$this->setTemplate("tpl_basic_page");
-		$this->setHeader("header_form_small");
-		$this->setFooter("footer");
+		$this->setTemplate("tpl_admin_form");
+		//$this->setTemplate("tpl_basic_page");
+		//$this->setHeader("header_form_small");
+		//$this->setFooter("footer");
 
-		$this->enqueueScript("pages/admin_form");
+		//$this->enqueueScript("pages/admin_form");
 
 		$this->render("gestion_valid_acquis");
 		
@@ -1710,9 +1712,10 @@ class ServicesAdmin extends Main
 		
 		$this->setResponse($this->returnData);
 
-		$this->setTemplate("tpl_basic_page");
-		$this->setHeader("header_form_small");
-		$this->setFooter("footer");
+		$this->setTemplate("tpl_admin_form");
+		//$this->setTemplate("tpl_basic_page");
+		//$this->setHeader("header_form_small");
+		//$this->setFooter("footer");
 
 		$this->render("gestion_organisme");
 		
@@ -2014,9 +2017,10 @@ class ServicesAdmin extends Main
 		
 		$this->setResponse($this->returnData);
 
-		$this->setTemplate("tpl_basic_page");
-		$this->setHeader("header_form_small");
-		$this->setFooter("footer");
+		$this->setTemplate("tpl_admin_form");
+		//$this->setTemplate("tpl_basic_page");
+		//$this->setHeader("header_form_small");
+		//$this->setFooter("footer");
 
 		$this->render("gestion_utilisateur");
 		
@@ -2307,9 +2311,9 @@ class ServicesAdmin extends Main
 		
 		$this->setResponse($this->returnData);
 
-		$this->setTemplate("tpl_basic_page");
-		$this->setHeader("header_form_small");
-		$this->setFooter("footer");
+		$this->setTemplate("tpl_admin_form");
+		//$this->setHeader("header_form_small");
+		//$this->setFooter("footer");
 
 		$this->render("gestion_compte");   
 	}

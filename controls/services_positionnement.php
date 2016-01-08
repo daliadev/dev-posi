@@ -460,7 +460,7 @@ class ServicesPositionnement extends Main
 
 		/**
 		 * Description: Gestion et génération de la page résultat et de l'envoi d'email à l'intervenant.
-		 * Last update: 14/12/2015
+		 * Last update: 07/01/2016
 		 * Author: Dalia Team
 		 *
 		 * Summary:
@@ -711,8 +711,8 @@ class ServicesPositionnement extends Main
 			
 			//unset($categorie);
 		}
-		//var_dump($categories);
-		//exit();
+		// var_dump($categories);
+		// exit();
 
 		// Cette fois-ci, il s'agit de répercuter les résultats de chaque catégorie sur sa propre catégorie parente
 
@@ -767,7 +767,7 @@ class ServicesPositionnement extends Main
 
 
 		// Enfin, on attribue aux resultats les catégories détaillées correspondantes
-
+		/*
 		for ($i = 0; $i < count($resultsDetails); $i++)  
 		{
 			$resultsDetails[$i]['categories'] = array();
@@ -787,7 +787,7 @@ class ServicesPositionnement extends Main
 			}
 			unset($resultsDetails[$i]['codes_cat']);
 		}
-
+		*/
 		//var_dump($resultsDetails);
 		//exit();
 

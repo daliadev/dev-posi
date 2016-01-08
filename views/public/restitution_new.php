@@ -196,7 +196,7 @@ $form_url = $response['url'];
 		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
 		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
 
-		<div style="clear:both;"></div>
+		<div class="clear"></div>
 		<?php endif; ?>
 		
 		<!-- Header -->
@@ -635,7 +635,7 @@ $form_url = $response['url'];
 		</div>
 		
 		
-		<div style="clear:both;"></div>
+		<div class="clear"></div>
 
 
 		<?php

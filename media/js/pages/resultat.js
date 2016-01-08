@@ -15,24 +15,29 @@ $(function() {
 
 
 	function animateBar(index) {
-
+		
 		var $el = progressBars[index].el;
+		var $percent = progressBars[index].percent;
 		var maxWidth = progressBars[index].leng;
 		var currentWidth = new Number($el.attr('width'));
 
 		var d = maxWidth - currentWidth;
-		currentWidth += Math.round(d * 0.1);
+		currentWidth += d * 0.15;
+		//currentWidth = Math.round(currentWidth);
 		$el.attr('width', currentWidth);
 		
-		if (index == 0) {
-			console.log(currentWidth);
-		}
-		
-		//if (currentWidth >= maxWidth) {
-		
-			//console.log('end');
-			clearInterval(animBars[index]);
+		//if (index == 0) {
+		//	console.log(currentWidth + ' - '+ d + ' - ' + maxWidth);
 		//}
+
+		console.log('end');
+		
+		if (Math.round(currentWidth) >= maxWidth) {
+
+			$percent.show();
+			clearInterval(animBars[index]);
+			
+		}
 		
 		//console.log('en cours');
 	}
@@ -61,6 +66,7 @@ $(function() {
 				var time = i * 500;
 				var timer = setTimeout(startAnimateBar, time, i);
 			}
+			
 		}
 	}
 
@@ -70,15 +76,18 @@ $(function() {
  
 		var $bar = $(this).children('.front');
 		var barLength = $bar.attr('width');
-
+		var $percent = $(this).children('.percent-cat');
+		console.log($percent);
 		progressBars[i] = {
 			el: $bar,
-			leng: Math.round(barLength)
+			leng: Math.round(barLength),
+			percent: $percent
 		}
 	});
 	
-	console.log(progressBars);
+	//console.log(progressBars);
 	$('#bars .cat-bar .front').attr('width', '0');
+	$('#bars .cat-bar .percent-cat').hide();
 
 
 	var reponsesCorrectes = new Number($('#reponses-ok').html());

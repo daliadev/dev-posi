@@ -20,18 +20,27 @@ class MailSender
 
 
 
-	public function __construct($to, $from, $subject)
+	public function __construct($toto, $from, $subject)
 	{
-		if (is_array($to))
+		if (is_array($toto))
 		{
-			foreach ($to as $destinataire) 
+			$i = 0;
+
+			foreach ($toto as $destinataire) 
 			{
-				$this->to .= $destinataire.', ';
+				$this->to .= $destinataire;
+
+				if ($i < count($toto) - 1) 
+				{
+					$this->to .= ', ';
+				}
+
+				$i++;
 			}
 		}
 		else
 		{
-			$this->to = $to;
+			$this->to = $toto;
 		}
 		
 		$this->from = $from;
@@ -53,8 +62,8 @@ class MailSender
 
 	public function setHeader($mimeVersion = '1.0', $contentType = 'text/html', $charset = 'utf-8', $cc = null, $bcc = null)
 	{
-		$this->headers[] = 'MIME-Version: '.$mimeVersion;
-		$this->headers[] = 'Content-type: '.$contentType.'; charset='.$charset;
+		$this->headers[] = 'MIME-version: '.$mimeVersion;
+		$this->headers[] = 'Content-Type: '.$contentType.'; charset='.$charset;
 		$this->headers[] = 'From: '.$this->from;
 		if ($cc !== null)
 		{
@@ -101,12 +110,12 @@ class MailSender
 	{
 		if ($this->canBeSend) 
 		{
-			echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('/r/n', $this->headers).')';
+			//echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('\r\n', $this->headers).')';
 			//exit;
+			//return true;
+			
+			//$sending = mail($this->to, $this->subject, $this->message, implode('\n', $this->headers));
 
-			//$sending = mail($this->to, $this->subject, $this->message, implode('/r/n', $this->headers));
-
-			/*
 			if ($sending)
 			{
 				$this->isSend = true;
@@ -116,12 +125,11 @@ class MailSender
 			{
 				$this->isSend = false;
 			}
-			*/
+			
 		}
 		
 		return false;
 	}
-	
 }
 
 

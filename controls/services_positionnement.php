@@ -37,6 +37,9 @@ class ServicesPositionnement extends Main
 
 	private $servicesResultats = null;
 	private $servicesCategories = null;
+
+
+	private $sendMail = null;
 	
 	
 	
@@ -813,7 +816,7 @@ class ServicesPositionnement extends Main
 
 		$this->returnData['response']['total_reponses'] = $totalReponsesGlobal;
 		$this->returnData['response']['total_reponses_correctes'] = $totalReponsesCorrectesGlobal;
-		$this->returnData['response']['total_score'] = $scoreGlobal;
+		$this->returnData['response']['total_score'] = round($scoreGlobal);
 
 
 		/* Fin score global */
@@ -936,7 +939,7 @@ class ServicesPositionnement extends Main
 
 
 		/*** On va chercher toutes les infos pour l'envoi d'emails au référent du positionnement et à l'équipe admin ***/
-		/*
+		
 		$emailInfos = array();
 
 		$emailInfos['nom_organ'] = "";
@@ -964,7 +967,7 @@ class ServicesPositionnement extends Main
 		{
 			// Si le résultat est unique
 			if (!empty($resultsetOrgan['response']['organisme']) && count($resultsetOrgan['response']['organisme']) == 1)
-			{ 
+			{
 				$organisme = $resultsetOrgan['response']['organisme'];
 				$resultsetOrgan['response']['organisme'] = array($organisme);
 			}
@@ -1001,6 +1004,7 @@ class ServicesPositionnement extends Main
 
 		// Email -> infos intervenant
 
+		$emailInfos['email_intervenant'] = "";
 		$refInter = ServicesAuth::getSessionData('ref_intervenant');
 		$resultsetInter = $this->intervenantDAO->selectById($refInter);
 
@@ -1026,10 +1030,10 @@ class ServicesPositionnement extends Main
 
 
 		//$dataView['response']['email_infos'] = $emailInfos;
-		*/
+		
 
 		/* Configuration du mail */
-		/*
+		
 		$destinataires = array();
 
 		if (!empty(Config::$main_email_admin)) 
@@ -1049,20 +1053,18 @@ class ServicesPositionnement extends Main
 			}
 		}
 
-		if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($response['email_infos']['email_intervenant']) && !empty($response['email_infos']['email_intervenant'])) 
+		if (Config::ENVOI_EMAIL_REFERENT == 1 && isset($emailInfos['email_intervenant']) && !empty($emailInfos['email_intervenant'])) 
 		{
-			$destinataires[] = $response['email_infos']['email_intervenant'];
+			$destinataires[] = $emailInfos['email_intervenant'];
 		}
 
 		$from = !empty(Config::$main_email_admin) ? Config::$main_email_admin : "f.rampion@educationetformation.fr";
-		$subject = Config::POSI_NAME;
+		$subject = Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG;
 
-		$mail = new MailSender($destinataires, $from, $subject);
-		$mail->setHeader();
-		*/
+
 
 		/* Création du mail */
-		/*
+		
 		$messageBody = '';
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
@@ -1078,24 +1080,19 @@ class ServicesPositionnement extends Main
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br />';
-		$messageBody .= 'Score globale : <strong>'.$dataView['response']['percent_global'].' %</strong>';
+		$messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Score détaillé : <br />';
 
-		//$results = "";
-		foreach ($dataView['response']['correction'] as $correction)
-		{
-			if ($correction['parent'])
-			{         
-				if ($correction['total'] > 0)
-				{
-					$messageBody .= '</br>';
-					$messageBody .= $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].' questions)';
-				}
+		foreach ($categoriesResults as $categorie)
+		{	
+			if (strlen($categorie->getCode()) == 2 && $categorie->getHasResult())
+			{
+				$messageBody .= '</br>';
+				$messageBody .= $categorie->getNom().' / <strong>'.$categorie->getScorePercent().'</strong>% ('.$categorie->getTotalReponsesCorrectes().'/'.$categorie->getTotalReponses().' questions)';
 			}
 		}
-
 		$messageBody .= '</p>';
 		$messageBody .= '<br />';
 		$messageBody .= '<p>';
@@ -1106,13 +1103,18 @@ class ServicesPositionnement extends Main
 		$style = 'p { font-family: Arial, sans-serif; }';
 
 
-		$mail->setMessage($messageBody, 'html', Config::POSI_NAME, $style);
-		*/
+
+
+		$this->sendMail = new MailSender($destinataires, $from, $subject);
+		$this->sendMail->setHeader('1.0', 'text/html', 'utf-8');
+		$this->sendMail->setMessage($messageBody, 'html', Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG, $style);
+		
 
 		/*** Envoi du mail ***/
 
-		//$mail->send();
-
+		//$this->sendMail->send();
+		//var_dump($this->sendMail->getIsSend());
+		//exit();
 
 
 		/* ==========================================================================

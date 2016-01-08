@@ -15,7 +15,7 @@ require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/valid_acquis_dao.php');
 
 //require_once(ROOT.'controls/services_admin_categorie.php');
-
+require_once(ROOT.'controls/services_resultats.php');
 
 
 class ServicesAdminRestitution extends Main
@@ -35,6 +35,7 @@ class ServicesAdminRestitution extends Main
 	private $validAcquisDAO = null;
 
    // private $servicesCategories = null;
+	private $servicesResultats = null;
 	
 	
 	
@@ -57,6 +58,7 @@ class ServicesAdminRestitution extends Main
 		$this->validAcquisDAO = new ValidAcquisDAO();
 
 		//$this->servicesCategories = new ServicesAdminCategorie()
+		$this->servicesResultats = new ServicesPosiResultats();
 	}
 
 	

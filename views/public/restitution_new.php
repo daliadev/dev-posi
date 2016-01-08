@@ -2,6 +2,39 @@
 
 require_once(ROOT.'utils/array_sort.php');
 
+// Initialisation par défaut des valeurs du formulaire
+$formData = array();
+$formData['ref_organ_cbox'] = "";
+$formData['ref_organ'] = "";
+$formData['ref_user_cbox'] = "";
+$formData['ref_user'] = "";
+$formData['ref_session_cbox'] = "";
+$formData['ref_session'] = "";
+
+
+if (isset($response['form_data']) && !empty($response['form_data']))
+{   
+	foreach($response['form_data'] as $key => $value)
+	{
+		if (is_array($response['form_data'][$key]))
+		{
+			for ($i = 0; $i < count($response['form_data'][$key]); $i++)
+			{
+				$formData[$key][$i] = $response['form_data'][$key][$i];
+			}
+		}
+		else 
+		{
+			$formData[$key] = $value;
+		}
+	}
+}
+
+
+$form_url = $response['url'];
+
+
+
 // Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage 
 function getColor($percent)
 {
@@ -91,7 +124,7 @@ function recursiveCategories($parent, $level, $datas)
 				$list .= '<li>'; //<h3><a>'.$cat->getNom().'</a></h3>';
 
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
-				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3><span>Réponses 12/24</span><div class="clear"></div>';
+				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3><span>Réponses '.$cat->getTotalReponses().'/'.$cat->getTotalReponsesCorrectes().'</span><div class="clear"></div>';
 				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= getProgressBar($cat->getScorePercent());
@@ -153,38 +186,6 @@ function recursiveCategories($parent, $level, $datas)
 }
 
 
-
-
-// Initialisation par défaut des valeurs du formulaire
-$formData = array();
-$formData['ref_organ_cbox'] = "";
-$formData['ref_organ'] = "";
-$formData['ref_user_cbox'] = "";
-$formData['ref_user'] = "";
-$formData['ref_session_cbox'] = "";
-$formData['ref_session'] = "";
-
-
-if (isset($response['form_data']) && !empty($response['form_data']))
-{   
-	foreach($response['form_data'] as $key => $value)
-	{
-		if (is_array($response['form_data'][$key]))
-		{
-			for ($i = 0; $i < count($response['form_data'][$key]); $i++)
-			{
-				$formData[$key][$i] = $response['form_data'][$key][$i];
-			}
-		}
-		else 
-		{
-			$formData[$key] = $value;
-		}
-	}
-}
-
-
-$form_url = $response['url'];
 
 
 ?>

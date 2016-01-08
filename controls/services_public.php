@@ -218,7 +218,6 @@ class ServicesPublic extends Main
 		
 		
 		/*** Initialisation des infos sur le positionnement ***/
-  
 		
 		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme"
 		if ($loggedAsViewer)

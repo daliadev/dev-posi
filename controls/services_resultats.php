@@ -263,13 +263,8 @@ class ServicesPosiResultats extends Main
 					{
 						$parentCat->setScorePercent(0);
 					}
-					
-					
-					
-				}
-				
+				}	
 			}
-
 		}
 
 		$level--;

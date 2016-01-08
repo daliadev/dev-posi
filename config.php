@@ -85,14 +85,13 @@ class Config
 
     // Email du responsable du positionnement
     //public static $main_email_admin = "f.rampion@educationetformation.fr";
-    public static $main_email_admin = "n.beurion.dev@gmail.com";
+    public static $main_email_admin = "n.beurion@educationetformation.fr";
 
     // Tableau des adresse emails des administrateurs pour la réception des positionnements effectués.
     public static $emails_admin = array(
         //"f.rampion@educationetformation.fr",
         //"g.billard@educationetformation.fr", 
-        // "n.beurion@educationetformation.fr"
-        "n.beurion.dev@gmail.com"
+        "n.beurion@educationetformation.fr"
     );
 
 

@@ -230,17 +230,16 @@ class ServicesPosiResultats extends Main
 
 	public function getCategoriesResults($level, $categories)
 	{
-		
+
 		foreach ($categories as $categorie) 
 		{	
 			$levelCat = strlen($categorie->getCode()) / 2;
 
-			if ($levelCat == $level && $levelCat > 1)
+			if ($levelCat == $level && $level > 1)
 			{
 				if ($categorie->getHasResult(true) && $categorie->getParent() !== null)  
 				{
 					$parentCat = $categorie->getParent();
-					$parentCat->setHasResult(true);
 
 					$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
 					$nbreReponsesParent = ($parentCat->getTotalReponses() !== null) ? $parentCat->getTotalReponses() : 0;
@@ -252,6 +251,8 @@ class ServicesPosiResultats extends Main
 					$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
 					$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
 
+					$parentCat->setHasResult(true);
+
 					// Calcul du score
 					if ($nbreReponsesCorrectesParent != 0)
 					{	
@@ -262,19 +263,20 @@ class ServicesPosiResultats extends Main
 					{
 						$parentCat->setScorePercent(0);
 					}
-
-					$level--;
-
-					if ($level > 1) 
-					{
-						$categories = $this->getCategoriesResults($level, $categories);
-					}
+					
+					
+					
 				}
-
 				
 			}
 
-				
+		}
+
+		$level--;
+
+		if ($level > 1) 
+		{
+			$this->getCategoriesResults($level, $categories);
 		}
 
 		return $categories;

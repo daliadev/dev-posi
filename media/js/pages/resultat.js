@@ -2,7 +2,7 @@
 $(function() { 
 
 	var animCircle = null;
-	var animbar = null;
+	var animBars = new Array();
 
 	var percentGlobal = 0;
 	
@@ -12,28 +12,73 @@ $(function() {
 
 	var progressBars = new Array();
 
-	var barsLength = new Array();
+
+
+	function animateBar(index) {
+
+		var $el = progressBars[index].el;
+		var maxWidth = progressBars[index].leng;
+		var currentWidth = new Number($el.attr('width'));
+
+		var d = maxWidth - currentWidth;
+		currentWidth += Math.round(d * 0.1);
+		$el.attr('width', currentWidth);
+		
+		if (index == 0) {
+			console.log(currentWidth);
+		}
+		
+		//if (currentWidth >= maxWidth) {
+		
+			//console.log('end');
+			clearInterval(animBars[index]);
+		//}
+		
+		//console.log('en cours');
+	}
+
+
+	function startAnimateBar(index) {
+
+		animBars[index] = setInterval(animateBar, 40, index);
+	}
 
 
 	function animateCircle() {
 
 		d = circleOffset - circleOffsetTarget;
-		circleOffset -= d * 0.05;
+		circleOffset -= d * 0.1;
 
 		$('#circle-percent').css('stroke-dashoffset', circleOffset);
 
-		if (circleOffset <= circleOffsetTarget) {
 
+		if (Math.round(circleOffset) <= circleOffsetTarget) {
+			
 			clearInterval(animCircle);
+			
+			for (var i = 0; i < progressBars.length; i++) {
+				
+				var time = i * 500;
+				var timer = setTimeout(startAnimateBar, time, i);
+			}
 		}
 	}
 
 
-	function animateBar() {
+	
+	$('#bars').children().each(function(i) {
+ 
+		var $bar = $(this).children('.front');
+		var barLength = $bar.attr('width');
 
-		
-	}
-
+		progressBars[i] = {
+			el: $bar,
+			leng: Math.round(barLength)
+		}
+	});
+	
+	console.log(progressBars);
+	$('#bars .cat-bar .front').attr('width', '0');
 
 
 	var reponsesCorrectes = new Number($('#reponses-ok').html());
@@ -48,8 +93,6 @@ $(function() {
 	circleOffset = circleCircum;
 
 	animCircle = setInterval(animateCircle, 40);
-
-	//animbar = setInterval(animateBar, 40);
 
 	
 });

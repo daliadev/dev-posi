@@ -79,8 +79,15 @@
 	//var_dump($response['resultats']);
 
 
+	/* Résultat global */
+	$time = $response['temps_total'];
+	$percentGlobal = $response['total_score'];
+	$totalGlobal = $response['total_reponses'];
+	$totalCorrectGlobal = $response['total_reponses_correctes'];
 
-	// Tableau des catégories de niveau 1
+
+
+	/* Tableau des catégories de niveau 1 */
 	$firstLevelCat = array();
 
 	foreach ($response['categorie'] as $categorie)
@@ -91,7 +98,9 @@
 		}
 	}
 
-	//Estimation de la hauteur pour le graphique des catégories
+
+
+	/* Estimation de la hauteur pour le graphique des catégories */
 
 	$height = 3 * 100 + 86;
 
@@ -101,14 +110,9 @@
 	}
 
 
-	// Résultat global
-	$time = $response['temps_total'];
-	$percentGlobal = $response['total_score'];
-	$totalGlobal = $response['total_reponses'];
-	$totalCorrectGlobal = $response['total_reponses_correctes'];
-
-
+	
 	/* Cercle pourcentage global */
+
 	// circumference =  2 * Math.PI * radius + 1 // en radians
 	// soit 2 * PI * 60 = 377
 
@@ -150,9 +154,7 @@
 						
 						<g transform="translate(70, 70)">
 							<circle r="60" class="circle-back" />
-							<!-- circumference =  2 * Math.PI * radius + 1 // en radians  -->
 							<circle r="60" id="circle-percent" class="circle-front" transform="rotate(270.1)" style="stroke-dasharray: <?php echo $scoreStrokeArray; ?>; stroke-dashoffset: <?php echo $scoreStrokeOffset; ?>;" />
-
 						</g>
 
 						<g>
@@ -163,7 +165,7 @@
 
 				</div>
 
-				<div style="clear: both;"></div>
+				<div class="clear"></div>
 
 			</div>
 			
@@ -245,7 +247,7 @@
 					</g>
 					
 
-					<g class="cat-bars">
+					<g id="bars" class="cat-bars">
 
 						<?php 
 							//$catList = recursiveCategories(0, 0, $response['categorie']);

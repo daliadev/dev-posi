@@ -468,9 +468,9 @@ class ServicesPositionnement extends Main
 		 *	1. Création du tableau des résultats détaillées 
 		 *		- 1.1. Listing des categories
 		 *		- 1.2. Récupération des résultats
-		 * 		- 1.3. Score global
-		 * 		- 1.4. Gestion du temps
-		 * 		- 1.5. Assignation des resultats au catégories
+		 * 		- 1.3. Gestion du temps
+		 * 		- 1.4. Assignation des resultats au catégories
+		 * 		- 1.5. Score global à partir des catégories
 		 * 
 		 *	2. Mises à jour des tables concernées
 		 *		- 2.1. Mise à jour de la table "utilisateur"
@@ -542,9 +542,6 @@ class ServicesPositionnement extends Main
 		$totalReponsesCorrectes = 0;
 
 		$totalTime = 0;
-		$totalReponsesGlobal = 0;
-		$totalReponsesCorrectesGlobal = 0;
-		$scoreGlobal = 0;
 		$i = 0;
 
 
@@ -560,7 +557,7 @@ class ServicesPositionnement extends Main
 			if ($resultat->getRefReponseQcm() !== null && $resultat->getRefReponseQcmCorrecte() !== null)
 			{
 				$totalReponses++;
-				$totalReponsesGlobal++;
+				//$totalReponsesGlobal++;
 
 				// Test si bonne réponse ou non
 
@@ -568,7 +565,7 @@ class ServicesPositionnement extends Main
 				{
 					$resultsDetails[$i]['correct'] = true;
 					$totalReponsesCorrectes++;
-					$totalReponsesCorrectesGlobal++;
+					//$totalReponsesCorrectesGlobal++;
 				}
 				else 
 				{
@@ -578,11 +575,11 @@ class ServicesPositionnement extends Main
 			else if ($resultat->getReponseChamp() !== null)
 			{
 				$totalReponses++;
-				$totalReponsesGlobal++;
+				//$totalReponsesGlobal++;
 
 				$resultsDetails[$i]['correct'] = true;
 				$totalReponsesCorrectes++;
-				$totalReponsesCorrectesGlobal++;
+				//$totalReponsesCorrectesGlobal++;
 			}
 			else
 			{
@@ -617,23 +614,9 @@ class ServicesPositionnement extends Main
 
 
 
-		/* 1.3. Score global
+		/* 1.3. Gestion du temps de passation
 		   ========================================================================== */
 
-
-		$scoreGlobal = round(($totalReponsesCorrectesGlobal / $totalReponsesGlobal) * 100);
-		$this->returnData['response']['total_reponses'] = $totalReponsesGlobal;
-		$this->returnData['response']['total_reponses_correctes'] = $totalReponsesCorrectesGlobal;
-		$this->returnData['response']['total_score'] = $scoreGlobal;
-
-
-		/* Fin score global */
-
-
-
-		/* 1.4. Gestion du temps de passation
-		   ========================================================================== */
-		
 
 		$stringTime = Tools::timeToString($totalTime);
 		$this->returnData['response']['temps_total'] = $stringTime;
@@ -643,7 +626,7 @@ class ServicesPositionnement extends Main
 
 
 
-		/* 1.5. Assignation des resultats au catégories
+		/* 1.4. Assignation des resultats au catégories
 		   ========================================================================== */
 
 
@@ -794,9 +777,48 @@ class ServicesPositionnement extends Main
 
 		// On injecte le tout dans la réponse
 
-		$this->returnData['response']['resultats'] = $resultsDetails;
+		//$this->returnData['response']['resultats'] = $resultsDetails;
 
 		/* Fin assignation des resultats au catégories */
+
+
+
+		/* 1.5. Score global à partir des catégories
+		   ========================================================================== */
+
+
+		$totalReponsesGlobal = 0;
+		$totalReponsesCorrectesGlobal = 0;
+		$scoreGlobal = 0;
+		$scoreCats = 0;
+
+		$nbCats = 0;
+
+		foreach ($categories as $categorie)
+		{
+			$level = $this->servicesCategories->getLevel($categorie->getCode());
+
+			if ($level == 1 && $categorie->getHasResult())
+			{
+				$scoreCats += $categorie->getScorePercent();
+				$totalReponsesGlobal += $categorie->getTotalReponses();
+				$totalReponsesCorrectesGlobal += $categorie->getTotalReponsesCorrectes();
+
+				$nbCats++;
+			}
+
+		}
+
+		$scoreGlobal = $scoreCats / $nbCats;
+
+		$this->returnData['response']['total_reponses'] = $totalReponsesGlobal;
+		$this->returnData['response']['total_reponses_correctes'] = $totalReponsesCorrectesGlobal;
+		$this->returnData['response']['total_score'] = $scoreGlobal;
+
+
+		/* Fin score global */
+
+
 
 
 

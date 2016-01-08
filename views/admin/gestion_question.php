@@ -156,7 +156,7 @@ $form_url = $response['url'];
 
 								<div id="intitule">
 									<label for="intitule_question">Intitulé:</label>
-									<textarea name="intitule_question" rows="6" maxlength="390" placeholder="380 caractères maximum" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
+									<textarea name="intitule_question" rows="6" <?php echo $formData['disabled']; ?>><?php echo $formData['intitule_question']; ?></textarea>
 								</div>
 
 

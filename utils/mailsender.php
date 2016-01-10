@@ -20,27 +20,20 @@ class MailSender
 
 
 
-	public function __construct($toto, $from, $subject)
+	public function __construct($for, $from, $subject)
 	{
-		if (is_array($toto))
+		if (is_array($for))
 		{
-			$i = 0;
-
-			foreach ($toto as $destinataire) 
+			foreach ($for as $destinataire) 
 			{
-				$this->to .= $destinataire;
-
-				if ($i < count($toto) - 1) 
-				{
-					$this->to .= ', ';
-				}
-
-				$i++;
+				$this->to .= $destinataire.',';
 			}
+
+			$this->to = substr($this->to, 0, strlen($this->to) - 1);
 		}
 		else
 		{
-			$this->to = $toto;
+			$this->to = $for;
 		}
 		
 		$this->from = $from;
@@ -62,9 +55,10 @@ class MailSender
 
 	public function setHeader($mimeVersion = '1.0', $contentType = 'text/html', $charset = 'utf-8', $cc = null, $bcc = null)
 	{
+		//$this->headers[] = 'From: '.$this->from;
 		$this->headers[] = 'MIME-version: '.$mimeVersion;
 		$this->headers[] = 'Content-Type: '.$contentType.'; charset='.$charset;
-		$this->headers[] = 'From: '.$this->from;
+		
 		if ($cc !== null)
 		{
 			$this->headers[] = 'Cc: '.$cc;
@@ -73,6 +67,11 @@ class MailSender
 		{
 			$this->headers[] = 'Bcc: '.$bcc;
 		}
+	}
+
+
+	public function setTemplate() {
+
 	}
 
 
@@ -88,10 +87,13 @@ class MailSender
 				break;
 
 			case 'html':
-				$this->message = '<html>';
+				$this->message .= '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">';
+				$this->message .= '<html xmlns="http://www.w3.org/1999/xhtml">';
 				$this->message .= '<head>';
+				$this->message .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
+				$this->message .= '<meta name="viewport" content="initial-scale=1.0"/>';
 				$this->message .= '<title>'.$title.'</title>';
-				$this->message .= '<style>'.$style.'</style>';
+				//$this->message .= '<style>'.$style.'</style>';
 				$this->message .= '</head>';
 				$this->message .= '<body>';
 				$this->message .= $messageBody;
@@ -111,10 +113,12 @@ class MailSender
 		if ($this->canBeSend) 
 		{
 			//echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('\r\n', $this->headers).')';
-			//exit;
-			//return true;
+
+			$header = implode("\r\n", $this->headers);
+			$header .= $this->from."\r\n".$header;
+			$header .= "\r\n";
 			
-			//$sending = mail($this->to, $this->subject, $this->message, implode('\n', $this->headers));
+			$sending = mail($this->to, $this->subject, $this->message, $header);
 
 			if ($sending)
 			{

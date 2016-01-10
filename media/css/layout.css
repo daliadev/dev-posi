@@ -1942,6 +1942,8 @@ fieldset .add-link span
 }
 */
 
+
+
 /* Nouvelle liste des résultats par categories */
 
 .categories-list {
@@ -1958,65 +1960,108 @@ fieldset .add-link span
 	}
 	
 
-		.progressbar-title {
+		.categories-list .progressbar-title {
 			width: 100%;
 			height: 32px;
-			line-height: 32px;
+			/*line-height: 32px;*/
 		}
 
 
-			.progressbar-title h3 {
+			.categories-list li h3 {
 				display: inline-block;
 				float: left;
-				/*width: 90%;*/
+				height: 32px;
 				margin: 0;
 				padding: 0;
-				/*background-color: #ccc;*/
 				line-height: 32px;
 			}
 			
-			.progressbar-title h3:hover {
+			.categories-list li h3:hover {
 				/*text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);*/
 
 			}
 
-			.progressbar-title h3:before {
+			.categories-list li h3:before {
 				float: left;
-				width: 12px;
+				width: 15px;
+				height: 32px;
 				content: '\f105';
+				color: #009688;
 				font-family: "FontAwesome";
 				text-align: left;
 				line-height: 34px;
 			}
 
 
-		
-
-			/* Iconfont styles */
-			/*
-			.categories-list h3 i {
-				margin-right: 10px;
-				font-size: 1.2em;
+			.categories-list li.active h3:before {
+				content: '\f107';
 			}
-			*/
 
-			.progressbar-title h3 a {
-				/*display: inline-block;*/
+
+
+				.categories-list li h3 a {
+					/*display: inline-block;*/
+					padding: 0;
+					font-size: 13px; 
+					font-weight: bold; 
+					color: #555555;
+					/*line-height: 2.85em;*/
+					text-decoration: none;
+					cursor: pointer;
+				}
+
+				.categories-list li .progressbar-title span {
+					float: right;
+					display: inline-block;
+					text-align: right;
+					line-height: 32px;
+					font-weight: bold;
+					color: #555555;
+				}
+
+
+			.categories-list .progress-title a {
 				padding: 0;
-				font-size: 13px; 
-				font-weight: bold; 
-				color: #000;
-				line-height: 2.85em;
+				height: 28px;
+				font-size: 12px; 
+				/*font-weight: bold; */
+				color: #555555;
+				line-height: 28px;
 				text-decoration: none;
 				cursor: pointer;
 			}
 
-		.progressbar-title span {
-			float: right;
-			display: inline-block;
-			text-align: right;
-			line-height: 32px;
-		}
+			.categories-list .progress-title a:before {
+				float: left;
+				width: 14px;
+				height: 28px;
+				content: '\f105';
+				color: #00bfa5;
+				font-family: "FontAwesome";
+				text-align: left;
+				line-height: 28px;
+			}
+
+			.categories-list li .progress-title span {
+				float: right;
+				display: inline-block;
+				height: 28px;
+				text-align: right;
+				line-height: 28px;
+				/*line-height: 32px;*/
+				/*font-weight: bold;*/
+				/*color: #555555;*/
+			}
+
+			.categories-list li.active>a:not(:only-child):before {
+				content: '\f105';
+				font-family: "FontAwesome"; 
+				font-size: 1em;
+			}
+
+			.categories-list li h3:hover:not(:only-child):before {
+				content: '\f107';
+			}
 	
 	
 
@@ -2027,23 +2072,6 @@ fieldset .add-link span
 	.categories-list li {
 		list-style-type: none;
 	}
-		
-		
-
-		/* Links */
-		.categories-list ul ul li a,
-		.categories-list h4 {
-			display: block;
-			position: relative;
-			padding: 0; /*0 10px;*/
-			color: #000; /*font-size: 0.6875em; font-weight: 400;*/
-			text-decoration: none;
-			line-height: 2.455em;
-			cursor: pointer;
-			-webkit-transition: all 0.25s;
-			-o-transition: all 0.25s;
-			transition: all 0.25s;
-		}
 
 		
 		.categories-list ul ul li a:not(:only-child):before {
@@ -2058,18 +2086,19 @@ fieldset .add-link span
 			line-height: 34px;
 		}
 		
-		.categories-list ul ul li a:hover {
-			/*/*background-color: #003545;*/
-			/*/*border-left: 5px solid #90ee90;*/
-		}
-		
 		/* Hiding the non active lists by default */
 
-		.categories-list ul ul {
+		.categories-list ul ul, 
+		.categories-list ul li ul {
 			display: none;
 			border-left: 1px dotted #999;
-			/*/*border-bottom: 1px dotted #999;*/
 		}
+	
+		/*
+		.categories-list ul>ul ul {
+			border-left: 1px dotted #999;
+		}
+		*/
 
 		.categories-list li.active>ul {
 			display: block;
@@ -2080,33 +2109,52 @@ fieldset .add-link span
 			font-family: "FontAwesome"; font-size: 0.875em;
 		}
 		*/
-		
+		/*
 		.categories-list li.active a:not(:only-child):before {
 			content: '\f105';
 			font-family: "FontAwesome"; font-size: 0.875em;
 		}
-		
-		/*
-		.categories-list ul ul, 
-		.categories-list ul li ul {
-			display: none;
-		}
 		*/
 
 		/* Incrément de la marge à partir du 3eme niveau d'imbrication */
-		.categories-list ul ul ul {
-			/*/*margin-left: 10px;*/
-			border-left: 1px dotted #999;
-			/*/*opacity: 0.5;*/
-		}
 		
 		
 		
+		/*
 		.categories-list .active>a:not(:only-child):before {
 			content: '\f105';
 			font-family: "FontAwesome"; font-size: 0.875em;
 		}
+		*/
 
+	/* Empty items */
+	.categories-list li.disabled {
+
+	}
+
+		.categories-list li.disabled h3 {
+
+		}
+
+		.categories-list li.disabled h3:before {
+			content: '';
+			display: none;
+		}
+
+			.categories-list li.disabled a {
+				color: #bdbdbd;
+			}
+				
+				.categories-list li.disabled span {
+					display: none;
+				}
+				
+
+		.categories-list li.disabled .progress {
+
+			background-color: #e0e0e0;
+		}
+	
 
 
 

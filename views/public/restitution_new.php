@@ -96,6 +96,8 @@ function getProgressBar($percent)
 }
 
 
+//var_dump($response['stats']['categories']);
+
 
 
 function recursiveCategories($parent, $level, $datas)
@@ -121,17 +123,24 @@ function recursiveCategories($parent, $level, $datas)
 
 			if ($level == 0)
 			{
-				$list .= '<li>'; //<h3><a>'.$cat->getNom().'</a></h3>';
+				//var_dump($cat->getCode());
+
+				if (!$cat->getHasResult())
+				{
+					$list .= '<li class="disabled">';
+				}
+				else
+				{
+					$list .= '<li>';
+				}
+				//$list .= '<li'.$disabled.'>'; //<h3><a>'.$cat->getNom().'</a></h3>';
 
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
-				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3><span>Réponses '.$cat->getTotalReponses().'/'.$cat->getTotalReponsesCorrectes().'</span><div class="clear"></div>';
+				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3>';
+				$list .= '<span>Réponses '.$cat->getTotalReponses().'/'.$cat->getTotalReponsesCorrectes().'</span><div class="clear"></div>';
 				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= getProgressBar($cat->getScorePercent());
-
-
-				//$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
-				//$list .= '</div>';
 				$list .= '</div>';
 
 				$isMainListOpen = true;
@@ -142,27 +151,23 @@ function recursiveCategories($parent, $level, $datas)
 				{
 					$list .= '</li>';
 				}
-				$list .= '<li>';
-				$list .= '<div class="progress-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
-				$list .= '<div class="progress">';
-				//$list .= '<div class="progressbar">';
-				//$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
-				//$list .= '<a>'.$cat->getNom().'</a> / <strong>'.$cat->getScorePercent().'</strong>%';
-				//$list .= '<div class="progressbar-bg">';
-				$list .= getProgressBar($cat->getScorePercent());
-				//$list .= '<span class="bg-'.getColor($cat->getScorePercent()).'" style="width:'.$cat->getScorePercent().'%;"></span>';
-				//$list .= '</div>';
+				//$list .= '<li>';
+				if (!$cat->getHasResult())
+				{
+					$list .= '<li class="disabled">';
+				}
+				else
+				{
+					$list .= '<li>';
+				}
+				$list .= '<div class="progress-title" title="'.$cat->getDescription().'">';
+				$list .= '<a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a>';
+				$list .= '<span>Réponses '.$cat->getTotalReponses().'/'.$cat->getTotalReponsesCorrectes().'</span><div class="clear"></div>';
 				$list .= '</div>';
-				//$list .= '</div>';
-				/*
-				echo '<p class="form-text-large">';
-					echo $correction['nom_categorie'].' / <strong>'.$correction['percent'].'</strong>% ('.$correction['total_correct'].'/'.$correction['total'].')';
-					echo '<div class="progress">';
-							echo '<div class="progress-bar progress-bar-'.$color.'" style="width: '.$percent.'%;"></div>';
-						//echo '<span class="bg-'.$color.'" style="width:'.$percent.'%;"></span>';
-					echo '</div>';
-				echo '</p>';
-				*/
+				$list .= '<div class="progress">';
+				$list .= getProgressBar($cat->getScorePercent());
+				$list .= '</div>';
+				
 
 				$isListOpen = true;
 			}
@@ -185,9 +190,13 @@ function recursiveCategories($parent, $level, $datas)
 	return $list;
 }
 
+if (isset($response['stats']['categories']) && !empty($response['stats']['categories']))
+{
+	$catList = recursiveCategories(0, 0, $response['stats']['categories']);
+}
 
 
-
+//var_dump($catList);
 ?>
 
 
@@ -444,7 +453,7 @@ function recursiveCategories($parent, $level, $datas)
 												<li>
 
 													<p><?php //echo $statCategorie['nom_categorie']; ?> :
-														<strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
+														<strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php //echo $statCategorie['total']; ?></strong> questions)
 														<?php //$width = $statCategorie['percent']; ?>
 														<span class="percent" style="width:<?php //echo $width; ?>%" title="<?php //echo $statCategorie['descript_categorie']; ?>"></span>
 													</p>
@@ -464,8 +473,7 @@ function recursiveCategories($parent, $level, $datas)
 											<!-- <div class="progressbars" style="width:100%;"> -->
 												
 												<?php
-													//$sortedCat = ArraySort::recursiveArray(0, 0, $response['stats']['categories'], 'code_cat', 2);
-													$catList = recursiveCategories(0, 0, $response['stats']['categories']);
+													//$catList = recursiveCategories(0, 0, $response['stats']['categories']);
 													echo $catList;
 												?>
 												
@@ -666,40 +674,96 @@ function recursiveCategories($parent, $level, $datas)
 
 			$("#table-resultats").tablesorter();
 
-			//$('.categories-list ul li').get(0).addClass('active');
+			$('.categories-list ul:first-child').children('li:first-child').addClass('active');
 
+			/*
+			$("#accordian a").click(function(){
+				var link = $(this);
+				var closest_ul = link.closest("ul");
+				var parallel_active_links = closest_ul.find(".active")
+				var closest_li = link.closest("li");
+				var link_status = closest_li.hasClass("active");
+				var count = 0;
 
+				closest_ul.find("ul").slideUp(function(){
+					if(++count == closest_ul.find("ul").length)
+						parallel_active_links.removeClass("active");
+				});
 
+				if(!link_status)
+				{
+					closest_li.children("ul").slideDown();
+					closest_li.addClass("active");
+				}
+			})
+			*/
+
+			/* First level */
+			/*
+			<div class="categories-list">
+				<ul>
+					<li>
+						<div class="progressbar-title">
+							<h3>
+								<a>Main categorie name / 75%</a>
+							</h3>
+							<span>Reponse 12/24</span>
+							<div class="clear"></div>
+						</div>
+						<div class="progress">
+							<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>
+						</div>
+					</li>
+					</ul>
+						<li class="active">
+							<div class="progressbar-title">
+								<a>Cat name / <strong>75</strong>%</a>
+							</div>
+								<div class="progress">
+									<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>
+							</div>
+						</li>
+						<li>
+							<div class="progressbar-title">
+								<a>Cat name / <strong>75</strong>%</a>
+							</div>
+								<div class="progress">
+									<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>
+							</div>
+						</li>
+					</ul>
+				</ul>
+			</div
+			*/
+
+			
 			// Liste des résultats par catégories interactives
 			$('.categories-list a').on('click', function() {
 
 				var link = $(this);
 				var closest_ul = link.closest('ul');
-				//var ul_children = $(this).closest('ul').find('ul');
-				//var ul_children = link.closest('ul');
-				//var active_links = closest_ul.find('.active');
+				var parallel_active_links = closest_ul.find('.active')
 				var closest_li = link.closest('li');
-				//var closest_active_li = closest_li.hasClass('.active');
-				var count = 0;
+				var link_li_hasClass = closest_li.hasClass('active');
+				var label = closest_li.closest('h3');
 
-				/* Slide up all the link lists not marked has active */
+				var count = 0;
+				
 				closest_ul.find('ul').slideUp(function() {
 
 					if (++count == closest_ul.find('ul').length) {
 
-						closest_ul.find('.active').removeClass('active');
+						parallel_active_links.removeClass('active');
 					}
 				});
 
-				/* Slide down the link list below the link clicked, only if it is closed */
-				if (!closest_li.hasClass('active')) {
-
+				if(!link_li_hasClass)
+				{
 					closest_li.children('ul').slideDown();
 					closest_li.addClass('active');
 				}
-
 			});
-		
+			
 
 
 

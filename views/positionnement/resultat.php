@@ -1,83 +1,5 @@
 <?php
 
-	/*
-	function recursiveCategories($parent, $level, $datas, $level_max = null)
-	{
-		$list = '';
-		$previous_level = 0;
-		$isMainListOpen = false;
-		$isListOpen = false;
-
-		if ($level == 0) 
-		{
-			$list .= '<ul>';
-		}
-
-		foreach ($datas as $cat) 
-		{
-			if ($parent == $cat->getParent()) 
-			{
-				if ($previous_level < $level) 
-				{
-					$list .= '<ul>';
-				}
-
-				if ($level == 0)
-				{
-					$list .= '<li>';
-					$list .= $cat->getDescription().' / '.$cat->getNom().' / '.$cat->getScorePercent().'%';
-					//$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'"><h3><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></h3></div>';
-					//$list .= '<div class="progress">';
-					//$list .= getProgressBar($cat->getScorePercent());
-					//$list .= '</div>';
-
-					$list .= '<g class="cat-bar">';
-						$list .= '<line class="cat-line" x1="1" y1="0" x2="1" y2="56"/>';
-						$list .= '<text class="cat-text" x="9" y="0">Ecrit</text>';
-						$list .= '<text class="reponses" x="505" y="0">14/24</text>';
-						$list .= '<rect class="back" x="9" y="24" width="701" height="32" />';
-						$list .= '<rect class="front" x="9" y="24" width="500" height="32" />';
-						$list .= '<text class="percent-cat" x="497" y="41">72<tspan class="percent">%<tspan></text>';
-					$list .= '</g>';
-
-					$isMainListOpen = true;
-				}
-				else
-				{
-					if ($isListOpen) 
-					{
-						$list .= '</li>';
-					}
-					$list .= '<li>';
-					$list .= $cat->getDescription().' / '.$cat->getNom().' / '.$cat->getScorePercent().'%';
-					//$list .= '<div class="progress-title" title="'.$cat->getDescription().'"><a>'.$cat->getNom().' / <strong>'.$cat->getScorePercent().'</strong>%</a></div>';
-					//$list .= '<div class="progress">';
-					//$list .= getProgressBar($cat->getScorePercent());
-					//$list .= '</div>';
-
-					$isListOpen = true;
-				}
-
-				$previous_level = $level;
-
-				$list .= recursiveCategories($cat->getCode(), ($level + 1), $datas, $level_max);
-			}
-		}
-
-		if ($previous_level == $level && $previous_level != 0) 
-		{
-			if ($isMainListOpen || $isListOpen)
-			{
-				$list .= '</li>';
-			}
-			$list .= '</ul>';
-		}
-
-		return $list;
-	}
-	*/
-	//var_dump($response['resultats']);
-
 
 	/* Résultat global */
 	$time = $response['temps_total'];
@@ -120,6 +42,8 @@
 	$scoreStrokeArray = 377;
 	// Partie vide
 	$scoreStrokeOffset = 377 - (377 * ($percentGlobal / 100));
+
+
 
 ?>
 	

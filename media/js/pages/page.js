@@ -119,7 +119,8 @@ $(function() {
 	}
 	else {
 
-		alert('Ce navigateur ne prend pas en charge les médias audio.');
+		enableUserResponse();
+		//alert('Ce navigateur ne prend pas en charge les médias audio.');
 	}
 
 	// URL complète de la piste audio

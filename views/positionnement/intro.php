@@ -41,13 +41,12 @@
 						<div id="speaker">
 							
 							
-							
 							<button id="speaker-button" type"button">
 								<svg id="svg-speaker-bg" version="1.1" viewBox="0 0 48 48" preserveAspectRatio="xMinYMin meet">
 									<circle id="speaker-bg" r="24" transform="translate(24, 24) rotate(-90)"></circle>
 								</svg>
 								<div class="button-icon">
-									<span class="ripple"><i id="speaker-icon" class="fa fa-music"></i><!-- <i id="speaker-icon"class="fa fa-headphones"></i> --></span>
+									<span class="ripple"><i id="speaker-icon" class="fa"></i><!-- <i id="speaker-icon"class="fa fa-headphones"></i> --></span>
 									<!-- <span class="ripple"><i id="speaker-icon" class="fa fa-refresh fa-spin"></i></span> -->
 									<!-- <i class="fa fa-volume-up"></i> -->
 								</div>

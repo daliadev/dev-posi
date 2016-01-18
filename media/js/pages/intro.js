@@ -208,7 +208,7 @@ $(function() {
 	}
 	else
 	{
-		alert('Ce navigateur ne prend pas en charge les médias audio.');
+		//alert('Ce navigateur ne prend pas en charge les médias audio.');
 	}
 
 

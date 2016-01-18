@@ -355,7 +355,6 @@ class ServicesAdminRestitution extends Main
 
 				if ($resultats[$j]->getRefCat() == $codeCat)
 				{
-					
 					//$posiStats[$j]['total']++;
 					$totalCategorie++;
 					$totalGlobal++;
@@ -370,7 +369,7 @@ class ServicesAdminRestitution extends Main
 						$totalCorrectGlobal++;
 					}
 
-					//$hasResults = true;
+					$hasResults = true;
 				}  
 			}
 
@@ -388,20 +387,16 @@ class ServicesAdminRestitution extends Main
 				$percentCategorie = 0;
 			}
 
-			
 
 			$statsCat[$i]->setTemps($tempsCat);
 			$statsCat[$i]->setTotalReponses($totalCategorie);
 			$statsCat[$i]->setTotalReponsesCorrectes($totalCorrectCategorie);
 			$statsCat[$i]->setScorePercent($percentCategorie);
-			//$statsCat[$i]->setHasResult($hasResults);
+			$statsCat[$i]->setHasResult($hasResults);
 
 			$posiStats['categories'][$i] = $statsCat[$i];
 
-
-
-			$i++;
-
+			/*
 			if (!empty($parents)) {
 				
 				for ($m = 0; $m < count($posiStats['categories']); $m++) 
@@ -413,20 +408,21 @@ class ServicesAdminRestitution extends Main
 							//$posiStats[$i]->setTemps(null);
 
 
-
 							$totalParent = $posiStats['categories'][$m]->getTotalReponses() + $totalCategorie;
 							$totalParentCorrect = $posiStats['categories'][$m]->getTotalReponsesCorrectes() + $totalCorrectCategorie;
  
 							//$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
-							if ($totalParentCorrect > 0 && $totalParent > 0)
+							
+							if ($totalParentCorrect > 0 && $totalParent > 0 && $percentCategorie > 0)
 							{
-								$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
+								//$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
+								$scoreParent = ($posiStats['categories'][$m]->getScorePercent() + $percentCategorie) / 2;
 							}
 							else
 							{
 								$scoreParent = 0;
 							}
-
+							
 							
 							$tempsParent = $posiStats['categories'][$m]->getTemps() + $tempsCat;
 
@@ -440,13 +436,15 @@ class ServicesAdminRestitution extends Main
 					}
 				}
 			}
+			*/
 
-
+			$i++;
 			
 		}
 		
 
 		/* Score global en pourcentage */
+		/*
 		for ($p = 0; $p < count($posiStats['categories']); $p++) 
 		{ 
 			if (strlen($posiStats['categories'][$p]->getCode()) == 2 && $posiStats['categories'][$p]->getTotalReponses() > 0)
@@ -463,14 +461,14 @@ class ServicesAdminRestitution extends Main
 				$posiStats['categories'][$p]->setHasResult(true);
 			}
 		}
-
+		*/
 
 		/*** Stats globales ***/
 		
-		$posiStats['percent_global'] = round($posiStats['percent_global'] / $primaryCatCount); //round(($totalCorrectGlobal / $totalGlobal) * 100);
-		$posiStats['total_global'] = $totalGlobal;
-		$posiStats['total_correct_global'] = $totalCorrectGlobal;
-		$posiStats['temps-total'] = $tempsGlobal;
+		$posiStats['percent_global'] = 0; //round($posiStats['percent_global'] / $primaryCatCount); //round(($totalCorrectGlobal / $totalGlobal) * 100);
+		$posiStats['total_global'] = 0; //$totalGlobal;
+		$posiStats['total_correct_global'] = 0; //$totalCorrectGlobal;
+		$posiStats['temps-total'] = 0; //$tempsGlobal;
 
 		return  $posiStats;
 	}

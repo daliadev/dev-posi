@@ -9,11 +9,11 @@ function getColor($percent)
 	
 	$color = "gris";
 
-	if ($percent < 60)
+	if ($percent < 50)
 	{
 		$color = "rouge";
 	}
-	else if ($percent >= 60 && $percent < 75)
+	else if ($percent >= 50 && $percent < 75)
 	{
 		$color = "orange2";
 	}
@@ -33,27 +33,27 @@ function getProgressBar($percent)
 {
 	$progressbar = '';
 
-	if ($percent < 60)
+	if ($percent < 50)
 	{
 		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: '.$percent.'%;"></div>';
 	}
-	else if ($percent >= 60 && $percent < 75)
+	else if ($percent >= 50 && $percent < 75)
 	{
-		$percent -= 60;
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>';
+		$percent -= 50;
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 50%;"></div>';
 		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: '.$percent.'%;"></div>';
 	}
 	else if ($percent >= 75 && $percent < 90)
 	{
 		$percent -= 75;
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 50%;"></div>';
 		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: 15%;"></div>';
 		$progressbar .= '<div class="progress-bar progress-bar-warning" style="width: '.$percent.'%;"></div>';
 	}
 	else if ($percent >= 90)
 	{
 		$percent -= 90;
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 60%;"></div>';
+		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 50%;"></div>';
 		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: 15%;"></div>';
 		$progressbar .= '<div class="progress-bar progress-bar-warning" style="width: 15%;"></div>';
 		$progressbar .= '<div class="progress-bar progress-bar-success" style="width: '.$percent.'%;"></div>';

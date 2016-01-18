@@ -79,16 +79,17 @@ var NavigatorAgent = function() {
 	}
 
 	// Test for all Mobile
-	/*
-	if (this.agent.indexOf('android') != -1) {
-	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(ua)) {
-
+	
+	//if (this.agent.indexOf('android') != -1) {
+	//if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(ua)) {
+		/*
 		// Check if the orientation has changed 90 degrees or -90 degrees... or 0
 		window.addEventListener("orientationchange", function () {
 			alert(window.orientation);
 		});
-	}
-	*/
+		*/
+	//}
+	
 
 
 	/* Browser version detection */
@@ -140,7 +141,8 @@ var NavigatorAgent = function() {
 			(this.agentName == 'chrome' && this.agentVersion >= 4) || 
 			(this.agentName == 'firefox' && this.agentVersion >= 3.5) || 
 			(this.agentName == 'safari' && this.agentVersion >= 4) || 
-			(this.agentName == 'opera' && this.agentVersion >= 10.5)) {
+			(this.agentName == 'opera' && this.agentVersion >= 10.5) ||
+			(this.agentName == 'android' && this.agentVersion >= 2.3)) {
 
 			return true;
 		}
@@ -198,30 +200,3 @@ var NavigatorAgent = function() {
 	
 }
 
-/*
-NavigatorAgent.prototype.getName = function() {
-
-	return this.agentName;
-}
-
-
-NavigatorAgent.prototype.getVersion = function() {
-	
-	return this.agentVersion;
-}
-
-NavigatorAgent.prototype.isAudioEnable = function() {
-
-	return this.agentName;
-}
-
-NavigatorAgent.prototype.isVideoEnable = function() {
-
-	return this.agentName;
-}
-
-NavigatorAgent.prototype.isPngEnable = function() {
-
-	return this.agentName;
-}
-*/

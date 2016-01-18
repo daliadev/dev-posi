@@ -228,50 +228,78 @@ class ServicesPosiResultats extends Main
 
 
 
-	public function getCategoriesResults($level, $categories)
+	public function getRecursiveCategoriesResults($level, $categories)
 	{
 
 		foreach ($categories as $categorie) 
 		{	
 			$levelCat = strlen($categorie->getCode()) / 2;
 
-			if ($levelCat == $level && $level > 1)
+			if ($levelCat == $level && $level > 1 && $categorie->getHasResult() && $categorie->getParent() !== null)  
 			{
-				if ($categorie->getHasResult(true) && $categorie->getParent() !== null)  
+				$parentCat = $categorie->getParent();
+
+
+				// Calcul du nombre de réponses totales
+				$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
+				$nbreReponsesParent = ($parentCat->getTotalReponses() !== null) ? $parentCat->getTotalReponses() : 0;
+				$nbreReponsesParent += $nbreReponses;
+				$parentCat->setTotalReponses($nbreReponsesParent);
+
+				// Calcul du nombre de réponses correctes
+				$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
+				$nbreReponsesCorrectesParent = ($parentCat->getTotalReponsesCorrectes() !== null) ? $parentCat->getTotalReponsesCorrectes() : 0;
+				$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
+				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
+
+				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
+				$scorePercent = $categorie->getScorePercent();
+				$scorePercentParent = $parentCat->getScorePercent();
+				if (($scorePercent + $scorePercentParent) > 0 && $parentCat->getHasResult())
 				{
-					$parentCat = $categorie->getParent();
+					$scorePercentParent = ($scorePercent + $scorePercentParent) / ($nbreReponses + 1);
+				}
+				else
+				{
+					$scorePercentParent = $scorePercent;
+				}
+				//$scorePercentParent = (($scorePercent + $scorePercentParent) > 0 && $parentCat->getHasResult()) ? ($scorePercent + $scorePercentParent) / 2 : 0;
+				var_dump($nbreReponses.' - '.$categorie->getCode().'('.$scorePercent.') < '.$parentCat->getCode().'('.$scorePercentParent.') = '.$scorePercentParent);
 
-					$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
-					$nbreReponsesParent = ($parentCat->getTotalReponses() !== null) ? $parentCat->getTotalReponses() : 0;
-					$nbreReponsesParent += $nbreReponses;
-					$parentCat->setTotalReponses($nbreReponsesParent);
+				$parentCat->setScorePercent($scorePercentParent);
 
-					$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
-					$nbreReponsesCorrectesParent = ($parentCat->getTotalReponsesCorrectes() !== null) ? $parentCat->getTotalReponsesCorrectes() : 0;
-					$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
-					$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
+				/*
+				// Calcul du temps de réponse moyen par question
+				$temps = ($categorie->getTemps() !== null) ? $categorie->getTemps() : 0;
+				$tempsParent = ($parentCat->getTemps() !== null) ? $parentCat->getTemps() : 0;
+				$tempsParent = (($temps + $tempsParent) > 0) ? ($temps + $tempsParent) / 2 : 0;
+				//$tempsParent += $nbreReponses;
+				$parentCat->setTemps($tempsParent);
+				*/
+				
+				$parentCat->setHasResult(true);
 
-					$parentCat->setHasResult(true);
+				/*
+				// Calcul du score
+				if ($nbreReponsesCorrectesParent != 0)
+				{	
+					$scoreParentCat = round(($nbreReponsesCorrectesParent / $nbreReponsesParent) * 100);
+					$parentCat->setScorePercent($scoreParentCat);
+				}
+				else
+				{
+					$parentCat->setScorePercent(0);
+				}
+				*/
+			}	
 
-					// Calcul du score
-					if ($nbreReponsesCorrectesParent != 0)
-					{	
-						$scoreParentCat = round(($nbreReponsesCorrectesParent / $nbreReponsesParent) * 100);
-						$parentCat->setScorePercent($scoreParentCat);
-					}
-					else
-					{
-						$parentCat->setScorePercent(0);
-					}
-				}	
-			}
 		}
 
 		$level--;
 
 		if ($level > 1) 
 		{
-			$this->getCategoriesResults($level, $categories);
+			$this->getRecursiveCategoriesResults($level, $categories);
 		}
 
 		return $categories;

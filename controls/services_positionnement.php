@@ -746,9 +746,9 @@ class ServicesPositionnement extends Main
 			}
 		}
 
-		$categoriesResults = $this->servicesResultats->getCategoriesResults($maxLevel, $categories);
+		$recursiveCategoriesResults = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $categories);
 
-		//var_dump($categoriesResults);
+		//var_dump($recursiveCategoriesResults);
 		//exit();
 
 

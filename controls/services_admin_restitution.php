@@ -292,11 +292,11 @@ class ServicesAdminRestitution extends Main
 	
 	public function getPosiStats($refSession)
 	{
-		$posiStats = array();
-		
 
-		$posiStats['percent_global'] = null;
-		//$posiStats['categories'] = array();
+		$posiStats = array();
+		$posiStats['categories'] = array();
+
+		//$posiStats['percent_global'] = null;
 		
 		
 		/*** On récupère la liste des categories ***/
@@ -305,19 +305,24 @@ class ServicesAdminRestitution extends Main
 
 		$categoriesList = $resultsetcategories['response']['categorie'];
 		
+
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
 		$resultats = $this->getResultatsByCategories($refSession);
 
-		$statsCat = array();
+
+
+		//$statsCat = array();
 		
 		$tempsGlobal = 0;
 		$totalGlobal = 0;
 		$totalCorrectGlobal = 0;
 		$percentGlobal = 0;
-		$countValidCategories = 0;
-		$primaryCatCount = 0;
-		$i = 0;
+		//$countValidCategories = 0;
+		$countPrimeCategories = 0;
+		$maxLevel = 0;
+
+		//$i = 0;
 		
 		foreach ($categoriesList as $categorie)
 		{
@@ -327,8 +332,152 @@ class ServicesAdminRestitution extends Main
 			$percentCategorie = 0;
 			$hasResults = false;
 
-			$codeCat = $categorie->getCode();
+			//$statsCat[$i] = $categorie;
 
+			// On récupére le niveau de la catégorie dans la hiérarchie
+			$level = $categorie->getLevel();
+
+			if ($level > $maxLevel)
+			{
+				$maxLevel = $level;
+			}
+
+
+			// Test d'existence d'une catégorie parente
+			
+			if ($level > 1)
+			{
+				foreach ($categoriesList as $searchParentCat)
+				{
+					if ($searchParentCat->getCode() == $categorie->getParentCode())
+					{
+						$categorie->setParent($searchParentCat);
+					}
+				}
+			}
+			else if ($level == 1)
+			{
+				// Catégorie principale -> pas de parent
+				$countPrimeCategories++;
+			}
+			
+			
+			// On attribut à chaque catégorie, les réponses et les scores à partir des résultats
+			
+			for ($j = 0; $j < count($resultats); $j++)  
+			{
+				if ($resultats[$j]->getRefCat() == $categorie->getCode())
+				{
+					$totalCategorie++;
+					$totalGlobal++;
+				   	
+				   	$tempsGlobal += $resultats[$j]->getTempsReponse();
+					$tempsCat += $resultats[$j]->getTempsReponse();
+
+					if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte() || $resultats[$j]->getReponseChamp() !== null)
+					{
+						$totalCorrectCategorie++;
+						$totalCorrectGlobal++;
+					}
+
+					$hasResults = true;
+				}
+
+				/*
+				foreach ($resultsDetails[$i]['codes_cat'] as $code_cat) 
+				{
+					if ($code_cat == $categorie->getCode())
+					{
+						// Attribution du nombre de réponses et de réponses correctes par ajouts successifs sur l'objet 'categorie'
+						$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
+						$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
+
+						$nbreReponses++;
+						$categorie->setTotalReponses($nbreReponses);
+
+						if ($resultsDetails[$i]['correct'])
+						{
+							$nbreReponsesCorrectes++;
+						}
+						$categorie->setTotalReponsesCorrectes($nbreReponsesCorrectes);
+
+						// Calcul du score
+						if ($nbreReponsesCorrectes != 0)
+						{	
+							$scoreCat = round(($nbreReponsesCorrectes / $nbreReponses) * 100);
+							$categorie->setScorePercent($scoreCat);
+						}
+						else
+						{
+							$categorie->setScorePercent(0);
+						}
+
+						$categorie->setHasResult(true);
+					}
+					
+				}
+				*/
+			}
+			
+			// Calcul du score en pourcentage
+
+			if ($totalCategorie > 0 && $hasResults)
+			{	
+				$percentCategorie = round(($totalCorrectCategorie / $totalCategorie) * 100);
+			}
+
+
+			$categorie->setTemps($tempsCat);
+			$categorie->setTotalReponses($totalCategorie);
+			$categorie->setTotalReponsesCorrectes($totalCorrectCategorie);
+			$categorie->setScorePercent($percentCategorie);
+			$categorie->setHasResult($hasResults);
+
+			$posiStats['categories'][] = $categorie;
+
+			
+
+			//$i++;
+
+		}
+
+		$posiStats['categories'] = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories']);
+
+		var_dump($posiStats['categories']);
+		//exit();
+
+		//$tempsGlobal = 0;
+		//$totalGlobal = 0;
+		//$totalCorrectGlobal = 0;
+		//$percentGlobal = 0;
+		//$countValidCategories = 0;
+		//$countPrimaryCategories = 0;
+
+		/*
+		
+
+		foreach ($categories as $categorie)
+		{
+			$level = $this->servicesCategories->getLevel($categorie->getCode());
+
+			if ($level > $maxLevel)
+			{
+				$maxLevel = $level;
+			}
+		}
+
+		*/
+
+		/*
+		foreach ($categoriesList as $categorie)
+		{
+			$tempsCat = 0;
+			$totalCategorie = 0;
+			$totalCorrectCategorie = 0;
+			$percentCategorie = 0;
+			$hasResults = false;
+
+			$codeCat = $categorie->getCode();
 
 			$statsCat[$i] = $categorie;
 
@@ -386,15 +535,15 @@ class ServicesAdminRestitution extends Main
 			{
 				$percentCategorie = 0;
 			}
+			*/
 
+			// $statsCat[$i]->setTemps($tempsCat);
+			// $statsCat[$i]->setTotalReponses($totalCategorie);
+			// $statsCat[$i]->setTotalReponsesCorrectes($totalCorrectCategorie);
+			// $statsCat[$i]->setScorePercent($percentCategorie);
+			// $statsCat[$i]->setHasResult($hasResults);
 
-			$statsCat[$i]->setTemps($tempsCat);
-			$statsCat[$i]->setTotalReponses($totalCategorie);
-			$statsCat[$i]->setTotalReponsesCorrectes($totalCorrectCategorie);
-			$statsCat[$i]->setScorePercent($percentCategorie);
-			$statsCat[$i]->setHasResult($hasResults);
-
-			$posiStats['categories'][$i] = $statsCat[$i];
+			// $posiStats['categories'][$i] = $statsCat[$i];
 
 			/*
 			if (!empty($parents)) {
@@ -438,9 +587,8 @@ class ServicesAdminRestitution extends Main
 			}
 			*/
 
-			$i++;
-			
-		}
+			//$i++;
+		//}
 		
 
 		/* Score global en pourcentage */
@@ -465,10 +613,10 @@ class ServicesAdminRestitution extends Main
 
 		/*** Stats globales ***/
 		
-		$posiStats['percent_global'] = 0; //round($posiStats['percent_global'] / $primaryCatCount); //round(($totalCorrectGlobal / $totalGlobal) * 100);
-		$posiStats['total_global'] = 0; //$totalGlobal;
-		$posiStats['total_correct_global'] = 0; //$totalCorrectGlobal;
-		$posiStats['temps-total'] = 0; //$tempsGlobal;
+		//$posiStats['percent_global'] = 0; //round($posiStats['percent_global'] / $primaryCatCount); //round(($totalCorrectGlobal / $totalGlobal) * 100);
+		//$posiStats['total_global'] = 0; //$totalGlobal;
+		//$posiStats['total_correct_global'] = 0; //$totalCorrectGlobal;
+		//$posiStats['temps-total'] = 0; //$tempsGlobal;
 
 		return  $posiStats;
 	}
@@ -789,6 +937,11 @@ class ServicesAdminRestitution extends Main
 				$resultset['response']['categorie'] = array($categorie);
 			}
 
+			foreach ($resultset['response']['categorie'] as $categorie) {
+				
+				$categorie->setLevel($this->categorieDAO->getLevel($categorie->getCode()));
+			}
+
 			return $resultset;
 		}
 
@@ -808,6 +961,11 @@ class ServicesAdminRestitution extends Main
 			{ 
 				$categorie = $resultset['response']['categorie'];
 				$resultset['response']['categorie'] = array($categorie);
+			}
+
+			foreach ($resultset['response']['categorie'] as $categorie) {
+				
+				$categorie->setLevel($this->categorieDAO->getLevel($categorie->getCode()));
 			}
 
 			return $resultset;

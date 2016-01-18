@@ -54,6 +54,27 @@ class CategorieDAO extends ModelDAO
 
 
 
+
+	public function getLevel($code)
+	{
+		$level = null;
+
+		$codeLength = strlen($code);
+
+		if ($codeLength % 2 === 0) 
+		{
+			$level = $codeLength / 2;
+		}
+		else
+		{
+			return false;
+		}
+
+		return $level;
+	}
+
+
+
 	public function selectCodesByLevel($parentCode, $level = null)
 	{
 		$this->initialize();

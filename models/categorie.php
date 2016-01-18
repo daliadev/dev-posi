@@ -8,6 +8,7 @@ class Categorie
 	public $code_cat = null;
 	public $nom_cat = null;
 	public $descript_cat = null;
+	private $level = null;
 	private $temps = null;
 	private $total_reponses = 0;
 	private $total_reponses_correctes = 0;
@@ -46,6 +47,18 @@ class Categorie
 		}
 
 		return $parentCode;
+	}
+
+
+
+	public function getLevel()
+	{
+		return $this->level;
+	}
+
+	public function setLevel($level)
+	{
+		$this->level = $level;
 	}
 
 	

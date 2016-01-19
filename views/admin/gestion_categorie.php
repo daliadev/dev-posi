@@ -176,8 +176,14 @@ $form_url = $response['url'];
 									</ul>
 									
 								</div>
+								
+								<div id="submit">    
+									<input type="submit" name="selection" value="Sélectionner" />
+									<div class="clear"></div>
+								</div>
 
 							</fieldset>
+
 						</div>
 					</div>
 				</div>

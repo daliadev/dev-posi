@@ -496,6 +496,19 @@ form input[type="text"][disabled]
 		font-weight: bold;
 		/*line-height: 1px;*/
 	}
+	
+#form-posi #liste-cat-main #submit {
+
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+	#form-posi #liste-cat-main #submit input {
+		float: right;
+		width: 200px;
+		margin: 20px auto 10px;
+	}
 
 	#form-posi #submit input[disabled]
 	{

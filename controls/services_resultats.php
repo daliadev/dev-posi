@@ -231,6 +231,9 @@ class ServicesPosiResultats extends Main
 	public function getRecursiveCategoriesResults($level, $categories)
 	{
 
+		$countLevelParent = 0;
+		$totalPercent = 0;
+
 		foreach ($categories as $categorie) 
 		{	
 			$levelCat = strlen($categorie->getCode()) / 2;
@@ -239,6 +242,7 @@ class ServicesPosiResultats extends Main
 			{
 				$parentCat = $categorie->getParent();
 
+				$countLevelParent++;
 
 				// Calcul du nombre de réponses totales
 				$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
@@ -253,6 +257,7 @@ class ServicesPosiResultats extends Main
 				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
 
 				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
+
 				$scorePercent = $categorie->getScorePercent();
 				$scorePercentParent = $parentCat->getScorePercent();
 				if (($scorePercent + $scorePercentParent) > 0 && $parentCat->getHasResult())

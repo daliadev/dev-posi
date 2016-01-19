@@ -118,8 +118,8 @@ $(function() {
 		playerURL = '<?php echo SERVER_URL; ?>media/dewplayer/';
 	}
 	else {
-
-		enableUserResponse();
+		isAudioActive = false;
+		//enableUserResponse();
 		//alert('Ce navigateur ne prend pas en charge les médias audio.');
 	}
 
@@ -819,6 +819,10 @@ $(function() {
 		{
 			createAudio();
 			createVideo();
+		}
+		else
+		{
+			$('#speaker').hide();
 		}
 	}
 	else if (isAudioActive)

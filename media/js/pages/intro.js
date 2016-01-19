@@ -208,6 +208,7 @@ $(function() {
 	}
 	else
 	{
+		$('#speaker').hide();
 		//alert('Ce navigateur ne prend pas en charge les médias audio.');
 	}
 

@@ -32,15 +32,15 @@ var ImageController = function(container, loader, onCreateCallback) {
 			$loader.fadeOut(loaderFadeDuration);
 		}
 	};
-
+	*/
 
 
 	var onDisplayed = function() {
 
-		//clearInterval(displayTimer);
+		clearTimeout(displayTimer);
 		displayedCallback.call(this);
 	};
-	*/
+	
 
 
 
@@ -80,7 +80,8 @@ var ImageController = function(container, loader, onCreateCallback) {
 		displayedCallback = onDisplayedCallback;
 
 		$(imageBox).fadeIn(duration);
-		//setTimeout(onDisplayed, duration);
+		displayTimer = setTimeout(onDisplayed, duration);
+		
 	};
 
 

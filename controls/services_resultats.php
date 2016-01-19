@@ -232,7 +232,10 @@ class ServicesPosiResultats extends Main
 	{
 
 		$countLevelParent = 0;
-		$totalPercent = 0;
+		$totalParentPercent = 0;
+		//$parentPercent = 0;
+		$currentParentCode = null;
+
 
 		foreach ($categories as $categorie) 
 		{	
@@ -242,7 +245,30 @@ class ServicesPosiResultats extends Main
 			{
 				$parentCat = $categorie->getParent();
 
-				$countLevelParent++;
+				if ($currentParentCode != null && $parentCat->getCode() != $currentParentCode) 
+				{
+					if ($totalParentPercent > 0 && $countLevelParent > 0)
+					{
+						$parentPercent = $totalParentPercent / $countLevelParent;
+					}
+					else
+					{
+						$parentPercent = 0;
+					}
+
+					var_dump('$parentPercent = '.$parentPercent);
+
+					$parentCat->setScorePercent($parentPercent);
+
+					$currentParentCode = null;
+					$countLevelParent = 0;
+					$totalParentPercent = 0;
+				}
+				else
+				{
+					$currentParentCode = $parentCat->getCode();
+				}
+
 
 				// Calcul du nombre de réponses totales
 				$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
@@ -256,22 +282,37 @@ class ServicesPosiResultats extends Main
 				$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
 				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
 
-				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
 
+				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
 				$scorePercent = $categorie->getScorePercent();
 				$scorePercentParent = $parentCat->getScorePercent();
-				if (($scorePercent + $scorePercentParent) > 0 && $parentCat->getHasResult())
+
+				var_dump($categorie->getCode());
+
+				if ($scorePercentParent > 0 && $parentCat->getHasResult())
 				{
-					$scorePercentParent = ($scorePercent + $scorePercentParent) / ($nbreReponses + 1);
+					var_dump('$scorePercentParent : '.$scorePercentParent);
+					//$scorePercentParent = ($scorePercent + $scorePercentParent) / ($nbreReponses + 1);
+					$totalParentPercent += $scorePercent;
 				}
 				else
 				{
-					$scorePercentParent = $scorePercent;
+					var_dump('$scorePercent : '.$scorePercent);
+					$totalParentPercent = $scorePercent;
 				}
-				//$scorePercentParent = (($scorePercent + $scorePercentParent) > 0 && $parentCat->getHasResult()) ? ($scorePercent + $scorePercentParent) / 2 : 0;
-				var_dump($nbreReponses.' - '.$categorie->getCode().'('.$scorePercent.') < '.$parentCat->getCode().'('.$scorePercentParent.') = '.$scorePercentParent);
+				
+				var_dump('$totalParentPercent : '.$totalParentPercent);
+				$countLevelParent++;
+				
+				
+				//var_dump('result => '.$currentParentCode.' = '.$totalParentPercent / $countLevelParent.' -> '.$totalParentPercent.' / '.$countLevelParent);
 
-				$parentCat->setScorePercent($scorePercentParent);
+				
+				
+				
+				
+				$parentCat->setHasResult(true);
+				
 
 				/*
 				// Calcul du temps de réponse moyen par question
@@ -282,23 +323,13 @@ class ServicesPosiResultats extends Main
 				$parentCat->setTemps($tempsParent);
 				*/
 				
-				$parentCat->setHasResult(true);
+				
 
-				/*
-				// Calcul du score
-				if ($nbreReponsesCorrectesParent != 0)
-				{	
-					$scoreParentCat = round(($nbreReponsesCorrectesParent / $nbreReponsesParent) * 100);
-					$parentCat->setScorePercent($scoreParentCat);
-				}
-				else
-				{
-					$parentCat->setScorePercent(0);
-				}
-				*/
 			}	
 
 		}
+
+		$countLevelParent = 0;
 
 		$level--;
 

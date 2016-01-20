@@ -231,9 +231,8 @@ class ServicesPosiResultats extends Main
 	public function getRecursiveCategoriesResults($level, $categories)
 	{
 
-		$countLevelParent = 0;
-		$totalParentPercent = 0;
-		//$parentPercent = 0;
+		$countChildren = 0;
+		$totalPercent = 0;
 		$currentParentCode = null;
 
 
@@ -245,31 +244,92 @@ class ServicesPosiResultats extends Main
 			{
 				$parentCat = $categorie->getParent();
 
-				if ($currentParentCode != null && $parentCat->getCode() != $currentParentCode) 
-				{
-					if ($totalParentPercent > 0 && $countLevelParent > 0)
+
+				var_dump('Remonte vers '.$parentCat->getCode());
+				
+				var_dump('Code cat en cours : '.$categorie->getCode());
+				var_dump('Total cat en cours : '.$totalPercent);
+				var_dump('currentParentCode : '.$currentParentCode);
+
+				if ($currentParentCode !== null && $parentCat->getCode() != $currentParentCode) 
+				{		
+					if ($totalPercent > 0 && $countChildren > 0)
 					{
-						$parentPercent = $totalParentPercent / $countLevelParent;
+						$percentChildren = $totalPercent / $countChildren;
 					}
 					else
 					{
-						$parentPercent = 0;
+						$percentChildren = 0;
 					}
 
-					var_dump('$parentPercent = '.$parentPercent);
+					var_dump('Moyenne enfant = '.$percentChildren);
 
-					$parentCat->setScorePercent($parentPercent);
+					$parentScore = $percentChildren;
+
+					if ($parentCat->getHasResult()) 
+					{
+						$percentChildren += $parentCat->getScorePercent();
+
+						if ($percentChildren > 0)
+						{
+							$parentScore = $percentChildren / 2;
+						}
+						else
+						{
+							$parentScore = 0;
+						}
+					}
+
+					var_dump('Moyenne enfant + parent = '.$parentScore);
+
+					$parentCat->setScorePercent($parentScore);
 
 					$currentParentCode = null;
-					$countLevelParent = 0;
-					$totalParentPercent = 0;
+					$countChildren = 0;
+					$totalPercent = 0;
 				}
 				else
 				{
 					$currentParentCode = $parentCat->getCode();
+
+					// Calcul du score en faisant la moyenne entre le score parent et le score enfant
+					$scorePercent = $categorie->getScorePercent();
+					//$scorePercentParent = $parentCat->getScorePercent();
+
+
+					//if ($scorePercentParent > 0 && $parentCat->getHasResult())
+					//{
+						//$totalParentPercent += $scorePercentParent + $scorePercent;
+					//}
+					//else
+					//{
+						$totalPercent += $scorePercent;
+					//}
+					
+					$countChildren++;
 				}
+				
+				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
+				$scorePercent = $categorie->getScorePercent();
+				//$scorePercentParent = $parentCat->getScorePercent();
 
 
+				//if ($scorePercentParent > 0 && $parentCat->getHasResult())
+				//{
+					//$totalParentPercent += $scorePercentParent + $scorePercent;
+				//}
+				//else
+				//{
+					$totalPercent += $scorePercent;
+				//}
+				
+				$countChildren++;
+				
+				
+				//var_dump('result => '.$currentParentCode.' = '.$totalParentPercent / $countLevelParent.' -> '.$totalParentPercent.' / '.$countLevelParent);
+				
+				
+				
 				// Calcul du nombre de réponses totales
 				$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
 				$nbreReponsesParent = ($parentCat->getTotalReponses() !== null) ? $parentCat->getTotalReponses() : 0;
@@ -283,34 +343,6 @@ class ServicesPosiResultats extends Main
 				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
 
 
-				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
-				$scorePercent = $categorie->getScorePercent();
-				$scorePercentParent = $parentCat->getScorePercent();
-
-				var_dump($categorie->getCode());
-
-				if ($scorePercentParent > 0 && $parentCat->getHasResult())
-				{
-					var_dump('$scorePercentParent : '.$scorePercentParent);
-					//$scorePercentParent = ($scorePercent + $scorePercentParent) / ($nbreReponses + 1);
-					$totalParentPercent += $scorePercent;
-				}
-				else
-				{
-					var_dump('$scorePercent : '.$scorePercent);
-					$totalParentPercent = $scorePercent;
-				}
-				
-				var_dump('$totalParentPercent : '.$totalParentPercent);
-				$countLevelParent++;
-				
-				
-				//var_dump('result => '.$currentParentCode.' = '.$totalParentPercent / $countLevelParent.' -> '.$totalParentPercent.' / '.$countLevelParent);
-
-				
-				
-				
-				
 				$parentCat->setHasResult(true);
 				
 

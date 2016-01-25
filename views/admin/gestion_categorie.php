@@ -342,7 +342,7 @@ $form_url = $response['url'];
 
 								<div id="type-preco-section">
 									
-									<div class="type-title">Présaisir les types de préconisation :</div>
+									<div class="type-title">Présaisie des types (volumes) de préconisation :</div>
 									
 									<div class="type-text">
 
@@ -426,7 +426,7 @@ $form_url = $response['url'];
 										{
 											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="0" />';
 											echo '<input type="hidden" name="ref_preco[]" value="" />';
-											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="1" />';
+											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="0" />';
 											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />&nbsp;%';
 											echo '&nbsp; à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />&nbsp;%';
 										}
@@ -567,6 +567,8 @@ $form_url = $response['url'];
 
 			var self = this;
 			var mode = $('#mode').val();
+			var $precoItem = $('.preco-item:first');
+			var numOrdrePreco = 0;
 
 			//$('#precos').hide();
 			//$('#type-preco-section').hide();
@@ -596,15 +598,6 @@ $form_url = $response['url'];
 				$('#descript-cat').val(descript);
 
 				//console.log($('.num-indicator').html());
-			};
-
-			/* Supprime une élément 'préconisation' */
-
-			this.delPreco = function($precoItem) {
-
-				console.log($precoItem);
-
-				$precoItem.remove();
 			};
 
 
@@ -713,43 +706,77 @@ $form_url = $response['url'];
 
 				$('#precos').fadeIn(500);
 
+
+				/* Gestion des préconisations */
+
 				// Rend les éléments de la liste des préconisations déplaçables et triables
 				$(".preco-list").sortable();
 
-				var i = 1;
-				var $item;
-				$numItemPreco = 0;
+				
+				var $item = null;
+				//$numItemPreco = 0;
+				//$precoItem = 
+
+				$('.choix-type-preco-cbox').each(function() {
+
+					$(this).on('change', function(event) {
+
+						if ($(this).val() != 'select_cbox') 
+						{
+							$(this).parent().find('.preco-active').val('1');
+						}
+						else
+						{
+							$(this).parent().find('.preco-active').val('0');
+						}
+					});
+				});
+
+
+				/* Gestion des numéros d'ordre des éléments préco lors d'un déplacement. */
+				$('.preco-item').on('sort', function(event, ui) {
+
+					var sortItemNum = $(this).children('.num-ordre').val();
+				});
 				
 				// Ajout d'une nouvelle préconisation par duplication
 				$('#add-preco').on('click', function(event) {
 
 					event.preventDefault();
-					i++;
-					$item = $('.preco-item:first').clone();
+					numOrdrePreco++;
+					$item = $precoItem.clone();
 					$('.preco-list').append($item);
-					$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
-				});
-				/*
-				$('#add-preco').on('click', function(event) {
+					$item.children('.num-ordre').val(numOrdrePreco);
 
-					//event.preventDefault();
-					$item = $('.preco-item:last').clone();
-					var num = $item.find('.num-ordre').val();
-					$(".preco-list").append($item);
+					$('.del-preco').each(function(index) {
 
-					num++;
-					$('.preco-item:last').find('.num-ordre').val(num);
+						$(this).on('click', function(event) {
+
+							var num = $(this).siblings('.num-ordre').val();
+							var active = $(this).siblings('.preco-active').val();
+
+							if ((active == 1 && confirm('Cet élément de préconisation contient des valeurs, voulez-vous les supprimer ?')) || active == 0) {
+
+								$(this).parent('.preco-item').remove();
+								numOrdrePreco--;
+							}
+							/*
+							else {
+							
+								$(this).parent('.preco-item').remove();
+								numOrdrePreco--;
+							}
+							*/
+						});
+					});
+
 				});
-				*/
 			
-				$('.del-preco').on('click', function(event) {
-
-					var num = $(this).siblings('.preco-item-num').val()
-					//$(this).parent('.preco-item').addClass('selected');
-					self.delPreco(num);
-				});
 
 
+
+
+				/* Gestion des types de préco */
 
 				$("#add-type-preco").on('click', function (event) {
 
@@ -891,20 +918,7 @@ $form_url = $response['url'];
 					// {
 					// 	$(this).parent().find('.preco-active').val('0');
 					// }
-				$('.choix-type-preco-cbox').each(function() {
-
-					$(this).on('change', function(event) {
-
-						if ($(this).val() != 'select_cbox') 
-						{
-							$(this).parent().find('.preco-active').val('1');
-						}
-						else
-						{
-							$(this).parent().find('.preco-active').val('0');
-						}
-					});
-				});
+				
 
 
 				if (mode == 'edit')

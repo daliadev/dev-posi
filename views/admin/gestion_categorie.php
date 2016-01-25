@@ -178,8 +178,8 @@ $form_url = $response['url'];
 								</div>
 								
 								<div id="submit">    
-									<input type="submit" name="selection" value="Sélectionner" />
-									<div class="clear"></div>
+									<input id="selection" type="submit" name="selection" value="Sélectionner" />
+									<!-- <div style="clear: both;"></div> -->
 								</div>
 
 							</fieldset>
@@ -572,6 +572,7 @@ $form_url = $response['url'];
 			//$('#type-preco-section').hide();
 			$('#type-preco').hide();
 
+
 			/* Vide le formulaire */
 
 			this.resetFieldsValues = function() {
@@ -597,6 +598,15 @@ $form_url = $response['url'];
 				//console.log($('.num-indicator').html());
 			};
 
+			/* Supprime une élément 'préconisation' */
+
+			this.delPreco = function($precoItem) {
+
+				console.log($precoItem);
+
+				$precoItem.remove();
+			};
+
 
 			/* Trouve la catégorie parente */
 
@@ -618,7 +628,7 @@ $form_url = $response['url'];
 			}
 
 			
-			
+			/* Modifie l'intitulé du boutton de suppression selon le contexte */
 			if (mode == 'edit' || mode == 'del')
 			{
 				$('#del').val('Supprimer');
@@ -631,7 +641,8 @@ $form_url = $response['url'];
 
 			/*  Système de sélection de la liste des catégories à gauche */
 
-			if (mode != 'edit' && mode != 'delete')
+			//if (mode != 'edit' && mode != 'delete')
+			if (mode == 'view')
 			{	
 				//$('#del').val('Supprimer');
 
@@ -661,8 +672,8 @@ $form_url = $response['url'];
 					$('#edit').removeProp('disabled');
 					//$('#add').removeProp('disabled');
 
-					<?php if (Config::ALLOW_AJAX) : ?>
-
+					<?php //if (Config::ALLOW_AJAX) : ?>
+					/*
 						console.log(mode);
 
 						if (mode == 'view') {
@@ -683,31 +694,11 @@ $form_url = $response['url'];
 								
 							}, 'json');
 						}
-
-					<?php endif; ?>
-					/*
-					if (mode == 'edit')
-					{
-						$('#precos').fadeIn(500);
-
-						// Rend les éléments de la liste des préconisations déplaçables et triables
-						$(".preco-list").sortable();
-
-						var i = 1;
-						var $item;
-						$numItemPreco = 0;
-						
-						// Ajout d'une nouvelle préconisation par duplication
-						$('#add-preco').on('click', function(event) {
-
-							event.preventDefault();
-							i++;
-							$item = $('.preco-item:first').clone();
-							$(".preco-list").append($item);
-							$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
-						});
-					}
 					*/
+					<?php //endif; ?>
+					
+					
+					
 
 					//$(this).blur();
 				});
@@ -718,15 +709,46 @@ $form_url = $response['url'];
 			
 			
 			
-			
 			if (mode == 'edit' || mode == 'new') {
 
+				$('#precos').fadeIn(500);
 
 				// Rend les éléments de la liste des préconisations déplaçables et triables
-				//$(".preco-list").sortable();
+				$(".preco-list").sortable();
 
 				var i = 1;
 				var $item;
+				$numItemPreco = 0;
+				
+				// Ajout d'une nouvelle préconisation par duplication
+				$('#add-preco').on('click', function(event) {
+
+					event.preventDefault();
+					i++;
+					$item = $('.preco-item:first').clone();
+					$('.preco-list').append($item);
+					$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+				});
+				/*
+				$('#add-preco').on('click', function(event) {
+
+					//event.preventDefault();
+					$item = $('.preco-item:last').clone();
+					var num = $item.find('.num-ordre').val();
+					$(".preco-list").append($item);
+
+					num++;
+					$('.preco-item:last').find('.num-ordre').val(num);
+				});
+				*/
+			
+				$('.del-preco').on('click', function(event) {
+
+					var num = $(this).siblings('.preco-item-num').val()
+					//$(this).parent('.preco-item').addClass('selected');
+					self.delPreco(num);
+				});
+
 
 
 				$("#add-type-preco").on('click', function (event) {
@@ -837,7 +859,7 @@ $form_url = $response['url'];
 					//});
 				//});
 				
-
+				/*
 				// Ajout d'une nouvelle préconisation par duplication
 				$('#add-preco').on('click', function(event) {
 
@@ -857,7 +879,7 @@ $form_url = $response['url'];
 					precoItem.remove();
 
 				});
-
+				*/
 
 				//$('.choix-type-preco-cbox').on('change', function(event) {
 
@@ -883,6 +905,51 @@ $form_url = $response['url'];
 						}
 					});
 				});
+
+
+				if (mode == 'edit')
+				{
+					/*
+					$('#precos').fadeIn(500);
+
+					// Rend les éléments de la liste des préconisations déplaçables et triables
+					$(".preco-list").sortable();
+
+					var i = 1;
+					var $item;
+					$numItemPreco = 0;
+					
+					// Ajout d'une nouvelle préconisation par duplication
+					$('#add-preco').on('click', function(event) {
+
+						event.preventDefault();
+						i++;
+						$item = $('.preco-item:first').clone();
+						$(".preco-list").append($item);
+						$('.preco-item-num strong:last').replaceWith('<strong>' + i + '</strong>');
+					});
+					/*
+					/*
+					$('#add-preco').on('click', function(event) {
+
+						//event.preventDefault();
+						$item = $('.preco-item:last').clone();
+						var num = $item.find('.num-ordre').val();
+						$(".preco-list").append($item);
+
+						num++;
+						$('.preco-item:last').find('.num-ordre').val(num);
+					});
+					*/
+					/*
+					$('.del-preco').on('click', function(event) {
+
+						var precoItem = $(this).parent();
+						precoItem.remove();
+
+					});
+					*/
+				}
 			}
 
 			/*

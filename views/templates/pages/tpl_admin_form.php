@@ -16,7 +16,7 @@
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/reset.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/layout.css" />
     <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/480.css" />
-    <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/client.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/client-styles.css" />
 
     <link type="text/css" rel="stylesheet" href="<?php echo SERVER_URL; ?>media/css/hot-sneaks/jquery-ui-1.10.3.custom.css" />
 

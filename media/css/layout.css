@@ -498,16 +498,15 @@ form input[type="text"][disabled]
 	}
 	
 #form-posi #liste-cat-main #submit {
-
 	width: 100%;
-	margin: 0;
-	padding: 0;
+	padding: 0 auto;
+	text-align: center
 }
 
 	#form-posi #liste-cat-main #submit input {
-		float: right;
+		/*float: right;*/
 		width: 200px;
-		margin: 20px auto 10px;
+		margin: 20px 0 10px auto;
 	}
 
 	#form-posi #submit input[disabled]

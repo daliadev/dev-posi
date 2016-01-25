@@ -443,7 +443,7 @@ class ServicesAdminRestitution extends Main
 
 		$posiStats['categories'] = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories']);
 
-		var_dump($posiStats['categories']);
+		//var_dump($posiStats['categories']);
 		//exit();
 
 		//$tempsGlobal = 0;

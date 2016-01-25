@@ -1,6 +1,7 @@
 <?php
 
-require_once(ROOT.'utils/array_sort.php');
+//require_once(ROOT.'utils/array_sort.php');
+require_once(ROOT.'utils/tools.php');
 
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
@@ -30,6 +31,18 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 	}
 }
 
+
+
+if (!empty($response['stats'])) 
+{
+	//$stats = $response['stats'];
+
+	$dateSession = Tools::toggleDate(substr($response['session'][0]->getDate(), 0, 10));
+	$timeToSeconds = Tools::timeToSeconds(substr($response['session'][0]->getDate(), 11, 8), $inputFormat = "h:m:s");
+	$time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
+	$tempsTotal = Tools::timeToString($response['session'][0]->getTempsTotal());
+
+}
 
 $form_url = $response['url'];
 
@@ -460,10 +473,10 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<div id="statistiques" class="tab-block">
 
 									<?php if (!empty($response['stats'])) : $stats = $response['stats'];
-										$dateSession = Tools::toggleDate(substr($response['session'][0]->getDate(), 0, 10));
-										$timeToSeconds = Tools::timeToSeconds(substr($response['session'][0]->getDate(), 11, 8), $inputFormat = "h:m:s");
-										$time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
-										$tempsTotal = Tools::timeToString($response['session'][0]->getTempsTotal());
+										//$dateSession = Tools::toggleDate(substr($response['session'][0]->getDate(), 0, 10));
+										//$timeToSeconds = Tools::timeToSeconds(substr($response['session'][0]->getDate(), 11, 8), $inputFormat = "h:m:s");
+										//$time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
+										//$tempsTotal = Tools::timeToString($response['session'][0]->getTempsTotal());
 									?>
 										<div class="info">Positionnement du : <strong><?php echo $dateSession; ?> à <?php echo $time; ?></strong></div>
 										<div class="info">Temps total : <strong><?php echo $tempsTotal; ?></strong></div>
@@ -639,7 +652,55 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								<div id="parcours-formation" class="tab-block">
 									
-									<div class="info">Service non disponible.</div>
+									<?php if (!empty($response['stats'])) : $stats = $response['stats']; ?>
+
+										<div class="info">Positionnement du : <strong><?php echo $dateSession; ?> à <?php echo $time; ?></strong></div>
+										<div class="info">Temps total : <strong><?php echo $tempsTotal; ?></strong></div>
+										<?php if (!empty($stats['percent_global'])) : ?>
+											<div class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</div>
+										<?php endif; ?>
+											
+										<br/>
+
+										<div class="precos-block">
+
+											<?php //$clear = null ?>
+											
+											<?php for ($i=0; $i < 7; $i++) : ?> 
+												
+												<div class="bandeau-preco">
+
+													<div class="cat-block">
+
+														<div class="cat-name">
+															<span><?php echo Tools::getExtrait('Lire et interpréter les différentes représentations graphiques : tableaux, graphiques, logos, sigles, pictogrammes...', 68); ?></span>
+														</div>
+														<div class="cat-score">72%</div>
+														<div style="clear: both;"></div>
+
+													</div>
+
+													<div class="volume">50 heures</div>
+
+													<!-- <div style="clear: both;"></div> -->
+
+												</div>
+
+											<?php endfor; ?>
+
+
+
+											<div style="clear: both;"></div>
+
+										</div>
+
+										<!-- <div style="clear: both;"></div> -->
+
+									<?php else : ?>
+
+										<div class="info">Aucun détail à afficher.</div>
+
+									<?php endif; ?>
 
 								</div>
 

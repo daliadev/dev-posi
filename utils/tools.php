@@ -10,8 +10,7 @@ class Tools {
     
     
     
-    
-    static function toggleDate($date, $type = "fr")
+    public static function toggleDate($date, $type = "fr")
     {
         if ($type == "us")
         {
@@ -42,7 +41,7 @@ class Tools {
     
     
     
-    static function timeToString($time, $outputFormat = "full")
+    public static function timeToString($time, $outputFormat = "full")
     {
 
         $hours = floor($time / 3600);
@@ -178,7 +177,7 @@ class Tools {
     
     
     
-    static function timeToSeconds($time, $inputFormat = "h:m:s")
+    public static function timeToSeconds($time, $inputFormat = "h:m:s")
     {
         $hours = 0;
         $minutes = 0;
@@ -213,7 +212,7 @@ class Tools {
     
 
 
-    static function stripSpecialCharsFromString($string)
+    public static function stripSpecialCharsFromString($string)
     {
         $specialChars = "àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ";
         $cleanedChars = "aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY";
@@ -222,6 +221,16 @@ class Tools {
         $string = strtr($string, utf8_decode($specialChars), $cleanedChars);
 
         return utf8_encode($string);
+    }
+
+
+
+    public static function getExtrait($text, $length)
+    {
+        $extractString = substr($text, 0, $length);
+        $extractString .= '...';
+
+        return $extractString;
     }
 
 

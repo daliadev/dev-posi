@@ -99,7 +99,7 @@ $form_url = $response['url'];
 					<i class="fa fa-arrow-right"></i>
 				</div>
 
-				<div style="float:left;">
+				<div style="float:left; min-height: 478px;">
 
 					<div id="liste-cat-main" class="zone-formu2">
 	 
@@ -192,7 +192,7 @@ $form_url = $response['url'];
 
 				<!-- Partie droite : Affichage / détail de la compétence -->
 
-				<div style="float:right;">
+				<div style="float:right; min-height: 478px;">
 
 					<div id="detail-cat" class="zone-formu2">
 						
@@ -573,8 +573,6 @@ $form_url = $response['url'];
 			var minPrecoValue = 0;
 			var maxPrecoValue = 100;
 
-			//$('#precos').hide();
-			//$('#type-preco-section').hide();
 			$('#type-preco').hide();
 
 
@@ -599,8 +597,6 @@ $form_url = $response['url'];
 				$('#ref_parent_cbox').val(parentCode);
 				$('#ordre-cat').val(order);
 				$('#descript-cat').val(descript);
-
-				//console.log($('.num-indicator').html());
 			};
 
 
@@ -621,7 +617,7 @@ $form_url = $response['url'];
 				}
 
 				return false;
-			}
+			};
 
 			/* Fonction calcul de validité des valeurs des préco */
 
@@ -643,9 +639,9 @@ $form_url = $response['url'];
 				console.log(precoPercentGap);
 			};
 
-			this.orderPrecoValues(precoValue) {
+			this.orderPrecoValues = function(precoValue) {
 
-			}
+			};
 
 
 			this.orderPrecoItems = function() {
@@ -766,13 +762,14 @@ $form_url = $response['url'];
 
 					$(this).on('change', function(event) {
 
+
 						if ($(this).val() != 'select_cbox') 
 						{
-							$(this).parent().find('.preco-active').val('1');
+							$(this).siblings('.preco-active').val('1');
 						}
 						else
 						{
-							$(this).parent().find('.preco-active').val('0');
+							$(this).siblings('.preco-active').val('0');
 						}
 					});
 				});
@@ -791,8 +788,9 @@ $form_url = $response['url'];
 
 					numOrdrePreco++;
 					$item = $precoItem.clone();
-					$('.preco-list').append($item);
+					$item.children('.preco-active').val('0');
 					$item.children('.num-ordre').val(numOrdrePreco);
+					$('.preco-list').append($item);
 
 					$('.del-preco').each(function(index) {
 
@@ -801,18 +799,20 @@ $form_url = $response['url'];
 							var num = $(this).siblings('.num-ordre').val();
 							var active = $(this).siblings('.preco-active').val();
 
-							if ((active == 1 && confirm('Cet élément de préconisation contient des valeurs, voulez-vous les supprimer ?')) || active == 0) {
+							if (active == 1) {
 
-								$(this).parent('.preco-item').remove();
-								numOrdrePreco--;
+								var confirmDeleting = confirm('Cet élément de préconisation contient des valeurs, voulez-vous les supprimer ?')
+								if (confirmDeleting) {
+
+									$(this).parent('.preco-item').remove();
+									numOrdrePreco--;
+								}
 							}
-							/*
 							else {
 							
 								$(this).parent('.preco-item').remove();
 								numOrdrePreco--;
 							}
-							*/
 						});
 					});
 
@@ -846,39 +846,39 @@ $form_url = $response['url'];
 
 					<?php if (Config::ALLOW_AJAX) : ?>
 
-					if ($('#type-preco-cbox').val() !== '' && $('#type-preco-cbox').val() !== 'select_cbox')
-					{
-						refType = $('#type-preco-cbox').val();
-					}
+						if ($('#type-preco-cbox').val() !== '' && $('#type-preco-cbox').val() !== 'select_cbox') {
 
-					console.log(refType);
+							refType = $('#type-preco-cbox').val();
+						}
 
-					nomType = $('#type-preco').val();
+						console.log(refType);
 
-					console.log(nomType);
+						nomType = $('#type-preco').val();
 
-					if (nomType !== '' && nomType !== null)
-					{
-						$.post('<?php echo $form_url; ?>', {'ref_type': refType, 'nom_type': nomType}, function(data) {
+						console.log(nomType);
 
-							if (data.error) {
+						if (nomType !== '' && nomType !== null) {
 
-								alert(data.error);
-							}
-							else {
+							$.post('<?php echo $form_url; ?>', {'ref_type': refType, 'nom_type': nomType}, function(data) {
 
-								//var parentCode = self.getParentCode(code);
-								//console.log(parentCode);
+								if (data.error) {
 
-								//self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
-							}
-							
-						}, 'json');
-					}
-					else
-					{
-						alert('Vous devez saisir un type de préconisation pour pouvoir l\'enregistrer.');
-					}
+									alert(data.error);
+								}
+								else {
+
+									//var parentCode = self.getParentCode(code);
+									//console.log(parentCode);
+
+									//self.setFieldsValues(code, data.results.nom_cat, parentCode, 0, data.results.descript_cat)
+								}
+								
+							}, 'json');
+						}
+						else {
+
+							alert('Vous devez saisir un type de préconisation pour pouvoir l\'enregistrer.');
+						}
 
 					<?php endif; ?>
 				});
@@ -1177,8 +1177,8 @@ $form_url = $response['url'];
 			/*** Gestion de la demande de suppression ***/
 			//console.log($('#del').val());
 
-			$('#del').on('click', function(event) 
-			{
+			$('#del').on('click', function(event) {
+
 				event.preventDefault();
 				/*
 				if (mode == 'view') 
@@ -1191,24 +1191,24 @@ $form_url = $response['url'];
 				}
 				else*/
 
-				if (mode == 'new')
-				{
-					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?"))
-					{
+				if (mode == 'new') {
+
+					if (confirm("Voulez-vous réellement effacer les données que vous avez saisi ?")) {
+
 						self.resetFieldsValues();
 						$('#mode').val('view');
 						$('#form-posi').submit();
 					}
 				}
-				else if (mode == 'edit')
-				{
+				else if (mode == 'edit') {
+
 					// Retour au mode view
 					//$('#mode').val('view');
 
 					// $('#form-posi').submit();
 
-					if (confirm("Voulez-vous réellement supprimer cette compétence ?"))
-					{
+					if (confirm("Voulez-vous réellement supprimer cette compétence ?")) {
+
 						$('input[name="delete"]').val("true");
 						$('#mode').val('view');
 						$('#form-posi').submit();

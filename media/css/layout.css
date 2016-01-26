@@ -1376,8 +1376,8 @@ fieldset .block:last-child  {
 }
 
 fieldset .block>textarea {
-	width: 386px !important; 
-	height: 70px !important;
+	width: 388px !important; 
+	height: 140px !important;
 	margin: 5px 0 0 0 !important;
 }
 

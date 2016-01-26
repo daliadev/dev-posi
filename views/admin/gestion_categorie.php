@@ -570,6 +570,9 @@ $form_url = $response['url'];
 			var $precoItem = $('.preco-item:first');
 			var numOrdrePreco = 0;
 
+			var minPrecoValue = 0;
+			var maxPrecoValue = 100;
+
 			//$('#precos').hide();
 			//$('#type-preco-section').hide();
 			$('#type-preco').hide();
@@ -619,6 +622,48 @@ $form_url = $response['url'];
 
 				return false;
 			}
+
+			/* Fonction calcul de validité des valeurs des préco */
+
+			this.controlPercentValue = function() {
+
+				var precoPercentGap = new Array();
+
+				var i = 0;
+
+				$('.preco-item').each(function(index) {
+
+					precoPercentGap[i] = {
+						'min': parseInt($(this).children('input[name=preco_min]').val()),
+						'max': parseInt($(this).children('input[name=preco_max]').val())
+					};
+					i++;
+				});
+
+				console.log(precoPercentGap);
+			};
+
+			this.orderPrecoValues(precoValue) {
+
+			}
+
+
+			this.orderPrecoItems = function() {
+
+				$('.preco-item').each(function(index) {
+
+					$(this).children('.num-ordre').val(index);
+				});
+			};
+
+
+			/* Contrôle soumission du formulaire */
+
+			this.controlSubmit = function() {
+
+				return false;
+
+			};
 
 			
 			/* Modifie l'intitulé du boutton de suppression selon le contexte */
@@ -743,6 +788,7 @@ $form_url = $response['url'];
 				$('#add-preco').on('click', function(event) {
 
 					event.preventDefault();
+
 					numOrdrePreco++;
 					$item = $precoItem.clone();
 					$('.preco-list').append($item);
@@ -838,12 +884,28 @@ $form_url = $response['url'];
 				});
 
 
-				$("#suppr-type-preco").on('click', function (event) {
+				$("#suppr-type-preco").on('click', function(event) {
 
 					event.preventDefault();
 				});
 				
 				
+
+				$('#save').on('click', function(event) {
+
+					event.preventDefault();
+
+					if (controlSubmit) {
+
+						$('#form-posi').submit();
+					}
+					else {
+						alert("Problème lors de la validation");
+					}
+				});
+
+
+
 				//$('.choix_type_preco_cbox').on('change', function(event) {
 
 					/*** Gestion de la requête pour éditer un type dans la liste des types ***/

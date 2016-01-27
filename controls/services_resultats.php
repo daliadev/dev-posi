@@ -235,6 +235,7 @@ class ServicesPosiResultats extends Main
 		$totalPercent = 0;
 		$currentParentCode = $parentCode;
 		$percentChildren = 0;
+		$scoreMoyenne = 0;
 		//$parentScore = 0;
 
 
@@ -269,15 +270,20 @@ class ServicesPosiResultats extends Main
 
 						if ($parentCat->getHasResult()) 
 						{
-							$parentCatScore = $parentCat->getScorePercent();
-							$scoreMoyenne = ($parentCatScore + $totalPercent) / ($countChildren + 1);
+							$totalPercent += $parentCat->getScorePercent();
+							$countChildren++;
+							//$scoreMoyenne = ($parentCatScore + $totalPercent) / ($countChildren + 1);
 						}
+						/*
 						else
 						{
-							$scoreMoyenne = $totalPercent / $countChildren;
+							
 						}
+						*/
+						$scoreMoyenne = $totalPercent / $countChildren;
 						var_dump('  Score parentcat '.$scoreMoyenne);
-						//$parentCat->setScorePercent($scoreMoyenne);
+						$parentCat->setScorePercent($scoreMoyenne);
+						$parentCat->setHasResult(true);
 						
 					}
 					else
@@ -300,8 +306,18 @@ class ServicesPosiResultats extends Main
 					var_dump('CurrentParentCode2 : '.$currentParentCode);
 				}
 				var_dump('Total score 2 : '.$totalPercent);
-				$parentCat->setScorePercent($totalPercent);
-				$parentCat->setHasResult(true);
+				/*
+				if ($countChildren > 0 && $totalPercent > 0)
+				{
+					$scorePercent
+				}
+				else
+				{
+
+				}
+				*/
+				//$parentCat->setScorePercent($totalPercent);
+				
 
 				/* Fin new */
 

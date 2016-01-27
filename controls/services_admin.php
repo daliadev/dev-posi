@@ -680,25 +680,20 @@ class ServicesAdmin extends Main
 		}
 		*/
 
-		
 
-
-	   
 		/*** Initialisation des boutons ***/
 
 		$this->servicesGestion->switchFormButtons($this->formData, "init");
 	   
 
 
-
-		/*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/
-		
+		/*-----   Action a effectuée selon le mode soumis par le formulaire  -----*/	
 
 		$this->formData['delete_label'] = 'Supprimer';
 
 
+
 		/*** Mode "visualisation" et "édition" ***/
-		
 
 		if ($this->formData['mode'] == "view" || $this->formData['mode'] == "edit")
 		{
@@ -774,6 +769,9 @@ class ServicesAdmin extends Main
 		
 		else if ($this->formData['mode'] == "save")
 		{ 
+			//var_dump('save');
+			//exit();
+
 			// Verrouillage des boutons.
 			$this->servicesGestion->switchFormButtons($this->formData, "save");
 
@@ -811,6 +809,10 @@ class ServicesAdmin extends Main
 
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
+
+			var_dump($_POST);
+			var_dump($this->formData);
+			exit();
 
 			//var_dump('formData', $this->formData);
 			//var_dump('dataCategorie', $dataCategorie);

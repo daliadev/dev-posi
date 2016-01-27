@@ -268,7 +268,6 @@ class ServicesAdminCategorie extends Main
 
 		/* Gestion des préconisations */
 		if (Config::ALLOW_PRECONISATION) {
-
 			
 			if (isset($postData['preco_active']) && is_array($postData['preco_active']) && count($postData['preco_active']) > 0)
 			{
@@ -370,6 +369,9 @@ class ServicesAdminCategorie extends Main
 		{
 			unset($dataCategorie['data_precos']);
 		}
+
+		var_dump($dataCategorie);
+		//exit();
 
 		return $dataCategorie;
 	}

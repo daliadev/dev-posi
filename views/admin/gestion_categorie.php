@@ -395,6 +395,7 @@ $form_url = $response['url'];
 									{
 										$nbrPrecos = (count($formData['precos']) > 0) ? count($formData['precos']) : 1;
 									}
+									//var_dump($formData['precos']);
 
 									for ($i = 0; $i < $nbrPrecos; $i++) 
 									{
@@ -619,6 +620,7 @@ $form_url = $response['url'];
 				return false;
 			};
 
+
 			/* Fonction calcul de validité des valeurs des préco */
 
 			this.controlPercentValue = function() {
@@ -639,6 +641,7 @@ $form_url = $response['url'];
 				console.log(precoPercentGap);
 			};
 
+
 			this.orderPrecoValues = function(precoValue) {
 
 			};
@@ -657,7 +660,7 @@ $form_url = $response['url'];
 
 			this.controlSubmit = function() {
 
-				return false;
+				return true;
 
 			};
 
@@ -762,6 +765,7 @@ $form_url = $response['url'];
 
 					$(this).on('change', function(event) {
 
+						//console.log($(this).val());
 
 						if ($(this).val() != 'select_cbox') 
 						{
@@ -781,6 +785,8 @@ $form_url = $response['url'];
 					var sortItemNum = $(this).children('.num-ordre').val();
 				});
 				
+
+
 				// Ajout d'une nouvelle préconisation par duplication
 				$('#add-preco').on('click', function(event) {
 
@@ -792,6 +798,24 @@ $form_url = $response['url'];
 					$item.children('.num-ordre').val(numOrdrePreco);
 					$('.preco-list').append($item);
 
+					$('.choix-type-preco-cbox').each(function() {
+
+						$(this).on('change', function(event) {
+
+							//console.log($(this).val());
+
+							if ($(this).val() != 'select_cbox') 
+							{
+								$(this).siblings('.preco-active').val('1');
+							}
+							else
+							{
+								$(this).siblings('.preco-active').val('0');
+							}
+						});
+					});
+
+
 					$('.del-preco').each(function(index) {
 
 						$(this).on('click', function(event) {
@@ -799,7 +823,9 @@ $form_url = $response['url'];
 							var num = $(this).siblings('.num-ordre').val();
 							var active = $(this).siblings('.preco-active').val();
 
-							if (active == 1) {
+							console.log(num);
+
+							if (active == "1") {
 
 								var confirmDeleting = confirm('Cet élément de préconisation contient des valeurs, voulez-vous les supprimer ?')
 								if (confirmDeleting) {
@@ -892,16 +918,17 @@ $form_url = $response['url'];
 				
 
 				$('#save').on('click', function(event) {
-
+					/*
 					event.preventDefault();
 
-					if (controlSubmit) {
+					if (self.controlSubmit()) {
 
 						$('#form-posi').submit();
 					}
 					else {
 						alert("Problème lors de la validation");
 					}
+					*/
 				});
 
 

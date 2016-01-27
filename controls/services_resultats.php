@@ -248,7 +248,7 @@ class ServicesPosiResultats extends Main
 				$parentCat = $categorie->getParent();
 
 				/* new */
-
+				
 				var_dump('----------------------------------');
 				var_dump('Code cat en cours : '.$categorie->getCode());
 				var_dump('Remonte vers '.$parentCat->getCode());
@@ -305,19 +305,18 @@ class ServicesPosiResultats extends Main
 					$currentParentCode = $parentCat->getCode();
 					var_dump('CurrentParentCode2 : '.$currentParentCode);
 				}
-				var_dump('Total score 2 : '.$totalPercent);
-				/*
-				if ($countChildren > 0 && $totalPercent > 0)
-				{
-					$scorePercent
-				}
-				else
-				{
-
-				}
-				*/
-				//$parentCat->setScorePercent($totalPercent);
+				//var_dump('Total score 2 : '.$totalPercent);
 				
+				$parentCat->setScorePercent($totalPercent);
+				
+				
+				var_dump('-------');
+				var_dump('2 - Code cat en cours : '.$categorie->getCode());
+				var_dump('2 - Remonte vers '.$parentCat->getCode());
+				var_dump('2 - Score cat '.$categorie->getScorePercent());
+				var_dump('2 - Total score : '.$totalPercent);
+				var_dump('2 - CurrentParentCode : '.$currentParentCode);
+
 
 				/* Fin new */
 

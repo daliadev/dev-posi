@@ -810,9 +810,9 @@ class ServicesAdmin extends Main
 			// Traitement/vérification des infos saisies.
 			$dataCategorie = $this->servicesCategorie->filterCategorieData($this->formData, $_POST);
 
-			var_dump($_POST);
-			var_dump($this->formData);
-			exit();
+			//var_dump($_POST);
+			//var_dump($this->formData);
+			//exit();
 
 			//var_dump('formData', $this->formData);
 			//var_dump('dataCategorie', $dataCategorie);
@@ -825,7 +825,7 @@ class ServicesAdmin extends Main
 			{
 				$this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
 			}
-			//exit();
+			exit();
 			
 			// Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors))
@@ -925,22 +925,27 @@ class ServicesAdmin extends Main
 
 		// Requete pour obtenir la liste des préconisations pour la categories en cours.
 
-		// $listePrecos = array();
-		// if (!empty($this->formData['code_cat']) && !empty($this->formData['code_cat']))
-		// {
-		// 	$listePrecos['precos'] = $this->servicesCategorie->getPreconisations($this->formData['code_cat']);
-		// }
+		$listePrecos = array();
+		if (!empty($this->formData['code_cat']) && !empty($this->formData['code_cat']))
+		{
+			$listePrecos['precos'] = $this->servicesCategorie->getPreconisations($this->formData['code_cat']);
+		}
 
+		
 		// Requete pour obtenir la liste des catégories
 		$listeCategories = $this->servicesCategorie->getCategories();
 
-		// Requete pour obtenir la liste des parcours
+		// Requete pour obtenir la liste des types (volumes) de parcours
 		$listeTypesPreco = $this->servicesCategorie->getTypePrecoList();
+
 
 		// Assemblage de toutes les données de la réponse
 		$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
-		// $this->returnData['response'] = array_merge($listePrecos, $this->returnData['response']);
+		$this->returnData['response'] = array_merge($listePrecos, $this->returnData['response']);
 		$this->returnData['response'] = array_merge($listeTypesPreco['response'], $this->returnData['response']);
+
+		//var_dump($this->returnData['response']);
+		//exit();
 
 		/*** Envoi des données et rendu de la vue ***/
 

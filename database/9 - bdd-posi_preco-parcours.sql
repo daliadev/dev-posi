@@ -53,7 +53,7 @@ CREATE TABLE preconisation
 (
 	id_preco INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_type INT(5) UNSIGNED NULL,
-	nom_preco VARCHAR(255) NOT NULL UNIQUE,
+	nom_preco VARCHAR(255) NOT NULL,
 	descript_preco TINYTEXT NULL,
 	taux_min INT(10) UNSIGNED NULL,
 	taux_max INT(10) UNSIGNED NULL,

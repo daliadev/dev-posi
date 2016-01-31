@@ -28,6 +28,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 	}
 }
 
+
 //var_dump($formData['code_cat']);
 //var_dump($formData['ordre_cat']);
 
@@ -391,11 +392,12 @@ $form_url = $response['url'];
 
 									$nbrPrecos = 1;
 
-									if (isset($formData['precos']) && !empty($formData['precos']))
+									if (isset($response['precos']) && !empty($response['precos']))
 									{
-										$nbrPrecos = (count($formData['precos']) > 0) ? count($formData['precos']) : 1;
+										$nbrPrecos = (count($response['precos']) > 0) ? count($response['precos']) : 1;
 									}
-									//var_dump($formData['precos']);
+									//var_dump($response['precos']);
+									//exit();
 
 									for ($i = 0; $i < $nbrPrecos; $i++) 
 									{
@@ -406,22 +408,22 @@ $form_url = $response['url'];
 
 
 
-										if (isset($formData['precos'][$i]) && !empty($formData['precos'][$i]))
+										if (isset($response['precos'][$i]) && !empty($response['precos'][$i]))
 										{
 											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="1" />';
-
-											if (!empty($formData['precos'][$i]['ref_preco']))
+											//var_dump($formData['precos']);
+											if (!empty($response['precos'][$i]['id_preco']))
 											{
-												echo '<input type="hidden" name="ref_preco[]" value="'.$formData['precos'][$i]['ref_preco'].'" />';
+												echo '<input type="hidden" name="ref_preco[]" value="'.$response['precos'][$i]['id_preco'].'" />';
 											}
 											else
 											{
 												echo '<input type="hidden" name="ref_preco[]" value="" />';
 											}
 
-											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$formData['precos'][$i]['num_ordre_preco'].'" />';
-											echo 'De<input type="text" name="preco_min[]" value="'.$formData['precos'][$i]['preco_min'].'" placeholder="Ex: 0" />&nbsp;%';
-											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$formData['precos'][$i]['preco_max'].'" placeholder="Ex: 20" />&nbsp;%';
+											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$response['precos'][$i]['num_ordre'].'" />';
+											echo 'De<input type="text" name="preco_min[]" value="'.$response['precos'][$i]['taux_min'].'" placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$response['precos'][$i]['taux_max'].'" placeholder="Ex: 20" />&nbsp;%';
 										}
 										else
 										{
@@ -442,7 +444,7 @@ $form_url = $response['url'];
 												foreach($response['type_preco'] as $type)
 												{
 													$selected = "";
-													if (!empty($formData['precos'][$i]['ref_type_preco']) && $formData['precos'][$i]['ref_type_preco'] == $type->getId())
+													if (isset($response['precos'][$i]['ref_type']) && !empty($response['precos'][$i]['ref_type']) && $response['precos'][$i]['ref_type'] == $type->getId())
 													{
 														$selected = "selected";
 													}				

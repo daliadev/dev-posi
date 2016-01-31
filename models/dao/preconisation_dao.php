@@ -52,6 +52,32 @@ class preconisationDAO extends ModelDAO
 		
 		return $this->resultset;
 	}
+
+
+
+	/**
+	 * selectByCode - Récupère la catégorie correspondant au code.
+	 * 
+	 * @param string Code de la catégorie
+	 * @return array Catégorie correspondant au code sinon erreurs
+	 */
+	public function selectByCodeCat($codeCat) 
+	{
+		$this->initialize();
+		
+		if (!empty($codeCat))
+		{   
+			$request = "SELECT * FROM preconisation, cat_preco WHERE cat_preco.ref_code_cat = '".$codeCat."' AND cat_preco.ref_preco = preconisation.id_preco ORDER BY preconisation.num_ordre ASC";
+
+			$this->resultset['response'] = $this->executeRequest("select", $request, "preconisation", "Preconisation");
+		}
+		else
+		{
+			$this->resultset['response']['errors'][] = array('type' => "select", 'message' => "Il n'y a aucun code pour la catégorie recherchée.");
+		}
+		
+		return $this->resultset;
+	}
 	
 	
 	
@@ -68,7 +94,7 @@ class preconisationDAO extends ModelDAO
 	   $this->initialize();
 		
 		if (!empty($values))
-		{       
+		{     
 			$request = $this->createQueryString("insert", $values, "preconisation");
 			
 			$this->resultset['response'] = $this->executeRequest("insert", $request, "preconisation", "Preconisation");

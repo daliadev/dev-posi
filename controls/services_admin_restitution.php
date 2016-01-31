@@ -441,7 +441,7 @@ class ServicesAdminRestitution extends Main
 
 		}
 
-		$posiStats['categories'] = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories']);
+		$posiStats['categories'] = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
 
 		var_dump($posiStats['categories']);
 		//exit();

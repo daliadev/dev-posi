@@ -228,16 +228,19 @@ class ServicesPosiResultats extends Main
 
 
 
-	public function getRecursiveCategoriesResults($level, $categories, $parentCode = null)
+
+	public function getRecursiveCategoriesResults($level, $categories, $parentCat = null, $totalScore = 0, $count = 0)
 	{
 
-		$countChildren = 0;
-		$totalPercent = 0;
-		$currentParentCode = $parentCode;
-		$percentChildren = 0;
+		$countChildren = $count;
+		$totalPercent = $totalScore;
+		$currentParent = $parentCat;
+		//$percentChildren = 0;
 		$scoreMoyenne = 0;
 		//$parentScore = 0;
 
+		var_dump('');
+		//var_dump('FUNCTION - $currentParent parameter = ' . $currentParent->getCode());
 
 		foreach ($categories as $categorie) 
 		{	
@@ -249,22 +252,24 @@ class ServicesPosiResultats extends Main
 
 				/* new */
 				
-				var_dump('----------------------------------');
-				var_dump('Code cat en cours : '.$categorie->getCode());
-				var_dump('Remonte vers '.$parentCat->getCode());
-				var_dump('Score cat '.$categorie->getScorePercent());
-				var_dump('Total score : '.$totalPercent);
-				var_dump('CurrentParentCode : '.$currentParentCode);
+				var_dump('*----------------------------------');
+				var_dump('1 - $categorie->getCode() = '.$categorie->getCode());
+				var_dump('1 - $parentCat->getCode() = '.$parentCat->getCode());
+				var_dump('1 - $countChildren = '.$countChildren);
+				var_dump('1 - $categorie->getScorePercent() = '.$categorie->getScorePercent());
+				var_dump('1 - $totalPercent = '.$totalPercent);
+				//var_dump('1 - $currentParent->getCode() : '.$currentParent->getCode());
 
 				$catScore = $categorie->getScorePercent();
 
 				
-				if ($currentParentCode !== null)
+				if ($currentParent !== null)
 				{
 
-					if ($currentParentCode == $parentCat->getCode())
+					if ($currentParent->getCode() == $parentCat->getCode())
 					{
 						// nouvelle categorie du parent courant
+						var_dump('-- nouvelle categorie du parent courant');
 						$countChildren++;
 						$totalPercent += $catScore;
 
@@ -280,42 +285,57 @@ class ServicesPosiResultats extends Main
 							
 						}
 						*/
-						$scoreMoyenne = $totalPercent / $countChildren;
-						var_dump('  Score parentcat '.$scoreMoyenne);
-						$parentCat->setScorePercent($scoreMoyenne);
-						$parentCat->setHasResult(true);
+						
 						
 					}
 					else
 					{
-						// Les scores des enfants devienennt la moyenne de leur total et sont attribué au parent
+
+						// Les scores des enfants deviennent la moyenne de leur total et sont attribués au parent
+						if ($totalPercent > 0 && $countChildren > 0)
+						{
+							$scoreMoyenne = $totalPercent / $countChildren;
+						}
+						else
+						{
+							$scoreMoyenne = 0;
+						}
+
+						// Les parents ont changés, on assigne le score à l'ancien parent
+						$currentParent->setScorePercent($scoreMoyenne);
+						$currentParent->setHasResult(true);
+						
 
 						// 1er categorie du parent courant
-						var_dump('1er categorie du parent courant');
+						var_dump('-- 1ere categorie du parent courant');
+
+						// Nouvelles valeurs
 						$countChildren = 1;
 						$totalPercent = $catScore;
-						$currentParentCode = $parentCat->getCode();
+						$currentParent = $parentCat;
 					}
 				}
 				else
 				{
 					// 1er categorie du premier parent
+					var_dump('- 1ere categorie du premier parent');
 					$countChildren = 1;
 					$totalPercent = $catScore;
-					$currentParentCode = $parentCat->getCode();
-					var_dump('CurrentParentCode2 : '.$currentParentCode);
+					$currentParent = $parentCat;
 				}
-				//var_dump('Total score 2 : '.$totalPercent);
 				
-				$parentCat->setScorePercent($totalPercent);
+				//$parentCat->setHasResult(true);
+				//$parentCat->setScorePercent($totalPercent);
 				
 				
-				var_dump('-------');
-				var_dump('2 - Code cat en cours : '.$categorie->getCode());
-				var_dump('2 - Remonte vers '.$parentCat->getCode());
-				var_dump('2 - Score cat '.$categorie->getScorePercent());
-				var_dump('2 - Total score : '.$totalPercent);
-				var_dump('2 - CurrentParentCode : '.$currentParentCode);
+				//var_dump('');
+				//var_dump('2 - Code cat en cours : '.$categorie->getCode());
+				//var_dump('2 - Remonte vers '.$parentCat->getCode());
+				var_dump('2 - $countChildren = '.$countChildren);
+				var_dump('2 - $categorie->getScorePercent() = '.$categorie->getScorePercent());
+				var_dump('2 - $totalPercent = '.$totalPercent);
+				var_dump('2 - $currentParent->getCode() = '.$currentParent->getCode());
+				var_dump('2 - $parentCat->getHasResult() = '.$parentCat->getHasResult());
 
 
 				/* Fin new */
@@ -325,8 +345,8 @@ class ServicesPosiResultats extends Main
 				
 				
 				
-				if ($currentParentCode !== null)
-				{
+				//if ($currentParent->getCode() !== null)
+				//{
 					/*
 					// Si le parent a changé
 					if ($parentCat->getCode() != $currentParentCode) 
@@ -372,9 +392,9 @@ class ServicesPosiResultats extends Main
 					$countChildren = 0;
 					$totalPercent = 0;
 					*/
-				}
-				else
-				{
+				//}
+				//else
+				//{
 					//$currentParentCode = $parentCat->getCode();
 
 					/*
@@ -394,7 +414,7 @@ class ServicesPosiResultats extends Main
 					
 					$countChildren++;
 					*/
-				}
+				//}
 				
 				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
 				//$scorePercent = $categorie->getScorePercent();
@@ -453,7 +473,7 @@ class ServicesPosiResultats extends Main
 
 		if ($level > 1) 
 		{
-			$this->getRecursiveCategoriesResults($level, $categories, $currentParentCode);
+			$this->getRecursiveCategoriesResults($level, $categories, $currentParent, $totalPercent, $countChildren);
 		}
 
 		return $categories;

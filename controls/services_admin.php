@@ -831,6 +831,7 @@ class ServicesAdmin extends Main
 			{
 				// On recharge la page en mode visualisation.
 				header("Location: ".$this->url.$this->formData['code_cat']);
+				exit();
 			}
 			else 
 			{
@@ -880,8 +881,8 @@ class ServicesAdmin extends Main
 			}
 			
 			// On recharge la page (sans aucune information).
-			//header("Location: ".$this->url);
-			//exit();
+			header("Location: ".$this->url);
+			exit();
 		}
 
 

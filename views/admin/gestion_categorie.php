@@ -118,41 +118,78 @@ $form_url = $response['url'];
 										
 										foreach($response['categorie'] as $categorie)
 										{   
-											$prefix = '';	
+											//$prefix = '';
+
 											$textSize = 14;
 											$weight = 'normal';
+											$padl = 0;
+											//$padr = 0;
+											
+											$length = strlen($categorie->getCode());
 
-											if (strlen($categorie->getCode()) <= 2) {
-
-												$prefix = substr($categorie->getCode(), 0, 1);
-												$textSize = 13;
-												$weight = 'bold';
-											}
-											else if (strlen($categorie->getCode()) <= 4) {
-
-												$prefix = substr($categorie->getCode(), 0, 1);
-												$prefix .= '.'.substr($categorie->getCode(), 2, 1);
-												$textSize = 13;
+											/*
+											if (strlen($categorie->getCode()) / 2 > 1) 
+											{
+												$prefix .= "|";
 											}
 											else
 											{
-												$prefix = substr($categorie->getCode(), 0, 1);
-												$prefix .= '.'.substr($categorie->getCode(), 2, 1);
-												$prefix .= '.'.substr($categorie->getCode(), 4, 1);
+												$prefix .= "- ";
+											}
+											*/
+											/*
+											for ($i = 0; $i < strlen($categorie->getCode()) / 2; $i++) 
+											{
+												if ($i > 1) 
+												{
+													//$prefix .= "&nbsp; ";
+												}
+											}
+											*/
+
+											$padleft = 'padding-left: '.(($length - 2) * 3).'px;';
+											$margLeft = 'margin-left: '.(($length - 2) * 5).'px;';
+											//$padr = $length * 10;
+
+											if ($length <= 2) 
+											{
+												//$prefix = substr($categorie->getCode(), 0, 1);
+												//$prefix = "- ";
+												$textSize = 13;
+												$weight = 'bold';
+												$borderStyle = "";
+											}
+											else if ($length <= 4) 
+											{
+												//$prefix = substr($categorie->getCode(), 0, 1);
+												//$prefix .= '.'.substr($categorie->getCode(), 2, 1);
+												//$prefix = "&nbsp; |";
+												$textSize = 13;
+												$borderStyle = "border-left: 1px dotted #999;";
+											}
+											else
+											{
+												//$prefix = substr($categorie->getCode(), 0, 1);
+												//$prefix .= '.'.substr($categorie->getCode(), 2, 1);
+												//$prefix .= '.'.substr($categorie->getCode(), 4, 1);
 												$textSize = 12;
+												$borderStyle = "border-left: 1px dotted #bdbdbd;";
 											}
 											
 											$code = $categorie->getCode();
 											//$name = $prefix . '- ' . $categorie->getNom();
 											$name = $categorie->getNom();
+											/*
 											$length = strlen($categorie->getCode()) - 2;
 											
 											if ($length < 0)
 											{
 												$length = 0;
 											}
-											
-											$styleMargin = 'margin-left:'.($length * 10).'px;';
+											*/
+
+											//$styleMargin = 'margin-left:'.($length * 10).'px;';
+											$styleMargin = 'margin-left: 0px;';
 											$style = 'font-size: '.$textSize.'px; font-weight: '.$weight.';';
 
 											$selected = '';
@@ -163,9 +200,10 @@ $form_url = $response['url'];
 
 										?>
 
-										<li style="<?php echo $styleMargin; ?>">
+										<li style="<?php echo $styleMargin.' '.$borderStyle.' '.$margLeft.' '.$padleft; ?>">
 											<!-- <div class="cat-item-block"> -->
 												<a class="cat-item-link <?php echo $selected; ?>" href="#">
+													<!-- <span style="padding-right: <?php //echo $padr; ?>px;"></span> -->
 													<span class="cat-item-code" style="display: none;"><?php echo $code; ?></span>
 													<span style="<?php echo $style; ?>"><?php echo $name; ?></span>
 												</a>
@@ -260,18 +298,19 @@ $form_url = $response['url'];
 
 												if (strlen($categorie->getCode()) == 2)
 												{
-													$label = '- '.$categorie->getNom();
+													$label = $categorie->getNom();
 
 													$length = 0;
 												}
 												else
 												{
 													$label = $categorie->getNom();
-
+													$space = '&nbsp;&nbsp;';
 													$length = strlen($categorie->getCode());
-													for ($i = 0; $i < $length; $i++) 
+
+													for ($i = 0; $i < ($length / 2); $i++) 
 													{ 
-														$space .= '&nbsp;&nbsp;';
+														$space .= '- ';
 													}
 												}
 												
@@ -323,7 +362,7 @@ $form_url = $response['url'];
 							<div class="preco-text">
 								<p style="text-align: justify;">
 									Cette section vous permet de mettre en oeuvre une stratégie de préconisation de parcours. 
-									Il vous suffit de saisir au préalable la ou les domaines (parcours, temps, ...) que vous souhaitez voir travailler par l'utilisateur, en cliquant sur "Ajouter une nouvelle préconisation".
+									Il vous suffit de saisir au préalable les types, actions, domaines de préconisation (parcours, temps, volumes ...) que vous souhaitez voir travailler par l'utilisateur, en cliquant sur "Ajouter une action".<br />
 									Ces préconisations pourront ensuite être attribuées à l'ensemble des compétences ou pour chacune d'entre elles. 
 									Ceci fait, il vous est possible de définir des intervalles (en pourcentage) des résultats obtenus lors de la passation du positionnement. 
 									Ces intervalles correspondent à des seuils à partir desquels vous établissez une préconisation.
@@ -333,7 +372,7 @@ $form_url = $response['url'];
 									Ex : Pour une compétence en calcul.
 									<ul>
 										<li>- De 0% à 40% -> 50 heures de formation préconisées.</li>
-										<li>- De 40% à 60% -> 30 heures de formation préconisées.</li>
+										<li>- De 41% à 60% -> 30 heures de formation préconisées.</li>
 										<li>- ...</li>
 									</ul>
 								</p>
@@ -341,15 +380,16 @@ $form_url = $response['url'];
 							
 							<div class="preco-content">
 
-								<div id="type-preco-section">
+								<!-- <div id="type-preco-section">
 									
 									<div class="type-title">Présaisie des types (volumes) de préconisation :</div>
 									
 									<div class="type-text">
 
-										<select id="type-preco-cbox" name="type_preco_cbox_edit" style="width: 200px;" <?php echo $formData['disabled']; ?>>
+										<select id="type-preco-cbox" name="type_preco_cbox_edit" style="width: 200px;" <?php //echo $formData['disabled']; ?>>
 											<option value="select_cbox">---</option>
 											<?php
+											/*
 											if (isset($response['type_preco']) && !empty($response['type_preco']))
 											{
 												foreach($response['type_preco'] as $type)
@@ -363,28 +403,35 @@ $form_url = $response['url'];
 													echo '<option value="'.$type->getId().'" '.$selected.'>'.$type->getNom().'</option>';	
 												}
 											}
+											*/
 											?>
 										</select>
 
-										<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+										<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
 										<input type="text" id="type-preco" name="nom_type_preco" value="" placeholder="Ex: 10 heures" style="width: 100px; margin: 0 5px;" />
 
-										<button type="submit" id="edit-type-preco" name="edit_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
-										<button type="submit" id="save-type-preco" name="save_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-refresh"></i></button>
-										<button type="submit" id="suppr-type-preco" name="suppr_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
+										<button type="submit" id="edit-type-preco" name="edit_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
+										<button type="submit" id="save-type-preco" name="save_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-refresh"></i></button>
+										<button type="submit" id="suppr-type-preco" name="suppr_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
 										
 									</div>
 									
 									<hr />
 
+								</div> -->
+
+
+								<div id="add-action-preco-button" style="float: left; margin: 0 20px;">
+									<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>&nbsp; Ajouter / gérer les actions
+									<!-- <input type="button" id="add-action" name="add_action" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php echo $formData['disabled']; ?> /> -->
 								</div>
 
-
-
-								<div id="add-preco-button">
-									<input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php echo $formData['disabled']; ?> />
+								<div id="add-preco-button" style="float: left; margin: 0 20px;">
+									<button type="submit" id="add-preco" name="add_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>&nbsp; Ajouter une nouvelle préconisation
+									<!-- <input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
-						
+							
+								<div style="clear: both;"></div>
 
 								<ul class="preco-list">
 									
@@ -434,7 +481,7 @@ $form_url = $response['url'];
 											echo '&nbsp; à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />&nbsp;%';
 										}
 
-										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>';
+										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>Action : ';
 
 										echo '<select class="choix-type-preco-cbox" name="choix_type_preco_cbox[]" '.$formData['disabled'].'>';
 											echo '<option value="select_cbox">---</option>';
@@ -529,7 +576,7 @@ $form_url = $response['url'];
 	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un type -->
 	<?php if (Config::ALLOW_PRECONISATION) : ?>
 
-		<!-- <div id="modal-box"></div> -->
+		<div id="modal-box"></div>
 
 	<?php endif; ?>
 	<!-- Template form ajout type -->
@@ -851,7 +898,7 @@ $form_url = $response['url'];
 
 
 				/* Gestion des types de préco */
-
+				/*
 				$("#add-type-preco").on('click', function (event) {
 
 					event.preventDefault();
@@ -916,7 +963,7 @@ $form_url = $response['url'];
 
 					event.preventDefault();
 				});
-				
+				*/
 				
 
 				$('#save').on('click', function(event) {
@@ -932,7 +979,7 @@ $form_url = $response['url'];
 					}
 					*/
 				});
-
+			
 
 
 				//$('.choix_type_preco_cbox').on('change', function(event) {
@@ -1077,8 +1124,8 @@ $form_url = $response['url'];
 			//});
 
 			/***  Fenêtre modale de gestion des parcours de la catégorie ***/
-			/*
-			$('#add-parcours').on('click', function(event) {
+			
+			$('#add-type-preco').on('click', function(event) {
 
 				event.preventDefault();
 
@@ -1142,7 +1189,7 @@ $form_url = $response['url'];
 							}
 						}
 					},
-					null,*//*
+					null,
 					{
 
 						events: [
@@ -1153,11 +1200,11 @@ $form_url = $response['url'];
 							// }
 						]
 					},
-					*//*
+					
 					'#modal-box'
 				);
 			});
-			*/
+			
 			
 
 			/*** Gestion de la requête pour éditer un type dans la liste des type ***/

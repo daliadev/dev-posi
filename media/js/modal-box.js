@@ -141,6 +141,7 @@
 		},
 
 		show: function() {
+			console.log('show');
 			var posX = Math.round(($(window).width() / 2) - (this.el.outerWidth(true) / 2));
 			//var posY = Math.round($(window).height() / 3 - this.el.outerHeight(true) / 2);
 			var posY = 0;
@@ -156,6 +157,7 @@
 		var modal = ModalBox;
 		modal.initialize(form, title, text, settings, boxContainer);
 		modal.show();
+		
 		return modal;
 	};
 	

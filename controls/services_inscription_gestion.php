@@ -523,7 +523,7 @@ class ServicesInscriptionGestion extends Main
                 if ($formData['name_validation'] == "false" || $formData['name_validation'] == "none")
                 {
                     $formData['name_validation'] = "false";
-                    $this->registerError("duplicate_name", "Le nom de l'utilisateur existe déjà.");
+                    $this->registerError("form_valid", "Le nom de l'utilisateur existe déjà.");
                 }
             }
 

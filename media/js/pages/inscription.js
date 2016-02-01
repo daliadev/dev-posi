@@ -324,12 +324,13 @@ $(function() {
 				}
 			], 
 			callback: function(buttonText) {
-				
+				console.log(buttonText);
+
 				if (buttonText === 'Continuer') {
 
 					$('#name-validation').val('true');
-					$('#form-inscription').submit();
-					console.log('submit');
+					$('#form-inscript-user').submit();
+					//console.log('submit');
 				}
 				else {
 					$('#name-validation').val('false');

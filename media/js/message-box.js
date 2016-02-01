@@ -47,7 +47,7 @@
 
 		createButtons: function(buttons) {
 			return $.map(buttons, function(button) {
-				return '<button type="submit" class="' + button.btnclass + '">' + button.btnvalue + '</button>';
+				return '<button type="submit" class="' + button.btnclass + '" value="' + button.btnvalue + '">' + button.btnvalue + '</button>';
 			}).join('');
 		},
 
@@ -56,6 +56,7 @@
 			this.el.find('button').on('click', function() {
 				self.close();
 				if (typeof self.settings.callback === 'function') {
+
 					self.settings.callback.call(self, $(this).val());
 				}
 			});

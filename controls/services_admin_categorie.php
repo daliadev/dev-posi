@@ -238,18 +238,19 @@ class ServicesAdminCategorie extends Main
 				{
 					// On supprime l'ancienne entrée dans la bdd (effet cascade avec les précos)
 					//$resultDelete = $this->deleteCategorie($formData['code_cat']);
-					$resultDelete = true;
+					//$resultDelete = true;
 
-					if ($resultDelete)
-					{
+					//if ($resultDelete)
+					//{
+						$formData['old_code_cat'] = $formData['code_cat'];
 						$formData['code_cat'] = $newCode;
 						//$formData['mode'] = 'new';
-					}
-					else
-					{
-						$this->registerError("form_valid", "La catégorie ne peut pas être mise à jour.");
-						$error = false;
-					}
+					//}
+					//else
+					//{
+						//$this->registerError("form_valid", "La catégorie ne peut pas être mise à jour.");
+						//$error = false;
+					//}
 				}
 			}
 
@@ -269,7 +270,6 @@ class ServicesAdminCategorie extends Main
 				}
 			}
 
-
 			if (!$error)
 			{
 				$dataCategorie['code_cat'] = $formData['code_cat'];
@@ -285,7 +285,6 @@ class ServicesAdminCategorie extends Main
 				$dataCategorie['data_precos'] = array();
 				$dataPrecos = array();
 				$errorPreco = false;
-				
 				
 
 				for ($i = 0; $i < count($postData['num_ordre_preco']); $i++)
@@ -738,7 +737,7 @@ class ServicesAdminCategorie extends Main
 		if ($previousMode == "new" || (isset($formData['mode']) && $formData['mode'] == 'new'))
 		{
 			// Insertion de la catégorie dans la bdd
-			$resultsetCategorie = $this->setCategorie("insert", $dataCategorie, $formData['code_cat']);
+			$resultsetCategorie = $this->setCategorie("insert", $dataCategorie);
 
 			//$this->categorieDAO->selectByCode($dataCategorie['code_cat']);
 			// Traitement des erreurs de la requête
@@ -757,12 +756,16 @@ class ServicesAdminCategorie extends Main
 		{
 			if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
 			{
+				$oldCode = null;
 				//$formData['code_cat'] = $dataCategorie['code_cat'];
-
+				if (isset($formData['old_code_cat']) && !empty($formData['old_code_cat']))
+				{
+					$oldCode = $formData['old_code_cat'];
+				}
 				// Mise à jour de la catégorie
-				$resultsetCategorie = $this->setCategorie("update", $dataCategorie, $formData['code_cat']);
+				$resultsetCategorie = $this->setCategorie("update", $dataCategorie, $oldCode);
 
-				//var_dump($dataCategorie);
+				//var_dump($dataCategorie, $formData['old_code_cat']);
 				//exit();
 
 				// Traitement des erreurs de la requête
@@ -882,7 +885,7 @@ class ServicesAdminCategorie extends Main
 
 	public function setCategorie($modeCategorie, $dataCategorie, $oldCodeCat = null)
 	{
-		//var_dump($dataCategorie, $oldCodeCat);
+		var_dump($dataCategorie, $oldCodeCat);
 		//exit();
 
 		if (!empty($dataCategorie) && is_array($dataCategorie))
@@ -911,7 +914,7 @@ class ServicesAdminCategorie extends Main
 					}
 					
 				}
-				else if ($modeCategorie == "update")
+				else if ($modeCategorie == "update" && $oldCodeCat !== null && $dataCategorie['code_cat'] !== null)
 				{ 
 					$resultset = $this->categorieDAO->update($dataCategorie, $oldCodeCat);
 					//var_dump($resultset);

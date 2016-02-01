@@ -825,7 +825,6 @@ class ServicesAdmin extends Main
 			{
 				$this->servicesCategorie->setCategorieProperties($previousMode, $dataCategorie, $this->formData);
 			}
-			exit();
 			
 			// Rechargement de la page avec l'identifiant récupéré (aucune erreur ne doit être enregistrée).
 			if (empty($this->servicesCategorie->errors) && empty($this->errors))
@@ -845,9 +844,12 @@ class ServicesAdmin extends Main
 					$this->formData['mode'] = "edit";
 				}
 			}
+			//var_dump('formData', $this->formData);
+			//var_dump('dataCategorie', $dataCategorie);
+			//exit();
 		}
- 
-		
+ 		
+
 		/*** Mode "suppression" ***/
 		
 		else if ($this->formData['mode'] == "delete")
@@ -920,7 +922,10 @@ class ServicesAdmin extends Main
 			}
 		}
 		
-		
+		//var_dump($this->returnData['response']);
+		//exit();
+
+
 		/*** Ensemble des requêtes permettant d'afficher les éléments du formulaire (liste déroulante, checkbox). ***/
 
 		// Requete pour obtenir la liste des préconisations pour la categories en cours.

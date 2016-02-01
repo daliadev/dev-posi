@@ -270,21 +270,30 @@ class CategorieDAO extends ModelDAO
 	 * @param array Valeurs de la catégorie à mettre à jour
 	 * @return array Nbre de lignes mises à jour sinon erreurs
 	 */
-	public function update($values) 
+	public function update($values, $currentCodeCat = null) 
 	{
 		$this->initialize();
 		
 		if (!empty($values))
 		{
-			//var_dump($values);
+			//var_dump($values, $currentCodeCat);
 			//exit();
+
 			if (isset($values['code_cat']) && !empty($values['code_cat']))
 			{
 				$codeCat = $values['code_cat'];
-				unset($values['code_cat']);
+				
+				if ($currentCodeCat !== null)
+				{
+					$codeCat = $currentCodeCat;
+				}
+				else
+				{
+					unset($values['code_cat']);
+				}
 				
 				$request = $this->createQueryString("update", $values, "categorie", "WHERE code_cat = ".$codeCat);
-				
+				//var_dump($request);
 				$this->resultset['response'] = $this->executeRequest("update", $request, "categorie", "Categorie");
 			}
 			else

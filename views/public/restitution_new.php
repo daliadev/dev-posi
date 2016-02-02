@@ -664,18 +664,21 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 										<div class="precos-block">
 
-											<?php //$clear = null ?>
+											<?php $numCat = count($response['stats']['categories']); ?>
 											
-											<?php for ($i=0; $i < 7; $i++) : ?> 
-												
-												<div class="bandeau-preco">
+											<?php //for ($i=0; $i < $numCat; $i++) : ?> 
+											<?php foreach ($response['stats']['categories'] as $categorie) : ?> 
 
+												<?php if (strlen($categorie->getCode()) == 2) : ?>
+
+												<div class="bandeau-preco">
+										
 													<div class="cat-block">
 
 														<div class="cat-name">
-															<span><?php echo Tools::getExtrait('Lire et interpréter les différentes représentations graphiques : tableaux, graphiques, logos, sigles, pictogrammes...', 68); ?></span>
+															<span><?php echo Tools::getExtrait($categorie->getNom(), 68); ?></span>
 														</div>
-														<div class="cat-score">72%</div>
+														<div class="cat-score"><?php echo $categorie->getScorePercent(); ?>%</div>
 														<div style="clear: both;"></div>
 
 													</div>
@@ -686,7 +689,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 												</div>
 
-											<?php endfor; ?>
+												<?php endif; ?>
+
+											<?php endforeach; ?>
 
 
 

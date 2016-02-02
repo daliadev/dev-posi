@@ -7,7 +7,7 @@ require_once(ROOT.'models/preconisation.php');
 
 
 
-class preconisationDAO extends ModelDAO
+class PreconisationDAO extends ModelDAO
 {
 
 		

@@ -12,6 +12,7 @@ require_once(ROOT.'models/dao/degre_dao.php');
 require_once(ROOT.'models/dao/reponse_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_dao.php');
+require_once(ROOT.'models/dao/preconisation_dao.php');
 require_once(ROOT.'models/dao/valid_acquis_dao.php');
 
 //require_once(ROOT.'controls/services_admin_categorie.php');
@@ -32,6 +33,7 @@ class ServicesAdminRestitution extends Main
 	private $reponseDAO = null;
 	private $questionCatDAO = null;
 	private $categorieDAO = null;
+	private $preconisationDAO = null;
 	private $validAcquisDAO = null;
 
    // private $servicesCategories = null;
@@ -55,6 +57,7 @@ class ServicesAdminRestitution extends Main
 		$this->resultatDAO = new ResultatDAO();
 		$this->questionCatDAO = new QuestionCategorieDAO();
 		$this->categorieDAO = new CategorieDAO();
+		$this->preconisationDAO = new PreconisationDAO();
 		$this->validAcquisDAO = new ValidAcquisDAO();
 
 		//$this->servicesCategories = new ServicesAdminCategorie()
@@ -433,6 +436,21 @@ class ServicesAdminRestitution extends Main
 			$categorie->setScorePercent($percentCategorie);
 			$categorie->setHasResult($hasResults);
 
+			// Préconisations
+			$precos = $this->preconisationDAO->selectByCodeCat($categorie->getCode());
+			
+
+			for ($i = 0; $i < count($precos); $i++) 
+			{ 
+				
+			}
+
+			$categorie->setPreconisations($precos);
+
+			$categorie->setActionPrecosTotal($precos);
+
+
+
 			$posiStats['categories'][] = $categorie;
 
 			
@@ -617,6 +635,17 @@ class ServicesAdminRestitution extends Main
 		//$posiStats['total_global'] = 0; //$totalGlobal;
 		//$posiStats['total_correct_global'] = 0; //$totalCorrectGlobal;
 		//$posiStats['temps-total'] = 0; //$tempsGlobal;
+
+
+		/*** Préconisations simplifiées ***/
+
+		foreach ($categories as $categorie)
+		{
+			$codeCat = $categorie->getCode();
+
+			$precos = $this->preconisationDAO->selectByCodeCat($codeCat);
+
+		}
 
 		return  $posiStats;
 	}

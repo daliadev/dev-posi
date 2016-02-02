@@ -16,6 +16,7 @@ class Categorie
 	private $has_results = false;
 	private $children_cat = array();
 	private $parent_cat = null;
+	private $preconisations = array();
 
 	
 	public function getCode()
@@ -152,6 +153,7 @@ class Categorie
 		return null;
 	}
 
+	/*
 	public function addChild($childCat)
 	{
 		if ($childCat !== null && $childCat instanceof Categorie)
@@ -175,6 +177,19 @@ class Categorie
 		}
 		return false;
 	}
+	*/
+
+
+	public function getPreconisations()
+	{
+		return $this->preconisations;
+	}
+
+	public function setPreconisations($precos)
+	{
+		$this->preconisations = $precos;
+	}
+
 }
 
 ?>

@@ -1524,7 +1524,7 @@ fieldset .add-link span
 	#add-preco {
 		display: inline !important;
 		/*text-align: center !important;*/
-		background-color: #1fbba6 !important;
+		background-color: #1fbba6;
 		/*margin: 0 auto !important;*/
 	}
 
@@ -1560,6 +1560,10 @@ fieldset .add-link span
 	.preco-item input {
 		width: 50px !important;
 		margin-left: 10px !important;
+	}
+
+	.preco-content label {
+		line-height: 42px;
 	}
 
 	.preco-item select {

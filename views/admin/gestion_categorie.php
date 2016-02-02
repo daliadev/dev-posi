@@ -422,12 +422,14 @@ $form_url = $response['url'];
 
 
 								<div id="add-action-preco-button" style="float: left; margin: 0 20px;">
-									<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>&nbsp; Ajouter / gérer les actions
-									<!-- <input type="button" id="add-action" name="add_action" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php echo $formData['disabled']; ?> /> -->
+									<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+									&nbsp; <label for="add-type-preco">Ajouter / gérer les actions</label>
+									<!-- <input type="button" id="add-action" name="add_action" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
 
 								<div id="add-preco-button" style="float: left; margin: 0 20px;">
-									<button type="submit" id="add-preco" name="add_preco" class="square-btn" value="" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>&nbsp; Ajouter une nouvelle préconisation
+									<button type="submit" id="add-preco" name="add_preco" class="square-btn" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+									&nbsp; <label for="add-preco">Ajouter une nouvelle préconisation</label>
 									<!-- <input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
 							
@@ -1129,11 +1131,11 @@ $form_url = $response['url'];
 
 				event.preventDefault();
 
-				var title = 'Ajouter un parcours';
+				var title = 'Ajouter une action';
 
-				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou le supprimer :</p>';
+				var contentText = '<p>Sélectionner une action pour l\'éditer ou la supprimer :</p>';
 				contentText += '<select name="parcours_cbox" id="parcours_cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
-				contentText += '<option value="select_cbox">Aucun</option>';
+				contentText += '<option value="select_cbox">Aucune</option>';
 
 				<?php
 
@@ -1189,15 +1191,13 @@ $form_url = $response['url'];
 							}
 						}
 					},
-					null,
 					{
-
 						events: [
-							// {
-							// 	'type': 'change', 
-							// 	'selector': '#parcours_cbox',
-							// 	'callback': 'onChangeParcours'
-							// }
+							{
+							 	'type': 'change', 
+							 	'selector': '#parcours_cbox',
+							 	'callback': 'onChangeParcours'
+							}
 						]
 					},
 					
@@ -1212,7 +1212,7 @@ $form_url = $response['url'];
 			//$('#type_cbox').change(function(event) {
 
 				//alert('change');
-				/*
+			
 			onChangeParcours = function() {
 
 				console.log('onChangeParcours');
@@ -1241,7 +1241,6 @@ $form_url = $response['url'];
 				<?php endif; ?>
 			};
 			//});
-			*/
 			
 
 
@@ -1296,6 +1295,4 @@ $form_url = $response['url'];
 		});
 
 
-	</script>
-	   
-	   
+	</script> 

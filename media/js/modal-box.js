@@ -54,6 +54,7 @@
 
 			//this.text = text;
 			this.container = boxContainer;
+			//console.log(boxContainer, this.container);
 			//this.bg = $('<div>', {'class': 'modalbox-bg', 'style': 'display:none'});
 			this.el = $('<div>', {'class': 'modal-box', 'style': 'display:none'});
 			
@@ -67,7 +68,7 @@
 
 			this.el.html(html);
 			
-			this.addEvents();
+			this.addEvents(events);
 
 			//this.bg.appendTo(this.container);
 			this.el.appendTo(this.container);
@@ -89,11 +90,11 @@
 			}).join('');
 		},
 
-		addEvents: function() {
+		addEvents: function(events) {
 
 			//console.log('addEvents');
 			var self = this;
-			/*
+			
 			for (var i = 0; i < events.length; i++)
 			{
 				this.el.find(events[i].selector).on(events[i].type, function(event) {
@@ -102,7 +103,7 @@
 					}
 				});
 			}
-			*/
+			
 			this.el.find('button').on('click', function() {
 				self.close();
 				if (typeof self.settings.callback === 'function') {
@@ -141,21 +142,23 @@
 		},
 
 		show: function() {
-			console.log('show');
+			//console.log('show');
 			var posX = Math.round(($(window).width() / 2) - (this.el.outerWidth(true) / 2));
 			//var posY = Math.round($(window).height() / 3 - this.el.outerHeight(true) / 2);
 			var posY = 0;
 			this.el.css('left', posX).css('top', posY);
-			
-			this.el.animate({top: Math.round($(window).height() / 2 + - this.el.outerHeight(true) / 2), opacity: 'show'}, 500);
+
+			//console.log(posX, posY);
+			this.el.animate({top: Math.round($(window).height() / 2 - this.el.outerHeight(true) / 2), opacity: 'show'}, 500);
 			//this.bg.fadeTo(this.animDuration, this.bgOpacity);
 		}
 	};
 
 
-	$.modalbox = function(form, title, text, settings, boxContainer) {
+	$.modalbox = function(form, title, text, settings, events, boxContainer) {
+		//console.log(boxContainer);
 		var modal = ModalBox;
-		modal.initialize(form, title, text, settings, boxContainer);
+		modal.initialize(form, title, text, settings, events, boxContainer);
 		modal.show();
 		
 		return modal;

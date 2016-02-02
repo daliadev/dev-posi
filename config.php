@@ -106,7 +106,7 @@ class Config
     public static $database = array(
         'driver'    =>  "mysql",
         'host'      =>  "127.0.0.1",
-        'schema'    =>  "posi_dalia",
+        'schema'    =>  "posi_dev",
         'username'  =>  "root",
         'password'  =>  ""
     );

@@ -10,6 +10,16 @@
 
 /*--- Création des tables simples ---*/
 
+DROP TABLE IF EXISTS valid_acquis;
+CREATE TABLE positionnement 
+(
+	id_posi INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nom_posi VARCHAR(255) NOT NULL UNIQUE,
+	descript_posi TINYTEXT NULL
+) 
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS administrateur;
 CREATE TABLE administrateur 
 (
@@ -45,6 +55,7 @@ DROP TABLE IF EXISTS categorie;
 CREATE TABLE categorie 
 (
 	code_cat VARCHAR(20) NOT NULL PRIMARY KEY,
+	ref_posi VARCHAR(10) NULL,
 	nom_cat VARCHAR(255) NOT NULL UNIQUE,
 	descript_cat TINYTEXT NULL
 ) 
@@ -145,6 +156,7 @@ DROP TABLE IF EXISTS session;
 CREATE TABLE session 
 (
 	id_session INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ref_posi VARCHAR(10) NULL,
 	ref_user INT(5) UNSIGNED NOT NULL,
 	ref_intervenant INT(5) UNSIGNED NULL,
 	ref_valid_acquis INT(2) UNSIGNED NULL,
@@ -152,6 +164,8 @@ CREATE TABLE session
 	session_accomplie TINYINT(1) NOT NULL DEFAULT 0,
 	temps_total DOUBLE NOT NULL,
 	score_pourcent INT(3) UNSIGNED NOT NULL DEFAULT 0,
+	adresse_ip VARCHAR(20) NULL,
+	user_agent VARCHAR(255) NULL,
 	KEY date_session (date_session)
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -161,6 +175,7 @@ DROP TABLE IF EXISTS question;
 CREATE TABLE question 
 (
 	id_question INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ref_posi VARCHAR(10) NULL,
 	ref_degre INT(2) UNSIGNED NULL,
 	num_ordre_question INT(3) NOT NULL UNIQUE,
 	type_question ENUM('qcm','champ_saisie') NOT NULL DEFAULT 'qcm',

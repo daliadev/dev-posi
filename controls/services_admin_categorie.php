@@ -7,7 +7,7 @@ require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_preco_dao.php');
 require_once(ROOT.'models/dao/preconisation_dao.php');
-require_once(ROOT.'models/dao/type_preco_dao.php');
+require_once(ROOT.'models/dao/parcours_preco_dao.php');
 
 
 class ServicesAdminCategorie extends Main
@@ -17,7 +17,7 @@ class ServicesAdminCategorie extends Main
 	private $questionCatDAO = null;
 	private $categoriePrecoDAO = null;
 	private $preconisationDAO = null;
-	private $typePrecoDAO = null;
+	private $parcoursPrecoDAO = null;
 	
 	
 	public function __construct() 
@@ -29,7 +29,7 @@ class ServicesAdminCategorie extends Main
 		$this->questionCatDAO = new QuestionCategorieDAO();
 		$this->categoriePrecoDAO = new CategoriePrecoDAO();
 		$this->preconisationDAO = new PreconisationDAO();
-		$this->typePrecoDAO = new typePrecoDAO();
+		$this->parcoursPrecoDAO = new ParcoursPrecoDAO();
 	}
 
 	
@@ -359,10 +359,10 @@ class ServicesAdminCategorie extends Main
 						}
 
 
-						if (isset($postData['choix_type_preco_cbox'][$i]) && $postData['choix_type_preco_cbox'][$i] != 'select_cbox')
+						if (isset($postData['choix_parcours_preco_cbox'][$i]) && $postData['choix_parcours_preco_cbox'][$i] != 'select_cbox')
 						{
-							$formData['precos'][$i]['ref_type_preco'] = $postData['choix_type_preco_cbox'][$i];
-							$dataPrecos[$i]['ref_type'] = $formData['precos'][$i]['ref_type_preco'];
+							$formData['precos'][$i]['ref_parcours_preco'] = $postData['choix_parcours_preco_cbox'][$i];
+							$dataPrecos[$i]['ref_parcours'] = $formData['precos'][$i]['ref_parcours_preco'];
 						}
 						else
 						{
@@ -813,7 +813,7 @@ class ServicesAdminCategorie extends Main
 				
 				for ($i = 0; $i < count($data_precos); $i++)
 				{
-					$preco['ref_type'] = $data_precos[$i]['ref_type'];
+					$preco['ref_parcours'] = $data_precos[$i]['ref_parcours'];
 					$preco['nom_preco'] = 'NULL';
 					$preco['descript_preco'] = 'NULL';
 					$preco['taux_min'] = $data_precos[$i]['preco_min'];
@@ -1206,7 +1206,7 @@ class ServicesAdminCategorie extends Main
 			{
 				$preconisations[$i] = array();
 				$preconisations[$i]['id_preco'] = $preco->getId();
-				$preconisations[$i]['ref_type'] = $preco->getRefType();
+				$preconisations[$i]['ref_parcours'] = $preco->getRefParcours();
 				$preconisations[$i]['nom_preco'] = $preco->getNom();
 				$preconisations[$i]['descript_preco'] = $preco->getDescription();
 				$preconisations[$i]['taux_min'] = $preco->getTauxMin();
@@ -1269,7 +1269,7 @@ class ServicesAdminCategorie extends Main
 		{
 			//var_dump('insertPreconisation = ', $dataPreco);
 
-			// Insertion du type dans la bdd
+			// Insertion du parcours dans la bdd
 			$resultset = $this->preconisationDAO->insert($dataPreco);
 			
 			// Traitement des erreurs de la requête
@@ -1291,7 +1291,7 @@ class ServicesAdminCategorie extends Main
 	{
 		if (!empty($dataPreco) && is_array($dataPreco))
 		{
-			// Insertion du type dans la bdd
+			// Insertion du parcours dans la bdd
 			$resultset = $this->preconisationDAO->update($dataPreco);
 				
 			// Traitement des erreurs de la requête
@@ -1344,21 +1344,21 @@ class ServicesAdminCategorie extends Main
 
 
 	/*=============================================================
-	=              Gestion des types de préconisation             =
+	=              Gestion des parcourss de préconisation         =
 	=============================================================*/
 
 
 	/* Ok */
-	public function getTypePrecoList()
+	public function getParcoursPrecoList()
 	{
-		$resultset = $this->typePrecoDAO->selectAll();
+		$resultset = $this->parcoursPrecoDAO->selectAll();
 		
 		if (!$this->filterDataErrors($resultset['response']))
 		{
-			if (!empty($resultset['response']['type_preco']) && count($resultset['response']['type_preco']) == 1)
+			if (!empty($resultset['response']['parcours_preco']) && count($resultset['response']['parcours_preco']) == 1)
 			{ 
-				$type = $resultset['response']['type_preco'];
-				$resultset['response']['type_preco'] = array($type);
+				$parcours = $resultset['response']['parcours_preco'];
+				$resultset['response']['parcours_preco'] = array($parcours);
 			}
 
 			return $resultset;
@@ -1368,66 +1368,70 @@ class ServicesAdminCategorie extends Main
 	}
 
 	/* Ok */
-	public function getTypeDetails($idType)
+	public function getParcoursDetails($idParcours)
 	{
 		$parcoursDetails = array();
 		
-		$parcoursDetails['id_type'] = '';
-		$parcoursDetails['nom_type'] = '';
-		$parcoursDetails['desc_type'] = '';
+		$parcoursDetails['id_parcours'] = '';
+		$parcoursDetails['volume_parcours'] = '';
+		$parcoursDetails['nom_parcours'] = '';
+		$parcoursDetails['desc_parcours'] = '';
 
-		$resultset = $this->typePrecoDAO->selectById($idType);
+		$resultset = $this->parcoursPrecoDAO->selectById($idParcours);
 
 		if (!$this->filterDataErrors($resultset['response']))
 		{
-			$parcoursDetails['id_type'] = $resultset['response']['type_preco']->getId();
-			$parcoursDetails['nom_type'] = $resultset['response']['type_preco']->getNom();
-			$parcoursDetails['desc_type'] = $resultset['response']['type_preco']->getDescription();
+			$parcoursDetails['id_parcours'] = $resultset['response']['parcours_preco']->getId();
+			$parcoursDetails['volume_parcours'] = $resultset['response']['parcours_preco']->getVolume();
+			$parcoursDetails['nom_parcours'] = $resultset['response']['parcours_preco']->getNom();
+			$parcoursDetails['desc_parcours'] = $resultset['response']['parcours_preco']->getDescription();
 
-			return $typeDetails;
+			return $parcoursDetails;
 		}
 
 		return false;
 	}
 
+
 	/* Ok */
-	public function insertTypePreco($nomType, $description = null)
+	public function insertParcoursPreco($nomParcours, $volume = 'NULL', $description = 'NULL')
 	{
-		if (!empty($nomType) && $nomType !== null)
+		if (!empty($nomParcours) && $nomParcours !== null)
 		{
-			// Insertion du type dans la bdd
-			$resultset = $this->typePrecoDAO->insert(array('nom_type' => $nomType, 'descript_type' => $description));
-				
+			// Insertion du parcours dans la bdd
+			$resultset = $this->parcoursPrecoDAO->insert(array('volume_parcours' => $volume, 'nom_parcours' => $nomParcours, 'descript_parcours' => $description));
+			
 			// Traitement des erreurs de la requête
-			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['type_preco']['last_insert_id']))
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['parcours_preco']['last_insert_id']))
 			{
 				return $resultset;
 			} 
 			else 
 			{
-				$this->registerError("form_request", "Le type de la préconisation n'a pu être inséré.");
+				$this->registerError("form_request", "Le parcours de la préconisation n'a pu être inséré.");
 			}
 		}
 
 		return false;
 	}
 
+
 	/* Ok */
-	public function updateTypePreco($refType, $nomType, $description = null)
+	public function updateParcoursPreco($refParcours, $nomParcours, $volume = 'NULL', $description = 'NULL')
 	{
-		if (!empty($nomType) && $nomType !== null)
+		if (!empty($nomParcours) && $nomParcours !== null)
 		{
-			// Insertion du type dans la bdd
-			$resultset = $this->typePrecoDAO->update(array('ref_type_preco' => $refType, 'nom_type' => $nomType, 'descript_type' => $description));
+			// Insertion du parcours dans la bdd
+			$resultset = $this->parcoursPrecoDAO->update(array('ref_parcours' => $refParcours, 'volume_parcours' => $volume, 'nom_parcours' => $nomParcours, 'descript_parcours' => $description));
 				
 			// Traitement des erreurs de la requête
-			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['type_preco']['row_count']))
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['parcours_preco']['row_count']))
 			{
 				return $resultset;
 			} 
 			else 
 			{
-				$this->registerError("form_request", "Le type de la préconisation n'a pu être mis à jour.");
+				$this->registerError("form_request", "Le parcours de la préconisation n'a pu être mis à jour.");
 			}
 		}
 
@@ -1435,14 +1439,14 @@ class ServicesAdminCategorie extends Main
 	}
 	
 	/* Ok */
-	public function deleteTypePreco($refType)
+	public function deleteParcoursPreco($refParcours)
 	{
 		// On commence par sélectionner les réponses associèes à la question
-		$resultsetSelect = $this->typePrecoDAO->selectById($refType);
+		$resultsetSelect = $this->parcoursPrecoDAO->selectById($refParcours);
 		
 		if (!$this->filterDataErrors($resultsetSelect['response']))
 		{ 
-			$resultsetDelete = $this->typePrecoDAO->delete($refType);
+			$resultsetDelete = $this->parcoursPrecoDAO->delete($refParcours);
 		
 			if (!$this->filterDataErrors($resultsetDelete['response']))
 			{
@@ -1450,19 +1454,19 @@ class ServicesAdminCategorie extends Main
 			}
 			else 
 			{
-				$this->registerError("form_request", "Le type de préconisation n'a pas pu être supprimée.");
+				$this->registerError("form_request", "Le parcours de préconisation n'a pas pu être supprimée.");
 			}
 		}
 		else
 		{
-		   $this->registerError("form_request", "Ce type de préconisation n'existe pas."); 
+		   $this->registerError("form_request", "Ce parcours de préconisation n'existe pas."); 
 		}
 
 		return false;
 	}
 
 
-	/*=====  Fin gestion des types de préconisations  ======*/
+	/*=====  Fin gestion des parcourss de préconisations  ======*/
 	
 
 }

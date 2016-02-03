@@ -495,7 +495,7 @@ class ServicesAdmin extends Main
 		if (Config::ALLOW_AJAX)
 		{
 			/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
-
+			/*
 			if (isset($_POST['ref_cat']) && !empty($_POST['ref_cat']))
 			{
 				$catDetails = $this->servicesCategorie->getCategorieDetails($_POST['ref_cat']);
@@ -512,6 +512,7 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
 				exit();
 			}
+			*/
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			
@@ -534,19 +535,26 @@ class ServicesAdmin extends Main
 			
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
-			/*
-			if (isset($_POST['nom_type']) && !empty($_POST['nom_type']))
+			
+			if (isset($_POST['save_parcours']) && !empty($_POST['save_parcours']) && isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
 			{
-				if (isset($_POST['ref_type']) && !empty($_POST['ref_type']))
+				$volumeParcours = null;
+
+				if (isset($_POST['volume_parcours']) && !empty($_POST['volume_parcours']))
 				{
-					$saveType = $this->servicesCategorie->updateTypePreco($_POST['ref_type'], $_POST['nom_type']);
+					$volumeParcours = $_POST['volume_parcours'];
+				}
+
+				if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']))
+				{
+					$saveParcours = $this->servicesCategorie->updateParcoursPreco($_POST['ref_parcours'], $_POST['nom_parcours'], $volumeParcours);
 				}
 				else
 				{
-					$saveType = $this->servicesCategorie->insertTypePreco($_POST['nom_type']);
+					$saveParcours = $this->servicesCategorie->insertParcoursPreco($_POST['nom_parcours'], $volumeParcours);
 				}
 
-				if ($saveType)
+				if ($saveParcours)
 				{
 					$response = array('error' => false);
 				}
@@ -558,7 +566,7 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
 				exit();
 			}
-			*/
+			
 			/*** Requête pour supprimer un nouveau parcours ***/
 
 		}
@@ -888,7 +896,7 @@ class ServicesAdmin extends Main
 
 		/*** Erreur : aucun mode ***/
 
-		else  
+		else 
 		{
 			// Renvoi vers le template 404 (page inconnue).
 			header("Location: ".SERVER_URL."erreur/page404");
@@ -941,14 +949,14 @@ class ServicesAdmin extends Main
 		// Requete pour obtenir la liste des catégories
 		$listeCategories = $this->servicesCategorie->getCategories();
 
-		// Requete pour obtenir la liste des types (volumes) de parcours
-		$listeTypesPreco = $this->servicesCategorie->getTypePrecoList();
+		// Requete pour obtenir la liste des parcours
+		$listeParcoursPreco = $this->servicesCategorie->getParcoursPrecoList();
 
 
 		// Assemblage de toutes les données de la réponse
 		$this->returnData['response'] = array_merge($listeCategories['response'], $this->returnData['response']);
 		$this->returnData['response'] = array_merge($listePrecos, $this->returnData['response']);
-		$this->returnData['response'] = array_merge($listeTypesPreco['response'], $this->returnData['response']);
+		$this->returnData['response'] = array_merge($listeParcoursPreco['response'], $this->returnData['response']);
 
 		//var_dump($this->returnData['response']);
 		//exit();

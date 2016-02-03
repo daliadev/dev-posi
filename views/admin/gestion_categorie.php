@@ -40,10 +40,10 @@ $form_url = $response['url'];
 
 	<div id="content-large">
 
-		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu" style="margin-right:30px">Retour menu</div></a>
-
-		<div style="clear:both;"></div>
-
+		<a href="<?php echo SERVER_URL; ?>admin/menu">
+			<div class="retour-menu" style="margin-right:30px">Retour menu</div>
+			<div style="clear:both;"></div>
+		</a>
 		
 		<!-- Header -->
 		<div id="titre-admin-h2">Gestion des compétences</div>
@@ -422,8 +422,8 @@ $form_url = $response['url'];
 
 
 								<div id="add-action-preco-button" style="float: left; margin: 0 20px;">
-									<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
-									&nbsp; <label for="add-type-preco">Ajouter / gérer les actions</label>
+									<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+									&nbsp; <label for="add-type-preco">Ajouter / gérer les parcours (volumes d'heures, actions...)</label>
 									<!-- <input type="button" id="add-action" name="add_action" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
 
@@ -1131,10 +1131,10 @@ $form_url = $response['url'];
 
 				event.preventDefault();
 
-				var title = 'Ajouter une action';
+				var title = 'Ajouter / gérer les parcours préconisé';
 
-				var contentText = '<p>Sélectionner une action pour l\'éditer ou la supprimer :</p>';
-				contentText += '<select name="parcours_cbox" id="parcours_cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
+				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou la supprimer :</p>';
+				contentText += '<select name="parcours_cbox" id="parcours-cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
 				contentText += '<option value="select_cbox">Aucune</option>';
 
 				<?php
@@ -1153,15 +1153,25 @@ $form_url = $response['url'];
 						<?php
 					}
 				}
-
 				?>
-
 				contentText += '</select>';
+				contentText += '<hr />'
 
-				contentText += '<p>Ou saisissez la description d\'un nouveau parcours : </p>';
-				contentText += '<input id="id-parcours" name="id_parcours" type="hidden" value="" />';
-				contentText += '<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de formation mathématiques" />';
+				contentText += '<p>Ajouter ou modifier un parcours en saisissant son nom et sa description : </p>';
+				contentText += '<input id="ref-parcours" name="ref_parcours" type="hidden" value="" />';
+
+				contentText += '<div style="float: left; style=width: 360px;  font-size: 12px;">';
+				contentText += '<label for="nom-parcours">Intitulé du parcours</label>';
+				contentText += '<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de calcul" style="width: 300px;" />';
+				contentText += '</div>';
+
+				contentText += '<div style="float: right; style=width: 80px; font-size: 12px;">';
+				contentText += '<label for="volume-parcours">Volume</label>';
+				contentText += '<input id="volume-parcours" name="volume_parcours" type="text" value="" placeholder="Ex : 10" style="width: 80px;" />';
+				contentText += '</div>';
+
 				
+				contentText += '<div style="clear: both;"></div>';
 
 				$.modalbox(
 					{
@@ -1174,11 +1184,15 @@ $form_url = $response['url'];
 					{
 						buttons: [
 							{
-								'btnvalue': 'Annuler', 
+								'btnvalue': 'Annuler',
+								'btnname': 'undo_parcours',
+								'btnid': 'btn-undo-parcours', 
 								'btnclass': 'default'
 							},
 							{
-								'btnvalue': 'Enregistrer', 
+								'btnvalue': 'Enregistrer',
+								'btnname': 'save_parcours',
+								'btnid' : 'btn-save-parcours', 
 								'btnclass': 'primary'
 							}
 						], 
@@ -1195,8 +1209,13 @@ $form_url = $response['url'];
 						events: [
 							{
 							 	'type': 'change', 
-							 	'selector': '#parcours_cbox',
+							 	'selector': '#parcours-cbox',
 							 	'callback': 'onChangeParcours'
+							},
+							{
+							 	'type': 'click', 
+							 	'selector': '#btn-save-parcours',
+							 	'callback': 'onClickParcoursSave'
 							}
 						]
 					},
@@ -1216,7 +1235,39 @@ $form_url = $response['url'];
 			onChangeParcours = function() {
 
 				console.log('onChangeParcours');
-				var refParcours = $('#type_cbox').val();
+				var refParcours = $('#parcours-cbox').val();
+				
+				<?php if (Config::ALLOW_AJAX) : ?>
+
+					if (refParcours != 'select_cbox')
+					{
+						$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
+
+							if (data.error) {
+
+								alert(data.error);
+							}
+							else if (data.results) {
+
+								console.log(data.results);
+								$('#ref-parcours').val(data.results.id_parcours);
+								$('#volume-parcours').val(data.results.volume_parcours);
+								$('#nom-parcours').val(data.results.nom_parcours);
+							}
+
+						}, 'json');
+					}
+
+				<?php endif; ?>
+			};
+			//});
+			
+			onClickParcoursSave = function() {
+
+				console.log('clickParcoursSave');
+				var refParcours = $('ref-parcours').val();
+				var volumeParcours = $('#volume-parcours').val();
+				var nomParcours = $('#nom-parcours').val();
 				
 				<?php if (Config::ALLOW_AJAX) : ?>
 
@@ -1233,16 +1284,15 @@ $form_url = $response['url'];
 								console.log(data.results);
 								$('#id-type').val(data.results.id_type);
 								$('#nom-type').val(data.results.nom_type);
+								$('#nom-type').val(data.results.nom_type);
 							}
 
 						}, 'json');
 					}
 
 				<?php endif; ?>
-			};
-			//});
-			
 
+			};
 
 
 

@@ -86,7 +86,7 @@
 
 		createButtons: function(buttons) {
 			return $.map(buttons, function(button) {
-				return '<button type="submit" class="' + button.btnclass + '">' + button.btnvalue + '</button>';
+				return '<button type="submit" class="' + button.btnclass + '" id="' + button.btnid + '" name="' + button.btnname + '">' + button.btnvalue + '</button>';
 			}).join('');
 		},
 
@@ -167,7 +167,9 @@
 	$.modalbox.defaults = { 
 		buttons: [
 			{
-				'btnvalue': 'Valider', 
+				'btnvalue': 'Valider',
+				'btnname': 'submit',
+				'btnid' : 'btn-submit', 
 				'btnclass': 'button-default'
 			}
 		], 

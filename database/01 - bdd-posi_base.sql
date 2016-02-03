@@ -10,7 +10,7 @@
 
 /*--- Création des tables simples ---*/
 
-DROP TABLE IF EXISTS valid_acquis;
+DROP TABLE IF EXISTS positionnement;
 CREATE TABLE positionnement 
 (
 	id_posi INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

@@ -1394,7 +1394,7 @@ class ServicesAdminCategorie extends Main
 
 
 	/* Ok */
-	public function insertParcoursPreco($nomParcours, $volume = 'NULL', $description = 'NULL')
+	public function insertParcoursPreco($nomParcours, $volume = null, $description = null)
 	{
 		if (!empty($nomParcours) && $nomParcours !== null)
 		{
@@ -1417,7 +1417,7 @@ class ServicesAdminCategorie extends Main
 
 
 	/* Ok */
-	public function updateParcoursPreco($refParcours, $nomParcours, $volume = 'NULL', $description = 'NULL')
+	public function updateParcoursPreco($refParcours, $nomParcours, $volume = null, $description = null)
 	{
 		if (!empty($nomParcours) && $nomParcours !== null)
 		{

@@ -356,6 +356,7 @@ label
 	border-radius: 5px 5px 5px 5px;
 	color: #403b3b;
 	font-size: 12px;
+	outline: none;
 	/*line-height: 1px;*/
 }
 	
@@ -446,6 +447,7 @@ label
 	float: left;
 	height: 30px;
 	width: 333px;
+	outline: none;
 }
 
 	#form-posi .reset-button {
@@ -495,6 +497,7 @@ form input[type="text"][disabled]
 		font-size: 15px;
 		font-weight: bold;
 		/*line-height: 1px;*/
+		outline: none;
 	}
 	
 #form-posi #liste-cat-main #submit {
@@ -534,6 +537,7 @@ form input[type="text"][disabled]
 	color: #FFF;
 	font-size: 15px;
 	/*line-height: 1px;*/
+	outline: none;
 }
 
 	form input[type="submit"][disabled], #form-posi input[type=button][disabled], button[type=submit][disabled]
@@ -553,6 +557,7 @@ form input[type="text"][disabled]
 	border-radius: 5px 5px 5px 5px;
 	color: #403b3b;
 	font-size: 12px;
+	outline: none;
 }
 
 
@@ -581,6 +586,7 @@ form input[type="text"][disabled]
 	border: 1px solid #ccc8c8;
 	border-radius: 5px 5px 5px 5px;
 	font-size: 12px;
+	outline: none;
 }
 
 	#form-posi textarea[disabled] { 
@@ -2770,7 +2776,7 @@ body:after {
 
 
 
-/*----------------------------------   Boite de message modale   --------------------------------*/
+/*----------------------------------   Boite de message modale (alert)   --------------------------------*/
 
 
 .message-box
@@ -2871,7 +2877,7 @@ body:after {
 			
 
 
-/*----------------------------------   Boite modale   --------------------------------*/
+/*----------------------------------   Boite modale (avec formulaire)  --------------------------------*/
 
 .modal-box {
 	position:absolute;
@@ -2921,6 +2927,7 @@ body:after {
 			-webkit-border-radius: 5px 5px 5px 5px;
 			-moz-border-radius: 5px 5px 5px 5px;
 			border-radius: 5px 5px 5px 5px;
+			outline: none;
 		}
 		
 		.modal-box-text select {
@@ -2951,6 +2958,7 @@ body:after {
 			margin: 0 0 0 10px;
 
 			cursor: pointer;
+			outline: none;
 			/*-webkit-border-radius: 5px;
 			-moz-border-radius: 5px;
 			border-radius: 5px;*/

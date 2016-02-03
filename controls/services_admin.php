@@ -516,7 +516,7 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			
-			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']))
+			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']) && $_POST['ref_parcours'] != 'select_cbox')
 			{
 				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
 
@@ -562,8 +562,8 @@ class ServicesAdmin extends Main
 				{
 					$response = array('error' => "L'enregistrement a échoué.");
 				}
-				
-				echo json_encode($response);
+				var_dump($response);
+				//echo json_encode($response);
 				exit();
 			}
 			

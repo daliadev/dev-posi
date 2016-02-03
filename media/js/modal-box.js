@@ -5,11 +5,11 @@
 	var ModalBox = {
 
 		self: this,
-		text: '',
+		//text: '',
 		container: null,
-		bg: null,
+		//bg: null,
 		el: null,
-		bgOpacity: 0.35,
+		//bgOpacity: 0.35,
 		animDuration: 1000,
 		
 		windowWidth: function() {
@@ -50,7 +50,7 @@
 			return html.join('');
 		},
 
-		initialize: function(form, title, text, settings, events, boxContainer) {
+		initialize: function(form, title, text, settings, boxContainer) {
 
 			//this.text = text;
 			this.container = boxContainer;
@@ -60,20 +60,25 @@
 			
 			this.settings = $.extend({}, $.modalbox.defaults, settings);
 			var buttons = this.createButtons(this.settings.buttons);
+			
 			var html = this.template(title, text, buttons)
 			
+			
+
 			if (typeof form == 'object') {
 				html = this.wrapForm(form, html);
 			}
 
 			this.el.html(html);
-			
-			this.addEvents(events);
+
+			//var eventsHandlers = 
+			this.addEvents(this.settings.events);
+			//this.addEvents(events);
 
 			//this.bg.appendTo(this.container);
 			this.el.appendTo(this.container);
 			
-			return this;
+			//return this;
 		},
 
 		wrapForm: function(form, content) {
@@ -92,25 +97,43 @@
 
 		addEvents: function(events) {
 
-			//console.log('addEvents');
+			console.log(events.length);
 			var self = this;
 			
 			for (var i = 0; i < events.length; i++)
 			{
-				this.el.find(events[i].selector).on(events[i].type, function(event) {
-					if (typeof events[i].callback === 'function') {
-						events[i].callback.call(self, $(this).val());
+				console.log(events[i]);
+				var selector = events[i].selector;
+				var eventType = events[i].type;
+				var callback = events[i].callback;
+
+				this.el.find(selector).on(eventType, function(event) {
+					//console.log($(this));
+					event.preventDefault();
+					if (typeof callback === 'function') {
+
+						var formValues = self.el.find('form').serializeArray();
+						var values = {};
+
+						for (var i = 0; i < formValues.length; i++) {
+							var prop = formValues[i].name;
+							var value = formValues[i].value;
+							values[prop] = value;
+						}
+						//console.log("values = " + values);
+						callback.call(self, values);
 					}
 				});
 			}
 			
+			/*
 			this.el.find('button').on('click', function() {
 				self.close();
 				if (typeof self.settings.callback === 'function') {
 					self.settings.callback.call(self, $(this).val());
 				}
 			});
-
+			*/
 			// // A généraliser
 			// this.el.find('select').on('change', function() {
 			// 	//self.close();
@@ -155,10 +178,10 @@
 	};
 
 
-	$.modalbox = function(form, title, text, settings, events, boxContainer) {
+	$.modalbox = function(form, title, text, settings, boxContainer) {
 		//console.log(boxContainer);
 		var modal = ModalBox;
-		modal.initialize(form, title, text, settings, events, boxContainer);
+		modal.initialize(form, title, text, settings, boxContainer);
 		modal.show();
 		
 		return modal;
@@ -173,7 +196,7 @@
 				'btnclass': 'button-default'
 			}
 		], 
-		callback: null
+		eventsCallback: null
 	};
 			
 			

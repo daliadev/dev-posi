@@ -98,6 +98,11 @@ class ParcoursPrecoDAO extends ModelDAO
 		{
 			if (isset($values['ref_parcours']) && !empty($values['ref_parcours']) && isset($values['nom_parcours']) && !empty($values['nom_parcours']))
 			{
+				if (isset($values['volume_parcours']) && $values['volume_parcours'] == null)
+				{
+					unset($values['volume_parcours']);
+				}
+				
 				if (isset($values['descript_parcours']) && $values['descript_parcours'] == null)
 				{
 					unset($values['descript_parcours']);

@@ -1184,18 +1184,19 @@ $form_url = $response['url'];
 					{
 						buttons: [
 							{
-								'btnvalue': 'Annuler',
-								'btnname': 'undo_parcours',
-								'btnid': 'btn-undo-parcours', 
-								'btnclass': 'default'
+								btnvalue: 'Annuler',
+								btnname: 'undo_parcours',
+								btnid: 'btn-undo-parcours', 
+								btnclass: 'default'
 							},
 							{
-								'btnvalue': 'Enregistrer',
-								'btnname': 'save_parcours',
-								'btnid' : 'btn-save-parcours', 
-								'btnclass': 'primary'
+								btnvalue: 'Enregistrer',
+								btnname: 'save_parcours',
+								btnid : 'btn-save-parcours', 
+								btnclass: 'primary'
 							}
-						], 
+						],
+						/*, 
 						callback: function(buttonText) {
 
 							if (buttonText === 'Enregistrer') {
@@ -1203,19 +1204,19 @@ $form_url = $response['url'];
 								$('#form-parcours').submit();
 								//console.log('submit');
 							}
-						}
-					},
-					{
+						}*/
+					//},
+					//{
 						events: [
 							{
-							 	'type': 'change', 
-							 	'selector': '#parcours-cbox',
-							 	'callback': 'onChangeParcours'
+							 	type: 'change', 
+							 	selector: '#parcours-cbox',
+							 	callback: self.onChangeParcours
 							},
 							{
-							 	'type': 'click', 
-							 	'selector': '#btn-save-parcours',
-							 	'callback': 'onClickParcoursSave'
+							 	type: 'click', 
+							 	selector: '#btn-save-parcours',
+							 	callback: self.onSaveParcours
 							}
 						]
 					},
@@ -1232,7 +1233,7 @@ $form_url = $response['url'];
 
 				//alert('change');
 			
-			onChangeParcours = function() {
+			this.onChangeParcours = function() {
 
 				console.log('onChangeParcours');
 				var refParcours = $('#parcours-cbox').val();
@@ -1262,18 +1263,20 @@ $form_url = $response['url'];
 			};
 			//});
 			
-			onClickParcoursSave = function() {
+			this.onSaveParcours = function(values) {
 
-				console.log('clickParcoursSave');
-				var refParcours = $('ref-parcours').val();
-				var volumeParcours = $('#volume-parcours').val();
-				var nomParcours = $('#nom-parcours').val();
+				console.log(values);
+				//var refParcours = $('ref-parcours').val();
+				//var volumeParcours = $('#volume-parcours').val();
+				//var nomParcours = $('#nom-parcours').val();
+				
 				
 				<?php if (Config::ALLOW_AJAX) : ?>
 
-					if (refParcours != 'select_cbox')
-					{
-						$.post('<?php echo $form_url; ?>', {'ref_type': refParcours}, function(data) {
+					//if (refParcours != 'select_cbox')
+					//{
+						
+						$.post('<?php echo $form_url; ?>', {values}, function(data) {
 
 							if (data.error) {
 
@@ -1282,13 +1285,14 @@ $form_url = $response['url'];
 							else if (data.results) {
 
 								console.log(data.results);
-								$('#id-type').val(data.results.id_type);
-								$('#nom-type').val(data.results.nom_type);
-								$('#nom-type').val(data.results.nom_type);
+								//$('#id-type').val(data.results.id_type);
+								//$('#nom-type').val(data.results.nom_type);
+								//$('#nom-type').val(data.results.nom_type);
 							}
 
 						}, 'json');
-					}
+						
+					//}
 
 				<?php endif; ?>
 

@@ -4,6 +4,36 @@
 /*==============================================================*/
 
 
+/*==============================================================*/
+/* Table : type_preco                                             */
+/*==============================================================*/
+DROP TABLE IF EXISTS parcours_preco;
+CREATE TABLE parcours_preco 
+(
+	id_parcours INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	volume_parcours INT(10) UNSIGNED NULL,
+	nom_parcours VARCHAR(255) NOT NULL UNIQUE,
+	descript_parcours TINYTEXT NULL
+) 
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+/*==============================================================*/
+/* Table : preconisation                                        */
+/*==============================================================*/
+DROP TABLE IF EXISTS preconisation;
+CREATE TABLE preconisation 
+(
+	id_preco INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ref_parcours INT(5) UNSIGNED NULL,
+	nom_preco VARCHAR(255) NOT NULL,
+	descript_preco TINYTEXT NULL,
+	taux_min INT(10) UNSIGNED NULL,
+	taux_max INT(10) UNSIGNED NULL,
+	num_ordre int(3) UNSIGNED NULL
+) 
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 /*==============================================================*/
 /* Table : cat_preco                                            */
@@ -18,43 +48,12 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 /*==============================================================*/
-/* Table : type_preco                                             */
-/*==============================================================*/
-DROP TABLE IF EXISTS action_preco;
-CREATE TABLE action_preco 
-(
-	id_action INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	volume_action INT(10) UNSIGNED NULL,
-	nom_action VARCHAR(255) NOT NULL UNIQUE,
-	descript_action TINYTEXT NULL
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-/*==============================================================*/
-/* Table : preconisation                                        */
-/*==============================================================*/
-DROP TABLE IF EXISTS preconisation;
-CREATE TABLE preconisation 
-(
-	id_preco INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_action INT(5) UNSIGNED NULL,
-	nom_preco VARCHAR(255) NOT NULL,
-	descript_preco TINYTEXT NULL,
-	taux_min INT(10) UNSIGNED NULL,
-	taux_max INT(10) UNSIGNED NULL,
-	num_ordre int(3) UNSIGNED NULL
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-/*==============================================================*/
 /* Indexes                                                      */
 /*==============================================================*/
 CREATE INDEX I_FK_preco_cat ON cat_preco (ref_code_cat ASC);
 CREATE INDEX I_FK_cat_preco ON cat_preco (ref_preco ASC);
 
-CREATE INDEX I_FK_preco_action ON preconisation (ref_action ASC);
+CREATE INDEX I_FK_preco_parcours ON preconisation (ref_parcours ASC);
 
 
 /*==============================================================*/
@@ -67,5 +66,7 @@ ALTER TABLE cat_preco
 	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 ALTER TABLE preconisation 
-	ADD CONSTRAINT FK_action_preco_preco FOREIGN KEY (ref_action) REFERENCES action_preco (id_action) ON DELETE SET NULL ON UPDATE RESTRICT;
+	ADD CONSTRAINT FK_preco_parcours_preco FOREIGN KEY (ref_parcours) REFERENCES parcours_preco (id_parcours) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+
 

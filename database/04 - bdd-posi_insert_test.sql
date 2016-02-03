@@ -57,7 +57,7 @@ INSERT INTO `question` (`id_question`, `ref_posi`, `ref_degre`, `num_ordre_quest
 		
 /* liaison question-catégories */
 
-INSERT INTO question_cat (ref_question, ref_cat) VALUES 	
+INSERT INTO question_cat (ref_question, ref_cat) VALUES 
 (1, '10'),
 (2, '1010'),
 (3, '1010'),

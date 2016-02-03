@@ -79,7 +79,7 @@ CREATE TABLE valid_acquis
 	id_acquis INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_acquis VARCHAR(100) NOT NULL UNIQUE,
 	descript_acquis TINYTEXT NULL
-) 
+)
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -101,7 +101,7 @@ CREATE TABLE organisme
 	email_organ VARCHAR(100) NULL,
 	nbre_posi_total INT(10) UNSIGNED NOT NULL DEFAULT 0,
 	nbre_posi_max INT(10) UNSIGNED NOT NULL DEFAULT 0
-) 
+)
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

@@ -60,13 +60,11 @@ CREATE INDEX I_FK_preco_parcours ON preconisation (ref_parcours ASC);
 /* Contraintes relationnelles                                   */
 /*==============================================================*/
 ALTER TABLE cat_preco 
-	ADD CONSTRAINT FK_cat_preco_cat FOREIGN KEY (ref_code_cat) REFERENCES categorie (code_cat) ON DELETE CASCADE ON UPDATE CASCADE;
+	ADD CONSTRAINT FK_cat_preco_cat FOREIGN KEY (ref_code_cat) REFERENCES categorie (code_cat) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 ALTER TABLE cat_preco 
-	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE CASCADE ON UPDATE RESTRICT;
+	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 ALTER TABLE preconisation 
 	ADD CONSTRAINT FK_preco_parcours_preco FOREIGN KEY (ref_parcours) REFERENCES parcours_preco (id_parcours) ON DELETE SET NULL ON UPDATE RESTRICT;
-
-
 

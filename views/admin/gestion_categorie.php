@@ -407,7 +407,7 @@ $form_url = $response['url'];
 											?>
 										</select>
 
-										<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+										<button type="submit" id="add-parcours-preco" name="add_parcours_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
 										<input type="text" id="type-preco" name="nom_type_preco" value="" placeholder="Ex: 10 heures" style="width: 100px; margin: 0 5px;" />
 
 										<button type="submit" id="edit-type-preco" name="edit_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
@@ -421,9 +421,9 @@ $form_url = $response['url'];
 								</div> -->
 
 
-								<div id="add-action-preco-button" style="float: left; margin: 0 20px;">
-									<button type="submit" id="add-type-preco" name="add_type_preco" class="square-btn" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
-									&nbsp; <label for="add-type-preco">Ajouter / gérer les parcours (volumes d'heures, actions...)</label>
+								<div id="add-parcours-preco_btn" style="float: left; margin: 0 20px;">
+									<button type="submit" id="add-parcours-preco" name="add_parcours_preco" class="square-btn" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
+									&nbsp; <label for="add-parcours-preco">Ajouter / gérer les parcours (volumes d'heures, actions...)</label>
 									<!-- <input type="button" id="add-action" name="add_action" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
 
@@ -609,20 +609,19 @@ $form_url = $response['url'];
 					</select>
 					<hr />
 
-					<p>Ajouter ou modifier un parcours en saisissant son nom et sa description : </p>
+					<p>Ajouter ou modifier un parcours en saisissant ses propriétés : </p>
 					<input id="ref-parcours" name="ref_parcours" type="hidden" value="<?php //echo $parcours->getId(); ?>" />
 
-					<div style="float: left; style=width: 360px;  font-size: 12px;">
+					<div class="input-parcours">
 					<label for="nom-parcours">Intitulé du parcours</label>
-					<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de calcul" style="width: 300px;" />
+					<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de calcul" style="width: 315px;" />
 					</div>
 
-					<div style="width: 80px; font-size: 12px;">
+					<div class="input-parcours" style="margin-right: 0;">
 					<label for="volume-parcours">Volume</label>
 					<input id="volume-parcours" name="volume_parcours" type="text" value="" placeholder="Ex : 10" style="width: 80px;" />
 					</div>
 
-					
 					<div style="clear: both;"></div>
 				</div>
 				
@@ -681,7 +680,12 @@ $form_url = $response['url'];
 			var minPrecoValue = 0;
 			var maxPrecoValue = 100;
 
-			$('#type-preco').hide();
+			var modalHtml = $('#modal-box').html();
+
+			$('#modal-box').contents().remove();
+
+			//$('#type-preco').hide();
+			//$('#modal-box').hide();
 
 
 			/* Vide le formulaire */
@@ -957,7 +961,7 @@ $form_url = $response['url'];
 
 				/* Gestion des types de préco */
 				/*
-				$("#add-type-preco").on('click', function (event) {
+				$("#add-parcours-preco").on('click', function (event) {
 
 					event.preventDefault();
 					$('#type-preco').show();
@@ -1183,10 +1187,10 @@ $form_url = $response['url'];
 
 			/***  Fenêtre modale de gestion des parcours de la catégorie ***/
 			
-			$('#add-type-preco').on('click', function(event) {
-				/*
+			$('#add-parcours-preco').on('click', function(event) {
+				
 				event.preventDefault();
-
+				/*
 				var title = 'Ajouter / gérer les parcours préconisé';
 
 				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou la supprimer :</p>';
@@ -1232,6 +1236,7 @@ $form_url = $response['url'];
 				contentText += '<div style="clear: both;"></div>';
 				*/
 				$.modalbox(
+					modalHtml,
 					/*
 					{
 						formId: '#form-parcours',
@@ -1239,8 +1244,8 @@ $form_url = $response['url'];
 						method: 'post'
 					},
 					*/
-					title,
-					contentText, 
+					//title,
+					//contentText, 
 					{
 						/*
 						buttons: [
@@ -1340,13 +1345,15 @@ $form_url = $response['url'];
 						
 						$.post('<?php echo $form_url; ?>', {values}, function(data) {
 
+							console.log(data);
+
 							if (data.error) {
 
 								alert(data.error);
 							}
 							else if (data.results) {
 
-								console.log(data.results);
+								//console.log(data.results);
 								//$('#id-type').val(data.results.id_type);
 								//$('#nom-type').val(data.results.nom_type);
 								//$('#nom-type').val(data.results.nom_type);

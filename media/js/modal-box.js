@@ -50,33 +50,35 @@
 			return html.join('');
 		},
 
-		initialize: function(form, title, text, settings, boxContainer) {
+		initialize: function(content, settings, boxContainer) {
 
 			//this.text = text;
 			this.container = boxContainer;
-			//console.log(boxContainer, this.container);
+			//console.log(content);
 			//this.bg = $('<div>', {'class': 'modalbox-bg', 'style': 'display:none'});
 			this.el = $('<div>', {'class': 'modal-box', 'style': 'display:none'});
+			//this.el = html;
+			//this.el = $('');
 			
 			this.settings = $.extend({}, $.modalbox.defaults, settings);
 			var buttons = this.createButtons(this.settings.buttons);
 			
-			var html = this.template(title, text, buttons)
+			//var html = this.template(title, text, buttons)
 			
-			
-
+			/*
 			if (typeof form == 'object') {
 				html = this.wrapForm(form, html);
 			}
+			*/
+			this.el.append(content);
+			//console.log(this.el);
 
-			this.el.html(html);
-
-			//var eventsHandlers = 
 			this.addEvents(this.settings.events);
-			//this.addEvents(events);
 
 			//this.bg.appendTo(this.container);
 			this.el.appendTo(this.container);
+
+
 			
 			//return this;
 		},
@@ -89,21 +91,22 @@
 			return formHtml.join('');
 		},
 		*/
-		/*
+		
 		createButtons: function(buttons) {
+
 			return $.map(buttons, function(button) {
 				return '<button type="submit" class="' + button.btnclass + '" id="' + button.btnid + '" name="' + button.btnname + '">' + button.btnvalue + '</button>';
 			}).join('');
 		},
-		*/
+		
 		addEvents: function(events) {
 
-			console.log(events.length);
+			//console.log(events.length);
 			var self = this;
 			
 			for (var i = 0; i < events.length; i++)
 			{
-				console.log(events[i]);
+				//console.log(events[i]);
 				var selector = events[i].selector;
 				var eventType = events[i].type;
 				var callback = events[i].callback;
@@ -179,10 +182,9 @@
 	};
 
 
-	$.modalbox = function(form, title, text, settings, boxContainer) {
-		//console.log(boxContainer);
+	$.modalbox = function(content, settings, boxContainer) {
 		var modal = ModalBox;
-		modal.initialize(form, title, text, settings, boxContainer);
+		modal.initialize(content, settings, boxContainer);
 		modal.show();
 		
 		return modal;

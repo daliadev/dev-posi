@@ -562,8 +562,8 @@ class ServicesAdmin extends Main
 				{
 					$response = array('error' => "L'enregistrement a échoué.");
 				}
-				var_dump($response);
-				//echo json_encode($response);
+				
+				echo json_encode($response);
 				exit();
 			}
 			

@@ -578,9 +578,65 @@ $form_url = $response['url'];
 	<!-- Inclusion d'une boîte modal dédiée à la saisie et à l'enregistrement d'un type -->
 	<?php if (Config::ALLOW_PRECONISATION) : ?>
 
-		<div id="modal-box"></div>
+		<div id="modal-box">
+			
+			<form id="type-form" action="<?php //echo $form_url; ?>" method="post">
+
+				<div class="modal-box-title">Ajouter / gérer les parcours préconisé</div>
+				
+				<div class="modal-box-text">
+					<p>Sélectionner un parcours pour l'éditer ou la supprimer :</p>
+					<select name="parcours_cbox" id="parcours-cbox" class="select-<?php echo $formData["disabled"]; ?>">
+					<option value="select_cbox">Aucune</option>
+
+					<?php
+
+					if (isset($response['parcours']) && !empty($response['parcours']))
+					{
+						foreach($response['parcours'] as $parcours)
+						{
+							$selected = "";
+							if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
+							{
+								$selected = "selected";
+							}
+							?>		
+							<option value="<?php echo $parcours->getId(); ?>" <?php echo $selected; ?>>- <?php echo $parcours->getNom(); ?></option>
+							<?php
+						}
+					}
+					?>
+					</select>
+					<hr />
+
+					<p>Ajouter ou modifier un parcours en saisissant son nom et sa description : </p>
+					<input id="ref-parcours" name="ref_parcours" type="hidden" value="<?php //echo $parcours->getId(); ?>" />
+
+					<div style="float: left; style=width: 360px;  font-size: 12px;">
+					<label for="nom-parcours">Intitulé du parcours</label>
+					<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de calcul" style="width: 300px;" />
+					</div>
+
+					<div style="width: 80px; font-size: 12px;">
+					<label for="volume-parcours">Volume</label>
+					<input id="volume-parcours" name="volume_parcours" type="text" value="" placeholder="Ex : 10" style="width: 80px;" />
+					</div>
+
+					
+					<div style="clear: both;"></div>
+				</div>
+				
+				<div class="modal-box-buttons">
+					<button type="submit" class="default" id="btn-undo-parcours" name="undo_parcours">Annuler</button>
+					<button type="submit" class="primary" id="btn-save-parcours" name="save_parcours">Enregistrer</button>
+				</div>
+
+			</form>
+		</div>
 
 	<?php endif; ?>
+
+
 	<!-- Template form ajout type -->
 	<!--
 	<div class="modal-box">
@@ -1128,7 +1184,7 @@ $form_url = $response['url'];
 			/***  Fenêtre modale de gestion des parcours de la catégorie ***/
 			
 			$('#add-type-preco').on('click', function(event) {
-
+				/*
 				event.preventDefault();
 
 				var title = 'Ajouter / gérer les parcours préconisé';
@@ -1136,9 +1192,9 @@ $form_url = $response['url'];
 				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou la supprimer :</p>';
 				contentText += '<select name="parcours_cbox" id="parcours-cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
 				contentText += '<option value="select_cbox">Aucune</option>';
-
+				*/
 				<?php
-
+				/*
 				if (isset($response['parcours']) && !empty($response['parcours']))
 				{
 					foreach($response['parcours'] as $parcours)
@@ -1153,7 +1209,9 @@ $form_url = $response['url'];
 						<?php
 					}
 				}
+				*/
 				?>
+				/*
 				contentText += '</select>';
 				contentText += '<hr />'
 
@@ -1172,16 +1230,19 @@ $form_url = $response['url'];
 
 				
 				contentText += '<div style="clear: both;"></div>';
-
+				*/
 				$.modalbox(
+					/*
 					{
 						formId: '#form-parcours',
 						action: '<?php echo $form_url; ?>',
 						method: 'post'
 					},
+					*/
 					title,
 					contentText, 
 					{
+						/*
 						buttons: [
 							{
 								btnvalue: 'Annuler',
@@ -1196,6 +1257,7 @@ $form_url = $response['url'];
 								btnclass: 'primary'
 							}
 						],
+						*/
 						/*, 
 						callback: function(buttonText) {
 

@@ -80,7 +80,7 @@
 			
 			//return this;
 		},
-
+		/*
 		wrapForm: function(form, content) {
 			var formHtml = [];
 			formHtml.push('<form id="'+ form.formId +'" name ="'+ form.formId +'" action="'+ form.action +'" method="'+ form.method +'">');
@@ -88,13 +88,14 @@
 			formHtml.push(['</form>']);
 			return formHtml.join('');
 		},
-
+		*/
+		/*
 		createButtons: function(buttons) {
 			return $.map(buttons, function(button) {
 				return '<button type="submit" class="' + button.btnclass + '" id="' + button.btnid + '" name="' + button.btnname + '">' + button.btnvalue + '</button>';
 			}).join('');
 		},
-
+		*/
 		addEvents: function(events) {
 
 			console.log(events.length);

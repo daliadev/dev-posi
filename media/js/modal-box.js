@@ -183,18 +183,22 @@
 
 		triggerEvent: function(id) {
 
-			console.log(id);
-
-			var callback = null;
+			var self = this;
+			//console.log(this.settings.events.length);
 
 			for (var i = 0; i < this.settings.events.length; i++)
 			{
 				var eventHandler = this.settings.events[i];
+				var selector = eventHandler.selector.substring(1);
+				//console.log(eventHandler);
+				console.log(i + " - " + id + " - " + selector);
+				//callback = eventHandler.callback;
+				//console.log(typeof eventHandler.callback);
 
-				if (eventHandler.id == id && eventHandler.callback != null && typeof eventHandler.callback === 'function') {
+				if (id == selector) {
 
-					callback = eventHandler.callback;
-					console.log(callback);
+					var callback = typeof eventHandler.callback === 'function' ? eventHandler.callback : null;
+					//console.log(id + " - " + callback);
 					
 					if (id.search("save") >= 0 || id.search("valid") >= 0) {
 
@@ -206,12 +210,13 @@
 							var value = formValues[i].value;
 							values[prop] = value;
 						}
-						//console.log("values = " + values);
-
+						//console.log(values);
+						self.close();
 						callback.call(self, values);
 					}
 					else if (id.search("annul") >= 0 || id.search("cancel") >= 0) {
 
+						//console.log(self);
 						self.close();
 					}
 					else {
@@ -225,6 +230,8 @@
 							callback.call(self);
 						}
 					}
+
+					break;
 				}
 			}
 		},

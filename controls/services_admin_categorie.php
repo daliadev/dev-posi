@@ -359,9 +359,9 @@ class ServicesAdminCategorie extends Main
 						}
 
 
-						if (isset($postData['choix_parcours_preco_cbox'][$i]) && $postData['choix_parcours_preco_cbox'][$i] != 'select_cbox')
+						if (isset($postData['parcours_preco_cbox'][$i]) && $postData['parcours_preco_cbox'][$i] != 'select_cbox')
 						{
-							$formData['precos'][$i]['ref_parcours_preco'] = $postData['choix_parcours_preco_cbox'][$i];
+							$formData['precos'][$i]['ref_parcours_preco'] = $postData['parcours_preco_cbox'][$i];
 							$dataPrecos[$i]['ref_parcours'] = $formData['precos'][$i]['ref_parcours_preco'];
 						}
 						else
@@ -1396,6 +1396,7 @@ class ServicesAdminCategorie extends Main
 	/* Ok */
 	public function insertParcoursPreco($nomParcours, $volume = null, $description = null)
 	{
+		
 		if (!empty($nomParcours) && $nomParcours !== null)
 		{
 			// Insertion du parcours dans la bdd

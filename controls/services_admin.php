@@ -494,6 +494,7 @@ class ServicesAdmin extends Main
 
 		if (Config::ALLOW_AJAX)
 		{
+			
 			/*** Requêtes ajax pour obtenir le détail d'une catégorie sélectionnée ***/
 			/*
 			if (isset($_POST['ref_cat']) && !empty($_POST['ref_cat']))
@@ -516,7 +517,7 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			
-			if (isset($_POST['parcours_cbox']) && !empty($_POST['parcours_cbox']) && $_POST['parcours_cbox'] != 'select_cbox')
+			if (isset($_POST['values']['parcours_cbox']) && !empty($_POST['values']['parcours_cbox']) && $_POST['values']['parcours_cbox'] != 'select_cbox')
 			{
 				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['parcours_cbox']);
 
@@ -536,22 +537,22 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
 			
-			else if (isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
+			else if (isset($_POST['values']['nom_parcours']) && !empty($_POST['values']['nom_parcours']))
 			{
 				$volumeParcours = null;
 
-				if (isset($_POST['volume_parcours']) && !empty($_POST['volume_parcours']))
+				if (isset($_POST['values']['volume_parcours']) && !empty($_POST['values']['volume_parcours']))
 				{
-					$volumeParcours = $_POST['volume_parcours'];
+					$volumeParcours = $_POST['values']['volume_parcours'];
 				}
 
-				if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']))
+				if (isset($_POST['values']['ref_parcours']) && !empty($_POST['values']['ref_parcours']))
 				{
-					$saveParcours = $this->servicesCategorie->updateParcoursPreco($_POST['ref_parcours'], $_POST['nom_parcours'], $volumeParcours);
+					$saveParcours = $this->servicesCategorie->updateParcoursPreco($_POST['values']['ref_parcours'], $_POST['values']['nom_parcours'], $volumeParcours, $_POST['values']['descript_parcours']);
 				}
 				else
 				{
-					$saveParcours = $this->servicesCategorie->insertParcoursPreco($_POST['nom_parcours'], $volumeParcours);
+					$saveParcours = $this->servicesCategorie->insertParcoursPreco($_POST['values']['nom_parcours'], $volumeParcours, $_POST['values']['descript_parcours']);
 				}
 
 				if ($saveParcours)
@@ -615,8 +616,8 @@ class ServicesAdmin extends Main
 			"num_ordre_preco" => "multi",
 			"preco_min"       => "multi",
 			"preco_max"       => "multi",
-			// "ref_type_preco"  => "multi",
-			"type_preco_cbox" => "select"
+			// "ref_parcours_preco"  => "multi",
+			"parcours_preco_cbox" => "select"
 		);
 
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);

@@ -241,15 +241,15 @@ $form_url = $response['url'];
 								<fieldset id="edit-cat">
 								
 									<legend>Détail d'une compétence (ajout, modification)</legend>
-										
-									<?php if(isset($formData['code_cat'])) : ?>
+									<!-- 	
+									<?php //if(isset($formData['code_cat'])) : ?>
 
 									<div id="num-cat" class="num-indicator">
 										N°<?php echo $formData['code_cat']; ?>
 									</div>
 
-									<?php endif; ?>
-
+									<?php //endif; ?>
+									 -->
 									<div id="nom-cat" class="block">
 										<p>
 										<label for="nom_cat">Nom *</label>
@@ -385,21 +385,21 @@ $form_url = $response['url'];
 									
 									<div class="type-text">
 
-										<select id="type-preco-cbox" name="type_preco_cbox_edit" style="width: 200px;" <?php //echo $formData['disabled']; ?>>
+										<select id="type-preco-cbox" name="parcours_preco_cbox_edit" style="width: 200px;" <?php //echo $formData['disabled']; ?>>
 											<option value="select_cbox">---</option>
 											<?php
 											/*
-											if (isset($response['type_preco']) && !empty($response['type_preco']))
+											if (isset($response['parcours_preco']) && !empty($response['parcours_preco']))
 											{
-												foreach($response['type_preco'] as $type)
+												foreach($response['parcours_preco'] as $parcours)
 												{
 													$selected = "";
-													if (!empty($formData['ref_type_preco_edit']) && $formData['ref_type_preco_edit'] == $type->getId())
+													if (!empty($formData['ref_parcours_preco_edit']) && $formData['ref_parcours_preco_edit'] == $parcours->getId())
 													{
 														$selected = "selected";
 													}				
 													
-													echo '<option value="'.$type->getId().'" '.$selected.'>'.$type->getNom().'</option>';	
+													echo '<option value="'.$parcours->getId().'" '.$selected.'>'.$parcours->getNom().'</option>';	
 												}
 											}
 											*/
@@ -407,11 +407,11 @@ $form_url = $response['url'];
 										</select>
 
 										<button type="submit" id="add-parcours-preco" name="add_parcours_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
-										<input type="text" id="type-preco" name="nom_type_preco" value="" placeholder="Ex: 10 heures" style="width: 100px; margin: 0 5px;" />
+										<input type="text" id="type-preco" name="nom_parcours_preco" value="" placeholder="Ex: 10 heures" style="width: 100px; margin: 0 5px;" />
 
-										<button type="submit" id="edit-type-preco" name="edit_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
-										<button type="submit" id="save-type-preco" name="save_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-refresh"></i></button>
-										<button type="submit" id="suppr-type-preco" name="suppr_type_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
+										<button type="submit" id="edit-type-preco" name="edit_parcours_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-pencil"></i></button>
+										<button type="submit" id="save-type-preco" name="save_parcours_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-refresh"></i></button>
+										<button type="submit" id="suppr-type-preco" name="suppr_parcours_preco" class="square-btn" value="" <?php //echo $formData['disabled']; ?>><i class="fa fa-times"></i></button>
 										
 									</div>
 									
@@ -485,30 +485,22 @@ $form_url = $response['url'];
 
 										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>Action : ';
 
-										echo '<select class="choix-type-preco-cbox" name="choix_type_preco_cbox[]" '.$formData['disabled'].'>';
+										echo '<select class="parcours-preco-cbox" name="parcours_preco_cbox[]" '.$formData['disabled'].'>';
 											echo '<option value="select_cbox">---</option>';
 
-											if (isset($response['type_preco']) && !empty($response['type_preco']))
+											if (isset($response['parcours_preco']) && !empty($response['parcours_preco']))
 											{
-												foreach($response['type_preco'] as $type)
+												foreach($response['parcours_preco'] as $parcours)
 												{
 													$selected = "";
-													if (isset($response['precos'][$i]['ref_type']) && !empty($response['precos'][$i]['ref_type']) && $response['precos'][$i]['ref_type'] == $type->getId())
+													if (isset($response['precos'][$i]['ref_parcours']) && !empty($response['precos'][$i]['ref_parcours']) && $response['precos'][$i]['ref_parcours'] == $parcours->getId())
 													{
 														$selected = "selected";
 													}				
 													
-													echo '<option value="'.$type->getId().'" '.$selected.'>'.$type->getNom().'</option>';	
+													echo '<option value="'.$parcours->getId().'" '.$selected.'>'.$parcours->getNom().'</option>';	
 												}
 											}
-											/*
-											if (!empty($formData['ref_organ_cbox']) && $formData['ref_organ_cbox'] === "Nouveau")
-											{
-												$selected = "selected";
-
-												echo '<option value="new" '.$selected.' style="font-weight:bold;">Autre</option>';
-											}
-											*/
 
 										echo '</select>';
 										
@@ -878,7 +870,7 @@ $form_url = $response['url'];
 				//$numItemPreco = 0;
 				//$precoItem = 
 
-				$('.choix-type-preco-cbox').each(function() {
+				$('.parcours-preco-cbox').each(function() {
 
 					$(this).on('change', function(event) {
 
@@ -915,7 +907,7 @@ $form_url = $response['url'];
 					$item.children('.num-ordre').val(numOrdrePreco);
 					$('.preco-list').append($item);
 
-					$('.choix-type-preco-cbox').each(function() {
+					$('.parcours-preco-cbox').each(function() {
 
 						$(this).on('change', function(event) {
 
@@ -1002,7 +994,7 @@ $form_url = $response['url'];
 
 						if (nomType !== '' && nomType !== null) {
 
-							$.post('<?php echo $form_url; ?>', {'ref_type': refType, 'nom_type': nomType}, function(data) {
+							$.post('<?php echo $form_url; ?>', {'ref_parcours': refType, 'nom_type': nomType}, function(data) {
 
 								if (data.error) {
 
@@ -1050,7 +1042,7 @@ $form_url = $response['url'];
 			
 
 
-				//$('.choix_type_preco_cbox').on('change', function(event) {
+				//$('.choix_parcours_preco_cbox').on('change', function(event) {
 
 					/*** Gestion de la requête pour éditer un type dans la liste des types ***/
 
@@ -1070,7 +1062,7 @@ $form_url = $response['url'];
 
 							if (refParcours != 'select_cbox')
 							{
-								$.post('<?php echo $form_url; ?>', {'ref_type': refParcours}, function(data) {
+								$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
 
 									if (data.error) {
 
@@ -1114,7 +1106,7 @@ $form_url = $response['url'];
 				});
 				*/
 
-				//$('.choix-type-preco-cbox').on('change', function(event) {
+				//$('.parcours-preco-cbox').on('change', function(event) {
 
 					// if ($(this).val() != 'select_cbox') 
 					// {
@@ -1344,7 +1336,7 @@ $form_url = $response['url'];
 			
 			this.onSaveParcours = function(values) {
 
-				//console.log(values);
+				console.log(values);
 				//var refParcours = $('ref-parcours').val();
 				//var volumeParcours = $('#volume-parcours').val();
 				//var nomParcours = $('#nom-parcours').val();
@@ -1354,18 +1346,19 @@ $form_url = $response['url'];
 
 					//if (refParcours != 'select_cbox')
 					//{
+						//console.log(values);
 						
 						$.post('<?php echo $form_url; ?>', {values}, function(data) {
 
-							console.log(data);
+							//console.log(data);
 
 							if (data.error) {
 
 								alert(data.error);
 							}
-							else if (data.results) {
+							else {
 
-								//console.log(data.results);
+								console.log('ok');
 								//$('#id-type').val(data.results.id_type);
 								//$('#nom-type').val(data.results.nom_type);
 								//$('#nom-type').val(data.results.nom_type);
@@ -1378,13 +1371,7 @@ $form_url = $response['url'];
 				<?php endif; ?>
 
 			};
-			/*
-			this.onCancelParcours = function(closeFunction) {
 
-				//console.log($.modalbox);
-				closeFunction();
-			}
-			*/
 
 
 

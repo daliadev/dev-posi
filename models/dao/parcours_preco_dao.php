@@ -19,7 +19,7 @@ class ParcoursPrecoDAO extends ModelDAO
 	{
 		$this->initialize();
 
-		$request = "SELECT * FROM parcours_preco ORDER BY nom_parcours ASC";
+		$request = "SELECT * FROM parcours_preco ORDER BY volume_parcours, nom_parcours ASC";
 		
 		$this->resultset['response'] = $this->executeRequest("select", $request, "parcours_preco", "ParcoursPreco");
 

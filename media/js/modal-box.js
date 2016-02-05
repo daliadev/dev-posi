@@ -19,6 +19,10 @@
 			return window.innerHeight;
 		},
 
+		get: function() {
+			return this;
+		},
+
 		template: function(title, text, buttons) {
 			
 			var html = [];
@@ -56,7 +60,7 @@
 			this.container = boxContainer;
 			//console.log(content);
 			//this.bg = $('<div>', {'class': 'modalbox-bg', 'style': 'display:none'});
-			this.el = $('<div>', {'class': 'modal-box', 'style': 'display:none'});
+			this.el = $('<div>', {'class': 'modal-box', 'style': 'display: none;'});
 			//this.el = html;
 			//this.el = $('');
 			
@@ -107,14 +111,25 @@
 			for (var i = 0; i < events.length; i++)
 			{
 				//console.log(events[i]);
-				var selector = events[i].selector;
-				var eventType = events[i].type;
-				var callback = events[i].callback;
+				//var selector = events[i].selector;
+				
+				//var callback = events[i].callback;
 
-				this.el.find(selector).on(eventType, function(event) {
-					//console.log($(this));
+				//console.log(callback);
+				var eventType = events[i].type;
+				var $button = this.el.find(events[i].selector);
+				//$button.attr('data-func', events[i].callback);
+
+				$button.on(eventType, function(event) {
+					
 					event.preventDefault();
-					if (typeof callback === 'function') {
+
+					var id = $(this).attr('id');
+					//var callback = $(this).attr('data-func');
+
+					self.triggerEvent(id);
+					/*
+					if (typeof callback === 'function' && (id.search("save") >= 0 || id.search("valid") >= 0)) {
 
 						var formValues = self.el.find('form').serializeArray();
 						var values = {};
@@ -125,8 +140,28 @@
 							values[prop] = value;
 						}
 						//console.log("values = " + values);
+
 						callback.call(self, values);
 					}
+					else if (id.search("annul") >= 0 || id.search("cancel") >= 0) {
+
+						self.close();
+					}
+					else {
+
+						if (typeof callback === 'function') {
+
+							if ($(this).val() != null) {
+
+								callback.call(self, $(this).val());
+							}
+							else {
+
+								callback.call(self);
+							}
+						}
+					}
+					*/
 				});
 			}
 			
@@ -144,6 +179,54 @@
 			// 	alert('change');
 			// 	self.settings.callback.call(self, $(this).val());
 			// });
+		},
+
+		triggerEvent: function(id) {
+
+			console.log(id);
+
+			var callback = null;
+
+			for (var i = 0; i < this.settings.events.length; i++)
+			{
+				var eventHandler = this.settings.events[i];
+
+				if (eventHandler.id == id && eventHandler.callback != null && typeof eventHandler.callback === 'function') {
+
+					callback = eventHandler.callback;
+					console.log(callback);
+					
+					if (id.search("save") >= 0 || id.search("valid") >= 0) {
+
+						var formValues = self.el.find('form').serializeArray();
+						var values = {};
+
+						for (var i = 0; i < formValues.length; i++) {
+							var prop = formValues[i].name;
+							var value = formValues[i].value;
+							values[prop] = value;
+						}
+						//console.log("values = " + values);
+
+						callback.call(self, values);
+					}
+					else if (id.search("annul") >= 0 || id.search("cancel") >= 0) {
+
+						self.close();
+					}
+					else {
+
+						if ($(this).val() != null) {
+
+							callback.call(self, $(this).val());
+						}
+						else {
+
+							callback.call(self);
+						}
+					}
+				}
+			}
 		},
 
 		close: function() {

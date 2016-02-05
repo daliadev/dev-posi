@@ -539,12 +539,19 @@ form input[type="text"][disabled]
 	/*line-height: 1px;*/
 	outline: none;
 }
-
-	form input[type="submit"][disabled], #form-posi input[type=button][disabled], button[type=submit][disabled]
+	
+	form input[type="submit"][disabled], #form-posi input[type=button][disabled], button[type=submit][disabled],
 	{
 		background-color: #bdc3c7 !important;
-		cursor: default;  	
+		cursor: default;
 	}
+	/*
+	form input[type="submit"].primary:hover, #form-posi input[type=button].primary:hover, button[type=submit].primary:hover
+	{
+		background-color: #fa8e00 !important;
+		cursor: pointer;
+	}
+	*/
 	
 
 #form-posi select {
@@ -1527,11 +1534,16 @@ fieldset .add-link span
 #add-preco-button {
 	text-align: center;
 }
+
 	#add-preco {
 		display: inline !important;
 		/*text-align: center !important;*/
 		background-color: #1fbba6;
 		/*margin: 0 auto !important;*/
+	}
+	#add-preco[disabled] {
+		background-color: #bdc3c7;
+		cursor: default;
 	}
 
 .preco-list {
@@ -2927,9 +2939,10 @@ body:after {
 		.modal-box-text label {
 			font-size: 12px;
 			display: block;
+			padding-bottom: 10px;
 		}
 
-		.modal-box-text input, .modal-box-text select {
+		.modal-box-text input, .modal-box-text select, .modal-box-text textarea {
 			height: 30px;
 			padding: 0 10px;
 			width: 438px;
@@ -2944,8 +2957,9 @@ body:after {
 			width: 458px;
 		}
 
-		.modal-box-text option {
-			/*width: 458px;*/
+		.modal-box-text textarea {
+			/*width: 100%;*/
+			height: 80px;
 		}
 
 	

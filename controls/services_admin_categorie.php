@@ -1352,7 +1352,7 @@ class ServicesAdminCategorie extends Main
 	public function getParcoursPrecoList()
 	{
 		$resultset = $this->parcoursPrecoDAO->selectAll();
-		
+
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['parcours_preco']) && count($resultset['response']['parcours_preco']) == 1)

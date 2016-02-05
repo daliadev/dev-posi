@@ -34,7 +34,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = $response['url'];
 
-
 ?>
 
 
@@ -428,8 +427,9 @@ $form_url = $response['url'];
 								</div>
 
 								<div id="add-preco-button" style="float: left; margin: 0 20px;">
-									<button type="submit" id="add-preco" name="add_preco" class="square-btn" <?php echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
-									&nbsp; <label for="add-preco">Ajouter une nouvelle préconisation</label>
+									<button type="submit" id="add-preco" name="add_preco" class="square-btn" <?php echo $formData['disabled']; ?>>
+										<i class="fa fa-plus"></i>
+									</button> &nbsp; <label for="add-preco">Ajouter une nouvelle préconisation</label>
 									<!-- <input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
 							
@@ -591,9 +591,9 @@ $form_url = $response['url'];
 
 					<?php
 
-					if (isset($response['parcours']) && !empty($response['parcours']))
+					if (isset($response['parcours_preco']) && !empty($response['parcours_preco']))
 					{
-						foreach($response['parcours'] as $parcours)
+						foreach($response['parcours_preco'] as $parcours)
 						{
 							$selected = "";
 							if (!empty($formData['ref_parcours']) && $formData['ref_parcours'] == $parcours->getId())
@@ -613,21 +613,27 @@ $form_url = $response['url'];
 					<input id="ref-parcours" name="ref_parcours" type="hidden" value="<?php //echo $parcours->getId(); ?>" />
 
 					<div class="input-parcours">
-					<label for="nom-parcours">Intitulé du parcours</label>
-					<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de calcul" style="width: 315px;" />
+						<label for="nom-parcours">Intitulé du parcours</label>
+						<input id="nom-parcours" name="nom_parcours" type="text" value="" placeholder="Ex : 10 heures de calcul" style="width: 315px;" />
 					</div>
 
 					<div class="input-parcours" style="margin-right: 0;">
-					<label for="volume-parcours">Volume</label>
-					<input id="volume-parcours" name="volume_parcours" type="text" value="" placeholder="Ex : 10" style="width: 80px;" />
+						<label for="volume-parcours">Volume</label>
+						<input id="volume-parcours" name="volume_parcours" type="text" value="" placeholder="Ex : 10" style="width: 80px;" />
+					</div>
+
+					<div class="input-parcours" style="margin-top: 10px;">
+						<label for="descript-parcours">Description</label>
+						<textarea id="descript-parcours" name="descript_parcours" type="text" style="float: none;"></textarea>
 					</div>
 
 					<div style="clear: both;"></div>
 				</div>
 				
 				<div class="modal-box-buttons">
-					<button type="submit" class="default" id="btn-undo-parcours" name="undo_parcours">Annuler</button>
+					<button type="submit" class="default" id="btn-cancel-parcours" name="cancel_parcours">Annuler</button>
 					<button type="submit" class="primary" id="btn-save-parcours" name="save_parcours">Enregistrer</button>
+					<button type="submit" class="danger" id="btn-delete-parcours" name="delete_parcours" style="display: none;">Supprimer</button>
 				</div>
 
 			</form>
@@ -636,7 +642,7 @@ $form_url = $response['url'];
 	<?php endif; ?>
 
 
-	<!-- Template form ajout type -->
+	<!-- Template form ajout parcours -->
 	<!--
 	<div class="modal-box">
 
@@ -1284,6 +1290,11 @@ $form_url = $response['url'];
 							 	type: 'click', 
 							 	selector: '#btn-save-parcours',
 							 	callback: self.onSaveParcours
+							},
+							{
+							 	type: 'click', 
+							 	selector: '#btn-cancel-parcours',
+							 	callback: null
 							}
 						]
 					},
@@ -1321,6 +1332,7 @@ $form_url = $response['url'];
 								$('#ref-parcours').val(data.results.id_parcours);
 								$('#volume-parcours').val(data.results.volume_parcours);
 								$('#nom-parcours').val(data.results.nom_parcours);
+								$('#descript-parcours').val(data.results.descript_parcours);
 							}
 
 						}, 'json');
@@ -1332,7 +1344,7 @@ $form_url = $response['url'];
 			
 			this.onSaveParcours = function(values) {
 
-				console.log(values);
+				//console.log(values);
 				//var refParcours = $('ref-parcours').val();
 				//var volumeParcours = $('#volume-parcours').val();
 				//var nomParcours = $('#nom-parcours').val();
@@ -1366,7 +1378,13 @@ $form_url = $response['url'];
 				<?php endif; ?>
 
 			};
+			/*
+			this.onCancelParcours = function(closeFunction) {
 
+				//console.log($.modalbox);
+				closeFunction();
+			}
+			*/
 
 
 

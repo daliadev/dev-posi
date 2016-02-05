@@ -516,9 +516,9 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			
-			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']) && $_POST['ref_parcours'] != 'select_cbox')
+			if (isset($_POST['parcours_cbox']) && !empty($_POST['parcours_cbox']) && $_POST['parcours_cbox'] != 'select_cbox')
 			{
-				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
+				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['parcours_cbox']);
 
 				if ($selectParcours)
 				{
@@ -532,11 +532,11 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
 				exit();
 			}
-			
+
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
 			
-			if (isset($_POST['save_parcours']) && !empty($_POST['save_parcours']) && isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
+			else if (isset($_POST['nom_parcours']) && !empty($_POST['nom_parcours']))
 			{
 				$volumeParcours = null;
 
@@ -566,6 +566,9 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
 				exit();
 			}
+			
+
+			
 			
 			/*** Requête pour supprimer un nouveau parcours ***/
 

@@ -229,7 +229,7 @@ class ServicesPosiResultats extends Main
 
 
 
-	public function getRecursiveCategoriesResults($level, $categories, $parentCat = null, $totalScore = 0, $count = 0)
+	public function getRecursiveCategoriesResults($level, $categories, $parentCat = null, $totalScore = 0, $count = 0, $currentCatId = null)
 	{
 
 		$countChildren = $count;
@@ -249,7 +249,7 @@ class ServicesPosiResultats extends Main
 			if ($levelCat == $level && $level > 1 && $categorie->getHasResult() && $categorie->getParent() !== null)  
 			{
 				$parentCat = $categorie->getParent();
-
+				$parentCat->setHasResult(true);
 				/* new */
 				
 				var_dump('*----------------------------------');
@@ -270,9 +270,12 @@ class ServicesPosiResultats extends Main
 					{
 						// nouvelle categorie du parent courant
 						var_dump('-- nouvelle categorie du parent courant');
-						$countChildren++;
-						$totalPercent += $catScore;
-
+						if ($currentCatId != null && $currentCatId != $categorie->getCode()) 
+						{
+							$countChildren++;
+							$totalPercent += $catScore;
+						}
+						
 						if ($parentCat->getHasResult()) 
 						{
 							$totalPercent += $parentCat->getScorePercent();
@@ -313,6 +316,7 @@ class ServicesPosiResultats extends Main
 						$countChildren = 1;
 						$totalPercent = $catScore;
 						$currentParent = $parentCat;
+						//$currentCatId = $categorie->getCode();
 					}
 				}
 				else
@@ -322,6 +326,7 @@ class ServicesPosiResultats extends Main
 					$countChildren = 1;
 					$totalPercent = $catScore;
 					$currentParent = $parentCat;
+					
 				}
 				
 				//$parentCat->setHasResult(true);
@@ -337,7 +342,8 @@ class ServicesPosiResultats extends Main
 				var_dump('2 - $currentParent->getCode() = '.$currentParent->getCode());
 				var_dump('2 - $parentCat->getHasResult() = '.$parentCat->getHasResult());
 
-
+				$currentCatId = $categorie->getCode();
+				
 				/* Fin new */
 
 
@@ -450,8 +456,6 @@ class ServicesPosiResultats extends Main
 				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
 
 
-				
-
 				/*
 				// Calcul du temps de réponse moyen par question
 				$temps = ($categorie->getTemps() !== null) ? $categorie->getTemps() : 0;
@@ -460,8 +464,10 @@ class ServicesPosiResultats extends Main
 				//$tempsParent += $nbreReponses;
 				$parentCat->setTemps($tempsParent);
 				*/
-				
-				
+
+			}
+			else
+			{
 
 			}	
 
@@ -473,9 +479,22 @@ class ServicesPosiResultats extends Main
 
 		if ($level > 1) 
 		{
-			$this->getRecursiveCategoriesResults($level, $categories, $currentParent, $totalPercent, $countChildren);
+			$this->getRecursiveCategoriesResults($level, $categories, $currentParent, $totalPercent, $countChildren, $currentCatId);
 		}
+		else if ($countChildren > 0)
+		{
+			if ($totalPercent > 0) {
 
+				$scoreMoyenne = $totalPercent / $countChildren;
+			}
+			else
+			{
+				$scoreMoyenne = 0;
+			}
+
+			$currentParent->setScorePercent($scoreMoyenne);
+			$currentParent->setHasResult(true);
+		}
 		return $categories;
 	}
 

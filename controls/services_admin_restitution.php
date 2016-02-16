@@ -445,9 +445,9 @@ class ServicesAdminRestitution extends Main
 				
 			}
 
-			$categorie->setPreconisations($precos);
+			//$categorie->setPreconisations($precos);
 
-			$categorie->setActionPrecosTotal($precos);
+			//$categorie->setActionPrecosTotal($precos);
 
 
 
@@ -460,7 +460,7 @@ class ServicesAdminRestitution extends Main
 		}
 
 		$posiStats['categories'] = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
-
+		$categories = $posiStats['categories'];
 		var_dump($posiStats['categories']);
 		//exit();
 

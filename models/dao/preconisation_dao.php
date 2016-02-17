@@ -117,16 +117,16 @@ class PreconisationDAO extends ModelDAO
 	 * @param array Valeurs de la préconisation à mettre à jour
 	 * @return array Nbre de lignes mises à jour sinon erreurs
 	 */
-	public function update($values) 
+	public function update($values, $refPreco) 
 	{
 		$this->initialize();
 		
 		if (!empty($values))
 		{
-			if (isset($values['ref_preco']) && !empty($values['ref_preco']))
+			if (isset($refPreco) && !empty($refPreco))
 			{
-				$refPreco = $values['ref_preco'];
-				unset($values['ref_preco']);
+				//$refPreco = $values['ref_preco'];
+				//unset($values['ref_preco']);
 				
 				$request = $this->createQueryString("update", $values, "preconisation", "WHERE id_preco = ".$refPreco);
 				

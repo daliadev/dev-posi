@@ -463,11 +463,11 @@ $form_url = $response['url'];
 											//var_dump($formData['precos']);
 											if (!empty($response['precos'][$i]['id_preco']))
 											{
-												echo '<input type="hidden" name="ref_preco[]" value="'.$response['precos'][$i]['id_preco'].'" />';
+												echo '<input type="hidden" id="ref-preco" name="ref_preco[]" value="'.$response['precos'][$i]['id_preco'].'" />';
 											}
 											else
 											{
-												echo '<input type="hidden" name="ref_preco[]" value="" />';
+												echo '<input type="hidden" id="ref-preco" name="ref_preco[]" value="" />';
 											}
 
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$response['precos'][$i]['num_ordre'].'" />';
@@ -477,7 +477,7 @@ $form_url = $response['url'];
 										else
 										{
 											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="0" />';
-											echo '<input type="hidden" name="ref_preco[]" value="" />';
+											echo '<input type="hidden" id="ref-preco" name="ref_preco[]" value="" />';
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="0" />';
 											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />&nbsp;%';
 											echo '&nbsp; à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />&nbsp;%';
@@ -905,6 +905,7 @@ $form_url = $response['url'];
 					$item = $precoItem.clone();
 					$item.children('.preco-active').val('0');
 					$item.children('.num-ordre').val(numOrdrePreco);
+					$item.children('#ref-preco').val('');
 					$('.preco-list').append($item);
 
 					$('.parcours-preco-cbox').each(function() {

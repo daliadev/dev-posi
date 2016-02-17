@@ -876,6 +876,8 @@ class ServicesAdminCategorie extends Main
 			// Aucune préconisations
 		}
 
+		var_dump($preco);
+		exit();
 
 		/*
 			for ($i = 0; $i < count($existingPrecos); $i++)
@@ -927,7 +929,7 @@ class ServicesAdminCategorie extends Main
 		*/
 
 
-
+		/*
 		if (isset($precos) && !empty($precos) && count($precos) > 0) {
 
 			for ($i = 0; $i < count($precos); $i++)
@@ -945,6 +947,7 @@ class ServicesAdminCategorie extends Main
 					$resultsetPreco = $this->deletePreconisation($precos[$i]['id_preco']);
 				}
 			//$preco['mode'] = "none";
+			*/
 			/*
 			$preco['ref_parcours'] = $data_precos[$i]['ref_parcours'];
 			$preco['nom_preco'] = 'NULL';
@@ -954,8 +957,8 @@ class ServicesAdminCategorie extends Main
 			$preco['num_ordre'] = $data_precos[$i]['num_ordre'];
 			*/
 			//var_dump($existingPrecos);
-			}
-		}
+			//}
+		//}
 				/*
 				if (!empty($existingPrecos))
 				{
@@ -1440,12 +1443,12 @@ class ServicesAdminCategorie extends Main
 	}
 
 	/* Ok */
-	public function updatePreconisation($dataPreco)
+	public function updatePreconisation($dataPreco, $refPreco = null)
 	{
 		if (!empty($dataPreco) && is_array($dataPreco))
 		{
 			// Insertion du parcours dans la bdd
-			$resultset = $this->preconisationDAO->update($dataPreco);
+			$resultset = $this->preconisationDAO->update($dataPreco, $refPreco);
 				
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['preconisation']['row_count']))

@@ -824,7 +824,7 @@ $form_url = $response['url'];
 
 						if (mode == 'view') {
 
-							$.post('<?php echo $form_url; ?>', {"ref_cat": code}, function(data) {
+							$.post('<?php //echo $form_url; ?>', {"ref_cat": code}, function(data) {
 
 								if (data.error) {
 

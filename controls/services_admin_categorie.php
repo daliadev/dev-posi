@@ -263,7 +263,7 @@ class ServicesAdminCategorie extends Main
 				//var_dump($postData);
 				//exit();
 
-				if (!empty($resultsetCode['response']) && $resultsetCode !== false)
+				if (!empty($resultsetCode['response']) && $resultsetCode['response'] !== false)
 				{
 					$this->registerError("form_valid", "Le code de la catégorie existe déjà.");
 					$error = false;
@@ -744,7 +744,7 @@ class ServicesAdminCategorie extends Main
 			if (isset($resultsetCategorie['response']['categorie']) && $dataCategorie['code_cat'])
 			{
  				$formData['code_cat'] = $dataCategorie['code_cat'];
-				$this->registerSuccess("La catégorie a été ajoutée.");
+				$this->registerSuccess("La catégorie a été correctement ajoutée.");
 			}
 			else 
 			{
@@ -787,19 +787,23 @@ class ServicesAdminCategorie extends Main
 		}
 
 
-		if (isset($data_precos) && is_array($data_precos) && count($data_precos) > 0)
-		{
-
+		//if (isset($data_precos) && is_array($data_precos) && count($data_precos) > 0)
+		//{
+			//var_dump($data_precos);
 			//$refsPrecos = array();
-			$j = 0;
+			//$globalMode = "none";
+
+			//$j = 0;
 
 			if ($formData['code_cat'] != null)
 			{
 				// On récupère les preconisations qui correspondent à la catégorie
 				$existingPrecos = $this->getPreconisations($formData['code_cat']);
-				$precoMode = 'insert';
-
+				//$precoMode = 'insert';
+				//var_dump($existingPrecos);
+				//exit();
 				// On récupère également le mode initial de la catégorie
+				/*
 				if ($formData['code_cat'] == "update")
 				{
 					$modeCat = "update";
@@ -808,41 +812,152 @@ class ServicesAdminCategorie extends Main
 				{
 					$modeCat = "insert";
 				}
+				*/
+			}
 
-				// Boucle sur chaque préconisation saisies
-				
-				for ($i = 0; $i < count($data_precos); $i++)
+			$numOrdre = 0;
+			$precos = array();
+
+			// Des préconisations ont déjà été saisies
+			if (isset($existingPrecos) && !empty($existingPrecos) && count($existingPrecos)> 0)
+			{
+				for ($i = 0; $i < count($existingPrecos); $i++)
 				{
-					$preco['ref_parcours'] = $data_precos[$i]['ref_parcours'];
-					$preco['nom_preco'] = 'NULL';
-					$preco['descript_preco'] = 'NULL';
-					$preco['taux_min'] = $data_precos[$i]['preco_min'];
-					$preco['taux_max'] = $data_precos[$i]['preco_max'];
-					$preco['num_ordre'] = $data_precos[$i]['num_ordre'];
+					$precos[$i] = array();
+					$precos[$i]['mode'] = "none";
 
-
-					if (!empty($existingPrecos))
+					if (isset($data_precos) && !empty($data_precos) && count($data_precos) > 0) 
 					{
-						for ($k = 0; $k < count($existingPrecos); $k++)
+						for ($j = 0; $j < count($data_precos); $j++)
 						{
-							if (isset($existingPrecos[$k]['id_preco']) && !empty($existingPrecos[$k]['id_preco']) && $existingPrecos[$i]['id_preco'] == $preco['ref_preco'])
+							if ($data_precos[$j]['num_ordre'] == $existingPrecos[$i]['num_ordre']) 
 							{
-								$precoMode = 'update';
+								$precos[$i]['mode'] = "update";
+								$precos[$i]['if_preco'] = $data_precos[$j]['ref_parcours'];
+								$precos[$i]['ref_parcours'] = $data_precos[$j]['ref_parcours'];
+								$precos[$i]['nom_preco'] = 'NULL';
+								$precos[$i]['descript_preco'] = 'NULL';
+								$precos[$i]['taux_min'] = $data_precos[$j]['preco_min'];
+								$precos[$i]['taux_max'] = $data_precos[$j]['preco_max'];
+								$precos[$i]['num_ordre'] = $data_precos[$j]['num_ordre'];
+								break;
+							}
+							
+							/*
+							$preco['ref_parcours'] = $data_precos[$i]['ref_parcours'];
+							$preco['nom_preco'] = 'NULL';
+							$preco['descript_preco'] = 'NULL';
+							$preco['taux_min'] = $data_precos[$i]['preco_min'];
+							$preco['taux_max'] = $data_precos[$i]['preco_max'];
+							$preco['num_ordre'] = $data_precos[$i]['num_ordre'];
+
+							/*
+							if (isset($existingPrecos[$j]['id_preco']) && !empty($existingPrecos[$k]['id_preco']) && $existingPrecos[$i]['id_preco'] == $preco['ref_preco'])
+							{
+								$preco['mode'] = "update";
+								//$precoMode = 'update';
 								$refPreco = $existingPrecos[$k]['id_preco'];
 								$preco['id_preco'] = $refPreco;
 								break;
 							}
+							*/
 						}
-					}
-					
-					if ($precoMode == 'update')
-					{
-						$resultsetPreco = $this->updatePreconisation($preco);
 					}
 					else
 					{
-						$resultsetPreco = $this->insertPreconisation($preco);
+						$precos[$i]['mode'] = "delete";
 					}
+				}
+			}
+			else if (isset($data_precos) && !empty($data_precos) && count($data_precos) > 0) 
+			{
+				for ($i = 0; $i < count($data_precos); $i++)
+				{
+					$precos[$i]['mode'] = "insert";
+					$precos[$i]['ref_parcours'] = $data_precos[$i]['ref_parcours'];
+					$precos[$i]['nom_preco'] = 'NULL';
+					$precos[$i]['descript_preco'] = 'NULL';
+					$precos[$i]['taux_min'] = $data_precos[$i]['preco_min'];
+					$precos[$i]['taux_max'] = $data_precos[$i]['preco_max'];
+					$precos[$i]['num_ordre'] = $data_precos[$i]['num_ordre'];
+				}
+			}
+			else
+			{
+				// Do nothing
+			}
+
+
+
+
+			if (isset($precos) && !empty($precos) && count($precos) > 0) {
+
+				for ($i = 0; $i < count($precos); $i++)
+				{
+					if ($precos[$i]['mode'] == 'insert')
+					{
+						$resultsetPreco = $this->insertPreconisation($precos[$i]);
+					}
+					else if ($precos[$i]['mode'] == 'update')
+					{
+						$resultsetPreco = $this->updatePreconisation($precos[$i]);
+					}
+					else if ($precos[$i]['mode'] == 'delete')
+					{
+						$resultsetPreco = $this->deletePreconisation($precos[$i]['id_preco']);
+					}
+				//$preco['mode'] = "none";
+				/*
+				$preco['ref_parcours'] = $data_precos[$i]['ref_parcours'];
+				$preco['nom_preco'] = 'NULL';
+				$preco['descript_preco'] = 'NULL';
+				$preco['taux_min'] = $data_precos[$i]['preco_min'];
+				$preco['taux_max'] = $data_precos[$i]['preco_max'];
+				$preco['num_ordre'] = $data_precos[$i]['num_ordre'];
+				*/
+				//var_dump($existingPrecos);
+				}
+			}
+				/*
+				if (!empty($existingPrecos))
+				{
+					for ($k = 0; $k < count($existingPrecos); $k++)
+					{
+						if (isset($existingPrecos[$k]['id_preco']) && !empty($existingPrecos[$k]['id_preco']) && $existingPrecos[$i]['id_preco'] == $preco['ref_preco'])
+						{
+							$preco['mode'] = "update";
+							//$precoMode = 'update';
+							$refPreco = $existingPrecos[$k]['id_preco'];
+							$preco['id_preco'] = $refPreco;
+							break;
+						}
+					}
+				}
+				else
+				{
+					$preco['mode'] = "insert";
+				}
+				*/
+			//}
+				//}
+				/*
+				else if ()
+				{
+
+				}
+				else
+				{
+
+				}
+				*/
+					//if ($precoMode == 'update')
+					//{
+						//$resultsetPreco = $this->updatePreconisation($preco);
+					//}
+					//else
+					//{
+						//$resultsetPreco = $this->insertPreconisation($preco);
+					//}
 
 					//var_dump('$resultsetPreco = ', $resultsetPreco);
 
@@ -870,15 +985,15 @@ class ServicesAdminCategorie extends Main
 					{
 						$this->registerError("form_valid", "L'enregistrement d'une préconisation a échouée.");
 					}
-				}
-				
+				//}
+				/*
 			}
 			else
 			{
 				// erreur catégorie
 			}
-			
-		}
+			*/
+		//}
 	}
 
 

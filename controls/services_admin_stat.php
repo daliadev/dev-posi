@@ -466,46 +466,46 @@ class ServicesAdminStat extends Main
 		$acquisList = $this->acquisDAO->selectAll();
 
 		$tabAcquisSession = array();
-
+		$nonValidCount = 0;
+		
 		$i = 0;
 
-		foreach ($acquisList['response']['valid_acquis'] as $acquis) 
+		if (isset($acquisList['response']) && !empty($acquisList['response']))
 		{
-			$count = 0;
-			$nonValidCount = 0;
-			$tabAcquisSession[$i]['id'] = $acquis->getId();
-			$tabAcquisSession[$i]['name'] = $acquis->getNom();
-			$tabAcquisSession[$i]['desc'] = $acquis->getDescription();
-
-			foreach ($sessionsList as $session)
+			foreach ($acquisList['response']['valid_acquis'] as $acquis) 
 			{
-				if ($session->getRefValidAcquis() !== null) 
+				$count = 0;
+				$nonValidCount = 0;
+				$tabAcquisSession[$i]['id'] = $acquis->getId();
+				$tabAcquisSession[$i]['name'] = $acquis->getNom();
+				$tabAcquisSession[$i]['desc'] = $acquis->getDescription();
+
+				foreach ($sessionsList as $session)
 				{
-					if ($acquis->getId() == $session->getRefValidAcquis())
+					if ($session->getRefValidAcquis() !== null) 
 					{
-						$count++;
+						if ($acquis->getId() == $session->getRefValidAcquis())
+						{
+							$count++;
+						}
 					}
+					else
+					{
+						$nonValidCount++;
+					}	
 				}
-				else
-				{
-					$nonValidCount++;
-				}	
+
+				//$tabAcquisSession['non_valid_count'] = $nonValidate;
+
+				$tabAcquisSession[$i]['count'] = $count;
+				$i++;
 			}
-
-			//$tabAcquisSession['non_valid_count'] = $nonValidate;
-
-			$tabAcquisSession[$i]['count'] = $count;
-			$i++;
 		}
-
 
 		$stats['global']['acquis'] = $tabAcquisSession;
 		$stats['global']['non_valid_count'] = $nonValidCount;
 
-
-
 		return $stats;
-
 	}
 
 

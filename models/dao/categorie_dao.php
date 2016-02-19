@@ -276,7 +276,7 @@ class CategorieDAO extends ModelDAO
 		
 		if (!empty($values))
 		{
-			//var_dump($values, $currentCodeCat);
+			var_dump($values, $currentCodeCat);
 			//exit();
 
 			if (isset($values['code_cat']) && !empty($values['code_cat']))
@@ -292,8 +292,10 @@ class CategorieDAO extends ModelDAO
 					unset($values['code_cat']);
 				}
 				
-				$request = $this->createQueryString("update", $values, "categorie", "WHERE code_cat = ".$codeCat);
-				//var_dump($request);
+				//$request = $this->createQueryString("update", $values, "categorie", "WHERE code_cat = ".$codeCat);
+				$request = "UPDATE categorie SET code_cat='".$codeCat."', nom_cat='".$values['nom_cat']."', descript_cat='".$values['descript_cat']."' WHERE code_cat = '".$codeCat."'";
+
+				var_dump($request);
 				$this->resultset['response'] = $this->executeRequest("update", $request, "categorie", "Categorie");
 			}
 			else

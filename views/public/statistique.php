@@ -59,6 +59,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = $response['url'];
 
+//var_dump($response);            
 
 ?>
 
@@ -90,28 +91,32 @@ $form_url = $response['url'];
 						
 						<div class="filter-item">
 							<label for="date_debut">Région : </label>
-							<?php $disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
-							<select name="ref_region_cbox" id="ref-region-cbox" style="width:120px;" <?php echo $disabled; ?>>
+							<?php //$disabled = (isset() && !empty() && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+							<select name="ref_region_cbox" id="ref-region-cbox" style="width:120px;" <?php //echo $disabled; ?>>
 							
 								<?php //if ($disabled == "") : ?>
 									<option class="stat-option" value="select_cbox">Toute la France</option>
 								<?php //endif; ?>
 
 								<?php
-								/*
-								if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
-								{                       
-									foreach ($response['organisme'] as $organisme)
+								
+								if (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) > 0)
+								{
+
+									foreach ($response['regions'] as $region)
 									{
+
 										$selected = "";
-										if (!empty($formData['ref_organ']) && $formData['ref_organ'] == $organisme->getId())
+										/*
+										if (!empty($formData['ref_region']) && $formData['ref_region'] == $region['ref'])
 										{
 											$selected = "selected";
 										}
-										echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
+										*/
+										echo '<option class="organ-option" value="'.$region['ref'].'" '.$selected.'>'.$region['nom'].'</option>';
 									}
 								}
-								*/
+								
 								?>
 							</select>
 						</div>
@@ -119,7 +124,7 @@ $form_url = $response['url'];
 						<div class="filter-item">
 							<label for="ref-organ-cbox">Organisme : </label>
 
-							<?php $disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+							<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
 							<select name="ref_organ_cbox" id="ref-organ-cbox" style="width:120px;" <?php echo $disabled; ?>>
 							
 								<?php if ($disabled == "") : ?>
@@ -171,7 +176,7 @@ $form_url = $response['url'];
 							<legend>
 
 							<?php 
-								if(count($response['stats']['global']['organismes']) > 1)
+								if(!isset($response['stats']['global']['organismes']) || empty($response['stats']['global']['organismes']) || count($response['stats']['global']['organismes']) > 1)
 								{
 									echo 'Résultats'; 
 								}

@@ -386,6 +386,8 @@ class ServicesPublic extends Main
 
 		//var_dump($this->returnData['response']['infos_user']['ref_valid_acquis']);
 		//exit();
+
+
 		
 
 		
@@ -520,6 +522,52 @@ class ServicesPublic extends Main
 		$this->url = SERVER_URL."public/statistique/".$codeOrgan;
 
 
+
+		/*** Requêtes ajax pour avoir les organismes en fonction de la région choisie ***/
+		/*
+		if (Config::ALLOW_AJAX)
+		{
+			if ($loggedAsViewer || $loggedAsAdmin)
+			{
+				if (isset($_POST['ref_region']) && !empty($_POST['ref_region']))
+				{
+
+					if ($_POST['sort'] == "user")
+					{
+						if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+						{
+							$utilisateurs = $this->servicesRestitution->getUsersFromOrganisme($_POST['ref_organ']);
+							
+							if ($utilisateurs)
+							{
+								$response = array('error' => false, 'results' => $utilisateurs['response']);
+							}
+							else
+							{
+								$response = array('error' => "Il n'existe pas d'utilisateur qui correspond à l'organisme.");
+							}
+						}
+						else
+						{
+							$response = array('error' => "Vous n'avez pas sélectionné d'organisme.");
+						}
+					}
+					else
+					{
+						$response = array('error' => "Le type n'a pas été trouvé.");
+					}
+
+					echo json_encode($response);
+					exit();
+				}
+			}
+		}
+		*/
+		/*** Fin requêtes ajax ***/
+
+
+
+
 		/*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
 		$this->formData['ref_organ'] = null;
 
@@ -603,6 +651,12 @@ class ServicesPublic extends Main
 		}
 
 
+		// Liste des régions pour le combo-box
+
+		$regionsList['response'] = $this->servicesAdminStat->getRegionsList('2015');
+		$this->returnData['response'] = array_merge($regionsList['response'], $this->returnData['response']);
+
+
 		// Liste des organismes pour le combo-box
 		if ($loggedAsViewer)
 		{
@@ -614,6 +668,10 @@ class ServicesPublic extends Main
 		}
 		$this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
 		
+
+
+
+
 		/*
 		$nomOrgan = null;
 		$codeOrgan = null;

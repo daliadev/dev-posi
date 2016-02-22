@@ -4,6 +4,7 @@
 
 // Inclusion du fichier de la classe Organisme
 require_once(ROOT.'models/organisme.php');
+require_once(ROOT.'utils/region.php');
 
 
 
@@ -123,6 +124,36 @@ class OrganismeDAO extends ModelDAO
 		
 		return $this->resultset;
 	}
+
+
+	/**
+	 * selectByCodeInterne - Récupère l'organisme grâce à son code interne
+	 * 
+	 * @param string Chaîne de caractères correcpondant au numéro interne
+	 * @return array Organisme correspondant sinon erreurs
+	 */
+	public function selectByRegion($refRegion) 
+	{
+		/*
+		$this->initialize();
+		
+		if(!empty($refRegion))
+		{
+			//$region = new Region(ROOT."database/regions/region2015.txt");
+			//exit();
+			$request = "SELECT * FROM organisme WHERE numero_interne = '".$refRegion."'";
+
+			$this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
+		}
+		else
+		{
+			$this->resultset['response']['errors'][] = array('type' => "form_request", 'message' => "Les données sont vides");
+		}
+		
+		return $this->resultset;
+		*/
+	}
+
 
 
 	

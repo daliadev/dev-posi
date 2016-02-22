@@ -246,14 +246,21 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 	<div id="content-large">
 
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
-		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
+		
+		<!-- <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a> -->
 
-		<div class="clear"></div>
-		<?php endif; ?>
+		<!-- <div class="clear"></div> -->
+		
 		
 		<!-- Header -->
-		<div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?></div>
+		<div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?>
+
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+		<?php endif; ?>
+
+		</div>
+
 
 
 		<?php
@@ -683,7 +690,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 													</div>
 
-													<div class="volume">50 heures</div>
+													<div class="volume"><?php echo $categorie->getVolumePreconisations(); ?> heures</div>
 
 													<!-- <div style="clear: both;"></div> -->
 

@@ -67,15 +67,20 @@ $form_url = $response['url'];
 
 	<div id="content-large">
 
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
-		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
+		<?php //if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+		<!-- <a href="<?php //echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a> -->
 
-		<div style="clear:both;"></div>
-		<?php endif; ?>
+		<!-- <div style="clear:both;"></div> -->
+		<?php //endif; ?>
 		
 		<!-- Header -->
-		<div id="titre-admin-h2">Statistiques du positionnement</div>
+		<div id="titre-admin-h2">Statistiques du positionnement
+		
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+		<?php endif; ?>
 
+		</div>
 
 		<div id="main-form">
 

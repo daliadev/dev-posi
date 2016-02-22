@@ -39,14 +39,19 @@ $form_url = $response['url'];
 
 	<div id="content-large">
 
-		<a href="<?php echo SERVER_URL; ?>admin/menu">
+		<!-- <a href="<?php //echo SERVER_URL; ?>admin/menu">
 			<div class="retour-menu" style="margin-right:30px">Retour menu</div>
 			<div style="clear:both;"></div>
-		</a>
+		</a> -->
 		
 		<!-- Header -->
-		<div id="titre-admin-h2">Gestion des compétences</div>
+		<div id="titre-admin-h2">Gestion des compétences
 
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+		<?php endif; ?>
+		
+		</div>
 		
 		<div id="main-form">
 

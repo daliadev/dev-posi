@@ -32,15 +32,19 @@ $form_url = $response['url'];
 
 	<div id="content-large">
 
-		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu" style="margin-right:30px">Retour menu</div></a>
+		<!-- <a href="<?php //echo SERVER_URL; ?>admin/menu"><div class="retour-menu" style="margin-right:30px">Retour menu</div></a>
 
-		<div style="clear:both;"></div>
+		<div style="clear:both;"></div> -->
 
 		
 		<!-- Header -->
-		<div id="titre-admin-h2">Administration positionnement - Gestion des questions</div>
-
-
+		<div id="titre-admin-h2">Administration positionnement - Gestion des questions
+		
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+		<?php endif; ?>
+		
+		</div>
 		
 		<!-- Partie haute : combo-box question -->
 

@@ -13,6 +13,7 @@ require_once(ROOT.'models/dao/reponse_dao.php');
 require_once(ROOT.'models/dao/question_cat_dao.php');
 require_once(ROOT.'models/dao/categorie_dao.php');
 require_once(ROOT.'models/dao/preconisation_dao.php');
+require_once(ROOT.'models/dao/parcours_preco_dao.php');
 require_once(ROOT.'models/dao/valid_acquis_dao.php');
 
 //require_once(ROOT.'controls/services_admin_categorie.php');
@@ -34,6 +35,7 @@ class ServicesAdminRestitution extends Main
 	private $questionCatDAO = null;
 	private $categorieDAO = null;
 	private $preconisationDAO = null;
+	private $parcoursPrecoDAO = null;
 	private $validAcquisDAO = null;
 
    // private $servicesCategories = null;
@@ -58,9 +60,10 @@ class ServicesAdminRestitution extends Main
 		$this->questionCatDAO = new QuestionCategorieDAO();
 		$this->categorieDAO = new CategorieDAO();
 		$this->preconisationDAO = new PreconisationDAO();
+		$this->parcoursPrecoDAO = new ParcoursPrecoDAO();
 		$this->validAcquisDAO = new ValidAcquisDAO();
 
-		//$this->servicesCategories = new ServicesAdminCategorie()
+		//$this->servicesCategories = new ServicesAdminCategorie();
 		$this->servicesResultats = new ServicesPosiResultats();
 	}
 
@@ -313,6 +316,8 @@ class ServicesAdminRestitution extends Main
 		// On sélectionne tous les résultats correspondant à la session en cours
 		$resultats = $this->getResultatsByCategories($refSession);
 
+		// Liste des parcours de formation
+		$parcoursPreco = $this->parcoursPrecoDAO->selectAll();
 
 
 		//$statsCat = array();
@@ -429,21 +434,14 @@ class ServicesAdminRestitution extends Main
 				$percentCategorie = round(($totalCorrectCategorie / $totalCategorie) * 100);
 			}
 
-
 			$categorie->setTemps($tempsCat);
 			$categorie->setTotalReponses($totalCategorie);
 			$categorie->setTotalReponsesCorrectes($totalCorrectCategorie);
 			$categorie->setScorePercent($percentCategorie);
 			$categorie->setHasResult($hasResults);
-
-			// Préconisations
-			$precos = $this->preconisationDAO->selectByCodeCat($categorie->getCode());
 			
 
-			for ($i = 0; $i < count($precos); $i++) 
-			{ 
-				
-			}
+			
 
 			//$categorie->setPreconisations($precos);
 
@@ -459,9 +457,54 @@ class ServicesAdminRestitution extends Main
 
 		}
 
-		$posiStats['categories'] = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
-		$categories = $posiStats['categories'];
-		var_dump($posiStats['categories']);
+		$categories = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
+		//$categories = $posiStats['categories'];
+
+
+		foreach ($posiStats['categories'] as $categorie)
+		{
+			$volumePrecoCat = 0;
+			
+			//var_dump($categorie->getScorePercent());
+			// Préconisations
+			if (strlen($categorie->getCode()) == 2 && isset($parcoursPreco['response']['parcours_preco']) && !empty($parcoursPreco['response']['parcours_preco']))
+			{
+				$precos = $this->preconisationDAO->selectByCodeCat($categorie->getCode());
+				
+				$scoreCat = $categorie->getScorePercent();
+				
+				if (isset($precos['response']['preconisation']) && !empty($precos['response']['preconisation']))
+				{
+					foreach ($precos['response']['preconisation'] as $preco) 
+					{
+						//var_dump($preco->getId());
+						$refPreco = $preco->getId();
+						$refParcours = $preco->getRefParcours();
+						$tauxMin = $preco->getTauxMin();
+						$tauxMax = $preco->getTauxMax();
+
+						if ($scoreCat >= $tauxMin && $scoreCat <= $tauxMax) 
+						{
+							foreach ($parcoursPreco['response']['parcours_preco'] as $parcours) 
+							{
+								if ($parcours->getId() == $refParcours)
+								{
+									$volumePrecoCat += $parcours->getVolume();
+								}
+							}
+						}
+					}
+				}
+			}
+
+			
+
+			$categorie->setVolumePreconisations($volumePrecoCat);
+		}
+
+		//$categories = $posiStats['categories'];
+		$posiStats['categories'] = $categories;
+		//var_dump($posiStats['categories']);
 		//exit();
 
 		//$tempsGlobal = 0;
@@ -638,7 +681,7 @@ class ServicesAdminRestitution extends Main
 
 
 		/*** Préconisations simplifiées ***/
-
+		/*
 		foreach ($categories as $categorie)
 		{
 			$codeCat = $categorie->getCode();
@@ -646,6 +689,7 @@ class ServicesAdminRestitution extends Main
 			$precos = $this->preconisationDAO->selectByCodeCat($codeCat);
 
 		}
+		*/
 
 		return  $posiStats;
 	}

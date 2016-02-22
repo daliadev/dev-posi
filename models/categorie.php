@@ -17,6 +17,7 @@ class Categorie
 	private $children_cat = array();
 	private $parent_cat = null;
 	private $preconisations = array();
+	private $volumePreco = 0;
 
 	
 	public function getCode()
@@ -188,6 +189,17 @@ class Categorie
 	public function setPreconisations($precos)
 	{
 		$this->preconisations = $precos;
+	}
+
+
+	public function getVolumePreconisations()
+	{
+		return $this->volumePreco;
+	}
+
+	public function setVolumePreconisations($volume)
+	{
+		$this->volumePreco = $volume;
 	}
 
 }

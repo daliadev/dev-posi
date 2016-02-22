@@ -239,7 +239,7 @@ class ServicesPosiResultats extends Main
 		$scoreMoyenne = 0;
 		//$parentScore = 0;
 
-		var_dump('');
+		//var_dump('');
 		//var_dump('FUNCTION - $currentParent parameter = ' . $currentParent->getCode());
 
 		foreach ($categories as $categorie) 
@@ -252,6 +252,7 @@ class ServicesPosiResultats extends Main
 				$parentCat->setHasResult(true);
 				/* new */
 				
+				/*
 				var_dump('*----------------------------------');
 				var_dump('1 - $categorie->getCode() = '.$categorie->getCode());
 				var_dump('1 - $parentCat->getCode() = '.$parentCat->getCode());
@@ -259,7 +260,7 @@ class ServicesPosiResultats extends Main
 				var_dump('1 - $categorie->getScorePercent() = '.$categorie->getScorePercent());
 				var_dump('1 - $totalPercent = '.$totalPercent);
 				//var_dump('1 - $currentParent->getCode() : '.$currentParent->getCode());
-
+				*/
 				$catScore = $categorie->getScorePercent();
 
 				
@@ -269,7 +270,7 @@ class ServicesPosiResultats extends Main
 					if ($currentParent->getCode() == $parentCat->getCode())
 					{
 						// nouvelle categorie du parent courant
-						var_dump('-- nouvelle categorie du parent courant');
+						//var_dump('-- nouvelle categorie du parent courant');
 						if ($currentCatId != null && $currentCatId != $categorie->getCode()) 
 						{
 							$countChildren++;
@@ -310,7 +311,7 @@ class ServicesPosiResultats extends Main
 						
 
 						// 1er categorie du parent courant
-						var_dump('-- 1ere categorie du parent courant');
+						//var_dump('-- 1ere categorie du parent courant');
 
 						// Nouvelles valeurs
 						$countChildren = 1;
@@ -322,7 +323,7 @@ class ServicesPosiResultats extends Main
 				else
 				{
 					// 1er categorie du premier parent
-					var_dump('- 1ere categorie du premier parent');
+					//var_dump('- 1ere categorie du premier parent');
 					$countChildren = 1;
 					$totalPercent = $catScore;
 					$currentParent = $parentCat;
@@ -332,7 +333,7 @@ class ServicesPosiResultats extends Main
 				//$parentCat->setHasResult(true);
 				//$parentCat->setScorePercent($totalPercent);
 				
-				
+				/*
 				//var_dump('');
 				//var_dump('2 - Code cat en cours : '.$categorie->getCode());
 				//var_dump('2 - Remonte vers '.$parentCat->getCode());
@@ -341,7 +342,7 @@ class ServicesPosiResultats extends Main
 				var_dump('2 - $totalPercent = '.$totalPercent);
 				var_dump('2 - $currentParent->getCode() = '.$currentParent->getCode());
 				var_dump('2 - $parentCat->getHasResult() = '.$parentCat->getHasResult());
-
+				*/
 				$currentCatId = $categorie->getCode();
 				
 				/* Fin new */

@@ -107,6 +107,8 @@ $controllerClassName = 'Services'.substr_replace($controllerRequest, $firstLette
 // Instanciation du contrôleur demandé
 $controller = new $controllerClassName();
 
+//var_dump($controller, $actionRequest);
+//exit();
 
 // Déclenchement de la fonction du contrôleur si elle existe.
 // Les paramètres de l'entête HTTP restants sont transmis à la fonction.

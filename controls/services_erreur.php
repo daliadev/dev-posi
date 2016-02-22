@@ -35,7 +35,7 @@ class ServicesErreur extends Main
 
     public function maintenance()
     {
-        $this->setTemplate("tpl_maintenance");
+        $this->setTemplate("tpl_error_page");
         $this->render('maintenance');
     }
 }

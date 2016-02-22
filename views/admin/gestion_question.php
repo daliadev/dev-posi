@@ -415,7 +415,7 @@ $form_url = $response['url'];
 								
 									<legend>Catégories / compétences</legend>
 
-									<select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?> multiple>
+									<select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?>>
 										<option value="select_cbox">---</option>
 										<?php 
 

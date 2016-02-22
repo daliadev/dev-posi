@@ -493,7 +493,7 @@ $form_url = $response['url'];
 					var sortOf = select.data('sort');
 					*/
 					var select = $(this);
-					var target = $('#ref-organ-cbox');
+					var target = '#ref-organ-cbox';
 					var url = $('#form-posi').attr('action');
 					console.log(url);
 					var refRegion = null;
@@ -535,15 +535,19 @@ $form_url = $response['url'];
 
 					$.post(url, {'ajax_request': 'organ', 'ref_region': refRegion, 'ref_organ': null}, function(data) {
 						
+						var $target = $(target).get(0);
+						$target.options.length = 1;
+
 						if (data.error) {
 
-							alert(data.error);
+							//alert(data.error);
 						}
 						else {
 
 							//$(target).parents('.filter-item').show();
-							var $target = target.get(0);
-							$target.options.length = 1;
+							
+							//console.log($target.options.length);
+							
 							
 							if (data.results.organisme) {
 								

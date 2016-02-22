@@ -80,7 +80,7 @@ class ServicesAdminStat extends Main
 		// On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref. de l'organisme, sinon sélectionne toutes les sessions)
 		$resultsetSessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
 
-
+		
 
 		/*****   Calcul des statistiques générales  *****/
 
@@ -181,7 +181,7 @@ class ServicesAdminStat extends Main
 			$stats['global']['age_moyen'] = round($stats['global']['age_total'] / $stats['global']['nbre_users']);
 		}
 
-
+		/*****   Fin calcul des statistiques générales  *****/
 
 
 

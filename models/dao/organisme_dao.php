@@ -132,18 +132,20 @@ class OrganismeDAO extends ModelDAO
 	 * @param string Chaîne de caractères correcpondant au numéro interne
 	 * @return array Organisme correspondant sinon erreurs
 	 */
-	public function selectByRegion($refRegion) 
+	public function selectByRegion($refRegion, $regionsList) 
 	{
 		
 		$this->initialize();
 		
 		if(!empty($refRegion))
 		{
-			$regionsList = $this->servicesAdminStat->getRegionsList('2015');
+			//$regionsList = $this->servicesAdminStat->getRegionsList('2015');
 
 			$searchCodePostal = null;
 			foreach ($regionsList as $region)
 			{
+				//var_dump($region);
+
 				if ($refRegion == $region['ref']) {
 
 					$departements = $region['departements'];
@@ -157,7 +159,7 @@ class OrganismeDAO extends ModelDAO
 							$searchCodePostal .= "OR ";
 						}
 
-						$searchCodePostal .= "SUBSTRING(code_postal_organ, 0, 2) LIKE '".$departmnt['numero']."' ";
+						$searchCodePostal .= "code_postal_organ LIKE '".$departmnt['numero']."___' ";
 
 						$k++;
 					}
@@ -167,9 +169,11 @@ class OrganismeDAO extends ModelDAO
 			}
 
 			$request = "SELECT * FROM organisme WHERE ".$searchCodePostal;
-			var_dump($request);
-			exit();
+			//var_dump($request);
+			//exit();
 			$this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
+			//var_dump($this->resultset['response']);
+			//exit();
 		}
 		else
 		{

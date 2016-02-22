@@ -115,7 +115,7 @@ class Region
 							$numero = substr($regionsRawText, 0, $posEqualSign);
 							$nomDptmt = substr($regionsRawText, $posEqualSign + 1);
 
-							$this->regions[$k]['departements'] = array(
+							$this->regions[$k]['departements'][] = array(
 								'numero' => $numero,
 								'nom'    => $nomDptmt
 							);

@@ -68,13 +68,14 @@ class ServicesAdminStat extends Main
 		$stats['global']['valid_acquis'] = array();
 
 		// On récupére le tableau complet des régions et des départements associés
-		$regionsList['response'] = $this->getRegionsList('2015');
+		//$this->createRegionsList('2015');
 
+		/*
 		if ($regionsList['response']['regions']) 
 		{
 			$this->regionsList = $regionsList['response']['regions'];
 		}
-
+		*/
 
 		// On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref. de l'organisme, sinon sélectionne toutes les sessions)
 		$resultsetSessions = $this->getSessionsDetails($startDate, $endDate, null, $ref_organ);
@@ -731,11 +732,11 @@ class ServicesAdminStat extends Main
 	}
 
 
-	private function getOrganismesByRegion($refRegion)
+	public function getOrganismesByRegion($refRegion)
 	{
-		var_dump($refRegion);
-		$resultset = $this->organismeDAO->selectByRegion($refRegion);
-		
+		//var_dump($refRegion);
+		$resultset = $this->organismeDAO->selectByRegion($refRegion, $this->regionsList);
+
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
@@ -753,18 +754,32 @@ class ServicesAdminStat extends Main
 	}
 
 
-
-
-	public function getRegionsList($year = '2015')
+	public function createRegionsList($year = '2015')
 	{
-		$regionsList['regions'] = null;
+		$this->regionsList = null;
 
 		$regions = new Region(ROOT.'database/regions/region'.$year.'.txt');
-		$regionsList['regions'] = $regions->getList();
+		$this->regionsList = $regions->getList();
 
-		if (isset($regionsList['regions']) && !empty($regionsList['regions'])) 
+		if (isset($this->regionsList) && !empty($this->regionsList)) 
 		{
-			return $regionsList;
+			return true;
+		}
+
+		return false;
+	}
+
+
+	public function getRegionsList()
+	{
+		//$regionsList['regions'] = null;
+
+		//$regions = new Region(ROOT.'database/regions/region'.$year.'.txt');
+		//$regionsList = $regions->getList();
+
+		if (isset($this->regionsList) && !empty($this->regionsList)) 
+		{
+			return $this->regionsList;
 		}
 
 		return false;

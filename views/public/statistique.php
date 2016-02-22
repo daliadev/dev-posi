@@ -97,11 +97,11 @@ $form_url = $response['url'];
 						<div class="filter-item">
 							<label for="ref-region-cbox">Région : </label>
 
-							<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) <= 1) ? "disabled" : ""; ?>
+							<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) == 0) ? "disabled" : ""; ?>
 							<select name="ref_region_cbox" id="ref-region-cbox" class="region-list" style="width:120px;" <?php echo $disabled; ?>>
 							
 								<?php if ($disabled == "") : ?>
-									<option class="stat-option" value="select_cbox">Toute la France</option>
+									<option class="region-option" value="select_cbox">Toute la France</option>
 								<?php endif; ?>
 
 								<?php
@@ -119,7 +119,7 @@ $form_url = $response['url'];
 											$selected = "selected";
 										}
 										
-										echo '<option class="organ-option" value="'.$region['ref'].'" '.$selected.'>'.$region['nom'].'</option>';
+										echo '<option class="region-option" value="'.$region['ref'].'" '.$selected.'>'.$region['nom'].'</option>';
 									}
 								}
 								
@@ -130,11 +130,11 @@ $form_url = $response['url'];
 						<div class="filter-item">
 							<label for="ref-organ-cbox">Organisme : </label>
 
-							<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+							<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) == 0) ? "disabled" : ""; ?>
 							<select name="ref_organ_cbox" id="ref-organ-cbox" style="width:120px;" <?php echo $disabled; ?>>
 							
 								<?php if ($disabled == "") : ?>
-									<option class="stat-option" value="select_cbox">Tous</option>
+									<option class="organ-option" value="select_cbox">Tous</option>
 								<?php endif; ?>
 
 								<?php
@@ -148,7 +148,7 @@ $form_url = $response['url'];
 										{
 											$selected = "selected";
 										}
-										echo '<option class="stat-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
+										echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
 									}
 								}
 								
@@ -399,9 +399,11 @@ $form_url = $response['url'];
 	</div>
 	
 
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
 
 
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	   
 		$(function() { 
 			
@@ -469,12 +471,132 @@ $form_url = $response['url'];
 			});
 			*/
 			
-			$("#infos-posi").tabs();
-
+			//$("#infos-posi").tabs();
+			/*
 			$('.region-list').on('change', function(event) {
 
 			});
+			*/
 
-		})(jQuery);
+
+			<?php if (Config::ALLOW_AJAX) : ?>
+
+
+				/* Listes dynamiques en ajax */
+			   
+				$('.region-list').on('change', function(event) {
+
+					/*
+					var select = $(this);
+					var target = '#' + select.data('target');
+					var url = select.data('url');
+					var sortOf = select.data('sort');
+					*/
+					var select = $(this);
+					var target = $('#ref-organ-cbox');
+					var url = $('#form-posi').attr('action');
+					console.log(url);
+					var refRegion = null;
+					//var refUser = null;
+					/*
+					if (sortOf === "user") {
+
+						$("#ref_session_cbox").parents('.filter-item').hide();
+
+						refOrgan = $("#ref_organ_cbox").val();
+					}
+					else if (sortOf === "session") {
+					*/
+						//$('#ref_session_cbox').show();
+
+						$('.region-option').each(function() {
+
+							var option = $(this)[0];
+							
+							if ($(option).prop('selected')) {
+
+								refRegion = $(option).val();
+							}
+						});
+						/*
+						refUser = $('#ref_user_cbox').val();
+
+
+						var cbox = $('#ref_session_cbox').get(0);
+
+						if (cbox.options.length > 1) {
+	
+							cbox.options.length = 1;
+							
+						}
+						*/
+					//}
+
+
+					$.post(url, {'ajax_request': 'organ', 'ref_region': refRegion, 'ref_organ': null}, function(data) {
+						
+						if (data.error) {
+
+							alert(data.error);
+						}
+						else {
+
+							//$(target).parents('.filter-item').show();
+							var $target = target.get(0);
+							$target.options.length = 1;
+							
+							if (data.results.organisme) {
+								
+								var i = 1;
+								for (var prop in data.results.organisme) {
+								
+									var result = data.results.organisme[prop];
+
+									var selected = false;
+
+									if (data.results.organisme.length <= 1) {
+										selected = true
+									}
+									$target.options[i] = new Option(result.nom_organ, result.id_organ, false, selected);
+
+									i++;
+								}
+							}
+							/*
+							else if (data.results.session) {
+
+								var i = 1;
+								for (var prop in data.results.session) {
+								
+									var result = data.results.session[prop];
+
+									$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
+
+									i++;
+								}
+							}
+							*/
+						}
+
+					}, 'json');
+					
+
+				});
+				/*	
+				.each(function() {
+
+					var select = $(this);
+					if (select.val() == "select_cbox")
+					{
+						var target = $('#' + select.data('target'));
+						target.parents('.filter-item').hide();
+					}
+					
+				});
+				*/
+
+			<?php endif; ?>
+
+		});
 
 	</script>

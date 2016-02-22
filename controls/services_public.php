@@ -477,7 +477,20 @@ class ServicesPublic extends Main
 		$loggedAsAdmin = false;
 		$preSelectOrganisme = null;
 
-		
+		$regions = null;
+		$hasRegions = $this->servicesAdminStat->createRegionsList('2015');
+
+		if ($hasRegions)
+		{
+			$regionsList['response'] = array();
+			$regionsList['response']['regions'] = $this->servicesAdminStat->getRegionsList();
+		}
+
+		if (isset($regionsList['response']['regions']) && !empty($regionsList['response']['regions'])) 
+		{
+			$regions = $regionsList['response']['regions'];
+		}
+
 		// on vérifie s'il y a un code dans les parametres url
 		if (isset($requestParams[0]) && !empty($requestParams[0]))
 		{   
@@ -529,39 +542,50 @@ class ServicesPublic extends Main
 		{
 			//if ($loggedAsViewer || $loggedAsAdmin)
 			//{
-			/*
-				if (isset($_POST['ref_region']) && !empty($_POST['ref_region']))
+				if (isset($_POST['ajax_request']) && !empty($_POST['ajax_request']))
 				{
 
-					if ($_POST['sort'] == "user")
+					if (isset($_POST['ref_region']) && !empty($_POST['ref_region']))
 					{
-						if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+						$resultsetOrgan = $this->servicesAdminStat->getOrganismesByRegion($_POST['ref_region']);
+
+						if (isset($resultsetOrgan['response']['organisme']) && !empty($resultsetOrgan['response']['organisme']))
 						{
-							$utilisateurs = $this->servicesRestitution->getUsersFromOrganisme($_POST['ref_organ']);
-							
-							if ($utilisateurs)
+							/*
+							$results = array();
+							$k = 0;
+
+							foreach ($resultsetOrgan['response']['organisme'] as $organisme) 
 							{
-								$response = array('error' => false, 'results' => $utilisateurs['response']);
+								$results[$k]['ref'] = $region;
+								$results[$k]['nom'] = $region;
+								$k++;
 							}
-							else
-							{
-								$response = array('error' => "Il n'existe pas d'utilisateur qui correspond à l'organisme.");
-							}
+							*/
+							$response = array('error' => false, 'results' => $resultsetOrgan['response']);
 						}
 						else
 						{
-							$response = array('error' => "Vous n'avez pas sélectionné d'organisme.");
+							$response = array('error' => "Aucun organisme n'est localisé dans cette région.");
 						}
+
+					}	
+					else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+					{
+							
+						
+						
 					}
 					else
 					{
-						$response = array('error' => "Le type n'a pas été trouvé.");
+						//$response = array('error' => "Vous n'avez pas sélectionné d'organisme.");
 					}
+
 
 					echo json_encode($response);
 					exit();
 				}
-				*/
+				
 			//}
 		}
 		
@@ -659,7 +683,7 @@ class ServicesPublic extends Main
 
 		// Liste des régions pour le combo-box
 
-		$regionsList['response'] = $this->servicesAdminStat->getRegionsList('2015');
+		//$regionsList['response'] = $this->servicesAdminStat->getRegionsList('2015');
 
 		if ($regionsList['response']['regions']) 
 		{
@@ -677,7 +701,7 @@ class ServicesPublic extends Main
 		{
 			$organismesList = $this->servicesRestitution->getOrganismesList(); 
 		}
-		$this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
+		//$this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
 		
 
 

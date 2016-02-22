@@ -91,11 +91,14 @@ class PreconisationDAO extends ModelDAO
 	 */
 	public function insert($values) 
 	{
-	   $this->initialize();
+		$this->initialize();
 		
 		if (!empty($values))
 		{     
-			$request = $this->createQueryString("insert", $values, "preconisation");
+			//$request = $this->createQueryString("insert", $values, "preconisation");
+			$request = "INSERT INTO preconisation (ref_parcours, nom_preco, descript_preco, taux_min, taux_max, num_ordre) ";
+			$request .= "VALUES (".$values['ref_parcours'].", '".$values['nom_preco']."', '".$values['descript_preco']."', ".$values['taux_min'].", ".$values['taux_max'].", ".$values['num_ordre'].")";
+			//var_dump($request);
 			
 			$this->resultset['response'] = $this->executeRequest("insert", $request, "preconisation", "Preconisation");
 		}
@@ -128,8 +131,11 @@ class PreconisationDAO extends ModelDAO
 				//$refPreco = $values['ref_preco'];
 				//unset($values['ref_preco']);
 				
-				$request = $this->createQueryString("update", $values, "preconisation", "WHERE id_preco = ".$refPreco);
-				
+				//$request = $this->createQueryString("update", $values, "preconisation", "WHERE id_preco = ".$refPreco);
+				$request = "UPDATE preconisation ";
+				$request .= "SET ref_parcours=".$values['ref_parcours'].", nom_preco='".$values['nom_preco']."', descript_preco='".$values['descript_preco']."', taux_min=".$values['taux_min'].", taux_max=".$values['taux_max'].", num_ordre=".$values['num_ordre']." ";
+				$request .= "WHERE id_preco=".$refPreco;
+				//var_dump($request);
 				$this->resultset['response'] = $this->executeRequest("update", $request, "preconisation", "Preconisation");
 			}
 			else

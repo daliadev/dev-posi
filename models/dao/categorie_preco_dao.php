@@ -126,7 +126,7 @@ class CategoriePrecoDAO extends ModelDAO
 				
 				//$request = $this->createQueryString("update", $values, "cat_preco", "WHERE ref_code_cat = ".$refCodeCat);
 
-				$request = "UPDATE cat_preco SET ref_code_cat = '".$refCodeCat."', id_preco = ".$values['id_preco']." WHERE ref_code_cat = '".$refCodeCat."' AND ref_preco = ".$refpreco;
+				$request = "UPDATE cat_preco SET ref_code_cat = '".$refCodeCat."', ref_preco = ".$refpreco." WHERE ref_code_cat = '".$refCodeCat; //."' AND ref_preco = ".$refpreco;
 				
 				$this->resultset['response'] = $this->executeRequest("update", $request, "cat_preco", "CategoriePreconisation");
 			}

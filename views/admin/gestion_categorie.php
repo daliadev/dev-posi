@@ -471,21 +471,21 @@ $form_url = $response['url'];
 											}
 
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$response['precos'][$i]['num_ordre'].'" />';
-											echo 'De<input type="text" name="preco_min[]" value="'.$response['precos'][$i]['taux_min'].'" placeholder="Ex: 0" />&nbsp;%';
-											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$response['precos'][$i]['taux_max'].'" placeholder="Ex: 20" />&nbsp;%';
+											echo 'De<input type="text" name="preco_min[]" value="'.$response['precos'][$i]['taux_min'].'" '.$formData['disabled'].' placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$response['precos'][$i]['taux_max'].'" '.$formData['disabled'].' placeholder="Ex: 20" />&nbsp;%';
 										}
 										else
 										{
 											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="0" />';
 											echo '<input type="hidden" id="ref-preco" name="ref_preco[]" value="" />';
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="0" />';
-											echo 'De<input type="text" name="preco_min[]" value="" placeholder="Ex: 0" />&nbsp;%';
-											echo '&nbsp; à<input type="text" name="preco_max[]" value="" placeholder="Ex: 20" />&nbsp;%';
+											echo 'De<input type="text" name="preco_min[]" value="" '.$formData['disabled'].' placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" value="" '.$formData['disabled'].' placeholder="Ex: 20" />&nbsp;%';
 										}
 
 										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>Action : ';
 
-										echo '<select class="parcours-preco-cbox" name="parcours_preco_cbox[]" '.$formData['disabled'].'>';
+										echo '<select class="parcours-preco-cbox select-'.$formData['disabled'].'" name="parcours_preco_cbox[]" '.$formData['disabled'].'>';
 											echo '<option value="select_cbox">---</option>';
 
 											if (isset($response['parcours_preco']) && !empty($response['parcours_preco']))
@@ -815,7 +815,7 @@ $form_url = $response['url'];
 
 					var code = $(this).find('.cat-item-code').html();
 					$('#code').val(code);
-					$('#edit').removeProp('disabled');
+					//$('#edit').removeProp('disabled');
 					//$('#add').removeProp('disabled');
 
 					<?php //if (Config::ALLOW_AJAX) : ?>

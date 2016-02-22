@@ -24,6 +24,8 @@ class ServicesAdminStat extends Main
 	private $resultatDAO = null;
 	private $categorieDAO = null;
 	private $acquisDAO = null;
+
+	private $regionsList = null;
 	
 	
 	
@@ -45,7 +47,7 @@ class ServicesAdminStat extends Main
 	
 
 
-	public function getCustomStats($startDate = null, $endDate = null, $ref_organ = null)
+	public function getCustomStats($ref_region = null, $ref_organ = null, $startDate = null, $endDate = null)
 	{
 		$stats = array();
 
@@ -64,6 +66,14 @@ class ServicesAdminStat extends Main
 		$stats['global']['organismes'] = array();
 
 		$stats['global']['valid_acquis'] = array();
+
+		// On récupére le tableau complet des régions et des départements associés
+		$regionsList['response'] = $this->getRegionsList('2015');
+
+		if ($regionsList['response']['regions']) 
+		{
+			$this->regionsList = $regionsList['response']['regions'];
+		}
 
 
 		// On récupère toutes les sessions terminées (comprises entre les dates si elles sont indiqués et la ref. de l'organisme, sinon sélectionne toutes les sessions)
@@ -176,17 +186,19 @@ class ServicesAdminStat extends Main
 
 
 		/*****   Calcul des stats par regions (Prendre les stats de base pour les organismes ayant pour code postal contenu dans la région)   *****/
-		/*
-		if (!empty($refRegion))
+		
+		if (!empty($refRegion) && $refRegion !== '00')
 		{
-			$resultsetOrgan = $this->getOrganismeByRegion($refRegion);
-
-			if (isset($resultsetOrgan['response']['organisme']) && !empty($resultsetOrgan['response']['organisme']))
+			$resultsetOrganRegion = $this->getOrganismesByRegion($refRegion);
+			/*
+			if (isset($resultsetOrganRegion['response']['organisme']) && !empty($resultsetOrganRegion['response']['organisme']))
 			{
-				$stats['global']['organismes'][0]['ref_organ'] = $resultsetOrgan['response']['organisme'][0]->getId();
-				$stats['global']['organismes'][0]['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
+				$stats['global']['organismes'][0]['ref_organ'] = $resultsetOrganRegion['response']['organisme'][0]->getId();
+				$stats['global']['organismes'][0]['nom_organ'] = $resultsetOrganRegion['response']['organisme'][0]->getNom();
 			}
+			*/
 		}
+		/*
 		else
 		{
 			// Récupération de tous les organismes
@@ -318,7 +330,13 @@ class ServicesAdminStat extends Main
 
 
 		/*****   Calcul des stats par organismes (Prendre les stats de base pour un organisme si un seul sélectionné)   *****/
-
+		/*
+		if (isset($resultsetOrganRegion['response']['organisme']) && !empty($resultsetOrganRegion['response']['organisme']))
+		{
+			$stats['global']['organismes'][0]['ref_organ'] = $resultsetOrganRegion['response']['organisme'][0]->getId();
+			$stats['global']['organismes'][0]['nom_organ'] = $resultsetOrganRegion['response']['organisme'][0]->getNom();
+		}
+		*/
 		if (!empty($ref_organ))
 		{
 			$resultsetOrgan = $this->getOrganisme($ref_organ);
@@ -715,6 +733,7 @@ class ServicesAdminStat extends Main
 
 	private function getOrganismesByRegion($refRegion)
 	{
+		var_dump($refRegion);
 		$resultset = $this->organismeDAO->selectByRegion($refRegion);
 		
 		// Traitement des erreurs de la requête
@@ -738,33 +757,16 @@ class ServicesAdminStat extends Main
 
 	public function getRegionsList($year = '2015')
 	{
+		$regionsList['regions'] = null;
 
 		$regions = new Region(ROOT.'database/regions/region'.$year.'.txt');
 		$regionsList['regions'] = $regions->getList();
 
-
-		//var_dump($regionsList);
-
-		//exit();
-
-		return $regionsList;
-		
-		/*
-		$resultset = $this->niveauEtudesDAO->selectAll();
-		
-		// Traitement des erreurs de la requête
-		if (!$this->filterDataErrors($resultset['response']))
+		if (isset($regionsList['regions']) && !empty($regionsList['regions'])) 
 		{
-			// Si le résultat est unique
-			if (!empty($resultset['response']['niveau_etudes']) && count($resultset['response']['niveau_etudes']) == 1)
-			{ 
-				$niveau = $resultset['response']['niveau_etudes'];
-				$resultset['response']['niveau_etudes'] = array($niveau);
-			}
-
-			return $resultset;
+			return $regionsList;
 		}
-		*/
+
 		return false;
 	}
 

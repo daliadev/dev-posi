@@ -524,11 +524,12 @@ class ServicesPublic extends Main
 
 
 		/*** Requêtes ajax pour avoir les organismes en fonction de la région choisie ***/
-		/*
+		
 		if (Config::ALLOW_AJAX)
 		{
-			if ($loggedAsViewer || $loggedAsAdmin)
-			{
+			//if ($loggedAsViewer || $loggedAsAdmin)
+			//{
+			/*
 				if (isset($_POST['ref_region']) && !empty($_POST['ref_region']))
 				{
 
@@ -560,9 +561,10 @@ class ServicesPublic extends Main
 					echo json_encode($response);
 					exit();
 				}
-			}
+				*/
+			//}
 		}
-		*/
+		
 		/*** Fin requêtes ajax ***/
 
 
@@ -572,13 +574,17 @@ class ServicesPublic extends Main
 		$this->formData['ref_organ'] = null;
 
 		$initializedData = array(
-			"ref_organ_cbox" => "select", 
-			"date_debut"     => "text", 
-			"date_fin"       => "text"
+			"ref_region_cbox" => "select", 
+			"ref_organ_cbox"  => "select", 
+			"date_debut"      => "text", 
+			"date_fin"        => "text"
 		);
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, $initializedData);
 
-		// On récupère les differents identifiants de la zone de sélection 
+		// On récupère les differents identifiants de la zone de sélection
+
+		$this->formData['ref_region'] = $this->formData['ref_region_cbox'];
+
 		$this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
 
 		if (isset($_POST['date_debut']) && !empty($_POST['date_debut']))
@@ -632,7 +638,7 @@ class ServicesPublic extends Main
 		
 		
 
-		$this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($filters['start_date'], $filters['end_date'], $this->formData['ref_organ']);
+		$this->returnData['response']['stats'] = $this->servicesAdminStat->getCustomStats($this->formData['ref_region'], $this->formData['ref_organ'], $filters['start_date'], $filters['end_date']);
 
 
 
@@ -654,8 +660,13 @@ class ServicesPublic extends Main
 		// Liste des régions pour le combo-box
 
 		$regionsList['response'] = $this->servicesAdminStat->getRegionsList('2015');
-		$this->returnData['response'] = array_merge($regionsList['response'], $this->returnData['response']);
 
+		if ($regionsList['response']['regions']) 
+		{
+			$this->returnData['response'] = array_merge($regionsList['response'], $this->returnData['response']);
+		}
+		
+		
 
 		// Liste des organismes pour le combo-box
 		if ($loggedAsViewer)

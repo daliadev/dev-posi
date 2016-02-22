@@ -70,20 +70,22 @@ class Region
 	
 	private function regionFileToArray()
 	{
+
 		if (!empty($this->contentText))
 		{
 			$regionFileArray = explode($this->separator, $this->contentText);
 
 			$k = -1;
 
-			for ($i = 0; $i < count($regionFileArray); $i++) { 
+			for ($i = 0; $i < count($regionFileArray); $i++) 
+			{ 
+				
 
-				if (!empty(trim($regionFileArray[$i])))
+				if (isset($regionFileArray[$i]) && !empty($regionFileArray[$i]))
 				{
-					//$this->regions[$i] = array();
 					$regionsRawText = trim($regionFileArray[$i]);
 
-					if ($regionsRawText)
+					if (!empty($regionsRawText))
 					{
 						// Detection de la référence et de l'intitulé de la région
 						if (strpos($regionsRawText, '[') !== false && strpos($regionsRawText, ']') !== false && strpos($regionsRawText, '=') !== false) 
@@ -100,8 +102,8 @@ class Region
 							$nameRegion = substr($regionsRawText, $posEqualSign);
 
 							$this->regions[$k] = array(
-								'ref' => $refRegion,
-								'nom' => $nameRegion,
+								'ref'          => $refRegion,
+								'nom'          => $nameRegion,
 								'departements' => array()
 							);
 						}
@@ -113,7 +115,10 @@ class Region
 							$numero = substr($regionsRawText, 0, $posEqualSign);
 							$nomDptmt = substr($regionsRawText, $posEqualSign + 1);
 
-							$this->regions[$k]['departements'][$numero] = $nomDptmt;
+							$this->regions[$k]['departements'] = array(
+								'numero' => $numero,
+								'nom'    => $nomDptmt
+							);
 						}
 
 						// erreur pas de région ou ligne vide
@@ -121,12 +126,9 @@ class Region
 						{
 							
 						}
-						
 					}
 				}
-
 			}
-			//var_dump($regions);
 		}
 	}
 	

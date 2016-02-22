@@ -95,13 +95,14 @@ $form_url = $response['url'];
 						<hr>
 						
 						<div class="filter-item">
-							<label for="date_debut">Région : </label>
-							<?php //$disabled = (isset() && !empty() && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
-							<select name="ref_region_cbox" id="ref-region-cbox" style="width:120px;" <?php //echo $disabled; ?>>
+							<label for="ref-region-cbox">Région : </label>
+
+							<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) <= 1) ? "disabled" : ""; ?>
+							<select name="ref_region_cbox" id="ref-region-cbox" class="region-list" style="width:120px;" <?php echo $disabled; ?>>
 							
-								<?php //if ($disabled == "") : ?>
+								<?php if ($disabled == "") : ?>
 									<option class="stat-option" value="select_cbox">Toute la France</option>
-								<?php //endif; ?>
+								<?php endif; ?>
 
 								<?php
 								
@@ -112,12 +113,12 @@ $form_url = $response['url'];
 									{
 
 										$selected = "";
-										/*
+										
 										if (!empty($formData['ref_region']) && $formData['ref_region'] == $region['ref'])
 										{
 											$selected = "selected";
 										}
-										*/
+										
 										echo '<option class="organ-option" value="'.$region['ref'].'" '.$selected.'>'.$region['nom'].'</option>';
 									}
 								}
@@ -410,7 +411,7 @@ $form_url = $response['url'];
 			$(".search-date").focus(function(event) {
 				$(this).val('');
 			});
-
+			/*
 			$("#date_debut").datepicker({
 				dateFormat: "dd/mm/yy",
 				changeMonth: true, 
@@ -466,9 +467,13 @@ $form_url = $response['url'];
 							
 			
 			});
-
+			*/
 			
 			$("#infos-posi").tabs();
+
+			$('.region-list').on('change', function(event) {
+
+			});
 
 		})(jQuery);
 

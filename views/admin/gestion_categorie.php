@@ -630,7 +630,7 @@ $form_url = $response['url'];
 				<div class="modal-box-buttons">
 					<button type="submit" class="default" id="btn-cancel-parcours" name="cancel_parcours">Annuler</button>
 					<button type="submit" class="primary" id="btn-save-parcours" name="save_parcours">Enregistrer</button>
-					<button type="submit" class="danger" id="btn-delete-parcours" name="delete_parcours" style="display: none;">Supprimer</button>
+					<button type="submit" class="alert" id="btn-delete-parcours" name="delete_parcours">Supprimer</button>
 				</div>
 
 			</form>
@@ -683,6 +683,7 @@ $form_url = $response['url'];
 			var minPrecoValue = 0;
 			var maxPrecoValue = 100;
 
+			$('#btn-delete-parcours').hide();
 			var modalHtml = $('#modal-box').html();
 
 			$('#modal-box').contents().remove();
@@ -1291,6 +1292,11 @@ $form_url = $response['url'];
 							},
 							{
 							 	type: 'click', 
+							 	selector: '#btn-delete-parcours',
+							 	callback: self.onDeleteParcours
+							},
+							{
+							 	type: 'click', 
 							 	selector: '#btn-cancel-parcours',
 							 	callback: null
 							}
@@ -1328,6 +1334,8 @@ $form_url = $response['url'];
 
 					if (refParcours != 'select_cbox')
 					{
+						$('#btn-delete-parcours').show();
+
 						$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
 
 							if (data.error) {
@@ -1345,16 +1353,20 @@ $form_url = $response['url'];
 
 						}, 'json');
 					}
+					else
+					{
+						$('#btn-delete-parcours').hide();
+					}
 
 				<?php endif; ?>
 			};
-			//});
+			
+
 			
 			this.onSaveParcours = function(values) {
 
 				//console.log(values);
 
-				
 				//var refParcours = values.ref_parcours;
 				//var volumeParcours = values.ref_parcours;
 				//var nomParcours = values.ref_parcours;
@@ -1371,6 +1383,8 @@ $form_url = $response['url'];
 						}
 						else {
 
+							$('#btn-delete-parcours').show();
+
 							//console.log('ok');
 							$('#ref-parcours').val(data.results.id_parcours);
 							$('#volume-parcours').val(data.results.volume_parcours);
@@ -1380,7 +1394,7 @@ $form_url = $response['url'];
 							var $selectParcours = $('#parcours-cbox').get(0);
 							var lenParcours = $selectParcours.options.length;
 
-							$selectParcours.options[lenParcours] = new Option(data.results.nom_parcours, data.results.id_parcours, false, true);
+							$selectParcours.options[lenParcours] = new Option('- ' + data.results.nom_parcours, data.results.id_parcours, false, true);
 						}
 
 					}, 'json');
@@ -1390,6 +1404,54 @@ $form_url = $response['url'];
 			};
 
 
+			this.onDeleteParcours = function(values) {
+
+				//console.log(values)
+				var refParcours = values.ref_parcours;
+
+				<?php if (Config::ALLOW_AJAX) : ?>
+
+					if (confirm('Vous êtes sur le point de supprimer un parcours. Ceci aura pour effet de laisser vide les préconisations qui en dépendent, et ainsi d\'altérer les résultats des passations. Par précaution, prenez le temps de modifier les préconisations où figurent ce parcours. Désirez-vous supprimer ce parcours ?')) {
+
+						$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours, 'delete_parcours': 'delete'}, function(data) {
+
+							if (data.error) {
+
+								alert(data.error);
+
+								$('#btn-delete-parcours').show();
+							}
+							else {
+								
+								$('#ref-parcours').val('');
+								$('#volume-parcours').val('');
+								$('#nom-parcours').val('');
+								$('#descript-parcours').val('');
+
+								var selectParcours = $('#parcours-cbox').get(0);
+								//$selectParcours.options[0].selected = true;
+
+								for (var i = 0; i < selectParcours.options.length; i++) {
+									if (selectParcours.options[i].value == 'select_cbox') {
+
+									}
+									else if (selectParcours.options[i].value == refParcours) {
+
+										selectParcours.remove(i);
+									}
+								}
+
+								$('#btn-delete-parcours').hide();	
+							}
+
+						}, 'json');
+					}
+
+					
+
+				<?php endif; ?>
+
+			};
 
 
 

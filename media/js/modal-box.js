@@ -200,7 +200,7 @@
 					var callback = typeof eventHandler.callback === 'function' ? eventHandler.callback : null;
 					//console.log(id.search());
 					//console.log($(this));
-					if (id.search("save") >= 0 || id.search("cbox") >= 0) {
+					if (id.search("save") >= 0 || id.search("cbox") >= 0 || id.search("delete") >= 0) {
 
 						var formValues = self.el.find('form').serializeArray();
 						var values = {};

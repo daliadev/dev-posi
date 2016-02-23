@@ -518,7 +518,7 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			
-			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']) && $_POST['ref_parcours'] != 'select_cbox')
+			if ((isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']) && $_POST['ref_parcours'] != 'select_cbox') && (!isset($_POST['delete_parcours']) || empty($_POST['delete_parcours']) || $_POST['delete_parcours'] != 'delete'))
 			{
 				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
 
@@ -573,11 +573,26 @@ class ServicesAdmin extends Main
 				echo json_encode($response);
 				exit();
 			}
-			
 
+			/*** Requête pour supprimer un parcours ***/
 			
-			
-			/*** Requête pour supprimer un nouveau parcours ***/
+			else if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']) && $_POST['ref_parcours'] != 'select_cbox' && isset($_POST['delete_parcours']) && !empty($_POST['delete_parcours']) && $_POST['delete_parcours'] == 'delete')
+			{
+
+				$deletedParcours = $this->servicesCategorie->deleteParcoursPreco($_POST['ref_parcours']);
+
+				if ($deletedParcours)
+				{
+					$response = array('error' => false, 'results' => $deletedParcours);
+				}
+				else
+				{
+					$response = array('error' => "Le parcours n'a pas été supprimé.");
+				}
+				
+				echo json_encode($response);
+				exit();
+			}
 
 		}
 

@@ -1556,11 +1556,11 @@ class ServicesAdminCategorie extends Main
 	{
 		// On commence par sélectionner les réponses associèes à la question
 		$resultsetSelect = $this->parcoursPrecoDAO->selectById($refParcours);
-		
+
 		if (!$this->filterDataErrors($resultsetSelect['response']))
 		{ 
 			$resultsetDelete = $this->parcoursPrecoDAO->delete($refParcours);
-		
+
 			if (!$this->filterDataErrors($resultsetDelete['response']))
 			{
 				return true;

@@ -366,7 +366,7 @@ class ServicesAdminRestitution extends Main
 			else if ($level == 1)
 			{
 				// Catégorie principale -> pas de parent
-				$countPrimeCategories++;
+				//$countPrimeCategories++;
 			}
 			
 			
@@ -460,15 +460,31 @@ class ServicesAdminRestitution extends Main
 		$categories = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
 		//$categories = $posiStats['categories'];
 
+		//$countCategories = 0;
 
-		foreach ($posiStats['categories'] as $categorie)
+
+		foreach ($categories as $categorie)
 		{
+		
+			if (strlen($categorie->getCode()) == 2 && $categorie->getHasResult())
+			{
+				$countPrimeCategories++;
+
+				$percentGlobal += $categorie->getScorePercent();
+				//var_dump($percentGlobal);
+			}
+
+
+
 			$volumePrecoCat = 0;
 			
 			//var_dump($categorie->getScorePercent());
 			// Préconisations
 			if (strlen($categorie->getCode()) == 2 && isset($parcoursPreco['response']['parcours_preco']) && !empty($parcoursPreco['response']['parcours_preco']))
 			{
+				// Calcul du score global
+
+
 				$precos = $this->preconisationDAO->selectByCodeCat($categorie->getCode());
 				
 				$scoreCat = $categorie->getScorePercent();
@@ -497,13 +513,29 @@ class ServicesAdminRestitution extends Main
 				}
 			}
 
-			
-
 			$categorie->setVolumePreconisations($volumePrecoCat);
 		}
 
+		$percentTotal = 0;
+
+		if ($percentGlobal > 0 && $countPrimeCategories > 0)
+		{
+			$percentTotal = round($percentGlobal / $countPrimeCategories);
+		}
+
+		//var_dump($percentTotal, $percentGlobal, $countPrimeCategories);
+		//exit();
+		
+		$posiStats['percent_global'] = $percentTotal;
+
+		$posiStats['total_correct_global'] = $totalCorrectGlobal;
+		$posiStats['total_global'] = $totalGlobal;
+
 		//$categories = $posiStats['categories'];
 		$posiStats['categories'] = $categories;
+
+
+
 		//var_dump($posiStats['categories']);
 		//exit();
 

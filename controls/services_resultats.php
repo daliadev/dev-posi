@@ -276,21 +276,21 @@ class ServicesPosiResultats extends Main
 							$countChildren++;
 							$totalPercent += $catScore;
 						}
-						
+						/*
 						if ($parentCat->getHasResult()) 
 						{
 							$totalPercent += $parentCat->getScorePercent();
 							$countChildren++;
 							//$scoreMoyenne = ($parentCatScore + $totalPercent) / ($countChildren + 1);
 						}
+						*/
 						/*
 						else
 						{
 							
 						}
 						*/
-						
-						
+
 					}
 					else
 					{
@@ -298,7 +298,7 @@ class ServicesPosiResultats extends Main
 						// Les scores des enfants deviennent la moyenne de leur total et sont attribués au parent
 						if ($totalPercent > 0 && $countChildren > 0)
 						{
-							$scoreMoyenne = $totalPercent / $countChildren;
+							$scoreMoyenne = round($totalPercent / $countChildren);
 						}
 						else
 						{
@@ -333,6 +333,7 @@ class ServicesPosiResultats extends Main
 				//$parentCat->setHasResult(true);
 				//$parentCat->setScorePercent($totalPercent);
 				
+				
 				/*
 				//var_dump('');
 				//var_dump('2 - Code cat en cours : '.$categorie->getCode());
@@ -343,14 +344,12 @@ class ServicesPosiResultats extends Main
 				var_dump('2 - $currentParent->getCode() = '.$currentParent->getCode());
 				var_dump('2 - $parentCat->getHasResult() = '.$parentCat->getHasResult());
 				*/
+
 				$currentCatId = $categorie->getCode();
 				
 				/* Fin new */
 
 
-				
-				
-				
 				
 				//if ($currentParent->getCode() !== null)
 				//{

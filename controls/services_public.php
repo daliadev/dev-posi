@@ -244,8 +244,6 @@ class ServicesPublic extends Main
 
 
 
-
-
 		// Pour chaque combo-box sélectionné, on effectue les requetes correspondantes
 		
 		/*------   Un organisme a été sélectionnée   -------*/

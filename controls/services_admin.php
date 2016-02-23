@@ -486,7 +486,8 @@ class ServicesAdmin extends Main
 		// Initialisation du tableau des données qui seront inserées ou mises à jour dans la base.
 		$dataCategorie = array();
 
-
+		//var_dump($_POST);
+		//exit();
 
 		/* ==========================================================================
 		   Requêtes ajax
@@ -517,9 +518,10 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour sélectionner un parcours et l'éditer ***/
 			
-			if (isset($_POST['values']['parcours_cbox']) && !empty($_POST['values']['parcours_cbox']) && $_POST['values']['parcours_cbox'] != 'select_cbox')
+			if (isset($_POST['ref_parcours']) && !empty($_POST['ref_parcours']) && $_POST['ref_parcours'] != 'select_cbox')
 			{
-				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['parcours_cbox']);
+				$selectParcours = $this->servicesCategorie->getParcoursDetails($_POST['ref_parcours']);
+
 
 				if ($selectParcours)
 				{
@@ -537,27 +539,31 @@ class ServicesAdmin extends Main
 
 			/*** Requête pour enregistrer un nouveau parcours ***/
 			
-			else if (isset($_POST['values']['nom_parcours']) && !empty($_POST['values']['nom_parcours']))
+			else if (isset($_POST['values']['volume_parcours']) && !empty($_POST['values']['volume_parcours']) && isset($_POST['values']['nom_parcours']) && !empty($_POST['values']['nom_parcours']))
 			{
-				$volumeParcours = null;
 
-				if (isset($_POST['values']['volume_parcours']) && !empty($_POST['values']['volume_parcours']))
+				$nomParcours = $_POST['values']['nom_parcours'];
+				$volumeParcours = $_POST['values']['volume_parcours'];
+				$descriptParcours = null;
+				
+				if (isset($_POST['values']['descript_parcours']) && !empty($_POST['values']['descript_parcours']))
 				{
-					$volumeParcours = $_POST['values']['volume_parcours'];
+					$descriptParcours = $_POST['values']['descript_parcours'];
 				}
+
 
 				if (isset($_POST['values']['ref_parcours']) && !empty($_POST['values']['ref_parcours']))
 				{
-					$saveParcours = $this->servicesCategorie->updateParcoursPreco($_POST['values']['ref_parcours'], $_POST['values']['nom_parcours'], $volumeParcours, $_POST['values']['descript_parcours']);
+					$lastSaveParcours = $this->servicesCategorie->updateParcoursPreco($_POST['values']['ref_parcours'], $nomParcours, $volumeParcours, $descriptParcours);
 				}
 				else
 				{
-					$saveParcours = $this->servicesCategorie->insertParcoursPreco($_POST['values']['nom_parcours'], $volumeParcours, $_POST['values']['descript_parcours']);
+					$lastSaveParcours = $this->servicesCategorie->insertParcoursPreco($nomParcours, $volumeParcours, $descriptParcours);
 				}
 
-				if ($saveParcours)
+				if ($lastSaveParcours)
 				{
-					$response = array('error' => false);
+					$response = array('error' => false, 'results' => $lastSaveParcours);
 				}
 				else
 				{

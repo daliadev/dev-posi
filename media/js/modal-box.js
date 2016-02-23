@@ -191,16 +191,16 @@
 				var eventHandler = this.settings.events[i];
 				var selector = eventHandler.selector.substring(1);
 				//console.log(eventHandler);
-				console.log(i + " - " + id + " - " + selector);
+				//console.log(i + " - " + id + " - " + selector);
 				//callback = eventHandler.callback;
 				//console.log(typeof eventHandler.callback);
 
 				if (id == selector) {
 
 					var callback = typeof eventHandler.callback === 'function' ? eventHandler.callback : null;
-					//console.log(id + " - " + callback);
-					
-					if (id.search("save") >= 0 || id.search("valid") >= 0) {
+					//console.log(id.search());
+					//console.log($(this));
+					if (id.search("save") >= 0 || id.search("cbox") >= 0) {
 
 						var formValues = self.el.find('form').serializeArray();
 						var values = {};
@@ -211,7 +211,7 @@
 							values[prop] = value;
 						}
 						//console.log(values);
-						self.close();
+						//self.close();
 						callback.call(self, values);
 					}
 					else if (id.search("annul") >= 0 || id.search("cancel") >= 0) {
@@ -220,15 +220,16 @@
 						self.close();
 					}
 					else {
-
+						/*
 						if ($(this).val() != null) {
 
 							callback.call(self, $(this).val());
 						}
 						else {
+							*/
 
 							callback.call(self);
-						}
+						//}
 					}
 
 					break;

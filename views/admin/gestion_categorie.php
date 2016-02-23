@@ -607,7 +607,7 @@ $form_url = $response['url'];
 					<hr />
 
 					<p>Ajouter ou modifier un parcours en saisissant ses propriétés : </p>
-					<input id="ref-parcours" name="ref_parcours" type="hidden" value="<?php //echo $parcours->getId(); ?>" />
+					<input id="ref-parcours" name="ref_parcours" type="hidden" value="" />
 
 					<div class="input-parcours">
 						<label for="nom-parcours">Intitulé du parcours</label>
@@ -1198,7 +1198,7 @@ $form_url = $response['url'];
 				var title = 'Ajouter / gérer les parcours préconisé';
 
 				var contentText = '<p>Sélectionner un parcours pour l\'éditer ou la supprimer :</p>';
-				contentText += '<select name="parcours_cbox" id="parcours-cbox" class="select-' + '<?php echo $formData["disabled"]; ?>' + '">';
+				contentText += '<select name="parcours_cbox" id="parcours-cbox" class="select-' + '<?php //echo $formData["disabled"]; ?>' + '">';
 				contentText += '<option value="select_cbox">Aucune</option>';
 				*/
 				<?php
@@ -1244,7 +1244,7 @@ $form_url = $response['url'];
 					/*
 					{
 						formId: '#form-parcours',
-						action: '<?php echo $form_url; ?>',
+						action: '<?php //echo $form_url; ?>',
 						method: 'post'
 					},
 					*/
@@ -1309,10 +1309,20 @@ $form_url = $response['url'];
 
 				//alert('change');
 			
-			this.onChangeParcours = function() {
+			this.onChangeParcours = function(values) {
+				
+				$('#ref-parcours').val('');
+				$('#volume-parcours').val('');
+				$('#nom-parcours').val('');
+				$('#descript-parcours').val('');
 
-				console.log('onChangeParcours');
-				var refParcours = $('#parcours-cbox').val();
+				var refParcours;
+
+				if (values.parcours_cbox)
+				{
+					refParcours = values.parcours_cbox;
+				}
+				//var refParcours = $('#parcours-cbox').val();
 				
 				<?php if (Config::ALLOW_AJAX) : ?>
 
@@ -1326,11 +1336,11 @@ $form_url = $response['url'];
 							}
 							else if (data.results) {
 
-								console.log(data.results);
+								//console.log(data.results);
 								$('#ref-parcours').val(data.results.id_parcours);
 								$('#volume-parcours').val(data.results.volume_parcours);
 								$('#nom-parcours').val(data.results.nom_parcours);
-								$('#descript-parcours').val(data.results.descript_parcours);
+								$('#descript-parcours').val(data.results.desc_parcours);
 							}
 
 						}, 'json');
@@ -1342,37 +1352,38 @@ $form_url = $response['url'];
 			
 			this.onSaveParcours = function(values) {
 
-				console.log(values);
-				//var refParcours = $('ref-parcours').val();
-				//var volumeParcours = $('#volume-parcours').val();
-				//var nomParcours = $('#nom-parcours').val();
+				//console.log(values);
+
 				
+				//var refParcours = values.ref_parcours;
+				//var volumeParcours = values.ref_parcours;
+				//var nomParcours = values.ref_parcours;
 				
 				<?php if (Config::ALLOW_AJAX) : ?>
 
-					//if (refParcours != 'select_cbox')
-					//{
-						//console.log(values);
-						
-						$.post('<?php echo $form_url; ?>', {values}, function(data) {
+					$.post('<?php echo $form_url; ?>', {values}, function(data) {
 
-							//console.log(data);
+						//console.log(data);
 
-							if (data.error) {
+						if (data.error) {
 
-								alert(data.error);
-							}
-							else {
+							alert(data.error);
+						}
+						else {
 
-								console.log('ok');
-								//$('#id-type').val(data.results.id_type);
-								//$('#nom-type').val(data.results.nom_type);
-								//$('#nom-type').val(data.results.nom_type);
-							}
+							//console.log('ok');
+							$('#ref-parcours').val(data.results.id_parcours);
+							$('#volume-parcours').val(data.results.volume_parcours);
+							$('#nom-parcours').val(data.results.nom_parcours);
+							$('#descript-parcours').val(data.results.desc_parcours);
 
-						}, 'json');
-						
-					//}
+							var $selectParcours = $('#parcours-cbox').get(0);
+							var lenParcours = $selectParcours.options.length;
+
+							$selectParcours.options[lenParcours] = new Option(data.results.nom_parcours, data.results.id_parcours, false, true);
+						}
+
+					}, 'json');
 
 				<?php endif; ?>
 

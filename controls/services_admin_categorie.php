@@ -1515,7 +1515,8 @@ class ServicesAdminCategorie extends Main
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['parcours_preco']['last_insert_id']))
 			{
-				return $resultset;
+				$resultsetParcours = $this->getParcoursDetails($resultset['response']['parcours_preco']['last_insert_id']);
+				return $resultsetParcours;
 			} 
 			else 
 			{
@@ -1538,7 +1539,8 @@ class ServicesAdminCategorie extends Main
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['parcours_preco']['row_count']))
 			{
-				return $resultset;
+				$resultsetParcours = $this->getParcoursDetails($refParcours);
+				return $resultsetParcours;
 			} 
 			else 
 			{

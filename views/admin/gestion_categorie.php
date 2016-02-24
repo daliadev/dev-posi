@@ -779,6 +779,34 @@ $form_url = $response['url'];
 
 			};
 
+
+			/* Fonction de suppression d'une préconisatoin */
+
+			this.deletePreco = function($preco) {
+
+				var num = $preco.find('.num-ordre').val();
+				var active = $preco.find('.preco-active').val();
+
+				console.log('on');
+
+				//console.log($preco);
+
+				if (active == "1") {
+
+					var confirmDeleting = confirm('Cet élément de préconisation contient des valeurs, voulez-vous les supprimer ?')
+					if (confirmDeleting) {
+
+						$preco.remove();
+						numOrdrePreco--;
+					}
+				}
+				else {
+				
+					$preco.remove();
+					numOrdrePreco--;
+				}
+			};
+
 			
 			/* Modifie l'intitulé du boutton de suppression selon le contexte */
 			if (mode == 'edit' || mode == 'del')
@@ -912,6 +940,8 @@ $form_url = $response['url'];
 					$item.children('.preco-active').val('0');
 					$item.children('.num-ordre').val(numOrdrePreco);
 					$item.children('#ref-preco').val('');
+					$item.children('.del-preco').on('click', self.deletePreco($(this)));
+
 					$('.preco-list').append($item);
 
 					$('.parcours-preco-cbox').each(function() {
@@ -920,22 +950,25 @@ $form_url = $response['url'];
 
 							//console.log($(this).val());
 
-							if ($(this).val() != 'select_cbox') 
-							{
+							if ($(this).val() != 'select_cbox') {
+
 								$(this).siblings('.preco-active').val('1');
 							}
-							else
-							{
+							else {
+
 								$(this).siblings('.preco-active').val('0');
 							}
 						});
 					});
 
+										
+					//$('.del-preco').each(function(index) {
 
-					$('.del-preco').each(function(index) {
+						//console.log('each');
 
-						$(this).on('click', function(event) {
+						//$(this).on('click', self.deletePreco($(this).parent()));
 
+							/*
 							var num = $(this).siblings('.num-ordre').val();
 							var active = $(this).siblings('.preco-active').val();
 
@@ -955,13 +988,25 @@ $form_url = $response['url'];
 								$(this).parent('.preco-item').remove();
 								numOrdrePreco--;
 							}
-						});
+							*/
+							
+						
+					//});
+					
+
+				});
+				
+
+				$('.del-preco').each(function(index) {
+
+					console.log('each');
+					
+					$(this).on('click', function(event) {
+
+						self.deletePreco($(this).parent());
 					});
 
 				});
-			
-
-
 
 
 				/* Gestion des types de préco */
@@ -986,7 +1031,7 @@ $form_url = $response['url'];
 					var refType = null;
 					var nomType = '';
 
-					<?php if (Config::ALLOW_AJAX) : ?>
+					<?php //if (Config::ALLOW_AJAX) : ?>
 
 						if ($('#type-preco-cbox').val() !== '' && $('#type-preco-cbox').val() !== 'select_cbox') {
 
@@ -1001,7 +1046,7 @@ $form_url = $response['url'];
 
 						if (nomType !== '' && nomType !== null) {
 
-							$.post('<?php echo $form_url; ?>', {'ref_parcours': refType, 'nom_type': nomType}, function(data) {
+							$.post('<?php //echo $form_url; ?>', {'ref_parcours': refType, 'nom_type': nomType}, function(data) {
 
 								if (data.error) {
 
@@ -1022,7 +1067,7 @@ $form_url = $response['url'];
 							alert('Vous devez saisir un type de préconisation pour pouvoir l\'enregistrer.');
 						}
 
-					<?php endif; ?>
+					<?php //endif; ?>
 				});
 
 
@@ -1065,11 +1110,11 @@ $form_url = $response['url'];
 						//$('#type-preco-section').hide();
 					//}
 						/*
-						<?php if (Config::ALLOW_AJAX) : ?>
+						<?php //if (Config::ALLOW_AJAX) : ?>
 
 							if (refParcours != 'select_cbox')
 							{
-								$.post('<?php echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
+								$.post('<?php //echo $form_url; ?>', {'ref_parcours': refParcours}, function(data) {
 
 									if (data.error) {
 
@@ -1085,7 +1130,7 @@ $form_url = $response['url'];
 								}, 'json');
 							}
 
-						<?php endif; ?>
+						<?php //endif; ?>
 						*/
 					//};
 					//});

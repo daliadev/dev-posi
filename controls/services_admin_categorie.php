@@ -761,16 +761,16 @@ class ServicesAdminCategorie extends Main
 		{
 			if (isset($dataCategorie['code_cat']) && !empty($dataCategorie['code_cat']))
 			{
-				$oldCode = null;
 				$formData['code_cat'] = $dataCategorie['code_cat'];
+
+				$oldCode = null;
 				if (isset($formData['old_code_cat']) && !empty($formData['old_code_cat']))
 				{
 					$oldCode = $formData['old_code_cat'];
 				}
+
 				// Mise à jour de la catégorie
 				$resultsetCategorie = $this->setCategorie("update", $dataCategorie, $oldCode);
-
-				
 
 				// Traitement des erreurs de la requête
 				if ($resultsetCategorie['response'])
@@ -877,7 +877,8 @@ class ServicesAdminCategorie extends Main
 				}
 			}
 
-			//var_dump($precos);
+			var_dump($precos);
+			//exit();
 
 			for ($i = 0; $i < count($precos); $i++)
 			{
@@ -903,7 +904,7 @@ class ServicesAdminCategorie extends Main
 				}
 				else if ($mode == 'delete')
 				{
-					$resultsetPreco = $this->deletePreconisation($id);
+					$resultsetPrecoDelete = $this->deletePreconisation($idPreco);
 				}
 				//var_dump($mode);
 				//var_dump($resultsetPreco);
@@ -911,24 +912,47 @@ class ServicesAdminCategorie extends Main
 
 				$refPrecoDef = null;
 			
-				if (isset($resultsetPreco['response']['preconisation']) && !empty($resultsetPreco['response']['preconisation']))
+				if ((isset($resultsetPreco['response']['preconisation']) && !empty($resultsetPreco['response']['preconisation'])) || $resultsetPrecoDelete)
 				{
-					if ($mode == 'insert' && isset($resultsetPreco['response']['preconisation']['last_insert_id']))
+					if ($mode == 'insert')
 					{
-						$refPrecoDef = $resultsetPreco['response']['preconisation']['last_insert_id'];
+						if (isset($resultsetPreco['response']['preconisation']['last_insert_id']) && !empty($resultsetPreco['response']['preconisation']['last_insert_id']))
+						{
+							$refPrecoDef = $resultsetPreco['response']['preconisation']['last_insert_id'];
+
+							$resultsetCatPreco = $this->setCategoriePrecos($mode, $formData['code_cat'], $refPrecoDef);
+
+							if (!$resultsetCatPreco)
+							{
+								$this->registerError("form_valid", "L'enregistrement d'une préconisation a échoué.");
+							}
+						}
+						else
+						{
+							$this->registerError("form_valid", "L'enregistrement d'une préconisation a échoué.");
+						}	
 					}
-					else if ($mode == 'update' && isset($resultsetPreco['response']['preconisation']['row_count'])  && $resultsetPreco['response']['preconisation']['row_count'] > 0)
+					else if ($mode == 'update')
 					{
-						$refPrecoDef = $idPreco;
+						if (isset($resultsetPreco['response']['preconisation']['row_count']))
+						{
+							$refPrecoDef = $idPreco;
+						}
+						else
+						{
+							$this->registerError("form_valid", "La mise à jour de la préconisation n'a pas fonctionné.");
+						}
+						
+					}
+					else if ($mode == 'delete')
+					{
+						if (!isset($resultsetPreco['response']['preconisation']['row_count']))
+						{
+							$this->registerError("form_valid", "La préconisation n'a pas été supprimée.");
+						}
 					}
 
-					$resultsetCatPreco = $this->setCategoriePrecos($mode, $formData['code_cat'], $refPrecoDef);
-
-					//var_dump($resultsetCatPreco);
-					if (!$resultsetCatPreco)
-					{
-						$this->registerError("form_valid", "L'enregistrement d'une préconisation a échouée.");
-					}
+					
 				}
 				else 
 				{
@@ -1028,7 +1052,7 @@ class ServicesAdminCategorie extends Main
 					//exit();
 
 					// Traitement des erreurs de la requête
-					if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['categorie']['row_count']) && !empty($resultset['response']['categorie']['row_count']))
+					if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['categorie']['row_count']))
 					{
 						return $resultset;
 					} 
@@ -1403,7 +1427,8 @@ class ServicesAdminCategorie extends Main
 		{
 			// Insertion du parcours dans la bdd
 			$resultset = $this->preconisationDAO->update($dataPreco, $refPreco);
-				
+			//var_dump($resultset);
+			//exit();
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['preconisation']['row_count']))
 			{
@@ -1427,11 +1452,14 @@ class ServicesAdminCategorie extends Main
 		
 		if (!$this->filterDataErrors($resultsetSelect['response']))
 		{ 
-			$resultsetDelete = $this->preconisationDAO->delete($refPreco);
-		
-			if (!$this->filterDataErrors($resultsetDelete['response']))
+
+			$resultset = $this->preconisationDAO->delete($refPreco);
+			//var_dump($resultset);
+			//exit();
+
+			if (!$this->filterDataErrors($resultset['response']))
 			{
-				return true;
+				return $resultset;
 			}
 			else 
 			{

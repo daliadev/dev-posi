@@ -426,16 +426,15 @@ $form_url = $response['url'];
 
 
 								<div id="add-parcours-preco_btn" style="float: left; margin: 0 20px;">
-									<button type="submit" id="add-parcours-preco" name="add_parcours_preco" class="square-btn" <?php //echo $formData['disabled']; ?>><i class="fa fa-plus"></i></button>
-									&nbsp; <label for="add-parcours-preco">Ajouter / gérer les parcours (volumes d'heures, actions...)</label>
-									<!-- <input type="button" id="add-action" name="add_action" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
+									<button type="submit" id="add-parcours-preco" name="add_parcours_preco" class="square-btn">
+										<i class="fa fa-plus"></i>
+									</button> &nbsp; <label for="add-parcours-preco">Ajouter / gérer les parcours (volumes d'heures, actions...)</label>
 								</div>
 
 								<div id="add-preco-button" style="float: left; margin: 0 20px;">
 									<button type="submit" id="add-preco" name="add_preco" class="square-btn" <?php echo $formData['disabled']; ?>>
 										<i class="fa fa-plus"></i>
 									</button> &nbsp; <label for="add-preco">Ajouter une nouvelle préconisation</label>
-									<!-- <input type="button" id="add-preco" name="add_preco" class="bt-admin-menu-ajout" style="width: 200px;" value="Ajouter une préconisation" <?php //echo $formData['disabled']; ?> /> -->
 								</div>
 							
 								<div style="clear: both;"></div>
@@ -476,16 +475,16 @@ $form_url = $response['url'];
 											}
 
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="'.$response['precos'][$i]['num_ordre'].'" />';
-											echo 'De<input type="text" name="preco_min[]" value="'.$response['precos'][$i]['taux_min'].'" '.$formData['disabled'].' placeholder="Ex: 0" />&nbsp;%';
-											echo '&nbsp; à<input type="text" name="preco_max[]" value="'.$response['precos'][$i]['taux_max'].'" '.$formData['disabled'].' placeholder="Ex: 20" />&nbsp;%';
+											echo 'De<input type="text" name="preco_min[]" class="taux-min" value="'.$response['precos'][$i]['taux_min'].'" '.$formData['disabled'].' placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" class="taux-max" value="'.$response['precos'][$i]['taux_max'].'" '.$formData['disabled'].' placeholder="Ex: 20" />&nbsp;%';
 										}
 										else
 										{
 											echo '<input type="hidden" name="preco_active[]" class="preco-active" value="0" />';
 											echo '<input type="hidden" id="ref-preco" name="ref_preco[]" value="" />';
 											echo '<input type="hidden" name="num_ordre_preco[]" class="num-ordre" value="0" />';
-											echo 'De<input type="text" name="preco_min[]" value="" '.$formData['disabled'].' placeholder="Ex: 0" />&nbsp;%';
-											echo '&nbsp; à<input type="text" name="preco_max[]" value="" '.$formData['disabled'].' placeholder="Ex: 20" />&nbsp;%';
+											echo 'De<input type="text" name="preco_min[]" class="taux-min" value="" '.$formData['disabled'].' placeholder="Ex: 0" />&nbsp;%';
+											echo '&nbsp; à<input type="text" name="preco_max[]" class="taux-max" value="" '.$formData['disabled'].' placeholder="Ex: 20" />&nbsp;%';
 										}
 
 										echo '<span class="preco-icon"><i class="fa fa-arrow-right"></i></span>Action : ';
@@ -940,7 +939,10 @@ $form_url = $response['url'];
 					$item.children('.preco-active').val('0');
 					$item.children('.num-ordre').val(numOrdrePreco);
 					$item.children('#ref-preco').val('');
-					$item.children('.del-preco').on('click', self.deletePreco($(this)));
+					$item.children('.taux-min').val('');
+					$item.children('.taux-max').val('');
+					$item.children('.parcours-preco-cbox').val('select_cbox');
+					$item.children('.del-preco').on('click', self.deletePreco($item));
 
 					$('.preco-list').append($item);
 

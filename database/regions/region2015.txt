@@ -84,7 +84,7 @@
 [72=Aquitaine]
 24=Dordogne
 33=Gironde
-40=Lande
+40=Landes
 47=Lot-et-Garonne
 64=Pyrénées-Atlantiques
 

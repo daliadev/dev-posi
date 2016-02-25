@@ -413,7 +413,7 @@ $form_url = $response['url'];
 			$(".search-date").focus(function(event) {
 				$(this).val('');
 			});
-			/*
+			
 			$("#date_debut").datepicker({
 				dateFormat: "dd/mm/yy",
 				changeMonth: true, 
@@ -466,17 +466,8 @@ $form_url = $response['url'];
 					var dateUs = new Date(the_date[2], the_date[1]-1, the_date[0]);
 					$("#date_debut").datepicker('option', 'maxDate', dateUs);
 				}
-							
-			
-			});
-			*/
-			
-			//$("#infos-posi").tabs();
-			/*
-			$('.region-list').on('change', function(event) {
 
 			});
-			*/
 
 
 			<?php if (Config::ALLOW_AJAX) : ?>
@@ -495,7 +486,7 @@ $form_url = $response['url'];
 					var select = $(this);
 					var target = '#ref-organ-cbox';
 					var url = $('#form-posi').attr('action');
-					console.log(url);
+					//console.log(url);
 					var refRegion = null;
 					//var refUser = null;
 					/*
@@ -537,6 +528,7 @@ $form_url = $response['url'];
 						
 						var $target = $(target).get(0);
 						$target.options.length = 1;
+						$target.options[0].selected;
 
 						if (data.error) {
 

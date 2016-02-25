@@ -754,7 +754,7 @@ class ServicesAdminStat extends Main
 	}
 
 
-	public function createRegionsList($year = '2015')
+	public function createRegionsList($year = '2016')
 	{
 		$this->regionsList = null;
 

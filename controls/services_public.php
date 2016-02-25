@@ -60,6 +60,23 @@ class ServicesPublic extends Main
 		$loggedAsAdmin = false;
 		$preSelectOrganisme = null;
 
+
+		// Lecture du intégration du fichier 'régions'
+		$regions = null;
+		$hasRegions = $this->servicesAdminStat->createRegionsList(Config::ANNEE_REGION);
+
+		if ($hasRegions)
+		{
+			$regionsList['response'] = array();
+			$regionsList['response']['regions'] = $this->servicesAdminStat->getRegionsList();
+		}
+
+		if (isset($regionsList['response']['regions']) && !empty($regionsList['response']['regions'])) 
+		{
+			$regions = $regionsList['response']['regions'];
+		}
+
+
 		
 		// on vérifie s'il y a un code dans les parametres url
 		if (isset($requestParams[0]) && !empty($requestParams[0]))
@@ -377,6 +394,14 @@ class ServicesPublic extends Main
 		//exit();
 
 
+		// Liste des régions pour le combo-box
+
+		if ($regionsList['response']['regions']) 
+		{
+			$this->returnData['response'] = array_merge($regionsList['response'], $this->returnData['response']);
+		}
+
+
 		/*** On va chercher les infos pour créer la liste de validation des acquis ***/
 		$valid_acquis = array();
 		$valid_acquis = $this->servicesRestitution->getValidAcquis();
@@ -475,6 +500,8 @@ class ServicesPublic extends Main
 		$loggedAsAdmin = false;
 		$preSelectOrganisme = null;
 
+
+		// Lecture du intégration du fichier 'régions'
 		$regions = null;
 		$hasRegions = $this->servicesAdminStat->createRegionsList(Config::ANNEE_REGION);
 
@@ -488,6 +515,7 @@ class ServicesPublic extends Main
 		{
 			$regions = $regionsList['response']['regions'];
 		}
+
 
 		// on vérifie s'il y a un code dans les parametres url
 		if (isset($requestParams[0]) && !empty($requestParams[0]))

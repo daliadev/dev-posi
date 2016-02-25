@@ -293,14 +293,49 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						
 						<fieldset>
 
-							<legend>Selection du positionnement</legend>
+							<legend>Recherche du positionnement</legend>
+							
+							<p style="margin-top:0;"><strong>Filtres : </strong></p>
+
+							<!-- <hr> -->
+
+							<div class="filter-item">
+								<label for="ref-region-cbox">Région : </label>
+
+								<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) <= 1) ? "disabled" : ""; ?>
+								<select name="ref_region_cbox" id="ref-region-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="region-organ" style="max-width: 200px;" <?php echo $disabled; ?>>
+								
+									<?php if ($disabled == "") : ?>
+										<option class="region-option" value="select_cbox">Toute la France</option>
+									<?php endif; ?>
+									<?php
+									
+									if (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) > 0)
+									{
+										foreach ($response['regions'] as $region)
+										{
+											$selected = "";
+											
+											if (!empty($formData['ref_region']) && $formData['ref_region'] == $region['ref'])
+											{
+												$selected = "selected";
+											}
+											
+											echo '<option class="region-option" value="'.$region['ref'].'" '.$selected.'>'.$region['nom'].'</option>';
+										}
+									}
+									
+									?>
+								</select>
+							</div>
+
 
 							<div class="filter-item" id="combo-organ">
 								<label for="ref_organ_cbox">Organisme :</label>
 
-								<?php //$disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
-								<?php $disabled = ""; ?>
-								<select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" <?php echo $disabled; ?>>
+								<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
+								<?php //$disabled = ""; ?>
+								<select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 200px;" <?php echo $disabled; ?>>
 									
 									<?php if ($disabled == "") : ?>
 									<option class="organ-option" value="select_cbox">---</option>
@@ -312,10 +347,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										foreach ($response['organisme'] as $organisme)
 										{
 											$selected = "";
+
 											if (!empty($formData['ref_organ']) && $formData['ref_organ'] == $organisme->getId())
 											{
 												$selected = "selected";
 											}
+
 											echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
 										}
 									}
@@ -324,11 +361,10 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								</select>
 							</div>
 
-							&nbsp;
-							
+
 							<div class="filter-item" id="combo-user">
 								<label for="ref_user_cbox">Utilisateur :</label>
-								<select name="ref_user_cbox" id="ref_user_cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session">
+								<select name="ref_user_cbox" id="ref_user_cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session" data-request="user-session" style="max-width: 200px;">
 									<option value="select_cbox">---</option>
 
 									<?php
@@ -347,14 +383,25 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								</select>
 							</div>
-							
 
-							&nbsp;
+							<div class="filter-item">
+								<label for="date_debut">Date : </label>
+								<input type="text" name="date_debut" id="date_debut" class="ajax-list" data-request="date-session" placeholder="jj/mm/aaaa" style="width: 60px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_debut']; ?>">
+							</div>
 							
-						
-							<div class="filter-item" id="combo-posi">
-								<label for="ref_session_cbox">Positionnement :</label>
-								<select name="ref_session_cbox" id="ref_session_cbox" class="ajax-list">
+							<div class="filter-item" style="margin-right: 0;">
+								<input type="submit" value="Filtrer" id="submit-posi" style="margin: 18px 0 0 0; width: 100px;">
+							</div>
+							
+							<div style="clear: both;"></div>
+
+							<hr />
+
+							<!-- <p style="margin-top: 0;"><strong>Sélection du positionnement : </strong></p> -->
+
+							<div class="filter-item" id="combo-posi" style="margin-top: 0;">
+								<label for="ref_session_cbox"><strong>Selection du positionnement :</strong></label>
+								<select name="ref_session_cbox" id="ref_session_cbox" class="ajax-list" data-request="session" style="margin: 10px 0 0 0; width: 120px;">
 									<option value="select_cbox">---</option>
 
 									<?php
@@ -377,13 +424,13 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								</select>
 							</div>
-							
 
-							&nbsp;
 
 							<div class="filter-item">
-								<input type="submit" value="Sélectionner" id="submit-posi" style="margin: 18px 0 0 0;" >
+								<input type="submit" value="Sélectionner" id="submit-posi" style="margin: 20px 0 0 0; width: 120px;">
 							</div>
+
+							<div style="clear: both;"></div>
 
 						</fieldset>
 					</div>
@@ -1001,14 +1048,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					
 
 				}).each(function() {
-
+					/*
 					var select = $(this);
 					if (select.val() == "select_cbox")
 					{
 						var target = $('#' + select.data('target'));
 						target.parents('.filter-item').hide();
 					}
-					
+					*/
 				});
 
 

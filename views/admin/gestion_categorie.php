@@ -28,7 +28,6 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 	}
 }
 
-
 //var_dump($formData['code_cat']);
 //var_dump($formData['ordre_cat']);
 
@@ -583,7 +582,7 @@ $form_url = $response['url'];
 				<div class="modal-box-text">
 					<p>Sélectionner un parcours pour l'éditer ou la supprimer :</p>
 					<select name="parcours_cbox" id="parcours-cbox" class="select-<?php echo $formData["disabled"]; ?>">
-					<option value="select_cbox">Aucune</option>
+					<option value="select_cbox">---</option>
 
 					<?php
 

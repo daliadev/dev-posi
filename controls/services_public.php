@@ -476,7 +476,7 @@ class ServicesPublic extends Main
 		$preSelectOrganisme = null;
 
 		$regions = null;
-		$hasRegions = $this->servicesAdminStat->createRegionsList('2015');
+		$hasRegions = $this->servicesAdminStat->createRegionsList(Config::ANNEE_REGION);
 
 		if ($hasRegions)
 		{

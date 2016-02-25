@@ -17,6 +17,9 @@ CREATE TABLE parcours_preco
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+INSERT INTO parcours_preco (volume_parcours, nom_parcours)
+	VALUES 	(0, "Aucune");
+
 
 /*==============================================================*/
 /* Table : preconisation                                        */
@@ -60,7 +63,7 @@ CREATE INDEX I_FK_preco_parcours ON preconisation (ref_parcours ASC);
 /* Contraintes relationnelles                                   */
 /*==============================================================*/
 ALTER TABLE cat_preco 
-	ADD CONSTRAINT FK_cat_preco_cat FOREIGN KEY (ref_code_cat) REFERENCES categorie (code_cat) ON DELETE SET NULL ON UPDATE RESTRICT;
+	ADD CONSTRAINT FK_cat_preco_cat FOREIGN KEY (ref_code_cat) REFERENCES categorie (code_cat) ON DELETE CASCADE ON UPDATE RESTRICT;
 
 ALTER TABLE cat_preco 
 	ADD CONSTRAINT FK_cat_preco_preco FOREIGN KEY (ref_preco) REFERENCES preconisation (id_preco) ON DELETE CASCADE ON UPDATE RESTRICT;

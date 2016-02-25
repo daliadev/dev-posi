@@ -12,7 +12,7 @@ class Config
 {
 
     /* Version */
-    const POSI_VERSION = "0.25.09";
+    const POSI_VERSION = "0.26.01";
 
 
     /* Nom et titre du positionnement */
@@ -26,10 +26,13 @@ class Config
     // Titre de la partie admin.
     const ADMIN_TITLE = "Gestion du positionnement";
 
-    const CLIENT_NAME = "Uniformation"; /*"Uniformation";*/
+    const CLIENT_NAME = "Uniformation";
     const CLIENT_NAME_LONG = "Uniformation";
     
-    
+    /* Référenciel régional 2015 ou 2016 (stats-restitution) */
+    const ANNEE_REGION = "2016";
+
+
     /* Gestion du nombre de positionnement */
 
     // Nombre de positionnements maximum que peut effectuer l'organisme client.

@@ -390,7 +390,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							</div>
 							
 							<div class="filter-item" style="margin-right: 0;">
-								<input type="submit" value="Filtrer" id="submit-posi" style="margin: 18px 0 0 0; width: 100px;">
+								<input type="submit" value="Filtrer" id="submit-posi" style="margin: 19px 0 0 0; width: 100px; height: 32px;">
 							</div>
 							
 							<div style="clear: both;"></div>
@@ -427,7 +427,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 							<div class="filter-item">
-								<input type="submit" value="Sélectionner" id="submit-posi" style="margin: 20px 0 0 0; width: 120px;">
+								<input type="submit" value="Sélectionner" id="submit-posi" style="margin: 24px 0 0 0; width: 120px; height: 32px;">
 							</div>
 
 							<div style="clear: both;"></div>
@@ -974,7 +974,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 					if (sortOf === "user") {
 
-						$("#ref_session_cbox").parents('.filter-item').hide();
+						//$("#ref_session_cbox").parents('.filter-item').hide();
 
 						refOrgan = $("#ref_organ_cbox").val();
 					}
@@ -1013,7 +1013,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						}
 						else {
 
-							$(target).parents('.filter-item').show();
+							//$(target).parents('.filter-item').show();
 							var $target = $(target).get(0);
 							$target.options.length = 1;
 							

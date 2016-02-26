@@ -198,6 +198,19 @@ class ServicesAdminRestitution extends Main
 	}
 
 
+	public function search($refRegion = null, $regionsList, $refOrgan = null, $refUser = null, $date = null,)
+	{
+		$request = "SELECT org.id_organ, org.numero_interne, org.nom_organ, org.code_postal_organ, inter.id_intervenant, user.ref_user, sess.id_session, sess.date_session ";
+		$request .= "FROM organisme as org, intervenant as inter, utilisateur as user, session as sess ";
+		$request .= "WHERE ";
+		// Trouve l'organisme correspondant à l'un des départements de la région
+		$request .= "org.code_postal_organ LIKE '".$departmnt['numero']."___' ";
+		$request .= "AND org.id_organ = ".$refOrgan." ";
+		$request .= "AND inter.ref_organ = org.id_organ ";
+		$request .= "AND sess.ref_intervenant = inter.id_intervenant ";
+		$request .= "AND user.ref_user = sess.ref_user ";
+		$request .= "AND sess.date_session = '".$date."' ";
+	}
 	
 	
 

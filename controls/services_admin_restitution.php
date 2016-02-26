@@ -198,18 +198,94 @@ class ServicesAdminRestitution extends Main
 	}
 
 
-	public function search($refRegion = null, $regionsList, $refOrgan = null, $refUser = null, $date = null,)
+	public function search($refRegion = null, $regionsList, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, )
 	{
-		$request = "SELECT org.id_organ, org.numero_interne, org.nom_organ, org.code_postal_organ, inter.id_intervenant, user.ref_user, sess.id_session, sess.date_session ";
-		$request .= "FROM organisme as org, intervenant as inter, utilisateur as user, session as sess ";
-		$request .= "WHERE ";
-		// Trouve l'organisme correspondant à l'un des départements de la région
-		$request .= "org.code_postal_organ LIKE '".$departmnt['numero']."___' ";
-		$request .= "AND org.id_organ = ".$refOrgan." ";
-		$request .= "AND inter.ref_organ = org.id_organ ";
-		$request .= "AND sess.ref_intervenant = inter.id_intervenant ";
-		$request .= "AND user.ref_user = sess.ref_user ";
-		$request .= "AND sess.date_session = '".$date."' ";
+		// code postaux
+		$codePostalRequest = "";
+
+		if(!empty($refRegion))
+		{
+			//$regionsList = $this->servicesAdminStat->getRegionsList('2015');
+
+			foreach ($regionsList as $region)
+			{
+				//var_dump($region);
+
+				if ($refRegion == $region['ref']) {
+
+					$departements = $region['departements'];
+
+					$k = 0;
+
+					foreach ($departements as $departmnt)
+					{
+						if ($k > 0) 
+						{
+							$codePostalRequest.= "OR ";
+						}
+
+						$codePostalRequest .= "code_postal_organ LIKE '".$departmnt['numero']."___' ";
+
+						$k++;
+					}
+
+					break;
+				}
+			}
+
+			//$request = "SELECT * FROM organisme WHERE ".$searchCodePostal;
+			//$this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
+		}
+
+
+		$query = "SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user ";
+		$query .= "FROM organisme AS org ";
+		$query .= "INNER JOIN intervenant AS inter ";
+		$query .= "ON org.id_organ = inter.ref_organ ";
+		$query .= "INNER JOIN session AS sess ";
+		$query .= "ON sess.ref_intervenant = inter.id_intervenant ";
+		$query .= "INNER JOIN utilisateur AS user ";
+		$query .= "ON user.id_user = sess.ref_user ";
+		$query .= "WHERE sess.session_accomplie = 1 ";
+		//$query .= "AND org.code_postal_organ LIKE '76___' ";
+		$query .= $codePostalRequest;
+		if ($refOrgan) 
+		{
+			$query .= "AND org.id_organ = ".$refOrgan." ";
+		}
+		if ($codeOrgan) 
+		{
+			$query .= "AND org.numero_interne LIKE '".$codeOrgan."' ";
+		}
+		if ($refUser) 
+		{
+			$query .= "AND user.id_user = ".$refUser." ";
+		}
+		if ($date) 
+		{
+			$query .= "AND sess.date_session = '".$date."' ";
+		}
+		//$query .= "GROUP BY user.nom_user ";
+		$query .= "ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
+
+		/*
+		SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user 
+		FROM organisme AS org 
+		INNER JOIN intervenant AS inter 
+			ON org.id_organ = inter.ref_organ 
+		INNER JOIN session AS sess 
+			ON sess.ref_intervenant = inter.id_intervenant 
+		INNER JOIN utilisateur AS user 
+			ON user.id_user = sess.ref_user
+		WHERE sess.session_accomplie = 1 
+			AND org.code_postal_organ LIKE '76___' 
+			# AND org.id_organ = $refOrgan
+			# AND org.numero_interne LIKE '$codeOrgan'  
+			# AND user.id_user = $refUser 
+			# AND sess.date_session = '$date'  
+		# GROUP BY user.nom_user 
+		ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC;
+		*/
 	}
 	
 	

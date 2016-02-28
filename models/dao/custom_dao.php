@@ -1,15 +1,15 @@
 <?php
 
 
-class CustomeDAO extends ModelDAO
+class CustomDAO extends ModelDAO
 {
 
 	
-	public function create($request, $resultName) 
+	public function read($request, $resultName) 
 	{
 		$this->initialize();
 
-		$this->resultset['response'] = executeCustomRequest($request, $resultName)
+		$this->resultset['response'] = $this->executeCustomRequest($request, $resultName);
 
 		return $this->resultset;
 	}

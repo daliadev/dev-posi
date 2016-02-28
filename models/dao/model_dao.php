@@ -88,7 +88,7 @@ class ModelDAO
 	
 	public function getStatementFetch()
 	{
-		return $this->callStatement->fetch();
+		return $this->callStatement->fetch(PDO::FETCH_ASSOC);
 	}
 
 	
@@ -340,20 +340,21 @@ class ModelDAO
 				{
 					// Si le tableau des résultats comporte des clés numériques, on supprime l'entrée du tableau.
 					// On ne garde que les clés qui sont des noms.
+					/*
 					foreach ($tabChamps as $key => $value) 
 					{
-					   if (is_numeric($key)) 
+					   if (is_numeric($key) ) 
 					   {
 						   unset($tabChamps[$key]);
 					   }
 					}
-					
+					*/
 					// Construction dynamique de l'objet demandé.
 					//$object = $this->buildModel($objectName, $tabChamps);
 					
 					// Ajout de l'objet au tableau de sortie.
-					//array_push($resultset[$tableName], $object);
-					$resultset[$resultName] = $tabChamps; 
+					array_push($resultset[$resultName], $tabChamps);
+					//$resultset[$resultName] = $tabChamps; 
 				}
 			}
 			else if ($this->getRowCount() === 1)
@@ -366,10 +367,8 @@ class ModelDAO
 				
 				// On renvoi l'objet directement (non dans un tableau).
 				//$resultset[$tableName] = $object;
-				$resultset[$resultName] = $tabChamps; 
-			}
-			break;
-				
+				$resultset[$resultName][0] = $tabChamps; 
+			}	
 				
 
 			// Fermeture de la requête préparée et fermeture de la connection.

@@ -123,15 +123,85 @@ class ServicesPublic extends Main
 		$this->servicesRestitution->initialize();
 		
 		$this->url = SERVER_URL."public/restitution/".$codeOrgan;
-
 		
 
-		/*** Requêtes ajax ***/
+
+		/*** Requêtes ajax de filtrage ***/
 
 		if (Config::ALLOW_AJAX)
 		{
 			if ($loggedAsViewer || $loggedAsAdmin)
 			{
+				if (isset($_POST['filter']))
+				{
+					$results = false;
+
+					$refRegion = null;
+					$refOrgan = null;
+					$refUser = null;
+					$dateSession = null;
+					$refSession = null;
+
+					if (isset($_POST['ref_region']) && !empty($_POST['ref_region']))
+					{
+						$refRegion = $_POST['ref_region'];
+					}
+					if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+					{
+						$refOrgan = $_POST['ref_organ'];
+					}
+					if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
+					{
+						$refUser = $_POST['ref_user'];
+					}
+					if (isset($_POST['date_session']) && !empty($_POST['date_session']))
+					{
+						$dateSession = $_POST['date_session'];
+					}
+					if (isset($_POST['ref_session']) && !empty($_POST['ref_session']))
+					{
+						$refSession = $_POST['ref_session'];
+					}
+
+					if ($refRegion != null || $refOrgan != null || $refUser != null || $dateSession != null)
+					{
+
+						if ($_POST['filter'] == 'false')
+						{
+							// Recherche des éléments de listes et de champs de filtrage
+
+							$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+							//var_dump($searchResults['response']);
+							//exit();
+							if ($searchResults)
+							{
+								$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'query' => $searchResults['response']['query']);
+							}
+							else
+							{
+								$results = array('error' => "error filter = false");
+							}
+						}
+						else if ($_POST['filter'] == 'true')
+						{
+							// Recherche des positionnements
+							$results = array('error' => "error filter = true");
+						}
+						else
+						{
+							$results = array('error' => $_POST['filter']);
+						}
+					}
+					else
+					{
+						$results = array('error' => "error no filter attribute");
+					}
+
+					echo json_encode($results);
+					exit();
+				}
+
+				/*
 				if (isset($_POST['sort']) && !empty($_POST['sort']))
 				{
 
@@ -201,6 +271,7 @@ class ServicesPublic extends Main
 					echo json_encode($response);
 					exit();
 				}
+				*/
 			}
 		}
 
@@ -655,8 +726,6 @@ class ServicesPublic extends Main
 		
 
 		
-
-
 
 		$filters = array();
 		$filters['start_date'] = false;

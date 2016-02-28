@@ -331,17 +331,17 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 							<div class="filter-item" id="combo-organ">
-								<label for="ref_organ_cbox">Organisme :</label>
+								<label for="ref-organ-cbox">Organisme :</label>
 
 								<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
 								<?php //$disabled = ""; ?>
-								<select name="ref_organ_cbox" id="ref_organ_cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 200px;" <?php echo $disabled; ?>>
+								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 200px;" <?php echo $disabled; ?>>
 									
 									<?php if ($disabled == "") : ?>
 									<option class="organ-option" value="select_cbox">---</option>
 									<?php endif; ?>
 									<?php
-									
+									/*
 									if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
 									{						
 										foreach ($response['organisme'] as $organisme)
@@ -356,41 +356,44 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
 										}
 									}
-									
+									*/
 									?>
 								</select>
 							</div>
 
 
 							<div class="filter-item" id="combo-user">
-								<label for="ref_user_cbox">Utilisateur :</label>
-								<select name="ref_user_cbox" id="ref_user_cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session" data-request="user-session" style="max-width: 200px;">
+								<label for="ref-user-cbox">Utilisateur :</label>
+								<select name="ref_user_cbox" id="ref-user-cbox" class="ajax-list" data-target="ref_session_cbox" data-url="<?php echo $form_url; ?>" data-sort="session" data-request="user-session" style="max-width: 200px;">
 									<option value="select_cbox">---</option>
 
 									<?php
-									
-									foreach ($response['utilisateurs'] as $utilisateur)
+									/*
+									if (isset($response['utilisateurs']) && !empty($response['utilisateurs']) && count($response['utilisateurs']) > 0)
 									{
-										$selected = "";
-										if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
+										foreach ($response['utilisateurs'] as $utilisateur)
 										{
-											$selected = "selected";
+											$selected = "";
+											if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
+											{
+												$selected = "selected";
+											}
+											echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
 										}
-										echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
 									}
-									
+									*/
 									?>
 
 								</select>
 							</div>
 
 							<div class="filter-item">
-								<label for="date_debut">Date : </label>
-								<input type="text" name="date_debut" id="date_debut" class="ajax-list" data-request="date-session" placeholder="jj/mm/aaaa" style="width: 60px;" title="Veuillez entrer la date de début" value="<?php //echo $formData['date_debut']; ?>">
+								<label for="date-session">Date : </label>
+								<input type="text" name="date_session" id="date-session" class="ajax-list" data-request="date-session" placeholder="jj/mm/aaaa" style="width: 70px;" title="Rechercher un positionnement par date." value="<?php //echo $formData['date_session']; ?>">
 							</div>
 							
 							<div class="filter-item" style="margin-right: 0;">
-								<input type="submit" value="Filtrer" id="submit-posi" style="margin: 19px 0 0 0; width: 100px; height: 32px;">
+								<input type="submit" value="Filtrer" id="submit-filter" style="margin: 19px 0 0 0; width: 90px; height: 32px;">
 							</div>
 							
 							<div style="clear: both;"></div>
@@ -826,6 +829,408 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			$('.categories-list ul:first-child').children('li:first-child').addClass('active');
 
+
+			var self = this;
+			
+			var refRegion = null;
+			var refOrgan = null;
+			var refUser = null;
+			var dateSession = null;
+			var refSession = null;
+			var isFilterActivate = false;
+
+
+			/* Listes dynamiques en ajax */
+
+			this.changeFilter = function(id, value) {
+
+				console.log('Filter changed for : ' + id + ' = ' + value);
+				console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
+
+				var selectRegion = $('#ref-region-cbox').get(0);
+				var selectOrgan = $('#ref-organ-cbox').get(0);
+				var selectUser = $('#ref-user-cbox').get(0);
+				var dateInput = $('#date-session');
+
+				if (id == selectRegion.id)
+				{
+					if (selectRegion.value == 'select_cbox') {
+
+						refRegion = null;
+					}
+					refOrgan = null;
+					refUser = null;
+				}
+				else if (id == selectOrgan.id)
+				{
+					if (selectOrgan.value == 'select_cbox') {
+
+						refOrgan = null;
+					}
+					refUser = null;
+				}
+
+				var url = $('#form-posi').attr('action');
+
+				<?php if (Config::ALLOW_AJAX) : ?>
+				
+				$.post(url, {'filter': isFilterActivate, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
+
+					if (data.error) {
+
+						alert(data.error);
+					}
+					else {
+
+						//console.log(data.results);
+						//var selectOrgan = $('#ref-organ-cbox').get(0);
+						//selectOrgan.options.length = 1;
+						//selectOrgan.options[0].selected;
+
+						//var selectUser = $('#ref-user-cbox').get(0);
+						//selectUser.options.length = 1;
+						//selectUser.options[0].selected;
+
+						//var dateInput = $('#date-session');
+
+						var selected = false;
+
+
+						if (isFilterActivate) {
+
+						}
+						else {
+
+							//console.log(ref + ' ' + selectOrgan.id);
+
+							if (id == $('#ref-region-cbox').get(0).id) {
+
+								selectOrgan.options.length = 1;
+								selectOrgan.options[0].selected;
+								selectUser.options.length = 1;
+								selectUser.options[0].selected;
+
+								currentRefOrgan = null;
+								currentRefUser = null;
+
+								var i = 1;
+								var j = 1;
+
+								for (var prop in data.results) {
+
+									// Changement des organismes
+									if (data.results[prop].id_organ != null && data.results[prop].nom_organ != null && data.results[prop].id_organ != currentRefOrgan) {
+
+										var organ = data.results[prop];
+										currentRefOrgan = organ.id_organ;
+
+										selected = false;
+										//if (organ.id_organ = refOrgan) { selected = true; }
+
+										selectOrgan.options[i] = new Option(organ.nom_organ, organ.id_organ, false, selected);
+
+										i++;
+									}
+									else if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+
+										var user = data.results[prop];
+										currentRefUser = user.id_user;
+
+										selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+
+										j++;
+									}
+								}
+							}
+							else if (id == selectOrgan.id) {
+
+								selectUser.options.length = 1;
+								selectUser.options[0].selected;
+
+								currentRefUser = null;
+								var j = 1;
+
+								for (var prop in data.results) {
+								
+									// Changement des utilisateurs
+									if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+
+										var user = data.results[prop];
+										currentRefUser = user.id_user;
+
+										selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+
+										j++;
+									}
+								}
+							}
+
+							// Organismes
+
+							
+							/*
+							var i = 1;
+							var currentId = null;
+
+							for (var prop in data.results) {
+								
+								if (data.results[prop].id_organ != null && data.results[prop].nom_organ != null && data.results[prop].id_organ != currentId) {
+
+									var organ = data.results[prop];
+									currentId = organ.id_organ;
+
+									selectOrgan.options[i] = new Option(organ.nom_organ, organ.id_organ, false, false);
+
+									i++;
+								}
+							}
+
+							// Utilisateurs
+							
+							i = 1;
+							currentId = null;
+
+							for (var prop in data.results) {
+								
+								if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentId) {
+
+									var user = data.results[prop];
+									currentId = user.id_user;
+
+									selectUser.options[i] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+
+									i++;
+								}
+							}
+							*/	
+						}
+
+
+						/*
+						var $target = $(target).get(0);
+						$target.options.length = 1;
+						
+						if (data.results.utilisateur) {
+							
+							var i = 1;
+							for (var prop in data.results.utilisateur) {
+							
+								var result = data.results.utilisateur[prop];
+
+								$target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
+
+								i++;
+							}
+						}
+						else if (data.results.session) {
+
+							var i = 1;
+							for (var prop in data.results.session) {
+							
+								var result = data.results.session[prop];
+
+								$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
+
+								i++;
+							}
+						}
+						*/
+					}
+				}, 'json');
+				
+				<?php endif; ?>
+			};
+
+
+
+			$('.ajax-list').on('change', function(event) {
+
+				var select = $(this);
+				var request = select.data('request');
+				var ref = null;
+				var hasChanged = false;
+				
+				switch (request) {
+					case 'region-organ' :
+						hasChanged = select.val() != refRegion;
+						refRegion = select.val() != 'select_cbox' ? select.val() : null;
+						ref = refRegion;
+						break;
+
+					case 'organ-user' :
+						hasChanged = select.val() != refOrgan;
+						refOrgan = select.val() != 'select_cbox' ? select.val() : null;
+						ref = refOrgan;
+						break;
+
+					case 'user-session' :
+						hasChanged = select.val() != refUser;
+						refUser = select.val() != 'select_cbox' ? select.val() : null;
+						ref = refUser;
+						break;
+
+					default :
+						break;
+				}
+
+				self.isFilterActivate = false;
+
+				if (hasChanged) {
+
+					self.changeFilter(this.id, ref);
+				}
+			});
+
+
+			var date = new Date();
+
+			$("#date-session").datepicker({
+				dateFormat: "dd/mm/yy",
+				changeMonth: true, 
+				changeYear: true, 
+				yearRange: "2014:" + date.getFullYear(),
+				closeText: 'Fermer',
+				prevText: 'Précédent',
+				nextText: 'Suivant',
+				currentText: 'Aujourd\'hui',
+				monthNames: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+				monthNamesShort: ['janv', 'fév', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'],
+				dayNames: ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'],
+				dayNamesShort: ['dim.', 'lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.'],
+				dayNamesMin: ['D','L','M','M','J','V','S'],
+				weekHeader: 'Sem.',
+				firstDay: 1,
+				showMonthAfterYear: false,
+				onClose: function(dateText, instance) {
+					var pickedDate = dateText.split('/'); 
+					//var dateUs = new Date(pickedDate[2], pickedDate[1] - 1, pickedDate[0]);
+					//this.
+					//$("#date-debut").datepicker('option', 'maxDate', dateUs);
+
+					//dateSession = new Date(pickedDate[2], pickedDate[1] - 1, pickedDate[0]);
+					dateSession = pickedDate[2] + '-' + pickedDate[1] + '-' + pickedDate[0];
+
+					self.isFilterActivate = false;
+					self.changeFilter(this.id, dateSession);
+				}
+			});
+
+
+			$('#submit-filter').on('click', function(event) {
+				
+				event.preventDefault();
+				self.isFilterActivate = true;
+				//self.changeFilter(null, null);
+
+				console.log('Filtering !');
+			});
+
+
+				
+
+				
+				/*
+				$('.ajax-list').change(function(event) {
+
+
+					var select = $(this);
+					var target = '#' + select.data('target');
+					var url = select.data('url');
+					var sortOf = select.data('sort');
+					
+					var refOrgan = null;
+					var refUser = null;
+
+					if (sortOf === "user") {
+
+						//$("#ref_session_cbox").parents('.filter-item').hide();
+
+						refOrgan = $("#ref_organ_cbox").val();
+					}
+					else if (sortOf === "session") {
+
+						//$('#ref_session_cbox').show();
+
+						$('.organ-option').each(function() {
+
+							var option = $(this)[0];
+							
+							if ($(option).prop('selected')) {
+
+								refOrgan = $(option).val();
+							}
+						});
+
+						refUser = $('#ref_user_cbox').val();
+
+
+						var cbox = $('#ref_session_cbox').get(0);
+
+						if (cbox.options.length > 1) {
+	
+							cbox.options.length = 1;
+							
+						}
+					}
+
+
+					$.post(url, {"ref_organ":refOrgan,"ref_user":refUser,"sort":sortOf}, function(data) {
+						
+						if (data.error) {
+
+							alert(data.error);
+						}
+						else {
+
+							//$(target).parents('.filter-item').show();
+							var $target = $(target).get(0);
+							$target.options.length = 1;
+							
+							if (data.results.utilisateur) {
+								
+								var i = 1;
+								for (var prop in data.results.utilisateur) {
+								
+									var result = data.results.utilisateur[prop];
+
+									$target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
+
+									i++;
+								}
+							}
+							else if (data.results.session) {
+
+								var i = 1;
+								for (var prop in data.results.session) {
+								
+									var result = data.results.session[prop];
+
+									$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
+
+									i++;
+								}
+							}
+							
+						}
+
+					}, 'json');
+					*/
+
+				//}).each(function() {
+					/*
+					var select = $(this);
+					if (select.val() == "select_cbox")
+					{
+						var target = $('#' + select.data('target'));
+						target.parents('.filter-item').hide();
+					}
+					*/
+				//});
+
+
+			
+
+
 			/*
 			$("#accordian a").click(function(){
 				var link = $(this);
@@ -953,113 +1358,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				$("#ref_valid_cbox").val(selectedAcquis);
 				return false;
 			});
-
-
-
-			<?php if (Config::ALLOW_AJAX) : ?>
-
-				//console.log('Ajax allowed');
-				/* Listes dynamiques en ajax */
-			   
-				$('.ajax-list').change(function(event) {
-
-
-					var select = $(this);
-					var target = '#' + select.data('target');
-					var url = select.data('url');
-					var sortOf = select.data('sort');
-					
-					var refOrgan = null;
-					var refUser = null;
-
-					if (sortOf === "user") {
-
-						//$("#ref_session_cbox").parents('.filter-item').hide();
-
-						refOrgan = $("#ref_organ_cbox").val();
-					}
-					else if (sortOf === "session") {
-
-						//$('#ref_session_cbox').show();
-
-						$('.organ-option').each(function() {
-
-							var option = $(this)[0];
-							
-							if ($(option).prop('selected')) {
-
-								refOrgan = $(option).val();
-							}
-						});
-
-						refUser = $('#ref_user_cbox').val();
-
-
-						var cbox = $('#ref_session_cbox').get(0);
-
-						if (cbox.options.length > 1) {
-	
-							cbox.options.length = 1;
-							
-						}
-					}
-
-
-					$.post(url, {"ref_organ":refOrgan,"ref_user":refUser,"sort":sortOf}, function(data) {
-						
-						if (data.error) {
-
-							alert(data.error);
-						}
-						else {
-
-							//$(target).parents('.filter-item').show();
-							var $target = $(target).get(0);
-							$target.options.length = 1;
-							
-							if (data.results.utilisateur) {
-								
-								var i = 1;
-								for (var prop in data.results.utilisateur) {
-								
-									var result = data.results.utilisateur[prop];
-
-									$target.options[i] = new Option(result.nom_user + " " + result.prenom_user, result.id_user, false, false);
-
-									i++;
-								}
-							}
-							else if (data.results.session) {
-
-								var i = 1;
-								for (var prop in data.results.session) {
-								
-									var result = data.results.session[prop];
-
-									$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
-
-									i++;
-								}
-							}
-							
-						}
-
-					}, 'json');
-					
-
-				}).each(function() {
-					/*
-					var select = $(this);
-					if (select.val() == "select_cbox")
-					{
-						var target = $('#' + select.data('target'));
-						target.parents('.filter-item').hide();
-					}
-					*/
-				});
-
-
-			<?php endif; ?>
 
 
 		});

@@ -16,6 +16,9 @@ require_once(ROOT.'models/dao/preconisation_dao.php');
 require_once(ROOT.'models/dao/parcours_preco_dao.php');
 require_once(ROOT.'models/dao/valid_acquis_dao.php');
 
+require_once(ROOT.'models/dao/custom_dao.php');
+
+
 //require_once(ROOT.'controls/services_admin_categorie.php');
 require_once(ROOT.'controls/services_resultats.php');
 
@@ -37,6 +40,8 @@ class ServicesAdminRestitution extends Main
 	private $preconisationDAO = null;
 	private $parcoursPrecoDAO = null;
 	private $validAcquisDAO = null;
+
+	private $customDAO = null;
 
    // private $servicesCategories = null;
 	private $servicesResultats = null;
@@ -62,6 +67,8 @@ class ServicesAdminRestitution extends Main
 		$this->preconisationDAO = new PreconisationDAO();
 		$this->parcoursPrecoDAO = new ParcoursPrecoDAO();
 		$this->validAcquisDAO = new ValidAcquisDAO();
+
+		$this->customDAO = new CustomDAO();
 
 		//$this->servicesCategories = new ServicesAdminCategorie();
 		$this->servicesResultats = new ServicesPosiResultats();
@@ -198,19 +205,17 @@ class ServicesAdminRestitution extends Main
 	}
 
 
-	public function search($refRegion = null, $regionsList, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, )
+
+
+	public function search($regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null)
 	{
 		// code postaux
 		$codePostalRequest = "";
 
 		if(!empty($refRegion))
 		{
-			//$regionsList = $this->servicesAdminStat->getRegionsList('2015');
-
 			foreach ($regionsList as $region)
 			{
-				//var_dump($region);
-
 				if ($refRegion == $region['ref']) {
 
 					$departements = $region['departements'];
@@ -223,8 +228,12 @@ class ServicesAdminRestitution extends Main
 						{
 							$codePostalRequest.= "OR ";
 						}
+						else
+						{
+							$codePostalRequest.= "AND ";
+						}
 
-						$codePostalRequest .= "code_postal_organ LIKE '".$departmnt['numero']."___' ";
+						$codePostalRequest .= "org.code_postal_organ LIKE '".$departmnt['numero']."___' ";
 
 						$k++;
 					}
@@ -232,42 +241,50 @@ class ServicesAdminRestitution extends Main
 					break;
 				}
 			}
-
-			//$request = "SELECT * FROM organisme WHERE ".$searchCodePostal;
-			//$this->resultset['response'] = $this->executeRequest("select", $request, "organisme", "Organisme");
 		}
+/*
+SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user 
+FROM organisme AS org INNER JOIN intervenant AS inter ON org.id_organ = inter.ref_organ INNER JOIN session AS sess ON inter.id_intervenant = sess.ref_intervenant INNER JOIN utilisateur AS user ON user.id_user = sess.ref_user WHERE sess.session_accomplie = 1 AND org.code_postal_organ LIKE '27___' OR org.code_postal_organ LIKE '76___' OR org.code_postal_organ LIKE '14___' OR org.code_postal_organ LIKE '50___' OR org.code_postal_organ LIKE '61___' 
+AND org.id_organ = 5 GROUP BY user.id_user ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC;
+*/
 
-
-		$query = "SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user ";
+		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user ";
 		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
 		$query .= "INNER JOIN session AS sess ";
-		$query .= "ON sess.ref_intervenant = inter.id_intervenant ";
+		$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
 		$query .= "INNER JOIN utilisateur AS user ";
 		$query .= "ON user.id_user = sess.ref_user ";
 		$query .= "WHERE sess.session_accomplie = 1 ";
-		//$query .= "AND org.code_postal_organ LIKE '76___' ";
-		$query .= $codePostalRequest;
+		//$query .= "WHERE 1 ";
+		////$query .= "AND org.code_postal_organ LIKE '76___' ";
 		if ($refOrgan) 
 		{
 			$query .= "AND org.id_organ = ".$refOrgan." ";
+		}
+		else
+		{
+			$query .= $codePostalRequest;
 		}
 		if ($codeOrgan) 
 		{
 			$query .= "AND org.numero_interne LIKE '".$codeOrgan."' ";
 		}
-		if ($refUser) 
-		{
-			$query .= "AND user.id_user = ".$refUser." ";
-		}
 		if ($date) 
 		{
 			$query .= "AND sess.date_session = '".$date."' ";
 		}
-		//$query .= "GROUP BY user.nom_user ";
+		if ($refUser) 
+		{
+			$query .= "AND user.id_user = ".$refUser." ";
+		}
+		//$query .= "GROUP BY user.id_user ";
 		$query .= "ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
 
+		//return $query;
+		//var_dump($query);
+		//exit();
 		/*
 		SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user 
 		FROM organisme AS org 
@@ -286,6 +303,19 @@ class ServicesAdminRestitution extends Main
 		# GROUP BY user.nom_user 
 		ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC;
 		*/
+
+		$resultset = $this->customDAO->read($query, 'restitution');
+
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			$resultset['response']['query'] = $query;
+
+			return $resultset;
+		}
+
+		return false;
+
 	}
 	
 	

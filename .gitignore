@@ -3,3 +3,5 @@
 /uploads/img/thumbs/
 /uploads/img/
 /uploads/video/
+*.sublime-project
+*.sublime-workspace

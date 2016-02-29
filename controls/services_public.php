@@ -163,6 +163,9 @@ class ServicesPublic extends Main
 						$refSession = $_POST['ref_session'];
 					}
 
+					//var_dump($refRegion, $refOrgan, $refUser, $dateSession);
+					//exit();
+
 					if ($refRegion != null || $refOrgan != null || $refUser != null || $dateSession != null)
 					{
 
@@ -175,7 +178,14 @@ class ServicesPublic extends Main
 							//exit();
 							if ($searchResults)
 							{
-								$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'query' => $searchResults['response']['query']);
+								if (isset($searchResults['response']) && !empty($searchResults['response'])) {
+
+									$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'test' => $refRegion); //, 'query' => $searchResults['response']['query']);
+								}
+								else
+								{
+									$results = array('error' => "not-found - filter = false");
+								}
 							}
 							else
 							{
@@ -194,11 +204,15 @@ class ServicesPublic extends Main
 					}
 					else
 					{
-						$searchResults = $this->servicesRestitution->search($regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-
+						// Select all
+						$searchResults = $this->servicesRestitution->search($regions, null, null, null, null); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+						
+						//var_dump($searchResults);
+						//exit();
+						
 						if ($searchResults)
 						{
-							$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'query' => $searchResults['response']['query']);
+							$results = array('error' => false, 'results' => $searchResults['response']['restitution']); //, 'query' => $searchResults['response']['query']);
 						}
 						else
 						{

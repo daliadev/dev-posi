@@ -309,8 +309,7 @@ AND org.id_organ = 5 GROUP BY user.id_user ORDER BY org.nom_organ, user.nom_user
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
-			$resultset['response']['query'] = $query;
-
+			//$resultset['response']['query'] = $query;
 			return $resultset;
 		}
 

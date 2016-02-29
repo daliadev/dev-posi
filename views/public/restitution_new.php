@@ -295,7 +295,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 							<legend>Recherche du positionnement</legend>
 							
-							<p style="margin-top:0;"><strong>Filtres : </strong></p>
+							<p style="margin-top: 0;"><strong>Filtres : </strong></p>
 
 							<!-- <hr> -->
 
@@ -844,16 +844,23 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			this.changeFilter = function(id, value) {
 
-				console.log('Filter changed for : ' + id + ' = ' + value);
-				console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
+				//console.log('Filter changed for : ' + id + ' = ' + value);
+				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
 
 				var selectRegion = $('#ref-region-cbox').get(0);
 				var selectOrgan = $('#ref-organ-cbox').get(0);
 				var selectUser = $('#ref-user-cbox').get(0);
 				var dateInput = $('#date-session');
 
+				var onlyOrgan = false;
+
 				if (id == selectRegion.id)
 				{
+					if (value == null)
+					{
+						onlyOrgan = true;
+					}
+
 					if (selectRegion.value == 'select_cbox') {
 
 						refRegion = null;
@@ -870,6 +877,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					refUser = null;
 				}
 
+				
+
+				
+				//console.log('Filter changed for : ' + id + ' = ' + value);
+				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
+
 				var url = $('#form-posi').attr('action');
 
 				<?php if (Config::ALLOW_AJAX) : ?>
@@ -882,7 +895,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					}
 					else {
 
-						//console.log(data.results);
+						//console.log(id, selectRegion.id);
 						//var selectOrgan = $('#ref-organ-cbox').get(0);
 						//selectOrgan.options.length = 1;
 						//selectOrgan.options[0].selected;
@@ -901,9 +914,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						}
 						else {
 
-							//console.log(ref + ' ' + selectOrgan.id);
-
-							if (id == $('#ref-region-cbox').get(0).id) {
+							if (id == selectRegion.id) {
 
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
@@ -931,7 +942,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 										i++;
 									}
-									else if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+									else if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
 
 										var user = data.results[prop];
 										currentRefUser = user.id_user;
@@ -953,7 +964,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								for (var prop in data.results) {
 								
 									// Changement des utilisateurs
-									if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+									if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
 
 										var user = data.results[prop];
 										currentRefUser = user.id_user;
@@ -964,45 +975,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									}
 								}
 							}
-
-							// Organismes
-
-							
-							/*
-							var i = 1;
-							var currentId = null;
-
-							for (var prop in data.results) {
-								
-								if (data.results[prop].id_organ != null && data.results[prop].nom_organ != null && data.results[prop].id_organ != currentId) {
-
-									var organ = data.results[prop];
-									currentId = organ.id_organ;
-
-									selectOrgan.options[i] = new Option(organ.nom_organ, organ.id_organ, false, false);
-
-									i++;
-								}
-							}
-
-							// Utilisateurs
-							
-							i = 1;
-							currentId = null;
-
-							for (var prop in data.results) {
-								
-								if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentId) {
-
-									var user = data.results[prop];
-									currentId = user.id_user;
-
-									selectUser.options[i] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
-
-									i++;
-								}
-							}
-							*/	
 						}
 
 
@@ -1126,7 +1098,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			});
 
 
-				
+			this.changeFilter('ref-region-cbox', null);
 
 				
 				/*

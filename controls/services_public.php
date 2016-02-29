@@ -142,15 +142,15 @@ class ServicesPublic extends Main
 					$dateSession = null;
 					$refSession = null;
 
-					if (isset($_POST['ref_region']) && !empty($_POST['ref_region']))
+					if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox')
 					{
 						$refRegion = $_POST['ref_region'];
 					}
-					if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']))
+					if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox')
 					{
 						$refOrgan = $_POST['ref_organ'];
 					}
-					if (isset($_POST['ref_user']) && !empty($_POST['ref_user']))
+					if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox')
 					{
 						$refUser = $_POST['ref_user'];
 					}
@@ -158,7 +158,7 @@ class ServicesPublic extends Main
 					{
 						$dateSession = $_POST['date_session'];
 					}
-					if (isset($_POST['ref_session']) && !empty($_POST['ref_session']))
+					if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox')
 					{
 						$refSession = $_POST['ref_session'];
 					}
@@ -194,7 +194,18 @@ class ServicesPublic extends Main
 					}
 					else
 					{
-						$results = array('error' => "error no filter attribute");
+						$searchResults = $this->servicesRestitution->search($regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+
+						if ($searchResults)
+						{
+							$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'query' => $searchResults['response']['query']);
+						}
+						else
+						{
+							$results = array('error' => "error no filter attribute");
+						}
+						
+						//$results = array('error' => "error no filter attribute");
 					}
 
 					echo json_encode($results);

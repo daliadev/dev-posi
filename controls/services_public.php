@@ -168,29 +168,52 @@ class ServicesPublic extends Main
 
 					if ($refRegion != null || $refOrgan != null || $refUser != null || $dateSession != null)
 					{
+						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 
-						if ($_POST['filter'] == 'false')
+						if ($searchResults)
 						{
-							// Recherche des éléments de listes et de champs de filtrage
+							if (isset($searchResults['response']) && !empty($searchResults['response'])) {
 
-							$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-							//var_dump($searchResults['response']);
-							//exit();
-							if ($searchResults)
-							{
-								if (isset($searchResults['response']) && !empty($searchResults['response'])) {
+								$filter = true;
 
-									$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'test' => $refRegion); //, 'query' => $searchResults['response']['query']);
-								}
-								else
+								if ($_POST['filter'] == 'false')
 								{
-									$results = array('error' => "not-found - filter = false");
+									$filter = false;
+
+									for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
+
+										if ($searchResults['response']['restitution'][$i]->id_session != null) 
+										{
+											unset($searchResults['response']['restitution'][$i]);
+										}
+									}
 								}
+
+								$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'filter' => $filter);
 							}
 							else
 							{
-								$results = array('error' => "error filter = false");
+								$results = array('error' => false, 'results' => null);
 							}
+						}
+						else
+						{
+							$results = array('error' => "error filter = false");
+						}
+						/*
+						if ($_POST['filter'] == 'false')
+						{
+							for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
+
+								if ($searchResults['response']['restitution']['session'] != null) 
+								{
+									unset($searchResults['response']['restitution']['session']);
+								}
+							}
+							
+							//$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+							//var_dump($searchResults['response']);
+							//exit();
 						}
 						else if ($_POST['filter'] == 'true')
 						{
@@ -199,8 +222,9 @@ class ServicesPublic extends Main
 						}
 						else
 						{
-							$results = array('error' => $_POST['filter']);
+							//$results = array('error' => $_POST['filter']);
 						}
+						*/
 					}
 					else
 					{
@@ -225,7 +249,28 @@ class ServicesPublic extends Main
 					echo json_encode($results);
 					exit();
 				}
+				/*
+				else if (isset($_POST['validate_search'])) 
+				{
+					if (!empty($this->formData['ref_session']) && $this->formData['ref_session'] != "select_cbox")
+					{
+						
+						$resultsetSession = $this->servicesRestitution->getSession($this->formData['ref_session']);
+						$this->returnData['response'] = array_merge($resultsetSession['response'], $this->returnData['response']);
 
+						$resultsetIntervenant = $this->servicesRestitution->getIntervenant($resultsetSession['response']['session'][0]->getRefIntervenant());
+						$this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
+						$this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
+
+						$refSession = $resultsetSession['response']['session'][0]->getId();
+						$this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
+						$this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
+						
+						$this->returnData['response']['stats'] = array();
+						$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
+					}
+				}
+				*/
 				/*
 				if (isset($_POST['sort']) && !empty($_POST['sort']))
 				{

@@ -291,11 +291,11 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 					<div class="form-full">
 						
-						<fieldset>
+						<fieldset id="posi-search">
 
 							<legend>Recherche du positionnement</legend>
 							
-							<p style="margin-top: 0;"><strong>Filtres : </strong></p>
+							<p style="margin-top: 0;"><strong>Filtres de recherche : </strong></p>
 
 							<!-- <hr> -->
 
@@ -403,7 +403,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							<!-- <p style="margin-top: 0;"><strong>Sélection du positionnement : </strong></p> -->
 
 							<div class="filter-item" id="combo-posi" style="margin-top: 0;">
-								<label for="ref-session-cbox"><strong>Selection du positionnement :</strong></label>
+								<label for="ref-session-cbox"><strong>Positionnement(s) trouvé(s) :</strong></label>
 								<select name="ref_session_cbox" id="ref-session-cbox" class="ajax-list" data-request="session" style="margin: 10px 0 0 0; width: 120px;">
 									<option value="select_cbox">---</option>
 
@@ -847,11 +847,11 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				//console.log('Filter changed for : ' + id + ' = ' + value);
 				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
 
-				var selectRegion = $('#ref-region-cbox').get(0);
-				var selectOrgan = $('#ref-organ-cbox').get(0);
-				var selectUser = $('#ref-user-cbox').get(0);
-				var dateInput = $('#date-session');
-				var selectSession = $('#ref-session-cbox').get(0);
+				var selectRegion = $('#posi-search #ref-region-cbox').get(0);
+				var selectOrgan = $('#posi-search #ref-organ-cbox').get(0);
+				var selectUser = $('#posi-search #ref-user-cbox').get(0);
+				var dateInput = $('#posi-search #date-session');
+				var selectSession = $('#posi-search #ref-session-cbox').get(0);
 
 				var onlyOrgan = false;
 
@@ -881,9 +881,10 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 
 				
-				//console.log('Filter changed for : ' + id + ' = ' + value);
-				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
-
+				console.log('Filter changed for : ' + id + ' = ' + value);
+				console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
+				console.log('isFilterActivate : ' + isFilterActivate);
+				
 				var url = $('#form-posi').attr('action');
 
 				<?php if (Config::ALLOW_AJAX) : ?>
@@ -948,6 +949,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							if (id == selectRegion.id) {
 							//if (data.results != null)
 							//{
+								console.log('Region selected');
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
 								selectUser.options.length = 1;
@@ -997,6 +999,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							}
 							else if (id == selectOrgan.id) {
 
+								console.log('Organ selected');
 								selectUser.options.length = 1;
 								selectUser.options[0].selected;
 
@@ -1019,15 +1022,16 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							}
 							else if (id == selectUser.id) {
 
-								console.log('Just click on Filter !');
+								console.log('User selected');
 							}
 							else {
-								//console.log('everything\'s set');
+								console.log('everything\'s set');
+								/*
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
 								selectUser.options.length = 1;
 								selectUser.options[0].selected;
-
+								*/
 								//currentRefOrgan = null;
 								//currentRefUser = null;
 							}
@@ -1067,11 +1071,13 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				}, 'json');
 				
 				<?php endif; ?>
+
+				self.isFilterActivate = false;
 			};
 
 
 
-			$('.ajax-list').on('change', function(event) {
+			$('#posi-search .ajax-list').on('change', function(event) {
 
 				var select = $(this);
 				var request = select.data('request');
@@ -1101,10 +1107,10 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						break;
 				}
 
-				self.isFilterActivate = false;
+				//self.isFilterActivate = false;
 
 				if (hasChanged) {
-
+					console.log('Filter has changed');
 					self.changeFilter(this.id, ref);
 				}
 			});
@@ -1112,7 +1118,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			var date = new Date();
 
-			$("#date-session").datepicker({
+			$("#posi-search #date-session").datepicker({
 				dateFormat: "dd/mm/yy",
 				changeMonth: true, 
 				changeYear: true, 
@@ -1144,16 +1150,15 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			});
 
 
-			$('#submit-filter').on('click', function(event) {
+			$('#posi-search #submit-filter').on('click', function(event) {
 				
 				event.preventDefault();
 				self.isFilterActivate = true;
+				console.log('Filtering ! : ' + self.isFilterActivate);
 				self.changeFilter(null, null);
-
-				//console.log('Filtering !');
 			});
 
-			$('#select-posi').on('click', function(event) {
+			$('#posi-search #select-posi').on('click', function(event) {
 				
 				event.preventDefault();
 				

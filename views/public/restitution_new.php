@@ -430,7 +430,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 							<div class="filter-item">
-								<input type="submit" value="Sélectionner" name="validate_search" id="submit-posi" style="margin: 24px 0 0 0; width: 120px; height: 32px;">
+								<input type="submit" value="Sélectionner" name="validate_search" id="select-posi" style="margin: 24px 0 0 0; width: 120px; height: 32px;">
 							</div>
 
 							<div style="clear: both;"></div>
@@ -896,6 +896,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					}
 					else {
 
+						//alert(data.results);
 						//console.log(id, selectRegion.id);
 						//var selectOrgan = $('#ref-organ-cbox').get(0);
 						//selectOrgan.options.length = 1;
@@ -911,7 +912,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 						if (isFilterActivate) {
-
+							
+							console.log('filter activated !')
 							if (data.results != null)
 							{
 								selectSession.options.length = 1;
@@ -929,7 +931,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										var session = data.results[prop];
 										currentRefSession = session.id_session;
 
-										selectUser.options[i] = new Option(user.date_session, user.id_session, false, false);
+										selectSession.options[i] = new Option(session.date_session, session.id_session, false, false);
 
 										i++;
 									}
@@ -939,13 +941,21 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							{
 
 							}
-
+							
 						}
 						else {
 
-							if (data.results != null)
-							{
+							if (id == selectRegion.id) {
+							//if (data.results != null)
+							//{
+								selectOrgan.options.length = 1;
+								selectOrgan.options[0].selected;
+								selectUser.options.length = 1;
+								selectUser.options[0].selected;
 
+ 								currentRefOrgan = null;
+								currentRefUser = null;
+ 								/*
 								if (id == selectRegion.id) {
 
 									selectOrgan.options.length = 1;
@@ -955,62 +965,64 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									var currentRefOrgan = null;
 									var currentRefUser = null;
+								*/
+								var i = 1;
+								var j = 1;
 
-									var i = 1;
-									var j = 1;
+								for (var prop in data.results) {
 
-									for (var prop in data.results) {
+									// Changement des organismes
+									if (data.results[prop].id_organ != null && data.results[prop].nom_organ != null && data.results[prop].id_organ != currentRefOrgan) {
 
-										// Changement des organismes
-										if (data.results[prop].id_organ != null && data.results[prop].nom_organ != null && data.results[prop].id_organ != currentRefOrgan) {
+										var organ = data.results[prop];
+										currentRefOrgan = organ.id_organ;
 
-											var organ = data.results[prop];
-											currentRefOrgan = organ.id_organ;
+										selected = false;
+										//if (organ.id_organ = refOrgan) { selected = true; }
 
-											selected = false;
-											//if (organ.id_organ = refOrgan) { selected = true; }
+										selectOrgan.options[i] = new Option(organ.nom_organ, organ.id_organ, false, selected);
 
-											selectOrgan.options[i] = new Option(organ.nom_organ, organ.id_organ, false, selected);
+										i++;
+									}
+									else if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
 
-											i++;
-										}
-										else if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+										var user = data.results[prop];
+										currentRefUser = user.id_user;
 
-											var user = data.results[prop];
-											currentRefUser = user.id_user;
+										selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
 
-											selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
-
-											j++;
-										}
+										j++;
 									}
 								}
-								else if (id == selectOrgan.id) {
-
-									selectUser.options.length = 1;
-									selectUser.options[0].selected;
-
-									currentRefUser = null;
-									var j = 1;
-
-									for (var prop in data.results) {
-									
-										// Changement des utilisateurs
-										if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
-
-											var user = data.results[prop];
-											currentRefUser = user.id_user;
-
-											selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
-
-											j++;
-										}
-									}
-								}
-
 							}
-							else
-							{
+							else if (id == selectOrgan.id) {
+
+								selectUser.options.length = 1;
+								selectUser.options[0].selected;
+
+								currentRefUser = null;
+								var j = 1;
+
+								for (var prop in data.results) {
+									
+									// Changement des utilisateurs
+									if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+
+										var user = data.results[prop];
+										currentRefUser = user.id_user;
+
+										selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+
+										j++;
+									}
+								}
+							}
+							else if (id == selectUser.id) {
+
+								console.log('Just click on Filter !');
+							}
+							else {
+								//console.log('everything\'s set');
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
 								selectUser.options.length = 1;
@@ -1138,7 +1150,17 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				self.isFilterActivate = true;
 				self.changeFilter(null, null);
 
-				console.log('Filtering !');
+				//console.log('Filtering !');
+			});
+
+			$('#select-posi').on('click', function(event) {
+				
+				event.preventDefault();
+				
+				if ($('ref-session-cbox').val() != 'select_cbox')
+				{
+					$(this).submit();
+				}
 			});
 
 

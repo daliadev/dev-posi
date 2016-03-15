@@ -170,61 +170,77 @@ class ServicesPublic extends Main
 					{
 						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 
-						if ($searchResults)
+						if ($_POST['filter'] == 'false')
+						//if ($searchResults)
 						{
-							if (isset($searchResults['response']) && !empty($searchResults['response'])) {
-
-								$filter = true;
-
-								if ($_POST['filter'] == 'false')
-								{
-									$filter = false;
-
+							// Recherche des éléments de listes et de champs de filtrage
+							//if (isset($searchResults['response']) && !empty($searchResults['response'])) {
+							//$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+							//var_dump($searchResults['response']);
+ 							//exit();
+							if ($searchResults)
+							{
+								if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
+ 								{
+									
+									// no results
+									/*
 									for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
 
 										if ($searchResults['response']['restitution'][$i]->id_session != null) 
 										{
-											unset($searchResults['response']['restitution'][$i]);
+											$searchResults['response']['restitution'][$i]->id_session == null;
+										}
+										if ($searchResults['response']['restitution'][$i]->date_session != null) 
+										{
+											$searchResults['response']['restitution'][$i]->date_session == null;
 										}
 									}
+									*/
+ 									$results = array('error' => false, 'results' => $searchResults['response']['restitution']); //, 'query' => $searchResults['response']['query']);
+								}
+								else
+								{
+									$results = array('error' => false, 'results' => null);
 								}
 
-								$results = array('error' => false, 'results' => $searchResults['response']['restitution'], 'filter' => $filter);
+								//var_dump($searchResults['response']['restitution']);
+								//exit();
+
+								//$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
 							}
 							else
 							{
-								$results = array('error' => false, 'results' => null);
+								$results = array('error' => "error filter = false");
+								//$results = array('error' => false, 'results' => null);
+							}
+						}
+						else if ($_POST['filter'] == 'true') {
+
+							// recherche avec les sessions
+							if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
+							{
+							
+							// no results
+								for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
+
+									if ($searchResults['response']['restitution'][$i]->id_session != null) 
+									{
+										$searchResults['response']['restitution'][$i]->id_session == null;
+									}
+									if ($searchResults['response']['restitution'][$i]->date_session != null) 
+									{
+										$searchResults['response']['restitution'][$i]->date_session == null;
+									}
+								}
+
+								$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
 							}
 						}
 						else
 						{
 							$results = array('error' => "error filter = false");
 						}
-						/*
-						if ($_POST['filter'] == 'false')
-						{
-							for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
-
-								if ($searchResults['response']['restitution']['session'] != null) 
-								{
-									unset($searchResults['response']['restitution']['session']);
-								}
-							}
-							
-							//$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-							//var_dump($searchResults['response']);
-							//exit();
-						}
-						else if ($_POST['filter'] == 'true')
-						{
-							// Recherche des positionnements
-							$results = array('error' => "error filter = true");
-						}
-						else
-						{
-							//$results = array('error' => $_POST['filter']);
-						}
-						*/
 					}
 					else
 					{
@@ -234,7 +250,7 @@ class ServicesPublic extends Main
 						//var_dump($searchResults);
 						//exit();
 						
-						if ($searchResults)
+						if (isset($searchResults['response']) && !empty($searchResults['response']))
 						{
 							$results = array('error' => false, 'results' => $searchResults['response']['restitution']); //, 'query' => $searchResults['response']['query']);
 						}

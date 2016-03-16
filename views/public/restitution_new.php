@@ -837,6 +837,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			var refUser = null;
 			var dateSession = null;
 			var refSession = null;
+			var isFilterable = false;
 			var isFilterActivate = false;
 
 
@@ -855,8 +856,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 				var onlyOrgan = false;
 
-				if (id == selectRegion.id)
-				{
+				if (id == selectRegion.id) {
+
 					if (value == null)
 					{
 						onlyOrgan = true;
@@ -868,14 +869,22 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					}
 					refOrgan = null;
 					refUser = null;
+
+					isFilterable = false;
 				}
-				else if (id == selectOrgan.id)
-				{
+				else if (id == selectOrgan.id) {
+
 					if (selectOrgan.value == 'select_cbox') {
 
 						refOrgan = null;
 					}
 					refUser = null;
+
+					isFilterable = false;
+				}
+				else if (id == selectUser.id) {
+
+					isFilterable = true;
 				}
 
 				
@@ -945,6 +954,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							
 						}
 						else {
+
+							self.isFilterActivate = false;
 
 							if (id == selectRegion.id) {
 							//if (data.results != null)
@@ -1072,7 +1083,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 				<?php endif; ?>
 
-				self.isFilterActivate = false;
+				
 			};
 
 
@@ -1153,9 +1164,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			$('#posi-search #submit-filter').on('click', function(event) {
 				
 				event.preventDefault();
-				self.isFilterActivate = true;
-				console.log('Filtering ! : ' + self.isFilterActivate);
-				self.changeFilter(null, null);
+				
+				if (isFilterable) {
+					self.isFilterActivate = true;
+					console.log('Filtering ! : ' + self.isFilterActivate);
+					//self.changeFilter('ref-session-cbox', null);
+				}
 			});
 
 			$('#posi-search #select-posi').on('click', function(event) {

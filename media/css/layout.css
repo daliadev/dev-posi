@@ -361,8 +361,10 @@ label
 }
 	
 	#form-posi input[disabled] {
-		background-color: #f0f0f0;
-		color: #807979;
+		/*color: #757575;*/
+		cursor: default !important;
+		background: #bdbdbd !important;
+		border-color: transparent;
 	}
 
 	#form-posi input:required{

@@ -170,9 +170,9 @@ class ServicesPublic extends Main
 					{
 						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 
-						if ($_POST['filter'] == 'false')
+						//if ($_POST['filter'] == 'false')
 						//if ($searchResults)
-						{
+						//{
 							// Recherche des éléments de listes et de champs de filtrage
 							//if (isset($searchResults['response']) && !empty($searchResults['response'])) {
 							//$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
@@ -214,6 +214,7 @@ class ServicesPublic extends Main
 								$results = array('error' => "error filter = false");
 								//$results = array('error' => false, 'results' => null);
 							}
+							/*
 						}
 						else if ($_POST['filter'] == 'true') {
 
@@ -236,11 +237,13 @@ class ServicesPublic extends Main
 
 								$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
 							}
+
 						}
 						else
 						{
 							$results = array('error' => "error filter = false");
 						}
+						*/
 					}
 					else
 					{

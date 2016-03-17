@@ -170,80 +170,25 @@ class ServicesPublic extends Main
 					{
 						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 
-						//if ($_POST['filter'] == 'false')
-						//if ($searchResults)
-						//{
 							// Recherche des éléments de listes et de champs de filtrage
-							//if (isset($searchResults['response']) && !empty($searchResults['response'])) {
-							//$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-							//var_dump($searchResults['response']);
- 							//exit();
-							if ($searchResults)
+
+						if ($searchResults)
+						{
+							if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
 							{
-								if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
- 								{
-									
-									// no results
-									/*
-									for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
-
-										if ($searchResults['response']['restitution'][$i]->id_session != null) 
-										{
-											$searchResults['response']['restitution'][$i]->id_session == null;
-										}
-										if ($searchResults['response']['restitution'][$i]->date_session != null) 
-										{
-											$searchResults['response']['restitution'][$i]->date_session == null;
-										}
-									}
-									*/
- 									$results = array('error' => false, 'results' => $searchResults['response']['restitution']); //, 'query' => $searchResults['response']['query']);
-								}
-								else
-								{
-									$results = array('error' => false, 'results' => null);
-								}
-
-								//var_dump($searchResults['response']['restitution']);
-								//exit();
-
-								//$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
+								$results = array('error' => false, 'results' => $searchResults['response']['restitution']); //, 'query' => $searchResults['response']['query']);
 							}
 							else
 							{
-								$results = array('error' => "error filter = false");
-								//$results = array('error' => false, 'results' => null);
-							}
-							/*
-						}
-						else if ($_POST['filter'] == 'true') {
-
-							// recherche avec les sessions
-							if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
-							{
-							
-							// no results
-								for ($i = 0; $i < $searchResults['response']['restitution']; $i++) { 
-
-									if ($searchResults['response']['restitution'][$i]->id_session != null) 
-									{
-										$searchResults['response']['restitution'][$i]->id_session == null;
-									}
-									if ($searchResults['response']['restitution'][$i]->date_session != null) 
-									{
-										$searchResults['response']['restitution'][$i]->date_session == null;
-									}
-								}
-
-								$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
+								$results = array('error' => false, 'results' => null);
 							}
 
+							//$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
 						}
 						else
 						{
 							$results = array('error' => "error filter = false");
 						}
-						*/
 					}
 					else
 					{
@@ -370,23 +315,28 @@ class ServicesPublic extends Main
 		   
 		/*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
 		
+		$this->formData['ref_region_cbox'] = null;
 		$this->formData['ref_organ_cbox'] = null;
 		$this->formData['ref_user_cbox'] = null;
 		$this->formData['ref_session_cbox'] = null;
+		$this->formData['ref_region'] = null;
 		$this->formData['ref_organ'] = null;
 		$this->formData['ref_user'] = null;
 		$this->formData['ref_session'] = null;
 		
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, array(
+			"ref_region_cbox" => "select",
 			"ref_organ_cbox" => "select", 
 			"ref_user_cbox" => "select", 
 			"ref_session_cbox" => "select"));
 		
 		// On récupère les differents identifiants de la zone de sélection 
+		$this->formData['ref_region'] = $this->formData['ref_region_cbox'];
 		$this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
 		$this->formData['ref_user'] = $this->formData['ref_user_cbox'];
 		$this->formData['ref_session'] = $this->formData['ref_session_cbox'];
 		
+
 		// Sauf si c'est un intervenant auquel cas l'organisme est déjà connu
 		if ($loggedAsViewer)
 		{
@@ -396,7 +346,74 @@ class ServicesPublic extends Main
 		
 		/*** Initialisation des infos sur le positionnement ***/
 		
-		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme"
+		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme" en fonction de la region
+
+		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], null);
+
+		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
+		{
+			$listings = $resultsListings['response']['restitution'];
+
+			$list = array(
+				'response' => array(
+					'organisme' => array(),
+					'utilisateurs' => array(),
+					'sessions' => array()
+				)
+			);
+
+			$i = 0;
+
+			foreach ($listings as $entity) {
+				
+				//var_dump($key, $value);
+				foreach ($entity as $key => $value) {
+					# code...
+				
+					switch ($key) {
+
+						case 'id_organ':
+							$list['response']['organisme'][$i]['id_organ'] = $value;
+							break;
+
+						case 'nom_organ':
+							$list['response']['organisme'][$i]['nom_organ'] = $value;
+							break;
+
+						case 'id_user':
+							$list['response']['utilisateurs'][$i]['id_user'] = $value;
+							break;
+
+						case 'nom_user':
+							$list['response']['utilisateurs'][$i]['nom_user'] = $value;
+							break;
+
+						case 'prenom_user':
+							$list['response']['utilisateurs'][$i]['prenom_user'] = $value;
+							break;
+
+						case 'id_session':
+							$list['response']['sessions'][$i]['id_session'] = $value;
+							break;
+
+						case 'date_session':
+							$list['response']['sessions'][$i]['date_session'] = $value;
+							break;
+
+						default :
+							break;
+					}
+				}
+
+				$i++;
+			}
+		}
+
+		var_dump($list);
+		exit();
+
+		$this->returnData['response'] = array_merge($resultset['response'], $this->returnData['response']);
+
 		if ($loggedAsViewer)
 		{
 			$organismesList = $preSelectOrganisme;

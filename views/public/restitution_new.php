@@ -45,7 +45,7 @@ if (!empty($response['stats']))
 }
 
 $form_url = $response['url'];
-
+var_dump($formData);
 var_dump($_POST);
 
 // Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage
@@ -316,7 +316,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										{
 											$selected = "";
 											
-											if (!empty($formData['ref_region']) && $formData['ref_region'] == $region['ref'])
+											if (!empty($_POST['ref_region_cbox']) && $_POST['ref_region_cbox'] == $region['ref'])
 											{
 												$selected = "selected";
 											}
@@ -341,7 +341,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									<option class="organ-option" value="select_cbox">---</option>
 									<?php endif; ?>
 									<?php
-									/*
+									
 									if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
 									{						
 										foreach ($response['organisme'] as $organisme)
@@ -356,7 +356,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
 										}
 									}
-									*/
+									
 									?>
 								</select>
 							</div>
@@ -368,7 +368,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									<option value="select_cbox">---</option>
 
 									<?php
-									/*
+									
 									if (isset($response['utilisateurs']) && !empty($response['utilisateurs']) && count($response['utilisateurs']) > 0)
 									{
 										foreach ($response['utilisateurs'] as $utilisateur)
@@ -381,7 +381,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											echo '<option value="'.$utilisateur->getId().'" '.$selected.'>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</option>';
 										}
 									}
-									*/
+									
 									?>
 
 								</select>
@@ -1201,7 +1201,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 				if ($('ref-session-cbox').val() != 'select_cbox')
 				{
-					$('form-posi').submit();
+					$('#form-posi').submit();
 				}
 			});
 

@@ -46,7 +46,7 @@ if (!empty($response['stats']))
 
 $form_url = $response['url'];
 var_dump($formData);
-var_dump($_POST);
+//var_dump($_POST);
 
 // Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage
 /*
@@ -900,6 +900,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				}
 
 				
+				
 
 				
 				console.log('Filter changed for : ' + id + ' = ' + value);
@@ -975,6 +976,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						else {
 
 							//self.isFilterActivate = false;
+
+							selectSession.options.length = 1;
+							selectSession.options[0].selected;
 
 							$selectButton.prop('disabled', true);
 

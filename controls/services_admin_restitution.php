@@ -242,11 +242,7 @@ class ServicesAdminRestitution extends Main
 				}
 			}
 		}
-/*
-SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user 
-FROM organisme AS org INNER JOIN intervenant AS inter ON org.id_organ = inter.ref_organ INNER JOIN session AS sess ON inter.id_intervenant = sess.ref_intervenant INNER JOIN utilisateur AS user ON user.id_user = sess.ref_user WHERE sess.session_accomplie = 1 AND org.code_postal_organ LIKE '27___' OR org.code_postal_organ LIKE '76___' OR org.code_postal_organ LIKE '14___' OR org.code_postal_organ LIKE '50___' OR org.code_postal_organ LIKE '61___' 
-AND org.id_organ = 5 GROUP BY user.id_user ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC;
-*/
+
 
 		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user ";
 		$query .= "FROM organisme AS org ";

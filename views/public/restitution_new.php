@@ -12,6 +12,8 @@ $formData['ref_user'] = "";
 $formData['ref_session_cbox'] = "";
 $formData['ref_session'] = "";
 
+//$formData['select_trigger'] = "false";
+
 
 if (isset($response['form_data']) && !empty($response['form_data']))
 {   
@@ -286,7 +288,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 		<div id="main-form">
 
 			<form id="form-posi" action="<?php echo $form_url; ?>" method="post" name="formu_admin_com_act">
-
+				
+				<input type="hidden" id="select-trigger" name="select_trigger" value="<?php echo $formData['select_trigger']; ?>" />
 				<div class="zone-formu2">
 
 					<div class="form-full">
@@ -334,7 +337,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<label for="ref-organ-cbox">Organisme :</label>
 
 								<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
-								<?php //$disabled = ""; ?>
+								<?php $disabled = "" ?>
 								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 200px;" <?php echo $disabled; ?>>
 									
 									<?php if ($disabled == "") : ?>
@@ -831,6 +834,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 			var self = this;
+
+			//var isSelectTriggered = false;
 			
 			var refRegion = null;
 			var refOrgan = null;
@@ -971,6 +976,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							{
 
 							}
+
+							filterRequested = false;
 							
 						}
 						else {
@@ -1115,27 +1122,28 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			$('#posi-search .ajax-list').on('change', function(event) {
 
-				var select = $(this);
-				var request = select.data('request');
+				var $select = $(this);
+				//var request = $select.data('request');
+				var id = $select.get(0).id;
 				var ref = null;
 				var hasChanged = false;
 				
-				switch (request) {
-					case 'region-organ' :
-						hasChanged = select.val() != refRegion;
-						refRegion = select.val() != 'select_cbox' ? select.val() : null;
+				switch (id) {
+					case 'ref-region-cbox' :
+						hasChanged = $select.val() != refRegion;
+						refRegion = $select.val() != 'select_cbox' ? $select.val() : null;
 						ref = refRegion;
 						break;
 
-					case 'organ-user' :
-						hasChanged = select.val() != refOrgan;
-						refOrgan = select.val() != 'select_cbox' ? select.val() : null;
+					case 'ref-organ-cbox' :
+						hasChanged = $select.val() != refOrgan;
+						refOrgan = $select.val() != 'select_cbox' ? $select.val() : null;
 						ref = refOrgan;
 						break;
 
-					case 'user-session' :
-						hasChanged = select.val() != refUser;
-						refUser = select.val() != 'select_cbox' ? select.val() : null;
+					case 'ref-user-cbox' :
+						hasChanged = $select.val() != refUser;
+						refUser = $select.val() != 'select_cbox' ? $select.val() : null;
 						ref = refUser;
 						break;
 
@@ -1148,7 +1156,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				if (hasChanged) {
 					self.filterRequested = false;
 					console.log('Filter has changed');
-					self.changeFilter(this.id, ref);
+					self.changeFilter(id, ref);
 				}
 			});
 
@@ -1204,7 +1212,10 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 				if ($('ref-session-cbox').val() != 'select_cbox')
 				{
+					$('#select-trigger').val("true");
 					$('#form-posi').submit();
+					//isSelectTriggered = true;
+
 				}
 			});
 

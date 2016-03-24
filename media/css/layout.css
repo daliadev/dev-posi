@@ -360,12 +360,6 @@ label
 	/*line-height: 1px;*/
 }
 	
-	#form-posi input[disabled] {
-		/*color: #757575;*/
-		cursor: default !important;
-		background: #bdbdbd !important;
-		border-color: transparent;
-	}
 
 	#form-posi input:required{
 		background-color:#ffffff;
@@ -542,11 +536,19 @@ form input[type="text"][disabled]
 	outline: none;
 }
 	
+	#form-posi .filter-item input[disabled] {
+		cursor: default !important;
+		background: #bdbdbd !important;
+		border-color: transparent;
+	}
+
 	form input[type="submit"][disabled], #form-posi input[type=button][disabled], button[type=submit][disabled],
 	{
 		background-color: #bdc3c7 !important;
 		cursor: default;
 	}
+
+
 	/*
 	form input[type="submit"].primary:hover, #form-posi input[type=button].primary:hover, button[type=submit].primary:hover
 	{
@@ -575,7 +577,7 @@ form input[type="text"][disabled]
 	/*display: block;*/
 	width: 398px;
 }
-	#form-posi .select-disabled {
+	#form-posi .select-disabled, #form-posi select:disabled {
 		background-color: #f0f0f0;
 		color: #807979;
 	}

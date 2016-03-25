@@ -1212,7 +1212,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 				if ($('ref-session-cbox').val() != 'select_cbox')
 				{
-					$('#select-trigger').val("true");
+					
 					$('#form-posi').submit();
 					//isSelectTriggered = true;
 
@@ -1220,7 +1220,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			});
 
 
-			this.changeFilter('ref-region-cbox', null);
+			if ($('#select-trigger').val() == "true")
+			{
+				$('#select-trigger').val(null);
+				this.changeFilter('ref-region-cbox', null);
+			}
+			
 
 				
 

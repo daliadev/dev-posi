@@ -337,13 +337,13 @@ class ServicesPublic extends Main
 		$this->formData['ref_user'] = $this->formData['ref_user_cbox'];
 		$this->formData['ref_session'] = $this->formData['ref_session_cbox'];
 		
-		if (!isset($_POST['select_trigger']) || $_POST['select_trigger'] != null) 
+		if (!isset($_POST['select_trigger']) || $_POST['select_trigger'] == null) 
 		{
-			$_POST['select_trigger'] = null;
+			$this->formData['select_trigger'] = null;
 		}
 		else
 		{
-			$_POST['select_trigger'] = "true";
+			$this->formData['select_trigger'] = "true";
 		}
 
 		// Sauf si c'est un intervenant auquel cas l'organisme est déjà connu

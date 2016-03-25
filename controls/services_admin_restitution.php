@@ -276,7 +276,7 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND user.id_user = ".$refUser." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
+		$query .= "GROUP BY org.nom_organ ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);

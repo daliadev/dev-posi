@@ -300,8 +300,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							
 							<p style="margin-top: 0;"><strong>Filtres de recherche : </strong></p>
 
-							<!-- <hr> -->
-
 							<div class="filter-item">
 								<label for="ref-region-cbox">Région : </label>
 

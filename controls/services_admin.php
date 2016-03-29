@@ -73,7 +73,7 @@ class ServicesAdmin extends Main
 			$this->formData['login'] = $_POST['login'];
 			$this->formData['password'] = $_POST['password'];
 
-			// Vérification du code organisme
+			// Vérification du code admin
 			$authAdmin = $this->servicesGestion->authenticateAdmin($this->formData['login'], $this->formData['password']);
 			
 			if (!empty($authAdmin['response']) && $authAdmin['response']['auth'] && !empty($authAdmin['response']['droit']))
@@ -87,6 +87,23 @@ class ServicesAdmin extends Main
 				// Redirection vers le menu
 				header("Location: ".SERVER_URL."admin/menu/");
 				exit();
+			}
+			elseif (!empty($this->formData['login']) && !empty($this->formData['password'])) 
+			{
+				// Vérification du code organisme
+				$authPublic = $this->servicesGestion->authenticatePublic($this->formData['login'], $this->formData['password']);
+
+				if ($authPublic)
+				{
+					$this->returnData['droit'] = "custom-public";
+
+					// authentifié
+					servicesAuth::login($this->returnData['droit']);
+					
+					// Redirection vers le menu
+					header("Location: ".SERVER_URL."admin/menu/");
+					exit();
+				}
 			}
 			else 
 			{
@@ -125,7 +142,7 @@ class ServicesAdmin extends Main
 		$this->initialize();
 		
 		// Authentification
-		ServicesAuth::checkAuthentication("custom");
+		ServicesAuth::checkAuthentication("custom-public,custom-admin,admin");
 
 		
 			
@@ -1517,7 +1534,7 @@ class ServicesAdmin extends Main
 	{
 		
 		// Authentification
-		ServicesAuth::checkAuthentication("custom");
+		ServicesAuth::checkAuthentication("custom-admin,admin");
 
 		
 		$this->initialize();
@@ -1780,7 +1797,7 @@ class ServicesAdmin extends Main
 	{
 
 		// Authentification
-		ServicesAuth::checkAuthentication("custom");
+		ServicesAuth::checkAuthentication("custom-admin,admin");
 
 
 		$this->initialize();

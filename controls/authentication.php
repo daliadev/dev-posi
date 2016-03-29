@@ -70,7 +70,7 @@ class ServicesAuth
 
 			if (!is_array($right))
 			{
-				$right = array($right);
+				$right = explode(',', $right);
 			}
 
 			for ($i = 0; $i < count($right); $i++) 
@@ -107,9 +107,9 @@ class ServicesAuth
 			{
 				return "custom";
 			}
-			else if ($_SESSION['droit'] == "custom")
+			else if ($_SESSION['droit'] == "custom-public")
 			{
-				return "custom";
+				return "custom-public";
 			}
 			else if ($_SESSION['droit'] == "user")
 			{

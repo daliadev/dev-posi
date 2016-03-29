@@ -44,4 +44,4 @@ ALTER TABLE question
 
 /* Ajout rôle admin intermédiaire pour accès à la régionalisation */
 ALTER TABLE administrateur
-	CHANGE droits droits ENUM('user','custom','custom-admin','admin') NOT NULL DEFAULT 'user';
+	CHANGE droits droits ENUM('user','custom-public','custom-admin','admin') NOT NULL DEFAULT 'user';

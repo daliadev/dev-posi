@@ -12,7 +12,7 @@ class Config
 {
 
     /* Version */
-    const POSI_VERSION = "0.26.01";
+    const POSI_VERSION = "0.27.01";
 
 
     /* Nom et titre du positionnement */
@@ -165,14 +165,14 @@ class Config
                 'label_menu' => "Utilisateurs",
                 'url_menu' => "utilisateur",
                 'display' => true,
-                'droits' => "custom,admin"
+                'droits' => "custom-admin,admin"
             ),
     		array(
                 'code_menu' => "60",
                 'label_menu' => "Organismes",
                 'url_menu' => "organisme",
                 'display' => true,
-                'droits' => "custom,admin"
+                'droits' => "custom-admin,admin"
             ),
             array(
                 'code_menu' => "70",
@@ -193,14 +193,14 @@ class Config
                 'label_menu' => "Restitution",
                 'url_menu' => "restitution",
                 'display' => true,
-                'droits' => "custom,admin"
+                'droits' => "custom-public,custom-admin,admin"
             ),
     		 array(
                 'code_menu' => "20",
                 'label_menu' => "Statistiques",
                 'url_menu' => "statistique",
                 'display' => true,
-                'droits' => "custom,admin"
+                'droits' => "custom-public,custom-admin,admin"
             )
         )
     );

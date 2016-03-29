@@ -267,10 +267,15 @@ class ServicesAdminRestitution extends Main
 		{
 			$query .= "AND org.numero_interne LIKE '".$codeOrgan."' ";
 		}
+		/*
 		if ($date) 
 		{
-			$query .= "AND sess.date_session = '".$date."' ";
+			$date = new DateTime($date);
+			$date->format('Y-m-d H:i:s');
+			
+			$query .= "AND sess.date_session >= '".$date."' AND sess.date_session < DATE_ADD('".$date."', INTERVAL 1 DAY) ";
 		}
+		*/
 		if ($refUser) 
 		{
 			$query .= "AND user.id_user = ".$refUser." ";

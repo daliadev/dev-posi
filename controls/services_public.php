@@ -139,7 +139,7 @@ class ServicesPublic extends Main
 					$refRegion = null;
 					$refOrgan = null;
 					$refUser = null;
-					$dateSession = null;
+					//$dateSession = null;
 					$refSession = null;
 
 					if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox')
@@ -154,10 +154,10 @@ class ServicesPublic extends Main
 					{
 						$refUser = $_POST['ref_user'];
 					}
-					if (isset($_POST['date_session']) && !empty($_POST['date_session']))
-					{
-						$dateSession = $_POST['date_session'];
-					}
+					// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
+					// {
+					// 	$dateSession = $_POST['date_session'];
+					// }
 					if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox')
 					{
 						$refSession = $_POST['ref_session'];
@@ -166,9 +166,9 @@ class ServicesPublic extends Main
 					//var_dump($refRegion, $refOrgan, $refUser, $dateSession);
 					//exit();
 
-					if ($refRegion != null || $refOrgan != null || $refUser != null || $dateSession != null)
+					if ($refRegion != null || $refOrgan != null || $refUser != null) // || $dateSession != null)
 					{
-						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $dateSession); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 
 							// Recherche des éléments de listes et de champs de filtrage
 
@@ -709,7 +709,7 @@ class ServicesPublic extends Main
 		{
 			$this->setTemplate("tpl_public");
 			//$this->setTemplate("tpl_old_page");
-			$this->render("restitution_new");
+			$this->render("restitution");
 			//$this->setTemplate("tpl_basic_page");
 			//$this->setHeader("header_admin_large");
 			//$this->setFooter("footer");

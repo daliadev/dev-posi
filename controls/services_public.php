@@ -703,6 +703,7 @@ class ServicesPublic extends Main
 		}
 		else if (isset($_POST['export_xls']) && !empty($_POST['export_xls']))
 		{
+			$this->setTemplate("tpl_empty");
 			$this->render("restitution_xls");
 		}
 		else

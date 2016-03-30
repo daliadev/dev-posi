@@ -1,5 +1,135 @@
+<?php 
 
-<style>
+function getProgressColor($percent)
+{
+    $percent = intval($percent);
+    
+    $color = "#00bfa5";
+
+    if ($percent < 50)
+    {
+        $color = "#e74c3c";
+    }
+    else if ($percent >= 50 && $percent < 75)
+    {
+        $color = "#ff9800";
+    }
+    else if ($percent >= 75 && $percent < 90)
+    {
+        $color = "#f1c40f";
+    }
+    else if ($percent >= 90)
+    {
+        $color = "#2ecc71";
+    }
+
+    return $color;
+}
+
+
+function recursiveCategories($parent, $level, $datas)
+{
+    $list = '';
+    $previous_level = 0;
+    $isMainListOpen = false;
+    $isListOpen = false;
+
+    if ($level == 0) 
+    {
+        $list .= '<ul>';
+    }
+
+    foreach ($datas as $cat) 
+    {
+        $percent = $cat->getScorePercent();
+
+        if ($parent == $cat->getParentCode()) 
+        {
+            if ($previous_level < $level) 
+            {
+                $list .= '<ul>';
+            }
+
+            if ($level == 0)
+            {
+                //var_dump($cat->getCode());
+
+                if (!$cat->getHasResult())
+                {
+                    $list .= '<li class="disabled">';
+                }
+                else
+                {
+                    $list .= '<li>';
+                }
+                //$list .= '<li'.$disabled.'>'; //<h3><a>'.$cat->getNom().'</a></h3>';
+
+                $list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
+                $list .= '<h3><a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a></h3>';
+                $list .= '<span>Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
+                $list .= '</div>';
+                $list .= '<div class="progress">';
+                $list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
+                //$list .= getProgressBar($cat->getScorePercent());
+                $list .= '</div>';
+
+                $isMainListOpen = true;
+            }
+            else
+            {
+                if ($isListOpen) 
+                {
+                    $list .= '</li>';
+                }
+                //$list .= '<li>';
+                if (!$cat->getHasResult())
+                {
+                    $list .= '<li class="disabled">';
+                }
+                else
+                {
+                    $list .= '<li>';
+                }
+                $list .= '<div class="progress-title" title="'.$cat->getDescription().'">';
+                $list .= '<a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a>';
+                $list .= '<span>Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
+                $list .= '</div>';
+                $list .= '<div class="progress">';
+                $list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
+                //$list .= getProgressBar($cat->getScorePercent());
+                $list .= '</div>';
+                
+
+                $isListOpen = true;
+            }
+
+            $previous_level = $level;
+
+            $list .= recursiveCategories($cat->getCode(), ($level + 1), $datas);
+        }
+    }
+
+    if ($previous_level == $level && $previous_level != 0) 
+    {
+        if ($isMainListOpen || $isListOpen)
+        {
+            $list .= '</li>';
+        }
+        $list .= '</ul>';
+    }
+
+    return $list;
+}
+
+
+if (isset($response['stats']['categories']) && !empty($response['stats']['categories']))
+{
+    $catList = recursiveCategories(0, 0, $response['stats']['categories']);
+}
+
+
+
+?><style>
     
     h1 {
         font-size: 15pt;
@@ -246,13 +376,15 @@
     </table>
 
     <br/><br/>
-    
+    <?php //echo $catList; ?>
     <table>
 
         <tr>
             <td class="title">Les statistiques</td>
         </tr>
-            
+        
+        
+
         <?php if (!empty($response['stats'])) : $stats = $response['stats'];
             $tempsTotal = Tools::timeToString($response['session'][0]->getTempsTotal()); ?>
 
@@ -268,25 +400,26 @@
             <tr>
                 <td class="line"><br/></td>
             </tr>
-
-            <?php foreach ($stats['categories'] as $statCategorie) : ?>
-                <?php if ($statCategorie['total'] > 0 && $statCategorie['parent']) : $width = ($statCategorie['percent'] * 152) / 100; ?>
-                    <?php if ($statCategorie['percent'] == 0) : $width = 0.5; endif; ?>
+            
+<!-- 
+            <?php //foreach ($stats['categories'] as $statCategorie) : ?>
+                <?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : $width = ($statCategorie['percent'] * 152) / 100; ?>
+                    <?php //if ($statCategorie['percent'] == 0) : $width = 0.5; endif; ?>
                     <tr>
                         <td class="info">
                             <div class="stats-text">
-                                <?php echo $statCategorie['nom_categorie']; ?> : 
-                                <strong><?php echo $statCategorie['percent']; ?>%</strong> (<strong><?php echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php echo $statCategorie['total']; ?></strong> questions)
+                                <?php //echo $statCategorie['nom_categorie']; ?> : 
+                                <strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php //echo $statCategorie['total']; ?></strong> questions)
                             </div>
                         </td>
                     </tr> 
                     <tr>
                         <td class="info">
-                            <div class="percent" style="width:<?php echo $width; ?>mm;">
-                                <?php $position = $width; ?>
-                                <?php $width = 152 - $position + 3; ?>
-                                <img src="<?php echo ROOT; ?>media/images/gradiant.png" />
-                                <div class="cache" style="width:<?php echo $width; ?>mm; left:<?php echo $position; ?>mm; top:-1mm; z-index:99;"></div>
+                            <div class="percent" style="width:<?php //echo $width; ?>mm;">
+                                <?php //$position = $width; ?>
+                                <?php //$width = 152 - $position + 3; ?>
+                                <img src="<?php //echo ROOT; ?>media/images/gradiant.png" />
+                                <div class="cache" style="width:<?php //echo $width; ?>mm; left:<?php //echo $position; ?>mm; top:-1mm; z-index:99;"></div>
                             </div>
                         </td>
                     </tr>
@@ -296,9 +429,9 @@
                         <td class="line"></td>
                     </tr>
             
-                <?php endif; ?>
-            <?php endforeach; ?>
-
+                <?php //endif; ?>
+            <?php //endforeach; ?>
+ -->
         <?php else : ?>
 
             <tr>

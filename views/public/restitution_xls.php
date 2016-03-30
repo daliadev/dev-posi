@@ -17,7 +17,10 @@ header('Content-Disposition: attachment; filename="'.$file.'"');
     	$detail['intitule'] = preg_replace("`&#39;`","'", $detail['intitule']);
 
 		$detail['categories'][0]['nom_cat'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat']);
-		$detail['categories'][0]['nom_cat_parent'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat_parent']);
+		if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
+		{
+			$detail['categories'][0]['nom_cat_parent'] = preg_replace("`&#39;`","'", $detail['categories'][0]['nom_cat_parent']);
+		}
 
 		$content .= "\n";
 		$content .= '"';

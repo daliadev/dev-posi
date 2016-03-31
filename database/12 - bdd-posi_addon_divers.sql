@@ -45,3 +45,18 @@ ALTER TABLE question
 /* Ajout rôle admin intermédiaire pour accès à la régionalisation */
 ALTER TABLE administrateur
 	CHANGE droits droits ENUM('user','custom-public','custom-admin','admin') NOT NULL DEFAULT 'user';
+
+
+/* Ajout d'un champ id dans les tables de liaison sans clé primaire */
+
+/* Ajout id_cat_activite dans la table cat_activite */
+ALTER TABLE cat_activite
+	ADD `id_cat_activite` INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+/* Ajout id_question_cat dans la table question_cat */
+ALTER TABLE question_cat
+	ADD `id_question_cat` INT(8) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
+/* Ajout id_question_cat dans la table question_cat */
+ALTER TABLE cat_preco
+	ADD `id_cat_preco` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;

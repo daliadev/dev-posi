@@ -44,8 +44,9 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS cat_preco;
 CREATE TABLE cat_preco
 (
-   ref_code_cat VARCHAR(20) NOT NULL,
-   ref_preco INT(5) UNSIGNED NOT NULL
+	id_cat_preco INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	ref_code_cat VARCHAR(20) NOT NULL,
+	ref_preco INT(5) UNSIGNED NOT NULL
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -70,4 +71,22 @@ ALTER TABLE cat_preco
 
 ALTER TABLE preconisation 
 	ADD CONSTRAINT FK_preco_parcours_preco FOREIGN KEY (ref_parcours) REFERENCES parcours_preco (id_parcours) ON DELETE SET NULL ON UPDATE RESTRICT;
+
+
+
+INSERT INTO parcours_preco (id_parcours, volume_parcours, nom_parcours)
+	VALUES 	(1, 0, "Aucune préconisation requise"),
+			(2, 10, "10 heures de formations"),
+			(3, 20, "20 heures de formations");
+			(4, 30, "30 heures de formations");
+			(5, 40, "40 heures de formations");
+			(6, 50, "50 heures de formations");
+
+INSERT INTO parcours_preco (id_parcours, volume_parcours, nom_parcours)
+	VALUES 	(1, 0, "Aucune préconisation requise"),
+			(2, 10, "10 heures de formations"),
+			(3, 20, "20 heures de formations");
+			(4, 30, "30 heures de formations");
+			(5, 40, "40 heures de formations");
+			(6, 50, "50 heures de formations");
 

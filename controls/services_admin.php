@@ -144,8 +144,7 @@ class ServicesAdmin extends Main
 		// Authentification
 		ServicesAuth::checkAuthentication("custom-public,custom-admin,admin");
 
-		
-			
+		/*
 		// Requete pour obtenir la liste des questions
 		$menuList = $this->menuAdminDAO->selectAll();
 		
@@ -159,7 +158,7 @@ class ServicesAdmin extends Main
 		}
 
 		$this->setResponse($menuList);
-
+		*/
 		$this->setTemplate("tpl_basic_page");
 		$this->setHeader("header_form_small");
 		$this->setFooter("footer");

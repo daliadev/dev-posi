@@ -20,6 +20,8 @@
 				
 					$authType = ServicesAuth::getAuthenticationRight();
 
+					$j = 0;
+
 					foreach (Config::$admin_menu as $menu)
 					{
 						$title = $menu['title'];
@@ -37,10 +39,11 @@
 							if ($menuItem['display'] == true && in_array($authType, $requiredAuth))
 							{
 								
-								echo '<button type="submit" name="submit_menu_'.$i.'" class="btn btn-primary" id="submit-menu-'.$i.'">';
+								//echo '<button type="button" name="submit_menu_'.$j.'" class="btn btn-primary" id="submit-menu-'.$j.'">';
 									echo '<a class="menu-link" href="'.SERVER_URL.'admin/'.$menuItem['url_menu'].'">'.$menuItem['label_menu'].'</a>';
-								echo '</button>';
+								//echo '</button>';
 								
+								$j++;
 								//echo '<a href="'.SERVER_URL.'admin/'.$menuItem['url_menu'].'">';
 								//echo '<div class="main-menu-btn">'.$menuItem['label_menu'].'</div>';
 								//echo '</a>';

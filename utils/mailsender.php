@@ -36,7 +36,7 @@ class MailSender
 			$this->to = $for;
 		}
 		
-		$this->from = $from;
+		$this->from = '<'.$from.'>';
 		$this->subject = $subject;
 	}
 

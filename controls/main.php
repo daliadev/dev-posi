@@ -211,11 +211,11 @@ class Main
 			
 			if (!$dest)
 			{
-				$pdf->Output($output);
+				//$pdf->Output($output);
 			}
 			else
 			{
-				$pdf->Output($output, $dest);
+				//$pdf->Output($output, $dest);
 			}
 		}
 		catch (HTML2PDF_exception $e)

@@ -47,19 +47,23 @@ function recursiveCategories($parent, $level, $datas)
 		{
 			if ($previous_level < $level) 
 			{
-				$list .= '<tr>';
+				//$list .= '<tr>';
 			}
 
 			if ($level == 0)
 			{
+				if ($isMainListOpen) 
+				{
+					//$list .= '</td></tr>';
+				}
 
 				if (!$cat->getHasResult())
 				{
-					$list .= '<td class="disabled">';
+					$list .= '<tr><td class="disabled">';
 				}
 				else
 				{
-					$list .= '<td>';
+					$list .= '<tr><td>';
 				}
 				/*
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
@@ -70,23 +74,26 @@ function recursiveCategories($parent, $level, $datas)
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
 				$list .= '</div>';
 				*/
+				$list .= '</td></tr>';
+
 				$isMainListOpen = true;
 			}
 			else
 			{
 				if ($isListOpen) 
 				{
-					$list .= '</td></tr>';
+					//$list .= '</td></tr>';
 				}
 				
 				if (!$cat->getHasResult())
 				{
-					$list .= '<td class="disabled">';
+					$list .= '<tr><td class="disabled">';
 				}
 				else
 				{
-					$list .= '<td>';
+					$list .= '<tr><td>';
 				}
+
 				/*
 				$list .= '<div class="progress-title" title="'.$cat->getDescription().'">';
 				$list .= '<a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a>';
@@ -96,6 +103,7 @@ function recursiveCategories($parent, $level, $datas)
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
 				$list .= '</div>';
 				*/
+				$list .= '</td></tr>';
 
 				$isListOpen = true;
 			}
@@ -108,11 +116,18 @@ function recursiveCategories($parent, $level, $datas)
 
 	if ($previous_level == $level && $previous_level != 0) 
 	{
+		if ($level == 0 && $isMainListOpen) 
+		{
+			$list .= '</table>';
+		}
+		/*
 		if ($isMainListOpen || $isListOpen)
 		{
-			$list .= '</td></tr>';
+			//$list .= '</td></tr>';
 		}
 		$list .= '</table>';
+		*/
+		
 	}
 
 	return $list;
@@ -125,6 +140,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 }
 
 echo $catList;
+//var_dump($catList);
+//exit();
 
 ?><style>
 	

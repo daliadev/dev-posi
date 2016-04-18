@@ -441,7 +441,7 @@ class ServicesInscriptionGestion extends Main
         $formData['nom_user'] = $this->validatePostData($postData['nom_user'], "nom_user", "string", true, "Aucun nom n'a été saisi.", "Le nom de l'utilisateur n'est pas correctement saisi.");
         $formData['prenom_user'] = $this->validatePostData($postData['prenom_user'], "prenom_user", "string", true, "Aucun prénom n'a été saisi.", "Le nom de l'utilisateur n'est pas correctement saisi.");
 
-
+        $formData['nom_user'] = strtoupper($formData['nom_user']);
 
         /*** Traitement de l'identification d'un utilisateur similaire à la saisie ***/
 

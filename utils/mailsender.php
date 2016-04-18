@@ -36,7 +36,11 @@ class MailSender
 			$this->to = $for;
 		}
 		
-		$this->from = '<'.$from.'>';
+		//$this->from = '<'.$from.'>';
+		$this->from  = "From:".$from;
+		//$this->from .= "<$from>";
+		//$this->from .= "\n";
+
 		$this->subject = $subject;
 	}
 
@@ -115,10 +119,11 @@ class MailSender
 			//echo 'mail('.$this->to.', '.$this->subject.', '.$this->message.', '.implode('\r\n', $this->headers).')';
 
 			$header = implode("\r\n", $this->headers);
-			$header .= $this->from."\r\n".$header;
-			$header .= "\r\n";
+			$final_header = $header."\r\n";
+			$final_header .= $this->from."\r\n";
 			
-			$sending = mail($this->to, $this->subject, $this->message, $header);
+			
+			$sending = mail($this->to, $this->subject, $this->message, $final_header);
 
 			if ($sending)
 			{

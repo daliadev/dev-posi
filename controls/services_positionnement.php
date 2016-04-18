@@ -1105,7 +1105,7 @@ class ServicesPositionnement extends Main
 
 
 
-		$this->sendMail = new MailSender($destinataires, 'positionnement@uniformation.fr', $subject);
+		$this->sendMail = new MailSender($destinataires, $from, $subject);
 		$this->sendMail->setHeader('1.0', 'text/html', 'utf-8');
 		$this->sendMail->setMessage($messageBody, 'html', Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG, $style);
 		
@@ -1161,7 +1161,7 @@ class ServicesPositionnement extends Main
 		
 
 		/*** Déconnexion automatique de l'utilisateur ***/
-		ServicesAuth::logout();
+		//ServicesAuth::logout();
 		
 
 		/*** Affichage de la page de résultat ***/

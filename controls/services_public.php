@@ -1008,18 +1008,22 @@ class ServicesPublic extends Main
 		// Si l'utilisateur a cliqué sur un des boutons d'export, on génère le fichier excel au format CSV
 		if (isset($_POST['export_total_organisme']) && !empty($_POST['export_total_organisme']))
 		{
+			$this->setTemplate("tpl_empty");
 			$this->render("statistique_posi_organ_xls");
 		}
 		else if (isset($_POST['export_niveau_nombre']) && !empty($_POST['export_niveau_nombre']))
 		{
+			$this->setTemplate("tpl_empty");
 			$this->render("statistique_niveau_xls");
 		}
 		else if (isset($_POST['export_score_competences']) && !empty($_POST['export_score_competences']))
 		{
+			$this->setTemplate("tpl_empty");
 			$this->render("statistique_competences_xls");
 		}
 		else if (isset($_POST['export_acquis']) && !empty($_POST['export_acquis']))
 		{
+			$this->setTemplate("tpl_empty");
 			$this->render("statistique_repartition_degre_xls");
 		}
 		

@@ -41,6 +41,10 @@ class Config
 
     // Affichage du débuguage (développement).
     const DEBUG_MODE = 0; // Activer (1) / désactiver (0)
+
+    // Pas d'attente lors des pages questions (développement).
+    const ADMIN_MODE = 1; // Activer (1) / désactiver (0)
+
     
     // Active la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
     const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0)

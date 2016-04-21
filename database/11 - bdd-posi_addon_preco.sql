@@ -1,6 +1,7 @@
 /*==============================================================*/
 /* Nom de SGBD :  MySQL 5.0                                     */
 /* Date de création :  27/10/2015 14:56:18                      */
+/* Commanditaire: Uniformation                                  */
 /*==============================================================*/
 
 
@@ -17,8 +18,8 @@ CREATE TABLE parcours_preco
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO parcours_preco (volume_parcours, nom_parcours)
-	VALUES 	(0, "Aucune");
+/* INSERT INTO parcours_preco (volume_parcours, nom_parcours)
+	VALUES 	(0, "Aucune"); */
 
 
 /*==============================================================*/
@@ -77,16 +78,8 @@ ALTER TABLE preconisation
 INSERT INTO parcours_preco (id_parcours, volume_parcours, nom_parcours)
 	VALUES 	(1, 0, "Aucune préconisation requise"),
 			(2, 10, "10 heures de formations"),
-			(3, 20, "20 heures de formations");
-			(4, 30, "30 heures de formations");
-			(5, 40, "40 heures de formations");
-			(6, 50, "50 heures de formations");
-
-INSERT INTO parcours_preco (id_parcours, volume_parcours, nom_parcours)
-	VALUES 	(1, 0, "Aucune préconisation requise"),
-			(2, 10, "10 heures de formations"),
-			(3, 20, "20 heures de formations");
-			(4, 30, "30 heures de formations");
-			(5, 40, "40 heures de formations");
+			(3, 20, "20 heures de formations"),
+			(4, 30, "30 heures de formations"),
+			(5, 40, "40 heures de formations"),
 			(6, 50, "50 heures de formations");
 

@@ -219,6 +219,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS question_cat;
 CREATE TABLE question_cat
 (
+	id_question_cat INT(8) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_question INT(5) UNSIGNED NOT NULL,
 	ref_cat VARCHAR(20) NULL
 ) 
@@ -228,6 +229,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS cat_activite;
 CREATE TABLE cat_activite 
 (
+	id_cat_activite INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_cat VARCHAR(20) NOT NULL,
 	ref_activite INT(5) UNSIGNED NOT NULL
 ) 
@@ -305,6 +307,7 @@ ALTER TABLE cat_activite
 	ADD CONSTRAINT FK_cat_activite_cat FOREIGN KEY (ref_cat) REFERENCES categorie (code_cat) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE cat_activite 
 	ADD CONSTRAINT FK_cat_activite_activ FOREIGN KEY (ref_activite) REFERENCES activite (id_activite);
+
 
 
 

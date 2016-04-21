@@ -11,14 +11,13 @@
 	<title><?php echo $page_title; ?></title>
 
 	<link type="image/x-icon" rel="shortcut icon" href="<?php echo SERVER_URL; ?>favicon.ico" />
-	<!-- <link rel="shortcut icon" href="favicon.ico"> -->
 	<!-- css -->
 	<link type="text/css" rel="stylesheet" media="all" href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' /> 
 	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/font-awesome.min.css" />
-	<!-- <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/reset_new.css" /> -->
+	<!-- <link type="text/css" rel="stylesheet" media="all" href="<?php //echo SERVER_URL; ?>media/css/reset_new.css" /> -->
 	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/bootstrap.min.css" />
-	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/base_new.css" />
-	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/main_new.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/main.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/client-styles.css" />
 	
 	<!-- css injecté dynamiquement -->

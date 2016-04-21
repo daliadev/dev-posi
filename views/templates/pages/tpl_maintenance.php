@@ -17,8 +17,8 @@
 	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/font-awesome.min.css" />
 	<!-- <link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/reset_new.css" /> -->
 	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/bootstrap.min.css" />
-	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/base_new.css" />
-	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/main_new.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/main.css" />
 	<link type="text/css" rel="stylesheet" media="all" href="<?php echo SERVER_URL; ?>media/css/client-styles.css" />
 	
 	<!-- css injecté dynamiquement -->

@@ -176,18 +176,18 @@
 
 
 	<!-- JQuery -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js"></script> -->
 	
 	<!-- Outils -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/placeholders.min.js"></script> -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/flash_detect.js"></script> -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/navigator-agent.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/placeholders.min.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/flash_detect.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/navigator-agent.js"></script> -->
 	
 	<!-- Medias -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script> -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script> -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/image-controller.js"></script> -->
-	<!-- <script type="text/javascript" src="<?php echo SERVER_URL; ?>media/js/audio-player.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/dewplayer/swfobject.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/projekktor/projekktor-1.3.09.min.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/image-controller.js"></script> -->
+	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/audio-player.js"></script> -->
 	<!-- <script type="text/javascript" src="<?php //echo SERVER_URL; ?>media/js/video-player.js"></script>-->
 	
 

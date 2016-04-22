@@ -60,7 +60,6 @@ class ServicesPublic extends Main
 		$loggedAsAdmin = false;
 		$preSelectOrganisme = null;
 
-
 		// Lecture du intégration du fichier 'régions'
 		$regions = null;
 		$hasRegions = $this->servicesAdminStat->createRegionsList(Config::ANNEE_REGION);

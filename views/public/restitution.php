@@ -299,8 +299,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							<legend>Recherche du positionnement</legend>
 							
 							<p style="margin-top: 0;"><strong>Filtres de recherche : </strong></p>
-
-							<div class="filter-item">
+							
+							<?php $visible  = Config::ALLOW_LOCALE ? '' : 'style="display: none;"' ?>
+							<div class="filter-item" <?php echo $visible; ?>>
 								<label for="ref-region-cbox">Région : </label>
 
 								<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) <= 1) ? "disabled" : ""; ?>

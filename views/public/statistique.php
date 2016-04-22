@@ -94,7 +94,8 @@ $form_url = $response['url'];
 
 						<hr>
 						
-						<div class="filter-item">
+						<?php $visible  = Config::ALLOW_LOCALE ? '' : 'style="display: none;"' ?>
+						<div class="filter-item" <?php echo $visible; ?>>
 							<label for="ref-region-cbox">Région : </label>
 
 							<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) == 0) ? "disabled" : ""; ?>
@@ -499,7 +500,7 @@ $form_url = $response['url'];
 					else if (sortOf === "session") {
 					*/
 						//$('#ref_session_cbox').show();
-
+					<?php if (Config::ALLOW_LOCALE) : ?>
 						$('.region-option').each(function() {
 
 							var option = $(this)[0];
@@ -509,6 +510,7 @@ $form_url = $response['url'];
 								refRegion = $(option).val();
 							}
 						});
+					<?php endif; ?>
 						/*
 						refUser = $('#ref_user_cbox').val();
 

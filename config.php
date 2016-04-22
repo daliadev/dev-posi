@@ -29,6 +29,12 @@ class Config
     const CLIENT_NAME = "Uniformation";
     const CLIENT_NAME_LONG = "Uniformation";
     
+
+    /* Gestion du niveau régional */
+
+    // Active la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
+    const ALLOW_LOCALE = 0; // Activer (1) / désactiver (0)
+
     /* Référenciel régional 2015 ou 2016 (stats-restitution) */
     const ANNEE_REGION = "2016";
 
@@ -39,13 +45,17 @@ class Config
     const POSI_MAX_COUNT = 0; // 0: illimité (non implémenté).
     
 
+    /* Debugage */
+
     // Affichage du débuguage (développement).
     const DEBUG_MODE = 0; // Activer (1) / désactiver (0)
 
     // Pas d'attente lors des pages questions (développement).
-    const ADMIN_MODE = 1; // Activer (1) / désactiver (0)
+    const ADMIN_MODE = 0; // Activer (1) / désactiver (0)
 
     
+    /* Activation des fonctionnalités médias */
+
     // Active la gestion des activités dans la partie admin (prédiction d'un parcours, orientation) (non implémenté).
     const ALLOW_ACTIVITES = 0; // Activer (1) / désactiver (0)
     
@@ -64,8 +74,6 @@ class Config
 
     // Active la saisie d'un organisme par un utilisateur lors de l'inscription.
     const ALLOW_OTHER_ORGAN = 1; // Activer (1) / désactiver (0) (Champ Autre) 
-
-
 
 
     /* Gestion spécifique des intervenants lors de l'inscription */
@@ -103,6 +111,7 @@ class Config
     );
 
 
+    /* Gestion des préconisations de parcours selon connaissance */
 
     // Active la gestion des préconisations de parcourts pour les compétences
     const ALLOW_PRECONISATION = 1; // autorisé (1) / non autorisé (0)

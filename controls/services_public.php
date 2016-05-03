@@ -168,7 +168,7 @@ class ServicesPublic extends Main
 					if ($refRegion != null || $refOrgan != null || $refUser != null) // || $dateSession != null)
 					{
 						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-
+						//var_dump($searchResults);
 							// Recherche des éléments de listes et de champs de filtrage
 
 						if ($searchResults)

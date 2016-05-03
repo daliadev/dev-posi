@@ -457,7 +457,7 @@ class ServicesPositionnement extends Main
 	{
 
 		/*** Test d'authentification de l'utilisateur ***/
-		//ServicesAuth::checkAuthentication("user");
+		ServicesAuth::checkAuthentication("user");
 
 		
 

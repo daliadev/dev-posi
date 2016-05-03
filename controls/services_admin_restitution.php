@@ -210,6 +210,7 @@ class ServicesAdminRestitution extends Main
 
 	public function search($regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null)
 	{
+
 		// code postaux
 		$codePostalRequest = "";
 
@@ -282,7 +283,7 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND user.id_user = ".$refUser." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY org.nom_organ ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
+		$query .= "GROUP BY org.id_organ ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);
@@ -307,7 +308,7 @@ class ServicesAdminRestitution extends Main
 		*/
 
 		$resultset = $this->customDAO->read($query, 'restitution');
-
+		//var_dump($resultset);
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{

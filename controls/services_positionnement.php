@@ -1161,7 +1161,7 @@ class ServicesPositionnement extends Main
 		
 
 		/*** Déconnexion automatique de l'utilisateur ***/
-		//ServicesAuth::logout();
+		ServicesAuth::logout();
 		
 
 		/*** Affichage de la page de résultat ***/

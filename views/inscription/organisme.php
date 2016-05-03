@@ -115,10 +115,11 @@ $form_url = $response['url'];
 					<div id="first-part">
 						
 						<div class="form-group">
-							<label for="code_identification">Code organisme</label>
+							<label for="code_identification">Code organisme -> (123456)</label>
 							<input type="password" name="code_identification" class="form-control" id="code_identification" title="Entrer votre code organisme" value="" />
 							<span id="code-help" class="help-block">Le code n'a pas été correctement saisi</span>
 						</div>
+						
 					</div>
 
 					<div id="second-part">

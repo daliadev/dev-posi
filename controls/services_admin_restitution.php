@@ -117,6 +117,7 @@ class ServicesAdminRestitution extends Main
 			for ($i = 0; $i < count($resultset['response']['utilisateur']); $i++)
 			{
 				$sessionsAccomplies = $resultset['response']['utilisateur'][$i]->getSessionsAccomplies();
+				
 				if (intval($sessionsAccomplies) === 0)
 				{
 					unset($resultset['response']['utilisateur'][$i]);

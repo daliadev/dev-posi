@@ -455,7 +455,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<li><a href="#infos">1 - Informations utilisateur</a></li>
 								<li><a href="#stats">2 - Les résultats</a></li>
 								<li><a href="#details">3 - Détails des résultats</a></li>
-								<li><a href="#parcours">4 - Parcours de formation</a></li>
+								<?php if (Config::ALLOW_PRECONISATION) : ?>
+									<li><a href="#parcours">4 - Parcours de formation</a></li>
+								<?php endif; ?>
 								<li><a href="#exports">5 - Exports</a></li>
 							</ul>
 
@@ -706,7 +708,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							</div>
 							
 
-
+							<?php if (Config::ALLOW_PRECONISATION) : ?>
 							<div id="parcours" class="zone-liste-restitution">
 
 								<div id="parcours-formation" class="tab-block">
@@ -769,6 +771,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								</div>
 
 							</div>
+
+							<?php endif; ?>
 
 
 
@@ -907,8 +911,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 
 				
-				console.log('Filter changed for : ' + id + ' = ' + value);
-				console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser); // + ' - date_session = ' + dateSession);
+				//console.log('Filter changed for : ' + id + ' = ' + value);
+				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser); // + ' - date_session = ' + dateSession);
 				//console.log('isFilterActivate : ' + isFilterActivate);
 				
 				
@@ -945,7 +949,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 						if (filterRequested) {
 							
-							console.log('filter activated !');
+							//console.log('filter activated !');
 
 							if (data.results != null)
 							{
@@ -992,7 +996,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							if (id == selectRegion.id) {
 							//if (data.results != null)
 							//{
-								console.log('Region selected');
+								//console.log('Region selected');
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
 								selectUser.options.length = 1;
@@ -1042,7 +1046,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							}
 							else if (id == selectOrgan.id) {
 
-								console.log('Organ selected');
+								//console.log('Organ selected');
 								selectUser.options.length = 1;
 								selectUser.options[0].selected;
 
@@ -1065,10 +1069,10 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							}
 							else if (id == selectUser.id) {
 
-								console.log('User selected');
+								//console.log('User selected');
 							}
 							else {
-								console.log('everything\'s set');
+								//console.log('everything\'s set');
 								/*
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
@@ -1161,7 +1165,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 				if (hasChanged) {
 					self.filterRequested = false;
-					console.log('Filter has changed');
+					//console.log('Filter has changed');
 					self.changeFilter(id, ref);
 				}
 			});
@@ -1207,7 +1211,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				if (isFilterable) {
 					//self.isFilterActivate = true;
 					filterRequested = true;
-					console.log('Filtering !');
+					//console.log('Filtering !');
 					self.changeFilter('ref-session-cbox', null);
 				}
 			});

@@ -249,7 +249,7 @@ $form_url = $response['url'];
 									<?php //if(isset($formData['code_cat'])) : ?>
 
 									<div id="num-cat" class="num-indicator">
-										N°<?php echo $formData['code_cat']; ?>
+										N°<?php //echo $formData['code_cat']; ?>
 									</div>
 
 									<?php //endif; ?>

@@ -106,6 +106,7 @@ class ServicesAdminCategorie extends Main
 		$catDetails['nom_cat'] = "";
 		$catDetails['descript_cat'] = "";
 		$catDetails['ordre_cat'] = "";
+	
 		
 		$resultset = $this->categorieDAO->selectByCode($codeCat);
 		

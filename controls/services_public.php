@@ -997,7 +997,7 @@ class ServicesPublic extends Main
 
 		// Liste des organismes pour le combo-box
 		//$organismesList = $this->servicesRestitution->getOrganismesList(); 
-		//$this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
+		$this->returnData['response'] = array_merge($organismesList['response'], $this->returnData['response']);
 
 		// On envoie les infos de la page à la vue
 		$this->setResponse($this->returnData);

@@ -265,6 +265,7 @@ class ServicesAdminRestitution extends Main
 		{
 			$query .= $codePostalRequest;
 		}
+
 		if ($codeOrgan) 
 		{
 			$query .= "AND org.numero_interne LIKE '".$codeOrgan."' ";
@@ -283,7 +284,7 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND user.id_user = ".$refUser." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY org.id_organ ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
+		$query .= "GROUP BY org.id_organ, user.id_user, sess.id_session, sess.date_session ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);

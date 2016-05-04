@@ -58,5 +58,5 @@ ALTER TABLE question_cat
 	ADD `id_question_cat` INT(8) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
 
 /* Ajout id_question_cat dans la table question_cat */
-ALTER TABLE cat_preco
-	ADD `id_cat_preco` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+/*ALTER TABLE cat_preco
+	ADD `id_cat_preco` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;*/

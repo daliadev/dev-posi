@@ -284,7 +284,7 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND user.id_user = ".$refUser." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY org.id_organ, user.id_user, sess.id_session, sess.date_session ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
+		$query .= "GROUP BY user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);
@@ -310,10 +310,31 @@ class ServicesAdminRestitution extends Main
 
 		$resultset = $this->customDAO->read($query, 'restitution');
 		//var_dump($resultset);
+		
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
-			//$resultset['response']['query'] = $query;
+			$time = -microtime(true);
+			$res1 = $resultset['response']['restitution'];
+			$res2 = array();
+			/*
+			foreach ($resultset['response'] as $key => $val) 
+			{    
+				$res2[$val] = true; 
+			}
+			*/
+			//$res2 = array_keys($res2); 
+			//res2 = array_keys(array_flip($resultset['response']['restitution']));
+			//$res2 = array_unique(array_diff_assoc($res1, array_unique($res1)));
+			foreach ($res1 as $res)
+			{
+				$res2 = array_unique(array_merge($res, $res2));
+			}
+			
+
+			$time += microtime(true); 
+			echo "<br />deduped to ".count($res2)." in ".$time;
+			
 			return $resultset;
 		}
 

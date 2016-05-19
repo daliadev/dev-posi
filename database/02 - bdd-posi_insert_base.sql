@@ -19,6 +19,6 @@ INSERT INTO niveau_etudes (nom_niveau, descript_niveau)
 /* Insertion de la liste des degrés de compétences */
 
 INSERT INTO degre (nom_degre, descript_degre)
-	VALUES 	("1", "Degré 1"),
-			("2", "Degré 2"),
-			("3", "Degré 3");
+	VALUES 	("1", "DegrÃ© 1"),
+			("2", "DegrÃ© 2"),
+			("3", "DegrÃ© 3");

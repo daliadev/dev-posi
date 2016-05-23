@@ -209,6 +209,9 @@ class ServicesPublic extends Main
 						//$results = array('error' => "error no filter attribute");
 					}
 
+					//var_dump($results);
+					//exit();
+
 					echo json_encode($results);
 					exit();
 				}

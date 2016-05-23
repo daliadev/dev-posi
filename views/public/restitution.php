@@ -411,19 +411,23 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									<?php
 									
-									foreach ($response['sessions'] as $session)
+									if (isset($response['sessions'])) 
 									{
-										$selected = "";
-										if (!empty($formData['ref_session']) && $formData['ref_session'] == $session->getId())
+										foreach ($response['sessions'] as $session)
 										{
-											$selected = "selected";
-										}
+											$selected = "";
+											if (!empty($formData['ref_session']) && $formData['ref_session'] == $session->getId())
+											{
+												$selected = "selected";
+											}
 
-										$date = Tools::toggleDate(substr($session->getDate(), 0, 10));
-										$timeToSeconds = Tools::timeToSeconds(substr($session->getDate(), 11, 8), $inputFormat = "h:m:s");
-										$time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
-										echo '<option value="'.$session->getId().'" '.$selected.'>'.$date.' '.$time.'</option>';
+											$date = Tools::toggleDate(substr($session->getDate(), 0, 10));
+											$timeToSeconds = Tools::timeToSeconds(substr($session->getDate(), 11, 8), $inputFormat = "h:m:s");
+											$time = str_replace(":", "h", Tools::timeToString($timeToSeconds, "h:m"));
+											echo '<option value="'.$session->getId().'" '.$selected.'>'.$date.' '.$time.'</option>';
+										}
 									}
+									
 									
 									?>
 
@@ -764,7 +768,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									<?php else : ?>
 
-										<div class="info">Aucun détail à afficher.</div>
+										<div class="info">Aucun parcours à afficher.</div>
 
 									<?php endif; ?>
 
@@ -865,10 +869,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			this.changeFilter = function(id, value) {
 
-				//console.log('Filter changed for : ' + id + ' = ' + value);
+				console.log('Filter changed for : ' + id + ' = ' + value);
 				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
-
-				
 
 				var onlyOrgan = false;
 
@@ -931,8 +933,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						alert(data.error);
 					}
 					else {
-
-						//alert(data.results);
 						//console.log(id, selectRegion.id);
 						//var selectOrgan = $('#ref-organ-cbox').get(0);
 						//selectOrgan.options.length = 1;

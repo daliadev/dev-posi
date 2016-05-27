@@ -241,7 +241,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 }
 
 
-//var_dump($catList);
+//var_dump($response['organisme']);
+
 ?>
 
 
@@ -345,7 +346,33 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									<?php
 									
 									if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
-									{						
+									{	
+										//$response['organisme'] = 
+										$already_exists = false;
+										$organs = array();
+
+										foreach ($response['organisme'] as $organisme)
+										{
+											foreach ($response['organisme'] as $org)
+											{
+												if ($organisme->getId() == $org->getId()) 
+												{
+													$already_exists = true;
+												}
+											}
+
+											if ($already_exists) 
+											{
+												$already_exists = false;
+											}
+											else
+											{
+												$organs[] = $organisme;
+											}
+										}
+
+										$response['organisme'] = $organs;
+
 										foreach ($response['organisme'] as $organisme)
 										{
 											$selected = "";

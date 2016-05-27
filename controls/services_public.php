@@ -363,6 +363,7 @@ class ServicesPublic extends Main
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
+			
 			$listings = $resultsListings['response']['restitution'];
 
 			$list = array(
@@ -372,6 +373,9 @@ class ServicesPublic extends Main
 			);
 
 			$i = 0;
+
+			//var_dump($listings);
+			//exit();
 
 			foreach ($listings as $entity) {
 
@@ -414,6 +418,7 @@ class ServicesPublic extends Main
 
 				$i++;
 			}
+			
 		}
 
 		//var_dump($list);

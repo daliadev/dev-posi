@@ -314,11 +314,11 @@ class ServicesAdminRestitution extends Main
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
-			$res2 = array();
-			foreach ($resultset['response']['restitution'] as $res)
-			{
-				//$res2 = array_unique(array_merge($res, $res2));
-
+			//$res2 = array();
+			//foreach ($resultset['response']['restitution'] as $res)
+			//{
+				//var_dump($res);
+				/*
 				foreach ($res as $key => $val) 
 				{
 					if (isset($res2[$key]) && is_array($res2[$key]))
@@ -332,16 +332,18 @@ class ServicesAdminRestitution extends Main
 					
 
 				}
-			}
-
+				*/
+			//}
+			/*
 			$unique = array();
 
 			foreach ($res2 as $key => $value)
 			{
 				$unique[$key] = array_keys(array_flip($value));
 			}
+			*/
 
-			$resultset['response']['restitution'] = $unique;
+			//$resultset['response']['restitution'] = $unique;
 			/* 
 			$time = -microtime(true);
 			$res1 = $resultset['response']['restitution'];

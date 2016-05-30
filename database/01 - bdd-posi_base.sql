@@ -179,7 +179,7 @@ CREATE TABLE question
 	ref_degre INT(2) UNSIGNED NULL,
 	num_ordre_question INT(3) NOT NULL UNIQUE,
 	type_question ENUM('qcm','champ_saisie') NOT NULL DEFAULT 'qcm',
-	intitule_question TINYTEXT NOT NULL,
+	intitule_question TEXT NOT NULL,
 	image_question VARCHAR(255) NULL,
 	audio_question VARCHAR(255) NULL,
 	video_question VARCHAR(255) NULL,

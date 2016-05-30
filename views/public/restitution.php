@@ -348,6 +348,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
 									{	
 										//$response['organisme'] = 
+										/*
 										$already_exists = false;
 										$organs = array();
 
@@ -372,7 +373,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										}
 
 										$response['organisme'] = $organs;
-
+										*/
 										foreach ($response['organisme'] as $organisme)
 										{
 											$selected = "";

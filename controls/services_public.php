@@ -451,23 +451,27 @@ class ServicesPublic extends Main
 		}
 		else 
 		{
-			$existing_keys = array();
+			//$existing_keys = array();
+
+			//$i = 0;
 			
 			foreach ($organismesList['response']['organisme'] as $organisme)
 			{
+				$j = 0;
+
+				$exists = false;
+
 				foreach ($list['organismes'] as $organ)
 				{
-					if ($organisme->getId() == $organ['id_organ']) 
+					
+					if ($organisme->getId() == $organ['id_organ'] && !$exists) 
 					{
-						$exists = false;
-
-						foreach ($list['organismes'] as $organ)
-						{	
-							array_push($existing_keys, $organisme->getId());
-						}
-
-						$organismes['response']['organisme'][] = $organisme;
+						$organismes['response']['organisme'][$j] = $organisme;
+						
+						$exists = true;
 					}
+
+					$j++;
 				}
 
 				if ($organisme->getId() == $this->formData['ref_organ'])
@@ -477,35 +481,11 @@ class ServicesPublic extends Main
 				}
 			}
 
-			$i = 0;
-			/*
-			foreach ($organismes['response']['organisme'] as $organisme)
-			{
-				$j = 0;
-
-				foreach ($organismes['response']['organisme'] as $organ)
-				{
-					if ($i !== $j && $organisme->getId() === $organ->getId()) 
-					{
-						var_dump($organisme->getId());
-						//array_splice($organismes['response']['organisme'], $i, 1);
-						break;
-					}
-
-					$j++;
-				}
-
-				$i++;
-			}
-			*/
-			
-			var_dump($organismes);
-			exit();
+			//var_dump($organismes['response']);
+			//exit();
 
 			$this->returnData['response'] = array_merge($organismes['response'], $this->returnData['response']);
 		}
-
-		
 
 
 		// Pour chaque combo-box sélectionné, on effectue les requetes correspondantes

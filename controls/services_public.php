@@ -363,11 +363,11 @@ class ServicesPublic extends Main
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
-			
+
 			$listings = $resultsListings['response']['restitution'];
 
 			$list = array(
-				'organisme' => array(),
+				'organismes' => array(),
 				'utilisateurs' => array(),
 				'sessions' => array()
 			);
@@ -440,7 +440,10 @@ class ServicesPublic extends Main
 		
 		$nomOrgan = null;
 		$codeOrgan = null;
-		$organismes = array('response', array('organisme'));
+		$organismes = array();
+		$organismes['response']['organisme'] = array();
+
+		//var_dump($organismes);
 
 		if (!$organismesList)
 		{
@@ -448,12 +451,21 @@ class ServicesPublic extends Main
 		}
 		else 
 		{
+			$existing_keys = array();
+			
 			foreach ($organismesList['response']['organisme'] as $organisme)
 			{
 				foreach ($list['organismes'] as $organ)
 				{
 					if ($organisme->getId() == $organ['id_organ']) 
 					{
+						$exists = false;
+
+						foreach ($list['organismes'] as $organ)
+						{	
+							array_push($existing_keys, $organisme->getId());
+						}
+
 						$organismes['response']['organisme'][] = $organisme;
 					}
 				}
@@ -464,9 +476,36 @@ class ServicesPublic extends Main
 					$codeOrgan = $organisme->getNumeroInterne();
 				}
 			}
+
+			$i = 0;
+			/*
+			foreach ($organismes['response']['organisme'] as $organisme)
+			{
+				$j = 0;
+
+				foreach ($organismes['response']['organisme'] as $organ)
+				{
+					if ($i !== $j && $organisme->getId() === $organ->getId()) 
+					{
+						var_dump($organisme->getId());
+						//array_splice($organismes['response']['organisme'], $i, 1);
+						break;
+					}
+
+					$j++;
+				}
+
+				$i++;
+			}
+			*/
 			
+			var_dump($organismes);
+			exit();
+
 			$this->returnData['response'] = array_merge($organismes['response'], $this->returnData['response']);
 		}
+
+		
 
 
 		// Pour chaque combo-box sélectionné, on effectue les requetes correspondantes

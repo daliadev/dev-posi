@@ -1275,8 +1275,16 @@ class ServicesAdminQuestion extends Main
                     {
                         require_once(ROOT."utils/image_uploader.php");
                         
+                        /*
                         // On recréé l'image au bon format
                         ImageUploader::create($path.$completeName, $path, $name, $ext, true, 750, 420);
+
+                        // On créé la vignette de l'image
+                        ImageUploader::create($path.$completeName, ROOT.THUMBS_PATH, "thumb_".$name, $ext, false, 112, 70);
+                        */
+
+                        // On recréé l'image au bon format
+                        ImageUploader::create($path.$completeName, $path, $name, $ext, true, null, null);
 
                         // On créé la vignette de l'image
                         ImageUploader::create($path.$completeName, ROOT.THUMBS_PATH, "thumb_".$name, $ext, false, 112, 70);

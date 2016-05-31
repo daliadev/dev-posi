@@ -3,7 +3,7 @@
 class ImageUploader
 {
 
-    static function create($image, $path, $name, $ext, $delete = false, $width = 100, $height = 100)
+    static function create($image, $path, $name, $ext, $delete = false, $width = null, $height = null)
     {
         // On supprime l'extension du nom
         //$name = substr($name, 0, -4);
@@ -40,35 +40,49 @@ class ImageUploader
             unlink($image);
         }
         
-        /* Création des miniatures */
-        // On créé une image vide de la largeur et hauteur voulue
-        $imageFinale = imagecreatetruecolor($width, $height);
 
-        // On va gérer la position et le redimensionnement de la grande image
-        $thumbDimRatio = $width / $height;
-
-        if ($imageWidth > $thumbDimRatio * $imageHeight)
+        if ($width === null && $height === null)
         {
-            // L'image est plus large que le format demansé
-            $finalWidth = $height * $imageWidth / $imageHeight; 
-            $finalHeight = $height; 
+            /* Sans contrôle */
+            $imageFinale = imagecreatetruecolor($imageWidth, $imageHeight);
+            $finalWidth = $imageWidth; 
+            $finalHeight = $imageHeight; 
             $offsetY = 0;
-            $offsetX = -($finalWidth - $width) / 2;
-        }
-        if ($imageWidth < $thumbDimRatio * $imageHeight)
-        { 
-            $finalWidth = $width; 
-            $finalHeight = $width * $imageHeight / $imageWidth;   
             $offsetX = 0;
-            $offsetY = -($finalHeight - $height) / 2; 
         }
-        if ($imageWidth == $thumbDimRatio * $imageHeight)
-        { 
-            $finalWidth = $width; 
-            $finalHeight = $height; 
-            $offsetX = 0;
-            $offsetY = 0; 
+        else
+        {
+            // On créé une image vide de la largeur et hauteur voulue
+            $imageFinale = imagecreatetruecolor($width, $height);
+
+            // On va gérer la position et le redimensionnement de la grande image
+            $thumbDimRatio = $width / $height;
+
+            if ($imageWidth > $thumbDimRatio * $imageHeight)
+            {
+                // L'image est plus large que le format demansé
+                $finalWidth = $height * $imageWidth / $imageHeight; 
+                $finalHeight = $height; 
+                $offsetY = 0;
+                $offsetX = -($finalWidth - $width) / 2;
+            }
+            if ($imageWidth < $thumbDimRatio * $imageHeight)
+            { 
+                $finalWidth = $width; 
+                $finalHeight = $width * $imageHeight / $imageWidth;   
+                $offsetX = 0;
+                $offsetY = -($finalHeight - $height) / 2; 
+            }
+            if ($imageWidth == $thumbDimRatio * $imageHeight)
+            { 
+                $finalWidth = $width; 
+                $finalHeight = $height; 
+                $offsetX = 0;
+                $offsetY = 0; 
+            }
         }
+        
+
 
         // on modifie l'image de base par l'image finale redimensionnée et décalée
         imagecopyresampled($imageFinale, $imageCreated, $offsetX, $offsetY, 0, 0, $finalWidth, $finalHeight, $imageWidth, $imageHeight);

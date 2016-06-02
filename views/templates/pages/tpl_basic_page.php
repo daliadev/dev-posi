@@ -37,11 +37,15 @@
 	<!-- Contenu de la page -->
 	<div id="posi-main" class="main">
 		
+		<div class="main-container">
+
 		<?php include($header_content); ?>
 
 		<?php echo $template_content; ?>
 
 		<?php include($footer_content); ?>
+
+		</div>
 	
 	</div>
 

@@ -1730,6 +1730,12 @@ body {
 	margin: 0 auto;
 }
 
+	.main-container {
+		width: 100%;
+		max-width: 680px;
+		height: auto;
+		margin: 0 auto;
+	}
 
 	.content-form-small {
 		margin: 40px 0 0 0 !important;
@@ -1934,7 +1940,7 @@ body {
 	
 .main {
 	width: 100%;
-	max-width: 1008px;
+	/*max-width: 1008px;*/
 	margin: 0 auto;
 	padding: 0;
 }

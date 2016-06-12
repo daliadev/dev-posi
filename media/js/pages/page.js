@@ -145,6 +145,10 @@ $(function() {
 	// URL complète de la vidéo
 	videoUrl = videoFilename;
 
+	// Message de la vidéo alternative
+	var question = $('.question').html();
+	$('.question').html('<p>Regardez et écoutez attentivement la vidéo, puis répondez à la question.</p>');
+
 
 
 	/*** Fonctions de contrôle des interactions ***/
@@ -200,15 +204,16 @@ $(function() {
 
 			
 
+			
+			// Si vidéo -> load vidéo
+			if (isVideoActive) {
+
+				//loadVideo();
+			}
 			// Creation du lecteur audio s'il y a une source
 			if (isAudioActive) {
 
 				audioPlayer.startLoading(onAudioLoaded);
-			}
-			// Sinon si vidéo -> load vidéo
-			else if (isVideoActive) {
-
-				displayVideo();
 			}
 			else {
 
@@ -237,13 +242,13 @@ $(function() {
 
 			console.log('onImageDisplayed');
 
-			if (isAudioActive) {
-
-				audioContainer.style.display = 'block';
-			}
-			else if (isVideoActive) {
+			if (isVideoActive) {
 
 				displayVideo();
+			}
+			else if (isAudioActive) {
+
+				audioContainer.style.display = 'block';
 			}
 
 			if (!isAudioActive && !isVideoActive) {
@@ -252,138 +257,29 @@ $(function() {
 				enableUserResponse();
 			}
 		};
-		
 
+		var onImageHidden = function() {
 
-	/**********************************************
-	*       Fonctions de gestion de l'audio       *
-	**********************************************/
+			console.log('onImageHidden');
 
-	var createAudio = function() {
-
-		console.log('createAudio');
-
-		audioContainer.style.display = 'none';
-
-		// Instanciation de l'objet AudioPlayer que gére et contrôle le son
-		// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
-		audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
-
-		// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
-		audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress, onAudioEnded);
-		audioPlayer.enableControls(false);
-	}
-
-
-		/* Evénements liés à l'audio */
-
-
-		// 1 : Le lecteur audio a été créé
-
-		var onAudioCreated = function() {
-
-			console.log('onAudioCreated');
-
-			if (!isImageActive) {
-
-				audioContainer.style.display = 'block';
-				audioPlayer.startLoading(onAudioLoaded);
-			}
-			
-			$('#speaker-icon').addClass('fa-refresh fa-spin');
-		};
-
-
-		// 2 : La piste audio est en chargement
-
-		var onAudioLoading = function(percent) {
-
-			console.log('onAudioLoading : ' + percent);
-
-			//var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
-			//$('#speaker-loader').css('stroke-dashoffset', offset.toString());
-
-			if (percent === 100) {
-
-				//var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
-				//$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
-			}
-		};
-
-
-		// 3 : La piste audio est chargée
-
-		var onAudioLoaded = function() {
-
-			console.log('onAudioLoaded');
-
-			setTimeout(function() { 
-				audioPlayer.startPlaying(onAudioStart); 
-			}, 1000);
-		};
-
-
-		// 4 : La lecture de la piste audio démarre
-
-		var onAudioStart = function() {
-
-			console.log('onAudioStart');
-			audioPlayer.enableControls(true);
-
-			audioIsPlaying = true;
-
-			// Démarrage ripple effect
-			$('.button-icon').addClass('animate');
-
-			// Changement icone play
-			$('#speaker-icon').css("margin-left", "0px");
-			$('#speaker-icon').removeClass('fa-play').removeClass('fa-refresh fa-spin').addClass('fa-microphone');
-		};
-
-
-		// 5 : La piste audio est en cours de lecture
-
-		var onAudioProgress = function(percent) {
-
-			console.log('onAudioProgress : ' + percent);
-
-			//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
-			//$('#speaker-progress').css('stroke-dashoffset', offset.toString());
-
-			if (percent === 100) {
-
-			}
-		};
-
-
-		// 6 : La lecture de la piste audio est terminée
-
-		var onAudioEnded = function() {
-
-			console.log('onAudioEnded');
-
-			audioIsPlaying = false;
-
-			// Fin ripple effect
-			$('.button-icon').removeClass('animate');
-
-			// Bouton play
-			$('#speaker-icon').removeClass('fa-microphone');
-			$('#speaker-icon').addClass('fa-play');
-			$('#speaker-icon').css("margin-left", "2px");
-
+			/*
 			if (isVideoActive) {
 
 				displayVideo();
 			}
-			else {
+			else if (isAudioActive) {
+
+				audioContainer.style.display = 'block';
+			}
+
+			if (!isAudioActive && !isVideoActive) {
 
 				controlsEnabled = true;
 				enableUserResponse();
 			}
+			*/
 		};
-
-
+		
 
 
 	/**********************************************
@@ -578,6 +474,11 @@ $(function() {
 
 		console.log('displayVideo');
 		$('#video').show();
+
+		if (isImageActive)
+		{
+			imageController.hide(1000, onImageHidden);
+		}
 	};
 
 
@@ -636,8 +537,145 @@ $(function() {
 
 			console.log('onVideoEnded');
 			controlsEnabled = true;
+			$('.question').html(question);
 			enableUserResponse();
 		};
+
+
+
+
+	/**********************************************
+	*       Fonctions de gestion de l'audio       *
+	**********************************************/
+
+	var createAudio = function() {
+
+		console.log('createAudio');
+
+		audioContainer.style.display = 'none';
+
+		// Instanciation de l'objet AudioPlayer que gére et contrôle le son
+		// Le player proprement dit est caché et le bouton speaker sert de bouton lecture/pause.
+		audioPlayer = new AudioPlayer(playerType, audioContainer, playerURL, 200, 40);
+
+		// Initialisation du lecteur audio (piste, boutons de controles, fonctions événementielles)
+		audioPlayer.init(audioTrack, audioControls, onAudioCreated, onAudioLoading, onAudioProgress, onAudioEnded);
+		audioPlayer.enableControls(false);
+	}
+
+
+		/* Evénements liés à l'audio */
+
+
+		// 1 : Le lecteur audio a été créé
+
+		var onAudioCreated = function() {
+
+			console.log('onAudioCreated');
+
+			if (!isImageActive) {
+
+				audioContainer.style.display = 'block';
+				audioPlayer.startLoading(onAudioLoaded);
+			}
+			
+			$('#speaker-icon').addClass('fa-refresh fa-spin');
+		};
+
+
+		// 2 : La piste audio est en chargement
+
+		var onAudioLoading = function(percent) {
+
+			console.log('onAudioLoading : ' + percent);
+
+			//var offset = parseInt($('#speaker-loader').css('stroke-dasharray')) / 100 * (100 - percent);
+			//$('#speaker-loader').css('stroke-dashoffset', offset.toString());
+
+			if (percent === 100) {
+
+				//var dasharrayValue = parseInt($('#speaker-loader').css('stroke-dasharray'));
+				//$('#speaker-loader').css('stroke-dashoffset', dasharrayValue);
+			}
+		};
+
+
+		// 3 : La piste audio est chargée
+
+		var onAudioLoaded = function() {
+
+			console.log('onAudioLoaded');
+
+			setTimeout(function() { 
+				audioPlayer.startPlaying(onAudioStart); 
+			}, 1000);
+		};
+
+
+		// 4 : La lecture de la piste audio démarre
+
+		var onAudioStart = function() {
+
+			console.log('onAudioStart');
+			audioPlayer.enableControls(true);
+
+			audioIsPlaying = true;
+
+			// Démarrage ripple effect
+			$('.button-icon').addClass('animate');
+
+			// Changement icone play
+			$('#speaker-icon').css("margin-left", "0px");
+			$('#speaker-icon').removeClass('fa-play').removeClass('fa-refresh fa-spin').addClass('fa-microphone');
+		};
+
+
+		// 5 : La piste audio est en cours de lecture
+
+		var onAudioProgress = function(percent) {
+
+			console.log('onAudioProgress : ' + percent);
+
+			//var offset = parseInt($('#speaker-progress').css('stroke-dasharray')) / 100 * (100 - percent);
+			//$('#speaker-progress').css('stroke-dashoffset', offset.toString());
+
+			if (percent === 100) {
+
+			}
+		};
+
+
+		// 6 : La lecture de la piste audio est terminée
+
+		var onAudioEnded = function() {
+
+			console.log('onAudioEnded');
+
+			audioIsPlaying = false;
+
+			// Fin ripple effect
+			$('.button-icon').removeClass('animate');
+
+			// Bouton play
+			$('#speaker-icon').removeClass('fa-microphone');
+			$('#speaker-icon').addClass('fa-play');
+			$('#speaker-icon').css("margin-left", "2px");
+
+			if (isVideoActive) {
+
+				displayVideo();
+			}
+			else {
+
+				controlsEnabled = true;
+				enableUserResponse();
+			}
+		};
+
+
+
+
+	
 
 
 

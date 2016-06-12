@@ -18,7 +18,10 @@ var ImageController = function(container, loader, onCreateCallback) {
 	var createCallback = onCreateCallback;
 	var loadCallback = null;
 	var displayCallback = null;
+	var hiddenCallback = null;
 
+	var displayTimer = null;
+	var hideTimer = null;
 
 	/*
 	var loaderFadeIn = function() {
@@ -41,6 +44,12 @@ var ImageController = function(container, loader, onCreateCallback) {
 		displayedCallback.call(this);
 	};
 	
+
+	var onHidden = function() {
+
+		clearTimeout(hideTimer);
+		hiddenCallback.call(this);
+	};
 
 
 
@@ -84,6 +93,13 @@ var ImageController = function(container, loader, onCreateCallback) {
 		
 	};
 
+	this.hide = function(duration, onHiddenCallback) {
+
+		hiddenCallback = onHiddenCallback;
+
+		$(imageBox).fadeOut(duration);
+		hideTimer = setTimeout(onHidden, duration);
+	}
 
 
 	/*

@@ -20,7 +20,7 @@
 				
 				<input type="hidden" id="audio-filename" name="audio-filename" value="<?php echo SERVER_URL; ?>/media/mp3/intro.mp3" />
 
-				<fieldset>
+				<fieldset style="text-align: justify;">
 
 					<p><strong>Bonjour,</strong></p>
 

@@ -723,7 +723,7 @@ class ServicesPublic extends Main
 			}
 			else 
 			{
-				$this->returnData['response']['errors'][] = array('type' => "form_valid", 'message' => "Le PDF n'a pu être générer. Veuillez réessayer ultérieurement.");
+				$this->returnData['response']['errors'][] = array('type' => "form_valid", 'message' => "Le PDF n'a pu être généré. Veuillez réessayer ultérieurement.");
 			}
 
 		}

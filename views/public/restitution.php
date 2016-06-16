@@ -814,7 +814,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									<?php if (!empty($response['details']['questions'])) : ?>
 
-										<input type="submit" value="Générer un PDF" name="export_pdf" class="bt-admin-menu-ajout2" disabled title="indisponible" style="background-color: #bdbdbd;" />
+										<!-- <input type="submit" value="Générer un PDF" name="export_pdf" class="bt-admin-menu-ajout2" disabled title="indisponible" style="background-color: #bdbdbd;" /> -->
+										<input type="submit" value="Générer un PDF" name="export_pdf" class="bt-admin-menu-ajout2" />
 										<input type="submit" value="Générer un Excel" name="export_xls" class="bt-admin-menu-ajout2" />
   
 									<?php else : ?>

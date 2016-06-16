@@ -32,8 +32,8 @@ function recursiveCategories($parent, $level, $datas)
 {
 	$list = '';
 	$previous_level = 0;
-	//$isMainListOpen = false;
-	//$isListOpen = false;
+	$isMainListOpen = false;
+	$isListOpen = false;
 
 	if ($level == 0) 
 	{
@@ -46,14 +46,14 @@ function recursiveCategories($parent, $level, $datas)
 
 		if ($parent == $cat->getParentCode()) 
 		{
-
 			if ($previous_level < $level) 
 			{
-				$list .= '<tr><td><table>'.$level;
+				$list .= '<table>';
 			}
 
 			if ($level == 0)
 			{
+				//var_dump($cat->getCode());
 
 				if (!$cat->getHasResult())
 				{
@@ -72,15 +72,14 @@ function recursiveCategories($parent, $level, $datas)
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
 				$list .= '</div>';
 
-				//$isMainListOpen = true;
-				$list .= '</td></tr>';
+				$isMainListOpen = true;
 			}
 			else
 			{
-				// if ($isListOpen) 
-				// {
-				// 	$list .= '</td></tr>';
-				// }
+				if ($isListOpen) 
+				{
+					$list .= '</tr></td>';
+				}
 
 				if (!$cat->getHasResult())
 				{
@@ -97,29 +96,23 @@ function recursiveCategories($parent, $level, $datas)
 				$list .= '<div class="progress">';
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
 				$list .= '</div>';
+				
 
-				//$isListOpen = true;
-				$list .= '</td></tr>';
+				$isListOpen = true;
 			}
 
 			$previous_level = $level;
 
 			$list .= recursiveCategories($cat->getCode(), ($level + 1), $datas);
-
-			$list .= '</table></td></tr>';
 		}
-
-		
 	}
 
 	if ($previous_level == $level && $previous_level != 0) 
 	{
-		/*
 		if ($isMainListOpen || $isListOpen)
 		{
-			$list .= '</td></tr>';
+			$list .= '</tr></td>';
 		}
-		*/
 		$list .= '</table>';
 	}
 
@@ -294,12 +287,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 		padding-top:15px;
 		font-size: 8pt;
 	}
-
-	.dump {
-		font-size: 6pt;
-		word-wrap: break-word;
-		word-break: break-all;
-	}
 		
 </style>
 
@@ -385,22 +372,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 	</table>
 
 	<br/><br/>
-	<table>
-		<tr>
-			<td class="dump"><?php 
-				$ex = explode('><', $catList);
-				for ($i=0; $i < 60; $i++) { 
-					var_dump($ex[$i]);
-				}
-			?></td>
-		</tr>
-	</table>
+	<?php //echo $catList; ?>
 
 	<table>
 
 		<tr>
 			<td class="title">Les statistiques</td>
 		</tr>
+		
 		
 
 		<?php if (!empty($response['stats'])) : $stats = $response['stats'];
@@ -418,7 +397,38 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			<tr>
 				<td class="line"><br/></td>
 			</tr>
+			
+<!-- 
+			<?php //foreach ($stats['categories'] as $statCategorie) : ?>
+				<?php //if ($statCategorie['total'] > 0 && $statCategorie['parent']) : $width = ($statCategorie['percent'] * 152) / 100; ?>
+					<?php //if ($statCategorie['percent'] == 0) : $width = 0.5; endif; ?>
+					<tr>
+						<td class="info">
+							<div class="stats-text">
+								<?php //echo $statCategorie['nom_categorie']; ?> : 
+								<strong><?php //echo $statCategorie['percent']; ?>%</strong> (<strong><?php //echo $statCategorie['total_correct']; ?></strong> réponses correctes sur <strong><?php //echo $statCategorie['total']; ?></strong> questions)
+							</div>
+						</td>
+					</tr> 
+					<tr>
+						<td class="info">
+							<div class="percent" style="width:<?php //echo $width; ?>mm;">
+								<?php //$position = $width; ?>
+								<?php //$width = 152 - $position + 3; ?>
+								<img src="<?php //echo ROOT; ?>media/images/gradiant.png" />
+								<div class="cache" style="width:<?php //echo $width; ?>mm; left:<?php //echo $position; ?>mm; top:-1mm; z-index:99;"></div>
+							</div>
+						</td>
+					</tr>
 
+					   
+					<tr>
+						<td class="line"></td>
+					</tr>
+			
+				<?php //endif; ?>
+			<?php //endforeach; ?>
+ -->
 		<?php else : ?>
 
 			<tr>

@@ -34,12 +34,13 @@ function recursiveCategories($parent, $level, $datas)
 	$previous_level = 0;
 	//$isMainListOpen = false;
 	//$isListOpen = false;
+	$isTableOpen = false;
 
 	if ($level == 0) 
 	{
-		$list .= '<table>';
+		//$list .= '<table>';
 	}
-
+	
 	foreach ($datas as $cat) 
 	{
 		$percent = $cat->getScorePercent();
@@ -49,7 +50,8 @@ function recursiveCategories($parent, $level, $datas)
 
 			if ($previous_level < $level) 
 			{
-				$list .= '<tr><td><table>'.$level;
+				$isTableOpen = true;
+				//$list .= '<tr><td><table>';
 			}
 
 			if ($level == 0)
@@ -75,8 +77,10 @@ function recursiveCategories($parent, $level, $datas)
 				//$isMainListOpen = true;
 				$list .= '</td></tr>';
 			}
+			
 			else
 			{
+				/*
 				// if ($isListOpen) 
 				// {
 				// 	$list .= '</td></tr>';
@@ -100,17 +104,33 @@ function recursiveCategories($parent, $level, $datas)
 
 				//$isListOpen = true;
 				$list .= '</td></tr>';
+				*/
 			}
+			
+
+			// if ($previous_level > $level && $isTableOpen) 
+			// {
+			// 	$list .= '</table></td></tr>';
+			// }
 
 			$previous_level = $level;
 
 			$list .= recursiveCategories($cat->getCode(), ($level + 1), $datas);
 
-			$list .= '</table></td></tr>';
+			//$list .= '</table></td></tr>';
+			/*
+			if ($isTableOpen) 
+			{
+				$list .= '</table></td></tr>';
+				$isTableOpen = false;
+			}
+			*/
+			
 		}
 
-		
 	}
+
+
 
 	if ($previous_level == $level && $previous_level != 0) 
 	{
@@ -120,7 +140,7 @@ function recursiveCategories($parent, $level, $datas)
 			$list .= '</td></tr>';
 		}
 		*/
-		$list .= '</table>';
+		//$list .= '</table>';
 	}
 
 	return $list;
@@ -300,6 +320,117 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 		word-wrap: break-word;
 		word-break: break-all;
 	}
+
+
+	/* Catégories */
+
+	.categories-list {
+		width: 100%;
+		color: #757575; 
+		font-size: 12px; 
+		font-weight: normal;
+	}
+		
+		.categories-list>table {
+			padding: 0;
+			margin: 0;
+		}
+		
+
+			.categories-list .progressbar-title {
+				width: 100%;
+				height: 32px;
+			}
+
+
+				.categories-list td h3 {
+					display: inline-block;
+					float: left;
+					height: 32px;
+					margin: 0;
+					padding: 0;
+					line-height: 32px;
+				}
+				
+				.categories-list td h3:hover {
+					/*text-shadow: 0 0 1px rgba(255, 255, 255, 0.7);*/
+				}
+
+				.categories-list td h3:before {
+					float: left;
+					width: 15px;
+					height: 32px;
+					content: '\f105';
+					color: #009688;
+					font-family: "FontAwesome";
+					text-align: left;
+					line-height: 34px;
+				}
+
+
+				.categories-list td.active h3:before {
+					content: '\f107';
+				}
+
+
+
+					.categories-list td h3 a {
+						padding: 0;
+						font-size: 13px; 
+						font-weight: bold; 
+						color: #555555;
+						text-decoration: none;
+						cursor: pointer;
+					}
+
+					.categories-list td .progressbar-title span {
+						float: right;
+						display: inline-block;
+						text-align: right;
+						line-height: 32px;
+						font-weight: bold;
+						color: #555555;
+					}
+
+
+				.categories-list .progress-title a {
+					padding: 0;
+					height: 28px;
+					font-size: 12px; 
+					color: #555555;
+					line-height: 28px;
+					text-decoration: none;
+					cursor: pointer;
+				}
+
+				.categories-list .progress-title a:before {
+					float: left;
+					width: 14px;
+					height: 28px;
+					content: '\f105';
+					color: #00bfa5;
+					font-family: "FontAwesome";
+					text-align: left;
+					line-height: 28px;
+				}
+
+				.categories-list td .progress-title span {
+					float: right;
+					display: inline-block;
+					height: 28px;
+					text-align: right;
+					line-height: 28px;
+				}
+
+				.categories-list td.active>a:not(:only-child):before {
+					content: '\f105';
+					font-family: "FontAwesome"; 
+					font-size: 1em;
+				}
+
+				.categories-list td h3:hover:not(:only-child):before {
+					content: '\f107';
+				}
 		
 </style>
 
@@ -385,16 +516,19 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 	</table>
 
 	<br/><br/>
-	<table>
+	<!-- <table>
 		<tr>
 			<td class="dump"><?php 
-				$ex = explode('><', $catList);
-				for ($i=0; $i < 60; $i++) { 
-					var_dump($ex[$i]);
-				}
+				//$ex = explode('><', $catList);
+				//for ($i=0; $i < 60; $i++) { 
+				//	var_dump($ex[$i]);
+				//}
 			?></td>
 		</tr>
-	</table>
+	</table> -->
+	
+
+
 
 	<table>
 
@@ -414,7 +548,16 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					<td class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</td>
 				</tr>  
 			<?php endif; ?>
-				
+			
+			<tr>
+				<td>
+					<table class="categories-list">
+
+						<?php echo $catList; ?>
+					</table>
+				</td>
+			</tr>
+			
 			<tr>
 				<td class="line"><br/></td>
 			</tr>

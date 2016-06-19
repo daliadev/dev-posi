@@ -199,6 +199,8 @@ class Main
 		require(ROOT.'views/'.$this->controllerName.'/'.$filename.'.php');
 		$pdf_content = ob_get_clean();
 
+		//echo $pdf_content;
+		
 		try
 		{
 			$pdf = new HTML2PDF("P", "A4", "fr", true, "UTF-8", array(5, 5, 5, 5));

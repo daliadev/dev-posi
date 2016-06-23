@@ -56,14 +56,15 @@ function recursiveCategories($parent, $level, $datas)
 
 			if ($level == 0)
 			{
+ 
 
 				if (!$cat->getHasResult())
 				{
-					$list .= '<tr class="disabled"><td>';
+					$list .= '<tr class="info disabled"><td>';
 				}
 				else
 				{
-					$list .= '<tr><td>';
+					$list .= '<tr><td class="info">';
 				}
 
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
@@ -544,13 +545,19 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				<td class="info">Temps total : <strong><?php echo $tempsTotal; ?></strong></td>
 			</tr>
 			<?php if (!empty($stats['percent_global'])) : ?>
-				<tr>
-					<td class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</td>
-				</tr>  
+			<tr>
+				<td class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</td>
+			</tr>  
 			<?php endif; ?>
 			
+
 			<tr>
-				<td>
+                <td class="line"><br/></td>
+            </tr>
+			
+			
+			<tr>
+				<td class="info">
 					<table class="categories-list">
 
 						<?php echo $catList; ?>

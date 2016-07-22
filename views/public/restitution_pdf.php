@@ -57,7 +57,7 @@ function recursiveCategories($parent, $level, $datas)
 			if ($level == 0)
 			{
  
-
+				/*
 				if (!$cat->getHasResult())
 				{
 					$list .= '<tr class="info disabled"><td>';
@@ -77,6 +77,60 @@ function recursiveCategories($parent, $level, $datas)
 
 				//$isMainListOpen = true;
 				$list .= '</td></tr>';
+				*/
+				$width = ($percent * 152) / 100;
+
+				if ($percent == 0) { $width = 0.5; }
+				
+				if (!$cat->getHasResult())
+				{
+					$list .= '<tr class="info disabled"><td></td></tr>';
+				}
+				else
+				{
+					//foreach ($stats['categories'] as $statCategorie) {
+					//if ($statCategorie['total'] > 0 && $statCategorie['parent']) {
+
+					$list .= '<tr>';
+						$list .= '<td class="info">';
+							$list .= '<div class="stats-text">';
+								$list .= $cat->getNom().' :'; 
+								$list .= '<strong>'.$percent.' %</strong> (<strong>'.$cat->getTotalReponsesCorrectes().'</strong> réponses correctes sur <strong>'.$cat->getTotalReponses().'</strong> questions)';
+							$list .= '</div>';
+						$list .= '</td>';
+					$list .= '</tr>';
+
+					$list .= '<tr>';
+						$list .= '<td class="info">';
+							$list .= '<div class="percent" style="width:'.$width.'mm;">';
+								$position = $width;
+								$width = 152 - $position + 3;
+								$list .= '<img src="'.ROOT.'media/images/gradiant.png" />';
+								$list .= '<div class="cache" style="width: '.$width.'mm; left: '.$position.'mm; top: -1mm; z-index: 99;"></div>';
+							$list .= '</div>';
+						$list .= '</td>';
+					$list .= '</tr>';
+
+						/*
+							<tr>
+								<td class="info">
+									<div class="percent" style="width:<?php echo $width; ?>mm;">
+										<?php $position = $width; ?>
+										<?php $width = 152 - $position + 3; ?>
+										<img src="<?php echo ROOT; ?>media/images/gradiant.png" />
+										<div class="cache" style="width:<?php echo $width; ?>mm; left:<?php echo $position; ?>mm; top:-1mm; z-index:99;"></div>
+									</div>
+								</td>
+							</tr>
+
+							   
+							<tr>
+								<td class="line"></td>
+							</tr>
+							*/
+						//}
+					//}
+				}
 			}
 			
 			else
@@ -552,8 +606,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			
 
 			<tr>
-                <td class="line"><br/></td>
-            </tr>
+				<td class="line"><br/></td>
+			</tr>
 			
 			
 			<tr>

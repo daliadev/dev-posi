@@ -97,6 +97,7 @@ class Config
 	const ENVOI_EMAIL_REFERENT = 1; // Envoi (1) / pas d'envoi (0)
 
 	// Email du responsable du positionnement
+	//public static $main_email_admin = "webmaster@educationetformation.fr"; // Evite courrier indesirable
 	//public static $main_email_admin = "f.rampion@educationetformation.fr";
 	public static $main_email_admin = "n.beurion.dev@gmail.com";
 

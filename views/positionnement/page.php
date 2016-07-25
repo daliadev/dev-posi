@@ -59,6 +59,8 @@
 						<?php endif; ?>
 
 					</div>
+
+					<?php endif; ?>
 					
 					<div id="loader">
 						<div class="image-loader"></div>
@@ -67,34 +69,34 @@
 
 
 					
-						<?php if (!empty($audioFile)) : ?>
+					<?php if (!empty($audioFile)) : ?>
+					
+
+
+					<!-- Audio -->
+					<!-- <div id="audio"> -->
 						
-
-
-						<!-- Audio -->
-						<!-- <div id="audio"> -->
-							
-							<!-- Lecteur audio  sous-forme d'îcone html par defaut, sinon lecteur flash -->
-							<div id="speaker">
-								
-								<button id="speaker-button" type"button">
-									<svg id="svg-speaker-bg" version="1.1" viewBox="0 0 48 48" preserveAspectRatio="xMinYMin meet">
-										<circle id="speaker-bg" r="24" transform="translate(24, 24) rotate(-90)"></circle>
-									</svg>
-									<div class="button-icon">
-										<span class="ripple"><i id="speaker-icon" class="fa fa-music"></i><!-- <i id="speaker-icon"class="fa fa-headphones"></i> --></span>
-										<!-- <span class="ripple"><i id="speaker-icon" class="fa fa-refresh fa-spin"></i></span> -->
-										<!-- <i class="fa fa-volume-up"></i> -->
-									</div>
-									
-								</button>
-	
+						<!-- Lecteur audio  sous-forme d'îcone html par defaut, sinon lecteur flash -->
+					<div id="speaker">
+						
+						<button id="speaker-button" type"button">
+							<svg id="svg-speaker-bg" version="1.1" viewBox="0 0 48 48" preserveAspectRatio="xMinYMin meet">
+								<circle id="speaker-bg" r="24" transform="translate(24, 24) rotate(-90)"></circle>
+							</svg>
+							<div class="button-icon">
+								<span class="ripple"><i id="speaker-icon" class="fa fa-music"></i><!-- <i id="speaker-icon"class="fa fa-headphones"></i> --></span>
+								<!-- <span class="ripple"><i id="speaker-icon" class="fa fa-refresh fa-spin"></i></span> -->
+								<!-- <i class="fa fa-volume-up"></i> -->
 							</div>
-						<!-- </div> -->
+							
+						</button>
 
-						<?php endif; ?>
+					</div>
+					<!-- </div> -->
 
 					<?php endif; ?>
+
+					
 
 					<div id="btn-suite">
 						<!-- <input type="submit" class="button-primary" id="submit-suite" name="submit_suite" value="Suite" /> -->

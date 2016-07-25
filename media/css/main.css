@@ -38,7 +38,7 @@ body {
 	}
 
 		.header .header-wrapper {
-			max-width: 412px;
+			/*max-width: 412px;*/
 			margin: 0 auto;
 			padding: 0 32px;
 		}
@@ -502,9 +502,9 @@ body {
 	/*-----  Content Page  ------*/
 
 	.content-form {
-		width: 100%;
+		/*width: 100%;*/
 		/*max-width: 1008px;*/
-		max-width: 100%;
+		/*max-width: 100%;*/
 		height: auto;
 		margin: 0 auto;
 		padding: 0 24px 24px 24px;
@@ -513,11 +513,12 @@ body {
 
 		.media-display {
 			position: relative;
-			width: 100%;
+			/*width: 100%;*/
+			/*max-width: 100%;*/
 			/*max-width: 750px;*/
 			/*height: 0%;*/
-			height: auto;
-			padding-bottom: 56%;
+			height: 100%;
+			/*padding-bottom: 56%;*/
 			/*max-height: 420px;*/
 			margin: 0 auto;
 			/*padding: 20px;*/
@@ -526,17 +527,17 @@ body {
 			
 			.media-display #visuel {
 				position: relative;
-				width: 100%;
-				max-width: 960px;
-				height: 100%;
+				/*width: 100%;*/
+				/*height: 100%;*/
+				/*max-width: 100%;*/ /*960px;*/
 				/*max-height: 420px;*/
 				/*padding-bottom: 56%;*/
 			}
 
 				.media-display img, .media-display #video {
-					position: absolute;
-					width: 100%;
-					max-width: 100%;
+					position: relative;
+					/*width: 100%;*/
+					/*max-width: 100%;*/
 					z-index: 99;
 				}
 				/*
@@ -1732,7 +1733,7 @@ body {
 
 	.main-container {
 		width: 100%;
-		max-width: 680px;
+		/*min-width: 680px;*/
 		height: auto;
 		margin: 0 auto;
 	}
@@ -1917,7 +1918,7 @@ body {
 		}
 
 			.media-display img {
-				width: 100%;
+				/*width: 100%;*/
 				max-width: 100%;
 			}
 
@@ -1947,14 +1948,14 @@ body {
 	
 	.header {
 		width: 100%;
-		max-width: 1008px;
+		/*max-width: 1008px;*/
 		height: 32px;
 		margin: 0 auto 24px auto;
 		background-color: #009688;
 	}
 
 		.header .header-wrapper {
-			max-width: 412px;
+			/*max-width: 412px;*/
 			margin: 0 auto;
 			padding: 0 32px;
 		}

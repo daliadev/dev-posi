@@ -222,6 +222,10 @@ $(function() {
 
 			loader.fadeOut(1000);
 
+			//console.log(imageController.getWidth());
+			//imageContainer.css('max-width', imageController.getWidth());
+			//imageContainer.css('max-height', imageController.getHeight());
+
 			displayImage(1500);
 		};
 
@@ -231,8 +235,14 @@ $(function() {
 		var displayImage = function(duration) {
 
 			console.log('displayImage');
+
+			
 			
 			imageController.display(duration, onImageDisplayed);
+
+			//imageContainer.css('max-width', imageController.getWidth());
+			//imageContainer.css('max-height', imageController.getHeight());
+			console.log(imageController.getWidth());
 		}
 
 

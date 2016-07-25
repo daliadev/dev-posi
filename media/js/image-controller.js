@@ -23,6 +23,9 @@ var ImageController = function(container, loader, onCreateCallback) {
 	var displayTimer = null;
 	var hideTimer = null;
 
+	var imageWidth = 0;
+	var imageHeight = 0;
+
 	/*
 	var loaderFadeIn = function() {
 
@@ -64,6 +67,10 @@ var ImageController = function(container, loader, onCreateCallback) {
 
 		imageBox.onload = function() {
 
+			// $self.imageWidth = $(this).width();
+			// $self.imageHeight = $(this).height();
+			// console.log('width = ' + $(this).width());
+
 			$(this).hide();
 			$container.append($(this));
 
@@ -86,7 +93,11 @@ var ImageController = function(container, loader, onCreateCallback) {
 
 	this.display = function(duration, onDisplayedCallback) {
 
+		//console.log('width = ' + $(imageBox).width());
 		displayedCallback = onDisplayedCallback;
+
+		$self.imageWidth = $(imageBox).width();
+		$self.imageHeight = $(imageBox).height();
 
 		$(imageBox).fadeIn(duration);
 		displayTimer = setTimeout(onDisplayed, duration);
@@ -101,6 +112,16 @@ var ImageController = function(container, loader, onCreateCallback) {
 		hideTimer = setTimeout(onHidden, duration);
 	}
 
+
+	this.getWidth = function()
+	{
+		return $self.imageWidth;
+	}
+
+	this.getHeight = function()
+	{
+		return $self.imageHeight;
+	}
 
 	/*
 	this.fadeToBlack = function(element, duration) {

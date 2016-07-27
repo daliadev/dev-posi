@@ -15,18 +15,18 @@ CREATE TABLE positionnement
 (
 	id_posi INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_posi VARCHAR(255) NOT NULL UNIQUE,
-	descript_posi TEXT NULL
+	descript_posi TINYTEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS administrateur;
-CREATE TABLE administrateur 
+CREATE TABLE administrateur
 (
 	id_admin INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_admin VARCHAR(100) NOT NULL UNIQUE,
 	pass_admin VARCHAR(50) NOT NULL,
-	droits ENUM('user','custom-public','custom-admin','admin') NOT NULL DEFAULT 'user'
+	droits ENUM('user','custom','admin') NOT NULL DEFAULT 'user'
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -36,7 +36,7 @@ CREATE TABLE niveau_etudes
 (
 	id_niveau INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_niveau VARCHAR(100) NOT NULL UNIQUE,
-	descript_niveau TEXT NULL
+	descript_niveau TINYTEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -46,7 +46,7 @@ CREATE TABLE degre
 (
 	id_degre INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_degre VARCHAR(100) NOT NULL UNIQUE,
-	descript_degre TEXT NULL
+	descript_degre TINYTEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -57,7 +57,7 @@ CREATE TABLE categorie
 	code_cat VARCHAR(20) NOT NULL PRIMARY KEY,
 	ref_posi VARCHAR(10) NULL,
 	nom_cat VARCHAR(255) NOT NULL UNIQUE,
-	descript_cat TEXT NULL
+	descript_cat TINYTEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -68,7 +68,7 @@ CREATE TABLE activite
 	id_activite INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_activite VARCHAR(255) NOT NULL UNIQUE,
 	theme_activite VARCHAR(255) NULL,
-	descript_activite TEXT NULL 
+	descript_activite TINYTEXT NULL 
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -78,7 +78,7 @@ CREATE TABLE valid_acquis
 (
 	id_acquis INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_acquis VARCHAR(100) NOT NULL UNIQUE,
-	descript_acquis TEXT NULL
+	descript_acquis TINYTEXT NULL
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -93,7 +93,7 @@ CREATE TABLE organisme
 	id_organ INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	numero_interne VARCHAR(50) NULL,
 	nom_organ VARCHAR(100) NOT NULL UNIQUE DEFAULT "",
-	adresse_organ TEXT NULL,
+	adresse_organ TINYTEXT NULL,
 	code_postal_organ CHAR(5) NULL,
 	ville_organ VARCHAR(200) NULL,
 	tel_organ CHAR(10) NULL,
@@ -126,7 +126,7 @@ CREATE TABLE utilisateur
 	nom_user VARCHAR(100) NOT NULL,
 	prenom_user VARCHAR(100) NOT NULL,
 	date_naiss_user DATE NOT NULL DEFAULT "0000-00-00",
-	adresse_user TEXT NULL,
+	adresse_user TINYTEXT NULL,
 	code_postal_user CHAR(5) NULL,
 	ville_user VARCHAR(100) NULL,
 	tel_user CHAR(10) NULL,
@@ -194,7 +194,7 @@ CREATE TABLE reponse
 	id_reponse INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_question INT(5) UNSIGNED NOT NULL,
 	num_ordre_reponse TINYINT(3) UNSIGNED NOT NULL,
-	intitule_reponse TEXT NOT NULL DEFAULT "",
+	intitule_reponse TINYTEXT NOT NULL DEFAULT "",
 	est_correct TINYINT(1) NOT NULL DEFAULT 0,
 	KEY num_ordre_reponse (num_ordre_reponse)
 ) 

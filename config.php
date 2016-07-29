@@ -29,6 +29,7 @@ class Config
 	const CLIENT_NAME = "Uniformation";
 	const CLIENT_NAME_LONG = "Uniformation";
 	
+	const MULTI_POSI_ID = 1;
 
 	/* Gestion du niveau régional */
 

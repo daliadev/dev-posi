@@ -28,7 +28,7 @@ class QuestionDAO extends ModelDAO
     {
         $this->initialize();
 
-        $request = "SELECT * FROM question ORDER BY num_ordre_question ASC";
+        $request = "SELECT * FROM question WHERE ref_posi = ".Config::MULTI_POSI_ID." ORDER BY num_ordre_question ASC";
         
         $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
         
@@ -79,7 +79,7 @@ class QuestionDAO extends ModelDAO
         
         if (!empty($numOrdre))
         {
-            $request = "SELECT * FROM question WHERE num_ordre_question = ".$numOrdre;
+            $request = "SELECT * FROM question WHERE ref_posi = ".Config::MULTI_POSI_ID." AND num_ordre_question = ".$numOrdre;
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
         }
@@ -222,7 +222,7 @@ class QuestionDAO extends ModelDAO
             // Connection à la base de données
             $this->connectDB();
 
-            $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE num_ordre_question = ".$numOrdre;
+            $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE ref_posi = ".Config::MULTI_POSI_ID." AND num_ordre_question = ".$numOrdre;
 
             // Création de l'appel à la requête préparée
             $this->prepareStatement($request);

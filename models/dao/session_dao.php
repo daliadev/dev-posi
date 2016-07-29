@@ -62,7 +62,7 @@ class SessionDAO extends ModelDAO
         
         if(!empty($date))
         {
-            $request = "SELECT * FROM session WHERE date_session = '".$date."'";
+            $request = "SELECT * FROM session WHERE ref_posi = ".Config::MULTI_POSI_ID." AND date_session = '".$date."'";
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
         }
@@ -112,6 +112,8 @@ class SessionDAO extends ModelDAO
             $request .= "AND intervenant.ref_organ = ".$refOrgan." ";
         }
 
+        $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
+
         $request .= "ORDER BY session.date_session ASC";
 
 
@@ -145,6 +147,7 @@ class SessionDAO extends ModelDAO
             $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
             $request .= "AND intervenant.ref_organ = ".$refOrganisme." ";
             $request .= "AND session_accomplie = 1 ";
+            $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
             $request .= "GROUP BY id_session ORDER BY date_session DESC";
             
             $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
@@ -174,6 +177,7 @@ class SessionDAO extends ModelDAO
         
         if (!empty($values))
         {
+            array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
             $request = $this->createQueryString("insert", $values, "session");
             
             $this->resultset['response'] = $this->executeRequest("insert", $request, "session", "Session");
@@ -202,6 +206,8 @@ class SessionDAO extends ModelDAO
         
         if (!empty($values))
         {
+            array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
+
             $request = $this->createQueryString("update", $values, "session", "WHERE id_session = ".$idSession);
 
             $this->resultset['response'] = $this->executeRequest("update", $request, "session", "Session");

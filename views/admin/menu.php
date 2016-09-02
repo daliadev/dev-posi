@@ -19,7 +19,7 @@
 				<?php
 				
 					$authType = ServicesAuth::getAuthenticationRight();
-
+					
 					$j = 0;
 
 					foreach (Config::$admin_menu as $menu)

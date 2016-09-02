@@ -153,12 +153,12 @@ class ServicesAdminCompte extends Main
 
                 if (!$resultsetAccount)
                 {
-                    $this->registerError("form_valid", "La mise à jour du compte a échouée.");
+                    $this->registerError("form_valid", "La mise à jour du compte a échoué ou les informations n'ont pas changé.");
                 }
             }
             else
             {
-                $this->registerError("form_valid", "La mise à jour du compte a échouée.");
+                $this->registerError("form_valid", "La mise à jour du compte a échoué.");
             }
         }
         else

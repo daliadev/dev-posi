@@ -159,11 +159,13 @@ $form_url = $response['url'];
                                 <?php
 
                                 $selected1 = (isset($formData['droits']) && $formData['droits'] == "admin") ? "selected" : "";
-                                $selected2 = (isset($formData['droits']) && $formData['droits'] == "custom") ? "selected" : "";
+                                $selected2 = (isset($formData['droits']) && $formData['droits'] == "custom-admin") ? "selected" : "";
+                                $selected3 = (isset($formData['droits']) && $formData['droits'] == "custom-public") ? "selected" : "";
 
                                 ?>
-                                <option value="admin" <?php echo $selected1; ?>>Compte administrateur</option>
-                                <option value="custom" <?php echo $selected2; ?>>Compte limité</option>
+                                <option value="admin" <?php echo $selected1; ?>>Compte administrateur global</option>
+                                <option value="custom-admin" <?php echo $selected2; ?>>Compte limité gestion</option>
+                                <option value="custom-public" <?php echo $selected3; ?>>Compte limité reporting</option>
 
                             </select>
                         </div>

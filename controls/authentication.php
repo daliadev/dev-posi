@@ -21,9 +21,9 @@ class ServicesAuth
 		{
 			$_SESSION['droit'] = "custom-admin";
 		}
-		else if ($droit == "custom")
+		else if ($droit == "custom-public")
 		{
-			$_SESSION['droit'] = "custom";
+			$_SESSION['droit'] = "custom-public";
 		}
 		else
 		{
@@ -105,7 +105,7 @@ class ServicesAuth
 			}
 			else if ($_SESSION['droit'] == "custom-admin")
 			{
-				return "custom";
+				return "custom-admin";
 			}
 			else if ($_SESSION['droit'] == "custom-public")
 			{

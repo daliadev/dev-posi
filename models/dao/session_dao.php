@@ -177,7 +177,8 @@ class SessionDAO extends ModelDAO
         
         if (!empty($values))
         {
-            array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
+            $values['ref_posi'] = Config::MULTI_POSI_ID;
+            //array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
             $request = $this->createQueryString("insert", $values, "session");
             
             $this->resultset['response'] = $this->executeRequest("insert", $request, "session", "Session");
@@ -206,7 +207,9 @@ class SessionDAO extends ModelDAO
         
         if (!empty($values))
         {
-            array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
+            $values['ref_posi'] = Config::MULTI_POSI_ID;
+
+            //array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
 
             $request = $this->createQueryString("update", $values, "session", "WHERE id_session = ".$idSession);
 

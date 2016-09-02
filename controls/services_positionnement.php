@@ -164,7 +164,7 @@ class ServicesPositionnement extends Main
 				'ref_intervenant' => $refIntervenant,
 				'date_session' => $dateSession,
 				'session_accomplie' => 0,
-				'temps_total' => "0"
+				'temps_total' => 0
 			);
 
 
@@ -200,6 +200,9 @@ class ServicesPositionnement extends Main
 			
 		}
 
+		
+
+		
 
 		// S'il n'y a aucune erreur
 		if (empty($this->errors)) 
@@ -213,9 +216,15 @@ class ServicesPositionnement extends Main
 		}
 		else 
 		{
+			foreach ($this->errors as $error) {
+				echo $error->message;
+			}
+
+			//exit();
+
 			// Redirection vers la page d'erreur interne
-			header("Location: ".SERVER_URL."erreur/page500");
-			exit();
+			//header("Location: ".SERVER_URL."erreur/page500");
+			//exit();
 		}
 
 	}

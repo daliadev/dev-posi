@@ -28,7 +28,7 @@ class QuestionDAO extends ModelDAO
     {
         $this->initialize();
 
-        $request = "SELECT * FROM question WHERE ref_posi = ".Config::MULTI_POSI_ID." ORDER BY num_ordre_question ASC";
+        $request = "SELECT * FROM question ORDER BY num_ordre_question ASC";
         
         $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
         
@@ -38,7 +38,24 @@ class QuestionDAO extends ModelDAO
     
 
     
-    
+    /**
+     * selectById - Récupère la question correspondant à l'identifiant
+     * 
+     * @param int Identifiant de la question
+     * @return array Question correspondant à l'identifiant sinon erreurs
+     */
+    public function selectByMultiPosi() 
+    {
+        $this->initialize();
+        
+        $request = "SELECT * FROM question WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' ORDER BY num_ordre_question ASC";
+
+        $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
+        
+        return $this->resultset;
+    }
+
+
     /**
      * selectById - Récupère la question correspondant à l'identifiant
      * 
@@ -51,7 +68,7 @@ class QuestionDAO extends ModelDAO
         
         if (!empty($idQuestion))
         {
-            $request = "SELECT * FROM question WHERE id_question=".$idQuestion;
+            $request = "SELECT * FROM question WHERE id_question = ".$idQuestion;
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
         }
@@ -79,7 +96,7 @@ class QuestionDAO extends ModelDAO
         
         if (!empty($numOrdre))
         {
-            $request = "SELECT * FROM question WHERE ref_posi = ".Config::MULTI_POSI_ID." AND num_ordre_question = ".$numOrdre;
+            $request = "SELECT * FROM question WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' AND num_ordre_question = ".$numOrdre;
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
         }
@@ -111,7 +128,12 @@ class QuestionDAO extends ModelDAO
             {
                 unset($values['ref_question']);
             }
-                
+            
+            if (Config::MULTI_POSI_ID) 
+            {
+                $values['ref_posi'] = Config::MULTI_POSI_ID;
+            }
+
             $request = $this->createQueryString("insert", $values, "question");
 
             $this->resultset['response'] = $this->executeRequest("insert", $request, "question", "Question");
@@ -145,6 +167,11 @@ class QuestionDAO extends ModelDAO
             {
                 $refQuestion = $values['ref_question'];
                 unset($values['ref_question']);
+
+                if (Config::MULTI_POSI_ID) 
+                {
+                    $values['ref_posi'] = Config::MULTI_POSI_ID;
+                }
 
                 $request = $this->createQueryString("update", $values, "question", "WHERE id_question = ".$refQuestion);
 
@@ -222,7 +249,7 @@ class QuestionDAO extends ModelDAO
             // Connection à la base de données
             $this->connectDB();
 
-            $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE ref_posi = ".Config::MULTI_POSI_ID." AND num_ordre_question = ".$numOrdre;
+            $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' AND num_ordre_question = ".$numOrdre;
 
             // Création de l'appel à la requête préparée
             $this->prepareStatement($request);

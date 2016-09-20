@@ -38,10 +38,26 @@ class ServicesAdminQuestion extends Main
     
     
     
-    
-    public function getQuestions()
+    public function getAllQuestions()
     {
         $resultset = $this->questionDAO->selectAll();
+        
+        // Traitement des erreurs de la requête
+        $this->filterDataErrors($resultset['response']);
+        
+        if (!empty($resultset['response']['question']) && count($resultset['response']['question']) == 1)
+        { 
+            $question = $resultset['response']['question'];
+            $resultset['response']['question'] = array($question);
+        }
+        
+        return $resultset;
+    }
+    
+
+    public function getQuestions()
+    {
+        $resultset = $this->questionDAO->selectByMultiPosi();
         
         // Traitement des erreurs de la requête
         $this->filterDataErrors($resultset['response']);

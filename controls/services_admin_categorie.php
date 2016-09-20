@@ -40,6 +40,24 @@ class ServicesAdminCategorie extends Main
 	=            Gestion des catégories           =
 	=============================================*/
 
+	public function getAllCategories()
+	{
+		$resultset = $this->categorieDAO->selectAll();
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['categorie']) && count($resultset['response']['categorie']) == 1)
+			{ 
+				$categorie = $resultset['response']['categorie'];
+				$resultset['response']['categorie'] = array($categorie);
+			}
+
+			return $resultset;
+		}
+		
+		return false;
+	}
+
 
 	public function getCategories()
 	{

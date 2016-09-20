@@ -25,6 +25,22 @@ class CategorieDAO extends ModelDAO
 
 		return $this->resultset;
 	}
+
+	/**
+	 * selectAll - Retourne la liste de toutes les catégories
+	 * 
+	 * @return array Liste d'objets "Categorie"
+	 */
+	public function selectByMultiPosi() 
+	{
+		$this->initialize();
+
+		$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' ORDER BY code_cat ASC";
+		
+		$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
+
+		return $this->resultset;
+	}
 	
 	
 	
@@ -247,7 +263,12 @@ class CategorieDAO extends ModelDAO
 		$this->initialize();
 		
 		if (!empty($values))
-		{       
+		{     
+			if (Config::MULTI_POSI_ID) 
+            {
+                $values['ref_posi'] = Config::MULTI_POSI_ID;
+            }
+
 			$request = $this->createQueryString("insert", $values, "categorie");
 			
 			$this->resultset['response'] = $this->executeRequest("insert", $request, "categorie", "Categorie");
@@ -291,6 +312,11 @@ class CategorieDAO extends ModelDAO
 				{
 					unset($values['code_cat']);
 				}
+
+				if (Config::MULTI_POSI_ID) 
+	            {
+	                $values['ref_posi'] = Config::MULTI_POSI_ID;
+	            }
 				
 				//$request = $this->createQueryString("update", $values, "categorie", "WHERE code_cat = ".$codeCat);
 				$request = "UPDATE categorie SET code_cat='".$codeCat."', nom_cat='".$values['nom_cat']."', descript_cat='".$values['descript_cat']."' WHERE code_cat = '".$codeCat."'";

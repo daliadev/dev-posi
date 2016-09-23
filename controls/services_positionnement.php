@@ -95,7 +95,7 @@ class ServicesPositionnement extends Main
 		
 		
 		/*** Il faut récupérer le nombre de questions ***/
-		$resultset = $this->questionDAO->selectAll();
+		$resultset = $this->questionDAO->selectByPosi();
 			
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
@@ -139,7 +139,7 @@ class ServicesPositionnement extends Main
 			ServicesAuth::openUserSession();
 			
 			// Il faut savoir combien de questions possède le questionnaire
-			$resultset = $this->questionDAO->selectAll();
+			$resultset = $this->questionDAO->selectByPosi();
 			
 			// Traitement des erreurs de la requête
 			if (!$this->filterDataErrors($resultset['response']))

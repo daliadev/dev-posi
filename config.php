@@ -12,7 +12,7 @@ class Config
 {
 
 	/* Version */
-	const POSI_VERSION = "0.27.02";
+	const POSI_VERSION = "0.30.01";
 
 
 	/* Nom et titre du positionnement */
@@ -26,8 +26,8 @@ class Config
 	// Titre de la partie admin.
 	const ADMIN_TITLE = "Gestion du positionnement";
 
-	const CLIENT_NAME = "Uniformation";
-	const CLIENT_NAME_LONG = "Uniformation";
+	const CLIENT_NAME = "Dalia";
+	const CLIENT_NAME_LONG = "Dalia";
 	
 	const MULTI_POSI_ID = 1;
 
@@ -221,11 +221,11 @@ class Config
 
 	/* Gestion du code organisme */
 
-	// code : dalia2013 (à remplacer si besoin).
+	// code : POSI (à remplacer si besoin).
 	public static function getCodeOrganisme()
 	{
 		$pass = array();
-		$pass[0] = Config::hashPassword("dalia2013");
+		$pass[0] = Config::hashPassword("POSI");
 		$pass[1] = Config::hashPassword("nico");
 		return $pass;
 	}

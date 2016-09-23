@@ -31,11 +31,19 @@ class CategorieDAO extends ModelDAO
 	 * 
 	 * @return array Liste d'objets "Categorie"
 	 */
-	public function selectByMultiPosi() 
+	public function selectByPosi() 
 	{
 		$this->initialize();
 
-		$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' ORDER BY code_cat ASC";
+		if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+		{
+			$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' ORDER BY code_cat ASC";
+		}
+		else
+		{
+			$request = "SELECT * FROM categorie ORDER BY code_cat ASC";
+		}
+		
 		
 		$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 
@@ -156,7 +164,15 @@ class CategorieDAO extends ModelDAO
 		
 		if (!empty($search) && !$error)
 		{   
-			$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
+			if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+			{
+				$request = "SELECT code_cat FROM categorie WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' AND code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
+			}
+			else
+			{
+				$request = "SELECT code_cat FROM categorie WHERE code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
+			}
+			
 			//var_dump($request);
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 			//var_dump($this->resultset['response']);
@@ -264,7 +280,7 @@ class CategorieDAO extends ModelDAO
 		
 		if (!empty($values))
 		{     
-			if (Config::MULTI_POSI_ID) 
+			if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '') 
             {
                 $values['ref_posi'] = Config::MULTI_POSI_ID;
             }
@@ -313,7 +329,7 @@ class CategorieDAO extends ModelDAO
 					unset($values['code_cat']);
 				}
 
-				if (Config::MULTI_POSI_ID) 
+				if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
 	            {
 	                $values['ref_posi'] = Config::MULTI_POSI_ID;
 	            }

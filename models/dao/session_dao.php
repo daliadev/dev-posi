@@ -62,7 +62,14 @@ class SessionDAO extends ModelDAO
         
         if(!empty($date))
         {
-            $request = "SELECT * FROM session WHERE ref_posi = ".Config::MULTI_POSI_ID." AND date_session = '".$date."'";
+            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            {
+                $request = "SELECT * FROM session WHERE ref_posi = ".Config::MULTI_POSI_ID." AND date_session = '".$date."'";
+            }
+            else
+            {
+                $request = "SELECT * FROM session WHERE date_session = '".$date."'";
+            }
 
             $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
         }
@@ -112,7 +119,10 @@ class SessionDAO extends ModelDAO
             $request .= "AND intervenant.ref_organ = ".$refOrgan." ";
         }
 
-        $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
+        if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+        {
+            $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
+        }
 
         $request .= "ORDER BY session.date_session ASC";
 
@@ -147,7 +157,12 @@ class SessionDAO extends ModelDAO
             $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
             $request .= "AND intervenant.ref_organ = ".$refOrganisme." ";
             $request .= "AND session_accomplie = 1 ";
-            $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
+
+            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            {
+                $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
+            }
+
             $request .= "GROUP BY id_session ORDER BY date_session DESC";
             
             $this->resultset['response'] = $this->executeRequest("select", $request, "session", "Session");
@@ -177,7 +192,11 @@ class SessionDAO extends ModelDAO
         
         if (!empty($values))
         {
-            $values['ref_posi'] = Config::MULTI_POSI_ID;
+            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            {
+                $values['ref_posi'] = Config::MULTI_POSI_ID;
+            }
+            
             //array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
             $request = $this->createQueryString("insert", $values, "session");
             
@@ -207,7 +226,10 @@ class SessionDAO extends ModelDAO
         
         if (!empty($values))
         {
-            $values['ref_posi'] = Config::MULTI_POSI_ID;
+            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            {
+                $values['ref_posi'] = Config::MULTI_POSI_ID;
+            }
 
             //array_push($values, array('ref_posi' => Config::MULTI_POSI_ID));
 

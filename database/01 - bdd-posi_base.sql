@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS categorie;
 CREATE TABLE categorie 
 (
 	code_cat VARCHAR(20) NOT NULL PRIMARY KEY,
-	ref_posi VARCHAR(10) NULL,
+	ref_posi VARCHAR(10) NOT NULL DEFAULT "1",
 	nom_cat VARCHAR(255) NOT NULL UNIQUE,
 	descript_cat TEXT NULL
 ) 
@@ -156,7 +156,7 @@ DROP TABLE IF EXISTS session;
 CREATE TABLE session 
 (
 	id_session INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_posi VARCHAR(10) NULL,
+	ref_posi VARCHAR(10) NOT NULL DEFAULT "1",
 	ref_user INT(5) UNSIGNED NOT NULL,
 	ref_intervenant INT(5) UNSIGNED NULL,
 	ref_valid_acquis INT(2) UNSIGNED NULL,
@@ -175,7 +175,7 @@ DROP TABLE IF EXISTS question;
 CREATE TABLE question 
 (
 	id_question INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_posi VARCHAR(10) NULL,
+	ref_posi VARCHAR(10) NOT NULL DEFAULT "1",
 	ref_degre INT(2) UNSIGNED NULL,
 	num_ordre_question INT(3) NOT NULL UNIQUE,
 	type_question ENUM('qcm','champ_saisie') NOT NULL DEFAULT 'qcm',

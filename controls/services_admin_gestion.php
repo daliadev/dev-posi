@@ -236,8 +236,8 @@ class ServicesAdminGestion extends Main
 				}
 			}
 
-			var_dump($organNums);
-			exit();
+			//var_dump($organNums);
+			//exit();
 
 			
 			if ($organPass && $depOrganPass && $departementOk)

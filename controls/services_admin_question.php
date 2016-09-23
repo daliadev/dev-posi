@@ -57,7 +57,7 @@ class ServicesAdminQuestion extends Main
 
     public function getQuestions()
     {
-        $resultset = $this->questionDAO->selectByMultiPosi();
+        $resultset = $this->questionDAO->selectByPosi();
         
         // Traitement des erreurs de la requête
         $this->filterDataErrors($resultset['response']);
@@ -449,15 +449,18 @@ class ServicesAdminQuestion extends Main
             $questionExist = false;
             $shiftOrdre = false;
 
-            for ($i = 0; $i < count($numsOrdreList); $i++) 
+            if (!$numsOrdreList || $numsOrdreList == 0) 
             {
-                if ($numsOrdreList[$i] == $formData['num_ordre_question'])
+                for ($i = 0; $i < count($numsOrdreList); $i++) 
                 {
-                    // S'il est réservé, on décale les numéros d'ordre avec n+1 pour toutes les questions supérieures à la question active (shift = décaler);
-                    $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
-                    
-                    $questionExist = true;
-                    break;
+                    if ($numsOrdreList[$i] == $formData['num_ordre_question'])
+                    {
+                        // S'il est réservé, on décale les numéros d'ordre avec n+1 pour toutes les questions supérieures à la question active (shift = décaler);
+                        $shiftOrdre = $this->shiftNumsOrdre($formData['num_ordre_question'], 1);
+                        
+                        $questionExist = true;
+                        break;
+                    }
                 }
             }
             
@@ -516,17 +519,17 @@ class ServicesAdminQuestion extends Main
 
                     if (!$resultsetCategorie)
                     {
-                        $this->registerError("form_request", "L'insertion de la catégorie liée à la question a échouée.");
+                        $this->registerError("form_request", "L'insertion de la catégorie liée à la question a échoué.");
                     }
                 }
                 else 
                 {
-                    $this->registerError("form_valid", "L'enregistrement de la question a échouée.");
+                    $this->registerError("form_valid", "L'enregistrement de la question a échoué.");
                 }
                 
             }
         }
-        else if ($previousMode == "edit"  || $previousMode == "save")
+        else if ($previousMode == "edit" || $previousMode == "save")
         {
 
             if (isset($dataQuestion['ref_question']) && !empty($dataQuestion['ref_question']))

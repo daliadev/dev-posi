@@ -61,7 +61,7 @@ class ServicesAdminCategorie extends Main
 
 	public function getCategories()
 	{
-		$resultset = $this->categorieDAO->selectAll();
+		$resultset = $this->categorieDAO->selectByPosi();
 		
 		if (!$this->filterDataErrors($resultset['response']))
 		{

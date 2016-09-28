@@ -4,41 +4,41 @@
 
 /* Nom de la base de données à utiliser pour le script */
 
-/* USE nom_de_la_bdd; */
 
-
+-- A installer aprés avoir fait la migration sous laravel de l'appli apapp
 
 /*--- Création des tables simples ---*/
 
-DROP TABLE IF EXISTS positionnement;
-CREATE TABLE positionnement 
-(
-	id_posi INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	nom_posi VARCHAR(255) NOT NULL UNIQUE,
-	descript_posi TINYTEXT NULL
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS positionnement;
+-- CREATE TABLE positionnement 
+-- (
+-- 	id_posi INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	nom_posi VARCHAR(255) NOT NULL UNIQUE,
+-- 	lien_posi VARCHAR(255),
+-- 	descript_posi TEXT NULL
+-- ) 
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS administrateur;
-CREATE TABLE administrateur
-(
-	id_admin INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	nom_admin VARCHAR(100) NOT NULL UNIQUE,
-	pass_admin VARCHAR(50) NOT NULL,
-	droits ENUM('user','custom','admin') NOT NULL DEFAULT 'user'
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS administrateur;
+-- CREATE TABLE administrateur 
+-- (
+-- 	id_admin INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	nom_admin VARCHAR(100) NOT NULL UNIQUE,
+-- 	pass_admin VARCHAR(50) NOT NULL,
+-- 	droits ENUM('user','custom-public','custom-admin','admin') NOT NULL DEFAULT 'user'
+-- ) 
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS niveau_etudes;
-CREATE TABLE niveau_etudes 
-(
-	id_niveau INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	nom_niveau VARCHAR(100) NOT NULL UNIQUE,
-	descript_niveau TINYTEXT NULL
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS niveau_etudes;
+-- CREATE TABLE niveau_etudes 
+-- (
+-- 	id_niveau INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	nom_niveau VARCHAR(100) NOT NULL UNIQUE,
+-- 	descript_niveau TEXT NULL
+-- ) 
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS degre;
@@ -46,7 +46,7 @@ CREATE TABLE degre
 (
 	id_degre INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_degre VARCHAR(100) NOT NULL UNIQUE,
-	descript_degre TINYTEXT NULL
+	descript_degre TEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,9 +55,9 @@ DROP TABLE IF EXISTS categorie;
 CREATE TABLE categorie 
 (
 	code_cat VARCHAR(20) NOT NULL PRIMARY KEY,
-	ref_posi VARCHAR(10) NULL,
+	ref_posi VARCHAR(10) NOT NULL DEFAULT "1",
 	nom_cat VARCHAR(255) NOT NULL UNIQUE,
-	descript_cat TINYTEXT NULL
+	descript_cat TEXT NULL
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -68,7 +68,7 @@ CREATE TABLE activite
 	id_activite INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_activite VARCHAR(255) NOT NULL UNIQUE,
 	theme_activite VARCHAR(255) NULL,
-	descript_activite TINYTEXT NULL 
+	descript_activite TEXT NULL 
 ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -78,7 +78,7 @@ CREATE TABLE valid_acquis
 (
 	id_acquis INT(2) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	nom_acquis VARCHAR(100) NOT NULL UNIQUE,
-	descript_acquis TINYTEXT NULL
+	descript_acquis TEXT NULL
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -87,95 +87,95 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*--- Création des tables relationnelles ---*/
 
-DROP TABLE IF EXISTS organisme;
-CREATE TABLE organisme 
-(
-	id_organ INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	numero_interne VARCHAR(50) NULL,
-	nom_organ VARCHAR(100) NOT NULL UNIQUE DEFAULT "",
-	adresse_organ TINYTEXT NULL,
-	code_postal_organ CHAR(5) NULL,
-	ville_organ VARCHAR(200) NULL,
-	tel_organ CHAR(10) NULL,
-	fax_organ CHAR(10) NULL,
-	email_organ VARCHAR(100) NULL,
-	nbre_posi_total INT(10) UNSIGNED NOT NULL DEFAULT 0,
-	nbre_posi_max INT(10) UNSIGNED NOT NULL DEFAULT 0
-)
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS organisme;
+-- CREATE TABLE organisme 
+-- (
+-- 	id_organ INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	numero_interne VARCHAR(50) NULL,
+-- 	nom_organ VARCHAR(100) NOT NULL UNIQUE DEFAULT "",
+-- 	adresse_organ TEXT NULL,
+-- 	code_postal_organ CHAR(5) NULL,
+-- 	ville_organ VARCHAR(200) NULL,
+-- 	tel_organ CHAR(10) NULL,
+-- 	fax_organ CHAR(10) NULL,
+-- 	email_organ VARCHAR(100) NULL,
+-- 	nbre_posi_total INT(10) UNSIGNED NOT NULL DEFAULT 0,
+-- 	nbre_posi_max INT(10) UNSIGNED NOT NULL DEFAULT 0
+-- )
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS intervenant;
-CREATE TABLE intervenant 
-(
-	id_intervenant INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_organ INT(5) UNSIGNED NULL,
-	nom_intervenant VARCHAR(200) NULL,
-	email_intervenant VARCHAR(100) NOT NULL DEFAULT "",
-	tel_intervenant VARCHAR(100) NULL,
-	KEY email_intervenant (email_intervenant)
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS intervenant;
+-- CREATE TABLE intervenant 
+-- (
+-- 	id_intervenant INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	ref_organ INT(5) UNSIGNED NULL,
+-- 	nom_intervenant VARCHAR(200) NULL,
+-- 	email_intervenant VARCHAR(100) NOT NULL DEFAULT "",
+-- 	tel_intervenant VARCHAR(100) NULL,
+-- 	KEY email_intervenant (email_intervenant)
+-- ) 
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS utilisateur;
-CREATE TABLE utilisateur 
-(
-	id_user INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_niveau INT(2) UNSIGNED NULL,
-	nom_user VARCHAR(100) NOT NULL,
-	prenom_user VARCHAR(100) NOT NULL,
-	date_naiss_user DATE NOT NULL DEFAULT "0000-00-00",
-	adresse_user TINYTEXT NULL,
-	code_postal_user CHAR(5) NULL,
-	ville_user VARCHAR(100) NULL,
-	tel_user CHAR(10) NULL,
-	email_user VARCHAR(100) NULL,
-	nbre_sessions_totales INT(5) UNSIGNED NOT NULL DEFAULT 0,
-	nbre_sessions_accomplies INT(5) UNSIGNED NOT NULL DEFAULT 0,
-	KEY nom_user (nom_user),
-	KEY prenom_user (prenom_user),
-	KEY date_naiss_user (date_naiss_user)
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS utilisateur;
+-- CREATE TABLE utilisateur 
+-- (
+-- 	id_user INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	ref_niveau INT(2) UNSIGNED NULL,
+-- 	nom_user VARCHAR(100) NOT NULL,
+-- 	prenom_user VARCHAR(100) NOT NULL,
+-- 	date_naiss_user DATE NOT NULL DEFAULT "0000-00-00",
+-- 	adresse_user TEXT NULL,
+-- 	code_postal_user CHAR(5) NULL,
+-- 	ville_user VARCHAR(100) NULL,
+-- 	tel_user CHAR(10) NULL,
+-- 	email_user VARCHAR(100) NULL,
+-- 	nbre_sessions_totales INT(5) UNSIGNED NOT NULL DEFAULT 0,
+-- 	nbre_sessions_accomplies INT(5) UNSIGNED NOT NULL DEFAULT 0,
+-- 	KEY nom_user (nom_user),
+-- 	KEY prenom_user (prenom_user),
+-- 	KEY date_naiss_user (date_naiss_user)
+-- ) 
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS inscription;
-CREATE TABLE inscription 
-(
-	id_inscription INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_user INT(5) UNSIGNED NOT NULL,
-	ref_intervenant INT(5) UNSIGNED NULL,
-	date_inscription DATE NOT NULL DEFAULT "0000-00-00",
-	KEY date_inscription (date_inscription)
-)
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS inscription;
+-- CREATE TABLE inscription 
+-- (
+-- 	id_inscription INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	ref_user INT(5) UNSIGNED NOT NULL,
+-- 	ref_intervenant INT(5) UNSIGNED NULL,
+-- 	date_inscription DATE NOT NULL DEFAULT "0000-00-00",
+-- 	KEY date_inscription (date_inscription)
+-- )
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS session;
-CREATE TABLE session 
-(
-	id_session INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_posi VARCHAR(10) NULL,
-	ref_user INT(5) UNSIGNED NOT NULL,
-	ref_intervenant INT(5) UNSIGNED NULL,
-	ref_valid_acquis INT(2) UNSIGNED NULL,
-	date_session DATETIME NOT NULL DEFAULT "0000-00-00 00:00:00",
-	session_accomplie TINYINT(1) NOT NULL DEFAULT 0,
-	temps_total DOUBLE NOT NULL,
-	score_pourcent INT(3) UNSIGNED NOT NULL DEFAULT 0,
-	adresse_ip VARCHAR(20) NULL,
-	user_agent VARCHAR(255) NULL,
-	KEY date_session (date_session)
-) 
-ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- DROP TABLE IF EXISTS session;
+-- CREATE TABLE session 
+-- (
+-- 	id_session INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- 	ref_posi VARCHAR(10) NOT NULL DEFAULT "1",
+-- 	ref_user INT(5) UNSIGNED NOT NULL,
+-- 	ref_intervenant INT(5) UNSIGNED NULL,
+-- 	ref_valid_acquis INT(2) UNSIGNED NULL,
+-- 	date_session DATETIME NOT NULL DEFAULT "0000-00-00 00:00:00",
+-- 	session_accomplie TINYINT(1) NOT NULL DEFAULT 0,
+-- 	temps_total DOUBLE NOT NULL,
+-- 	score_pourcent INT(3) UNSIGNED NOT NULL DEFAULT 0,
+-- 	adresse_ip VARCHAR(20) NULL,
+-- 	user_agent VARCHAR(255) NULL,
+-- 	KEY date_session (date_session)
+-- ) 
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS question;
 CREATE TABLE question 
 (
 	id_question INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	ref_posi VARCHAR(10) NULL,
+	ref_posi VARCHAR(10) NOT NULL DEFAULT "1",
 	ref_degre INT(2) UNSIGNED NULL,
 	num_ordre_question INT(3) NOT NULL UNIQUE,
 	type_question ENUM('qcm','champ_saisie') NOT NULL DEFAULT 'qcm',
@@ -194,7 +194,7 @@ CREATE TABLE reponse
 	id_reponse INT(5) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	ref_question INT(5) UNSIGNED NOT NULL,
 	num_ordre_reponse TINYINT(3) UNSIGNED NOT NULL,
-	intitule_reponse TINYTEXT NOT NULL DEFAULT "",
+	intitule_reponse TEXT NOT NULL DEFAULT "",
 	est_correct TINYINT(1) NOT NULL DEFAULT 0,
 	KEY num_ordre_reponse (num_ordre_reponse)
 ) 
@@ -241,16 +241,16 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*--- Définitions des index des clés étrangères ---*/
 
-CREATE INDEX I_FK_intervenant_organ ON intervenant (ref_organ ASC);
+-- CREATE INDEX I_FK_intervenant_organ ON intervenant (ref_organ ASC);
 
-CREATE INDEX I_FK_inscript_intervenant ON inscription (ref_intervenant ASC);
-CREATE INDEX I_FK_inscript_utilisateur ON inscription (ref_user ASC);
+-- CREATE INDEX I_FK_inscript_intervenant ON inscription (ref_intervenant ASC);
+-- CREATE INDEX I_FK_inscript_utilisateur ON inscription (ref_user ASC);
 
-CREATE INDEX I_FK_util_niveau ON utilisateur (ref_niveau ASC);
+-- CREATE INDEX I_FK_util_niveau ON utilisateur (ref_niveau ASC);
 
-CREATE INDEX I_FK_session_user ON session (ref_user ASC);
-CREATE INDEX I_FK_session_intervenant ON session (ref_intervenant ASC);
-CREATE INDEX I_FK_session_acquis ON session (ref_valid_acquis ASC);
+-- CREATE INDEX I_FK_session_user ON session (ref_user ASC);
+-- CREATE INDEX I_FK_session_intervenant ON session (ref_intervenant ASC);
+-- CREATE INDEX I_FK_session_acquis ON session (ref_valid_acquis ASC);
 
 CREATE INDEX I_FK_result_session ON resultat (ref_session ASC);
 CREATE INDEX I_FK_result_question ON resultat (ref_question ASC);
@@ -269,21 +269,21 @@ CREATE INDEX I_FK_activite_cat ON cat_activite (ref_activite ASC);
 
 /*--- Affectations des contraintes relationnelles entre tables ---*/
 
-ALTER TABLE intervenant 
-	ADD CONSTRAINT FK_intervenant_organ FOREIGN KEY (ref_organ) REFERENCES organisme (id_organ) ON DELETE SET NULL ON UPDATE RESTRICT;
+-- ALTER TABLE intervenant 
+-- 	ADD CONSTRAINT FK_intervenant_organ FOREIGN KEY (ref_organ) REFERENCES organisme (id_organ) ON DELETE SET NULL ON UPDATE RESTRICT;
 
-ALTER TABLE inscription 
-	ADD CONSTRAINT FK_inscript_intervenant FOREIGN KEY (ref_intervenant) REFERENCES intervenant (id_intervenant) ON DELETE SET NULL ON UPDATE RESTRICT;
-ALTER TABLE inscription 
-	ADD CONSTRAINT FK_inscript_util FOREIGN KEY (ref_user) REFERENCES utilisateur (id_user) ON DELETE CASCADE ON UPDATE RESTRICT;
+-- ALTER TABLE inscription 
+-- 	ADD CONSTRAINT FK_inscript_intervenant FOREIGN KEY (ref_intervenant) REFERENCES intervenant (id_intervenant) ON DELETE SET NULL ON UPDATE RESTRICT;
+-- ALTER TABLE inscription 
+-- 	ADD CONSTRAINT FK_inscript_util FOREIGN KEY (ref_user) REFERENCES utilisateur (id_user) ON DELETE CASCADE ON UPDATE RESTRICT;
 
-ALTER TABLE utilisateur
-	ADD CONSTRAINT FK_user_niveau FOREIGN KEY (ref_niveau) REFERENCES niveau_etudes (id_niveau) ON DELETE SET NULL ON UPDATE CASCADE;
+-- ALTER TABLE utilisateur
+-- 	ADD CONSTRAINT FK_user_niveau FOREIGN KEY (ref_niveau) REFERENCES niveau_etudes (id_niveau) ON DELETE SET NULL ON UPDATE CASCADE;
 
-ALTER TABLE session 
-	ADD CONSTRAINT FK_session_user FOREIGN KEY (ref_user) REFERENCES utilisateur (id_user) ON DELETE CASCADE ON UPDATE RESTRICT;
-ALTER TABLE session 
-	ADD CONSTRAINT FK_session_intervenant FOREIGN KEY (ref_intervenant) REFERENCES intervenant (id_intervenant) ON DELETE SET NULL ON UPDATE RESTRICT;
+-- ALTER TABLE session 
+-- 	ADD CONSTRAINT FK_session_user FOREIGN KEY (ref_user) REFERENCES utilisateur (id_user) ON DELETE CASCADE ON UPDATE RESTRICT;
+-- ALTER TABLE session 
+-- 	ADD CONSTRAINT FK_session_intervenant FOREIGN KEY (ref_intervenant) REFERENCES intervenant (id_intervenant) ON DELETE SET NULL ON UPDATE RESTRICT;
 ALTER TABLE session 
 	ADD CONSTRAINT FK_session_acquis FOREIGN KEY (ref_valid_acquis) REFERENCES valid_acquis (id_acquis) ON DELETE SET NULL ON UPDATE CASCADE;
 

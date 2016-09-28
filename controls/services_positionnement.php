@@ -124,8 +124,35 @@ class ServicesPositionnement extends Main
 		$this->render("intro");
 	}
 	
+
+
+	public function registerDirectUser()
+	{
+		// CHeckUser
+
+		// Ouvre session utilisateur
+		ServicesAuth::login("user");
+
+		// Récupération/sauvegarde des données
+		ServicesAuth::setSessionData('ref_organ', $_POST['ref_organ']);
+		ServicesAuth::setSessionData('ref_intervenant', $_POST['ref_intervenant']);
+
+		ServicesAuth::setSessionData('ref_user', $_POST['ref_user']);
+		ServicesAuth::setSessionData('ref_inscription', $_POST['ref_inscription']);
+
+		
+		// Redirection vers session()
+		$this->url = SERVER_URL."positionnement/session/";
+
+
+		// Redirection vers le formulaire utilisateurs
+		header("Location: ".$this->url);
+		exit;
+
+	}
 	
 	
+
 	public function session()
 	{
 		

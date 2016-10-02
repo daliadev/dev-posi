@@ -239,6 +239,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
+
 /*--- Définitions des index des clés étrangères ---*/
 
 -- CREATE INDEX I_FK_intervenant_organ ON intervenant (ref_organ ASC);
@@ -250,7 +251,7 @@ ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- CREATE INDEX I_FK_session_user ON session (ref_user ASC);
 -- CREATE INDEX I_FK_session_intervenant ON session (ref_intervenant ASC);
--- CREATE INDEX I_FK_session_acquis ON session (ref_valid_acquis ASC);
+CREATE INDEX I_FK_session_acquis ON session (ref_valid_acquis ASC);
 
 CREATE INDEX I_FK_result_session ON resultat (ref_session ASC);
 CREATE INDEX I_FK_result_question ON resultat (ref_question ASC);
@@ -310,4 +311,17 @@ ALTER TABLE cat_activite
 
 
 
+
+/* Start insert */
+
+INSERT INTO degre (nom_degre, descript_degre)
+	VALUES 	("1", "DegrÃ© 1"),
+			("2", "DegrÃ© 2"),
+			("3", "DegrÃ© 3");
+			
+INSERT INTO valid_acquis (nom_acquis, descript_acquis)
+	VALUES 	("DegrÃ© 1", ""),
+			("DegrÃ© 2", ""),
+			("DegrÃ© 3", ""),
+			("DegrÃ© 4", "");
 

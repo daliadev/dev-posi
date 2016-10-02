@@ -128,7 +128,26 @@ class ServicesPositionnement extends Main
 
 	public function registerDirectUser()
 	{
-		// CHeckUser
+		if (isset($_POST['ref_user']) && !empty($_POST['ref_intervenant']) && $_POST['ref_organ'] != 'select_cbox' && isset($_POST['delete_parcours']) && !empty($_POST['delete_parcours']) && $_POST['delete_parcours'] == 'delete')
+		{
+
+			$deletedParcours = $this->servicesCategorie->deleteParcoursPreco($_POST['ref_parcours']);
+
+			if ($deletedParcours)
+			{
+				$response = array('error' => false, 'results' => $deletedParcours);
+			}
+			else
+			{
+				$response = array('error' => "Le parcours n'a pas été supprimé.");
+			}
+			
+			echo json_encode($response);
+			exit();
+		}
+
+
+		// Check user
 
 		// Ouvre session utilisateur
 		ServicesAuth::login("user");
@@ -142,12 +161,12 @@ class ServicesPositionnement extends Main
 
 		
 		// Redirection vers session()
-		$this->url = SERVER_URL."positionnement/session/";
+		//$this->url = SERVER_URL."positionnement/session/";
 
 
 		// Redirection vers le formulaire utilisateurs
-		header("Location: ".$this->url);
-		exit;
+		//header("Location: ".$this->url);
+		//exit;
 
 	}
 	

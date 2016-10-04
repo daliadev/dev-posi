@@ -126,38 +126,50 @@ class ServicesPositionnement extends Main
 	
 
 
-	public function registerDirectUser()
+	public function register()
 	{
-		if (isset($_POST['ref_user']) && !empty($_POST['ref_intervenant']) && $_POST['ref_organ'] != 'select_cbox' && isset($_POST['delete_parcours']) && !empty($_POST['delete_parcours']) && $_POST['delete_parcours'] == 'delete')
+
+		// echo json_encode($_POST);
+		// exit();
+
+		if (isset($_POST['ref_user']) && isset($_POST['ref_intervenant']) && isset($_POST['ref_organ'])) //&& isset($_POST['ref_inscription']))
 		{
+			//echo $_POST['ref_user'];
+			// $deletedParcours = $this->servicesCategorie->deleteParcoursPreco($_POST['ref_parcours']);
 
-			$deletedParcours = $this->servicesCategorie->deleteParcoursPreco($_POST['ref_parcours']);
-
-			if ($deletedParcours)
-			{
-				$response = array('error' => false, 'results' => $deletedParcours);
-			}
-			else
-			{
-				$response = array('error' => "Le parcours n'a pas été supprimé.");
-			}
+			// if ($deletedParcours)
+			// {
+			// 	$response = array('error' => false, 'results' => $deletedParcours);
+			// }
+			// else
+			// {
+			// 	$response = array('error' => "Le parcours n'a pas été supprimé.");
+			// }
 			
-			echo json_encode($response);
-			exit();
+			// echo json_encode($response);
+			// exit();
+
+			// Check user
+
+			// Ouvre session utilisateur
+			ServicesAuth::login("user");
+
+			// Récupération/sauvegarde des données
+			ServicesAuth::setSessionData('ref_organ', $_POST['ref_organ']);
+			ServicesAuth::setSessionData('ref_intervenant', $_POST['ref_intervenant']);
+
+			ServicesAuth::setSessionData('ref_user', $_POST['ref_user']);
+			//ServicesAuth::setSessionData('ref_inscription', $_POST['ref_inscription']);
+			
+			$response = array('error' => false, 'results' => 'ok');
+		}
+		else
+		{
+			$response = array('error' => true, 'results' => 'User information not provided.');
 		}
 
-
-		// Check user
-
-		// Ouvre session utilisateur
-		ServicesAuth::login("user");
-
-		// Récupération/sauvegarde des données
-		ServicesAuth::setSessionData('ref_organ', $_POST['ref_organ']);
-		ServicesAuth::setSessionData('ref_intervenant', $_POST['ref_intervenant']);
-
-		ServicesAuth::setSessionData('ref_user', $_POST['ref_user']);
-		ServicesAuth::setSessionData('ref_inscription', $_POST['ref_inscription']);
+		echo json_encode($response);
+		exit();
 
 		
 		// Redirection vers session()
@@ -172,15 +184,20 @@ class ServicesPositionnement extends Main
 	
 	
 
-	public function session()
+	public function session($params = null)
 	{
-		
+
+		$ref_user = $params[0];
+		$ref_intervenant = $params[1];
+
+		ServicesAuth::login("user");
+
 		/*** Test d'authentification de l'intervenant/utilisateur ***/
-		ServicesAuth::checkAuthentication("user");
+		//ServicesAuth::checkAuthentication("user");
 		
 		// On test si l'utilisateur est déjà dans une session, c-à-d si il a déjà cliqué sur le bouton suite de la page d'intro
-		if (!ServicesAuth::checkUserSession())
-		{
+		//if (!ServicesAuth::checkUserSession())
+		//{
 			// Si ce n'est pas le cas, on ouvre une session
 			ServicesAuth::openUserSession();
 			
@@ -199,8 +216,26 @@ class ServicesPositionnement extends Main
 			/*-----   Enregistrement des infos de départ de la session : ref_user, date, validation  -----*/
 
 			// Récupération des infos necéssaires
-			$refUser = ServicesAuth::getSessionData("ref_user");
-			$refIntervenant = ServicesAuth::getSessionData("ref_intervenant");
+			if ($ref_user != null) {
+
+				$refUser = $ref_user;
+				ServicesAuth::setSessionData("ref_user", $ref_user);
+			}
+			else
+			{
+				$refUser = ServicesAuth::getSessionData("ref_user");
+			}
+
+			if ($ref_intervenant != null) {
+				
+				$refIntervenant = $ref_intervenant;
+				ServicesAuth::setSessionData("ref_intervenant", $ref_intervenant);
+			}
+			else
+			{
+				$refIntervenant = ServicesAuth::getSessionData("ref_intervenant");
+			}
+
 			  
 			$dateSession = date("Y-m-d H:i:s");
 			ServicesAuth::setSessionData("date_session", $dateSession);
@@ -244,7 +279,7 @@ class ServicesPositionnement extends Main
 				$resultset = $this->utilisateurDAO->update($dataUser);
 			}
 			
-		}
+		//}
 
 		
 
@@ -512,9 +547,7 @@ class ServicesPositionnement extends Main
 	{
 
 		/*** Test d'authentification de l'utilisateur ***/
-		ServicesAuth::checkAuthentication("user");
-
-		
+		//ServicesAuth::checkAuthentication("user");
 
 		/**
 		 * Description: Gestion et génération de la page résultat et de l'envoi d'email à l'intervenant.
@@ -923,7 +956,7 @@ class ServicesPositionnement extends Main
 		/* 2.2. Mise à jour du nbre de sessions accomplies ds la table "organisme"
 		   ========================================================================== */
 		
-
+		/*
 		$dataOrgan = array();
 		$refOrgan = ServicesAuth::getSessionData('ref_organ');
 
@@ -950,7 +983,7 @@ class ServicesPositionnement extends Main
 				}
 			}
 		}
-
+		*/
 		/* Fin mise à jour de l'organisme */
 
 		
@@ -1014,7 +1047,7 @@ class ServicesPositionnement extends Main
 
 
 		// Email -> infos organisme
-
+		/*
 		$refOrgan = ServicesAuth::getSessionData('ref_organ');
 		$resultsetOrgan = $this->organismeDAO->selectById($refOrgan);
 
@@ -1036,7 +1069,7 @@ class ServicesPositionnement extends Main
 			$emailInfos['code_postal_organ'] = $resultsetOrgan['response']['organisme'][0]->getCodePostal();
 			$emailInfos['tel_organ'] = $resultsetOrgan['response']['organisme'][0]->getTelephone();
 		}
-
+		*/
 
 		// Email -> infos utilisateur
 
@@ -1123,7 +1156,7 @@ class ServicesPositionnement extends Main
 		$messageBody = '';
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
-		$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
+		$messageBody .= 'Organisme : <strong>'.//$emailInfos['nom_organ'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';

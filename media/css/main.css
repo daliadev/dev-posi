@@ -28,13 +28,14 @@ body {
 
 	.header {
 		width: 100%;
+		max-width: 960px;
 		height: 32px;
-		margin: 0 auto 24px auto;
+		margin: 0px auto 24px auto;
 		background-color: #009688;
 	}
 
 	#header-form.header {
-		width: auto;
+		/*width: auto;*/
 	}
 
 		.header .header-wrapper {
@@ -503,8 +504,8 @@ body {
 
 	.content-form {
 		width: 100%;
-		/*max-width: 1008px;*/
-		max-width: 100%;
+		max-width: 1008px;
+		/*max-width: 100%;*/
 		height: auto;
 		margin: 0 auto;
 		padding: 0 24px 24px 24px;
@@ -515,7 +516,8 @@ body {
 			position: relative;
 			/*width: 100%;*/
 			/*max-width: 100%;*/
-			/*max-width: 750px;*/
+			max-width: 960px;
+			min-width: 420px;
 			/*height: 0%;*/
 			height: 100%;
 			/*padding-bottom: 56%;*/

@@ -201,19 +201,17 @@ $(function() {
 		var onImageLoaded = function() {
 
 			console.log('onImageLoaded');
-
 			
-
 			
-			// Si vidéo -> load vidéo
-			if (isVideoActive) {
-
-				//loadVideo();
-			}
 			// Creation du lecteur audio s'il y a une source
 			if (isAudioActive) {
 
 				audioPlayer.startLoading(onAudioLoaded);
+			}
+			// Si vidéo -> load vidéo
+			else if (isVideoActive) {
+
+				loadVideo();
 			}
 			else {
 
@@ -242,7 +240,7 @@ $(function() {
 
 			//imageContainer.css('max-width', imageController.getWidth());
 			//imageContainer.css('max-height', imageController.getHeight());
-			console.log(imageController.getWidth());
+			//console.log(imageController.getWidth());
 		}
 
 
@@ -254,7 +252,7 @@ $(function() {
 
 			if (isVideoActive) {
 
-				displayVideo();
+				//displayVideo();
 			}
 			else if (isAudioActive) {
 
@@ -463,7 +461,7 @@ $(function() {
 		
 
 		// ? : -
-		/*
+		
 		var onVideoLoading = function() {
 
 			console.log('onVideoLoading');
@@ -476,7 +474,7 @@ $(function() {
 
 			console.log('onVideoLoaded');
 		};
-		*/
+		
 
 	// ? : -
 
@@ -885,7 +883,7 @@ $(function() {
 	else if (isVideoActive) 
 	{
 		createVideo();
-		displayVideo();
+		//displayVideo();
 	}
 	
 });

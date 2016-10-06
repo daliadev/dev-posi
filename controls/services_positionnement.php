@@ -132,49 +132,32 @@ class ServicesPositionnement extends Main
 		// echo json_encode($_POST);
 		// exit();
 
-		if (isset($_POST['ref_user']) && isset($_POST['ref_intervenant']) && isset($_POST['ref_organ'])) //&& isset($_POST['ref_inscription']))
+		$postData = jsondecode($_POST, true);
+
+		if (isset($postData['ref_user']) && isset($postData['ref_intervenant']) && isset($postData['ref_organ']) && isset($postData['ref_inscription']))
 		{
-			//echo $_POST['ref_user'];
-			// $deletedParcours = $this->servicesCategorie->deleteParcoursPreco($_POST['ref_parcours']);
-
-			// if ($deletedParcours)
-			// {
-			// 	$response = array('error' => false, 'results' => $deletedParcours);
-			// }
-			// else
-			// {
-			// 	$response = array('error' => "Le parcours n'a pas été supprimé.");
-			// }
-			
-			// echo json_encode($response);
-			// exit();
-
-			// Check user
-
 			// Ouvre session utilisateur
 			ServicesAuth::login("user");
 
 			// Récupération/sauvegarde des données
-			ServicesAuth::setSessionData('ref_organ', $_POST['ref_organ']);
-			ServicesAuth::setSessionData('ref_intervenant', $_POST['ref_intervenant']);
+			ServicesAuth::setSessionData('ref_organ', $postData['ref_organ']);
+			ServicesAuth::setSessionData('ref_intervenant', $postData['ref_intervenant']);
 
-			ServicesAuth::setSessionData('ref_user', $_POST['ref_user']);
-			//ServicesAuth::setSessionData('ref_inscription', $_POST['ref_inscription']);
+			ServicesAuth::setSessionData('ref_user', $postData['ref_user']);
+			ServicesAuth::setSessionData('ref_inscription', $postData['ref_inscription']);
 			
-			$response = array('error' => false, 'results' => 'ok');
+			$response = array('error' => false, 'result' => 'ok');
 		}
 		else
 		{
-			$response = array('error' => true, 'results' => 'User information not provided.');
+			$response = array('error' => true, 'result' => 'User information not provided.');
 		}
 
 		echo json_encode($response);
 		exit();
-
 		
 		// Redirection vers session()
 		//$this->url = SERVER_URL."positionnement/session/";
-
 
 		// Redirection vers le formulaire utilisateurs
 		//header("Location: ".$this->url);
@@ -187,17 +170,35 @@ class ServicesPositionnement extends Main
 	public function session($params = null)
 	{
 
-		$ref_user = $params[0];
-		$ref_intervenant = $params[1];
+		$ref_user = null;
+		$ref_intervenant = null;
+		$ref_organ = null;
+		$ref_inscription = null;
 
-		ServicesAuth::login("user");
+		if ($params != null && is_array($params)) 
+		{
+			if (isset($params[0])) {
+				$ref_user = $params[0];
+			}
+			if (isset($params[1])) {
+				$ref_intervenant = $params[1];
+			}
+			if (isset($params[2])) {
+				$ref_organ = $params[2];
+			}
+			if (isset($params[3])) {
+				$ref_inscription = $params[3];
+			}
+		}
+
+		//ServicesAuth::login("user");
 
 		/*** Test d'authentification de l'intervenant/utilisateur ***/
 		//ServicesAuth::checkAuthentication("user");
 		
 		// On test si l'utilisateur est déjà dans une session, c-à-d si il a déjà cliqué sur le bouton suite de la page d'intro
-		//if (!ServicesAuth::checkUserSession())
-		//{
+		if (!ServicesAuth::checkUserSession())
+		{
 			// Si ce n'est pas le cas, on ouvre une session
 			ServicesAuth::openUserSession();
 			
@@ -216,8 +217,8 @@ class ServicesPositionnement extends Main
 			/*-----   Enregistrement des infos de départ de la session : ref_user, date, validation  -----*/
 
 			// Récupération des infos necéssaires
-			if ($ref_user != null) {
-
+			if ($ref_user != null) 
+			{
 				$refUser = $ref_user;
 				ServicesAuth::setSessionData("ref_user", $ref_user);
 			}
@@ -226,14 +227,24 @@ class ServicesPositionnement extends Main
 				$refUser = ServicesAuth::getSessionData("ref_user");
 			}
 
-			if ($ref_intervenant != null) {
-				
+			if ($ref_intervenant != null) 
+			{
 				$refIntervenant = $ref_intervenant;
 				ServicesAuth::setSessionData("ref_intervenant", $ref_intervenant);
 			}
 			else
 			{
 				$refIntervenant = ServicesAuth::getSessionData("ref_intervenant");
+			}
+
+			if ($ref_organ != null) 
+			{
+				ServicesAuth::setSessionData("ref_organ", $ref_organ);
+			}
+
+			if ($ref_inscription != null) 
+			{
+				ServicesAuth::setSessionData("ref_inscription", $ref_inscription);
 			}
 
 			  
@@ -279,7 +290,7 @@ class ServicesPositionnement extends Main
 				$resultset = $this->utilisateurDAO->update($dataUser);
 			}
 			
-		//}
+		}
 
 		
 
@@ -297,15 +308,17 @@ class ServicesPositionnement extends Main
 		}
 		else 
 		{
+			/*
 			foreach ($this->errors as $error) {
 				echo $error->message;
 			}
-
+				
 			//exit();
+			*/
 
 			// Redirection vers la page d'erreur interne
-			//header("Location: ".SERVER_URL."erreur/page500");
-			//exit();
+			header("Location: ".SERVER_URL."erreur/page500");
+			exit();
 		}
 
 	}
@@ -518,13 +531,15 @@ class ServicesPositionnement extends Main
 		$this->addStyleSheet("projekktor-dalia.style", SERVER_URL."media/projekktor/themes/dalia");
 
 		// Outils
+		$this->addScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
+		
 		//$this->enqueueScript("placeholders.min");
 		$this->enqueueScript("flash_detect");
 		$this->enqueueScript("navigator-agent");
 
 		// Medias
 		$this->enqueueScript("swfobject");
-		$this->enqueueScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
+		
 		$this->enqueueScript("image-controller");
 		$this->enqueueScript("audio-player");
 

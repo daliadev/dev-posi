@@ -19,7 +19,7 @@ $(function() {
 
 	// Variables controleur image
 	var imageUrl; // Type string
-	var imageContainer, loader, loaderDiv; // Type JQuery element
+	var imageContainer, loader; // Type JQuery element
 	var imageController = null; // Type ImageController
 
 
@@ -90,8 +90,7 @@ $(function() {
 
 	// Conteneur et icône animée de chargement de l'image
 	imageContainer = $('#visuel');
-	//loaderDiv = $('#loader');
-	//loaderDiv.css('display', 'block');
+
 
 	if (navAgent.isCSSAnimateSupported()) {
 		
@@ -104,6 +103,7 @@ $(function() {
 		loader = $('.image-loader');
 	}
 	
+
 
 
 	// Contrôle du son
@@ -147,9 +147,9 @@ $(function() {
 	// URL complète de la vidéo
 	videoUrl = videoFilename;
 
-	// Message de la vidéo alternative
-	//var question = $('.question').html();
-	//$('.question').html('<p>Regardez et écoutez attentivement la vidéo, puis répondez à la question.</p>');
+
+
+
 
 
 
@@ -203,24 +203,24 @@ $(function() {
 		var onImageLoaded = function() {
 
 			console.log('onImageLoaded');
-			
+
 			
 			// Creation du lecteur audio s'il y a une source
 			if (isAudioActive) {
 
 				audioPlayer.startLoading(onAudioLoaded);
 			}
-			// Si vidéo -> load vidéo
+			// Sinon si vidéo -> load vidéo
 			else if (isVideoActive) {
 
 				displayVideo();
 			}
+			else {
+
+				//enableUserResponse();
+			}
 
 			loader.fadeOut(1000);
-
-			//console.log(imageController.getWidth());
-			//imageContainer.css('max-width', imageController.getWidth());
-			//imageContainer.css('max-height', imageController.getHeight());
 
 			displayImage(1500);
 		};
@@ -231,14 +231,14 @@ $(function() {
 		var displayImage = function(duration) {
 
 			console.log('displayImage');
-
-			//loader.css('display', 'none');
 			
+
+
 			imageController.display(duration, onImageDisplayed);
 
-			//imageContainer.css('max-width', imageController.getWidth());
-			//imageContainer.css('max-height', imageController.getHeight());
-			//console.log(imageController.getWidth());
+
+
+
 		}
 
 
@@ -253,31 +253,10 @@ $(function() {
 				audioContainer.style.display = 'block';
 			}
 
-			else if (isVideoActive)
-			{
-				//loadVideo();
-				displayVideo();
-			}
-			else {
+			else if (isVideoActive) {
 
-				controlsEnabled = true;
-				enableUserResponse();
-			}
-
-		};
-
-		var onImageHidden = function() {
-
-			console.log('onImageHidden');
-
-			/*
-			if (isVideoActive) {
 
 				displayVideo();
-			}
-			else if (isAudioActive) {
-
-				audioContainer.style.display = 'block';
 			}
 
 			if (!isAudioActive && !isVideoActive) {
@@ -285,9 +264,30 @@ $(function() {
 				controlsEnabled = true;
 				enableUserResponse();
 			}
-			*/
 		};
 		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -423,7 +423,7 @@ $(function() {
 
 
 
-	
+
 
 
 	/**********************************************
@@ -597,7 +597,7 @@ $(function() {
 		
 
 		// ? : -
-		
+		/*
 		var onVideoLoading = function() {
 
 			console.log('onVideoLoading');
@@ -610,7 +610,7 @@ $(function() {
 
 			console.log('onVideoLoaded');
 		};
-		
+		*/
 
 	// ? : -
 
@@ -618,13 +618,13 @@ $(function() {
 
 		console.log('displayVideo');
 		$('#video').show();
-		/*
-		if (isImageActive)
-		{
-			imageController.hide(1000, onImageHidden);
-		}
-		*/
 	};
+
+
+
+
+
+
 
 
 		// ? : -
@@ -673,8 +673,6 @@ $(function() {
 		var onVideoPaused = function() {
 
 			console.log('onVideoPaused');
-			$('.ppstart').removeClass('inactive');
-			$('.ppstart').addClass('active');
 		};
 
 
@@ -684,13 +682,13 @@ $(function() {
 
 			console.log('onVideoEnded');
 			controlsEnabled = true;
-			//$('.question').html(question);
+
 			enableUserResponse();
 
-			// if (imageActive) {
 
-			// 	displayImage(imageUrl);
-			// }
+
+
+
 		};
 
 

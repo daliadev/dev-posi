@@ -254,7 +254,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				duration = player.duration; // Duree totale
 				currenttime = player.currentTime; // Temps écoulé
 				
-				percent = (currenttime / duration) * 100;
+				percent = Math.round((currenttime / duration) * 100);
 				//console.log('percent :' + percent);
 
 				if (player.ended || percent === 100) {

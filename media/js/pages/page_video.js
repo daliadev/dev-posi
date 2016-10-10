@@ -211,7 +211,7 @@ $(function() {
 				audioPlayer.startLoading(onAudioLoaded);
 			}
 			// Sinon si vidéo -> load vidéo
-			else if (isVideoActive) {
+			if (isVideoActive) {
 
 				displayVideo();
 			}

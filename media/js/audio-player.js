@@ -90,7 +90,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 			player.onloadstart = function() {
 
 				//console.log('loadstart');
-				loadingTimer = setInterval(updateLoading, 40);
+				//loadingTimer = setInterval(updateLoading, 40);
 			};
 
 			/*
@@ -190,6 +190,10 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 		}
 	};
 
+	var dummyLoad = function() {
+
+		loadedCallBack.call(this);
+	};
 
 	var updateLoading = function() {
 
@@ -254,7 +258,7 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 				duration = player.duration; // Duree totale
 				currenttime = player.currentTime; // Temps écoulé
 				
-				percent = Math.round((currenttime / duration) * 100);
+				percent = (currenttime / duration) * 100;
 				//console.log('percent :' + percent);
 
 				if (player.ended || percent === 100) {
@@ -553,7 +557,8 @@ var AudioPlayer = function(playertype, playerContainer, swfPlayerURL, width, hei
 	this.startLoading = function(onLoadedCallBack) {
 
 		loadedCallBack = onLoadedCallBack;
-		loadingTimer = setInterval(updateLoading, 1000);
+		//loadingTimer = setInterval(updateLoading, 1000);
+		loadingTimer = setTimeout(dummyLoad, 2500);
 
 	}
 

@@ -531,7 +531,7 @@ class ServicesPositionnement extends Main
 		$this->addStyleSheet("projekktor-dalia.style", SERVER_URL."media/projekktor/themes/dalia");
 
 		// Outils
-		$this->enqueueScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
+		$this->addScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
 		
 		//$this->enqueueScript("placeholders.min");
 		$this->enqueueScript("flash_detect");

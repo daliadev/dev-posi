@@ -90,8 +90,8 @@ $(function() {
 
 	// Conteneur et icône animée de chargement de l'image
 	imageContainer = $('#visuel');
-	//loaderDiv = $('#loader');
-	//loaderDiv.css('display', 'block');
+	loaderDiv = $('#loader');
+	loaderDiv.css('display', 'block');
 
 	if (navAgent.isCSSAnimateSupported()) {
 		
@@ -208,10 +208,11 @@ $(function() {
 			// Creation du lecteur audio s'il y a une source
 			if (isAudioActive) {
 
+				audioContainer.style.display = 'block';
 				audioPlayer.startLoading(onAudioLoaded);
 			}
 			// Si vidéo -> load vidéo
-			else if (isVideoActive) {
+			if (isVideoActive) {
 
 				displayVideo();
 			}
@@ -232,7 +233,7 @@ $(function() {
 
 			console.log('displayImage');
 
-			//loader.css('display', 'none');
+			loaderDiv.css('display', 'none');
 			
 			imageController.display(duration, onImageDisplayed);
 
@@ -256,7 +257,7 @@ $(function() {
 			else if (isVideoActive)
 			{
 				//loadVideo();
-				displayVideo();
+				//displayVideo();
 			}
 			else {
 
@@ -270,6 +271,7 @@ $(function() {
 
 			console.log('onImageHidden');
 
+			imageContainer.style.display = 'none';
 			/*
 			if (isVideoActive) {
 
@@ -354,6 +356,11 @@ $(function() {
 
 			console.log('onAudioLoaded');
 
+			if (!isImageActive) {
+
+				loaderDiv.css('display', 'none');
+			}
+
 			setTimeout(function() { 
 				audioPlayer.startPlaying(onAudioStart); 
 			}, 1000);
@@ -409,9 +416,13 @@ $(function() {
 			$('#speaker-icon').addClass('fa-play');
 			$('#speaker-icon').css("margin-left", "2px");
 
-			if (isVideoActive) {
+			if (isImageActive && isVideoActive) {
 
-				displayVideo();
+				imageController.hide(1500, onImageHidden);
+			}
+			else if (isVideoActive) {
+
+				//displayVideo();
 			}
 			else {
 
@@ -448,8 +459,8 @@ $(function() {
 				title: 'Lecteur vidéo',
 				playerFlashMP4: videoPlayerUrl,
 				playerFlashMP3: videoPlayerUrl,
-				width: 750,
-				height: 420,
+				width: 960,
+				height: 538,
 				controls: true,
 				enableFullscreen: false,
 				autoplay: false, //true,
@@ -593,6 +604,10 @@ $(function() {
 		var onVideoCreated = function() {
 
 			console.log('onVideoCreated');
+
+			if (!isImageActive) {
+				displayVideo();
+			}
 		};
 		
 
@@ -640,7 +655,7 @@ $(function() {
 		var onVideoDisplayed = function() {
 
 			console.log('onVideoDisplayed');
-			startvideo();
+			//startvideo();
 		};
 
 

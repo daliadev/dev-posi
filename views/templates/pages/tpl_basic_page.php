@@ -24,7 +24,7 @@
 	<?php echo $style_sheets; ?>
 	
 	<!-- JQuery v1.11.2 -->
-	<!--<script src="<?php echo SERVER_URL; ?>media/js/jquery.min.js" type="text/javascript"></script>-->
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery.min.js" type="text/javascript"></script>
 
 	<!-- js injecté dynamiquement -->
 	<?php echo $script_files; ?>
@@ -54,7 +54,7 @@
 	
 	
 	<!-- JQuery v1.11.2 -->
-	<script src="<?php echo SERVER_URL; ?>media/js/jquery.min.js" type="text/javascript"></script>
+	<!-- <script src="<?php echo SERVER_URL; ?>media/js/jquery.min.js" type="text/javascript"></script> -->
 	<!-- Bootstrap v3.0.6 -->
 	<script src="<?php echo SERVER_URL; ?>media/js/bootstrap.min.js" type="text/javascript"></script>
 	

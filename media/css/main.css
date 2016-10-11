@@ -1766,7 +1766,7 @@ body {
 
 		#header-form.header {
 			height: 32px;
-			margin: 0 24px 0px 24px;
+			/*margin: 0 24px 0px 24px;*/
 			/*background-color: #009688;*/
 		}
 			
@@ -1779,7 +1779,7 @@ body {
 			}
 
 			#header-form .header-wrapper {
-				max-width: 680px;
+				max-width: 100%; /*680px;*/
 				height: 100%;
 				padding: 0 24px;
 			}
@@ -1806,7 +1806,7 @@ body {
 						font-size: 0.8125em;
 						font-weight: 600;
 						line-height: 20px;
-						text-align: center;
+						text-align: left;
 						padding-bottom: 4px;
 					}
 
@@ -1956,7 +1956,7 @@ body {
 		width: 100%;
 		/*max-width: 1008px;*/
 		height: 32px;
-		margin: 0 auto 24px auto;
+		margin: 0 auto 0 auto;
 		background-color: #009688;
 	}
 

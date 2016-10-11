@@ -129,7 +129,8 @@ $(function() {
 	audioTrack = audioFilename;
 
 	// Conteneur du lecteur audio (caché)
-	audioContainer = document.getElementById('audio');
+	audioContainer = document.getElementById('speaker');
+	audioContainer.style.display = 'none';
 	
 	// Tableau des éléments de contrôle de l'audio (contrôle via le bouton speaker)
 	audioControls = [{
@@ -204,18 +205,17 @@ $(function() {
 
 			console.log('onImageLoaded');
 			
-			
 			// Creation du lecteur audio s'il y a une source
 			if (isAudioActive) {
 
-				audioContainer.style.display = 'block';
+				//audioContainer.style.display = 'block';
 				audioPlayer.startLoading(onAudioLoaded);
 			}
 			// Si vidéo -> load vidéo
-			if (isVideoActive) {
+			// if (isVideoActive) {
 
-				displayVideo();
-			}
+			// 	displayVideo();
+			// }
 
 			loader.fadeOut(1000);
 
@@ -253,11 +253,9 @@ $(function() {
 
 				audioContainer.style.display = 'block';
 			}
-
 			else if (isVideoActive)
 			{
-				//loadVideo();
-				//displayVideo();
+				displayVideo();
 			}
 			else {
 
@@ -271,7 +269,7 @@ $(function() {
 
 			console.log('onImageHidden');
 
-			imageContainer.style.display = 'none';
+			//imageContainer.style.display = 'none';
 			/*
 			if (isVideoActive) {
 
@@ -416,13 +414,15 @@ $(function() {
 			$('#speaker-icon').addClass('fa-play');
 			$('#speaker-icon').css("margin-left", "2px");
 
-			if (isImageActive && isVideoActive) {
+			//if (isImageActive && isVideoActive) {
 
-				imageController.hide(1500, onImageHidden);
-			}
-			else if (isVideoActive) {
+				//imageController.hide(1500, onImageHidden);
+			//}
 
-				//displayVideo();
+			if (isVideoActive) {
+
+				displayVideo();
+				//audioContainer.style.display = 'none';
 			}
 			else {
 
@@ -606,6 +606,7 @@ $(function() {
 			console.log('onVideoCreated');
 
 			if (!isImageActive) {
+
 				displayVideo();
 			}
 		};
@@ -633,12 +634,15 @@ $(function() {
 
 		console.log('displayVideo');
 		$('#video').show();
-		/*
+
+		$('.ppstart').removeClass('inactive');
+		$('.ppstart').addClass('active');
+		
 		if (isImageActive)
 		{
 			imageController.hide(1000, onImageHidden);
 		}
-		*/
+		
 	};
 
 
@@ -664,6 +668,8 @@ $(function() {
 	var startVideo = function() {
 
 		console.log('startVideo');
+
+		
 	};
 
 
@@ -672,6 +678,10 @@ $(function() {
 		var onVideoStarted = function() {
 
 			console.log('onVideoStarted');
+			if (isAudioActive) {
+	
+				audioContainer.style.display = 'none';
+			}
 		};
 
 
@@ -700,12 +710,13 @@ $(function() {
 			console.log('onVideoEnded');
 			controlsEnabled = true;
 			//$('.question').html(question);
+
+			if (isAudioActive) {
+
+				audioContainer.style.display = 'block';
+			}
+
 			enableUserResponse();
-
-			// if (imageActive) {
-
-			// 	displayImage(imageUrl);
-			// }
 		};
 
 

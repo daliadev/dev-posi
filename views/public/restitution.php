@@ -301,12 +301,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							
 							<p style="margin-top: 0;"><strong>Filtres de recherche : </strong></p>
 							
-							<?php $visible  = Config::ALLOW_LOCALE ? '' : 'style="display: none;"' ?>
+							<?php $visible = Config::ALLOW_LOCALE ? '' : 'style="display: none;"' ?>
 							<div class="filter-item" <?php echo $visible; ?>>
 								<label for="ref-region-cbox">Région : </label>
 
 								<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) <= 1) ? "disabled" : ""; ?>
-								<select name="ref_region_cbox" id="ref-region-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="region-organ" style="max-width: 200px;" <?php echo $disabled; ?>>
+								<select name="ref_region_cbox" id="ref-region-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="region-organ" style="max-width: 170px;" <?php echo $disabled; ?>>
 								
 									<?php if ($disabled == "") : ?>
 										<option class="region-option" value="select_cbox">Toute la France</option>
@@ -331,14 +331,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									?>
 								</select>
 							</div>
-
+							
 
 							<div class="filter-item" id="combo-organ">
 								<label for="ref-organ-cbox">Organisme :</label>
 
 								<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
 								<?php $disabled = "" ?>
-								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 200px;" <?php echo $disabled; ?>>
+								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 170px;" <?php echo $disabled; ?>>
 									
 									<?php if ($disabled == "") : ?>
 									<option class="organ-option" value="select_cbox">---</option>
@@ -390,11 +390,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									?>
 								</select>
 							</div>
+							
 
 
 							<div class="filter-item" id="combo-user">
 								<label for="ref-user-cbox">Utilisateur :</label>
-								<select name="ref_user_cbox" id="ref-user-cbox" class="ajax-list" data-target="ref-session-cbox" data-url="<?php echo $form_url; ?>" data-sort="session" data-request="user-session" style="max-width: 200px;">
+								<select name="ref_user_cbox" id="ref-user-cbox" class="ajax-list" data-target="ref-session-cbox" data-url="<?php echo $form_url; ?>" data-sort="session" data-request="user-posi" style="max-width: 170px;">
 									<option value="select_cbox">---</option>
 
 									<?php
@@ -417,13 +418,41 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								</select>
 							</div>
 
-							<!-- <div class="filter-item">
-								<label for="date-session">Date : </label>
-								<input type="text" name="date_session" id="date-session" class="ajax-list" data-request="date-session" placeholder="jj/mm/aaaa" style="width: 70px;" title="Rechercher un positionnement par date." value="<?php //echo $formData['date_session']; ?>">
-							</div> -->
+
+							<?php $visible = Config::MULTI_POSI_ID !== null ? '' : 'style="display: none;"' ?>
+							<div class="filter-item" <?php echo $visible; ?>>
+								<label for="ref-posi-cbox">Domaine : </label>
+
+								<?php $disabled = (isset($response['posis']) && !empty($response['posis']) && count($response['posis']) <= 1) ? "disabled" : ""; ?>
+								<select name="ref_posi_cbox" id="ref-posi-cbox" class="ajax-list" data-url="<?php echo $form_url; ?>" data-request="posi-session" style="max-width: 170px;" <?php echo $disabled; ?>>
+								
+									<?php if ($disabled == "") : ?>
+										<option class="posi-option" value="select_cbox">Tous les domaines</option>
+									<?php endif; ?>
+
+									<?php
+									if (isset($response['posis']) && !empty($response['posis']) && count($response['posis']) > 0)
+									{
+	
+										{
+											$selected = "";
+											
+											if (!empty($_POST['ref_posi_cbox']) && $_POST['ref_posi_cbox'] == $posi['ref'])
+											{
+												$selected = "selected";
+											}
+											
+											echo '<option class="posi-option" value="'.$posi['ref'].'" '.$selected.'>'.$posi['nom'].'</option>';
+										}
+									}
+									?>
+
+								</select>
+							</div>
+
 							
 							<div class="filter-item" style="margin-right: 0;">
-								<input type="submit" value="Filtrer" id="submit-filter" style="margin: 19px 0 0 0; width: 90px; height: 32px;">
+								<input type="submit" value="Filtrer" id="submit-filter" style="margin: 19px 0 0 0; width: 70px; height: 32px;">
 							</div>
 							
 							<div style="clear: both;"></div>
@@ -434,7 +463,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 							<div class="filter-item" id="combo-posi" style="margin-top: 0;">
 								<label for="ref-session-cbox"><strong>Positionnement(s) trouvé(s) :</strong></label>
-								<select name="ref_session_cbox" id="ref-session-cbox" class="ajax-list" data-request="session" style="margin: 10px 0 0 0; width: 120px;">
+								<select name="ref_session_cbox" id="ref-session-cbox" class="ajax-list" data-request="session" style="margin: 10px 0 0 0; width: 160px;">
 									<option value="select_cbox">---</option>
 
 									<?php
@@ -464,7 +493,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 							<div class="filter-item">
-								<input type="submit" value="Sélectionner" name="validate_search" id="select-posi" style="margin: 24px 0 0 0; width: 120px; height: 32px;">
+								<input type="submit" value="Sélectionner" name="validate_search" id="select-posi" style="margin: 24px 0 0 0; width: 100px; height: 32px;">
 							</div>
 
 							<div style="clear: both;"></div>
@@ -876,12 +905,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			var refRegion = null;
 			var refOrgan = null;
 			var refUser = null;
+			var refPosi = null;
 			//var dateSession = null;
 			var refSession = null;
 
 			var selectRegion = $('#posi-search #ref-region-cbox').get(0);
 			var selectOrgan = $('#posi-search #ref-organ-cbox').get(0);
 			var selectUser = $('#posi-search #ref-user-cbox').get(0);
+			var selectPosi = $('#posi-search #ref-posi-cbox').get(0);
 			var dateInput = $('#posi-search #date-session').val();
 			var selectSession = $('#posi-search #ref-session-cbox').get(0);
 
@@ -898,7 +929,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			this.changeFilter = function(id, value) {
 
-				console.log('Filter changed for : ' + id + ' = ' + value);
+				//console.log('Filter changed for : ' + id + ' = ' + value);
 				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser + ' - date_session = ' + dateSession);
 
 				var onlyOrgan = false;

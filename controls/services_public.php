@@ -114,7 +114,8 @@ class ServicesPublic extends Main
 		else 
 		{
 			// Sinon, authentification necessaire
-			ServicesAuth::checkAuthentication("custom");
+			ServicesAuth::login("custom-public");
+			//ServicesAuth::checkAuthentication("custom");
 			$loggedAsAdmin = true;
 		}
 		
@@ -320,16 +321,19 @@ class ServicesPublic extends Main
 		$this->formData['ref_region_cbox'] = null;
 		$this->formData['ref_organ_cbox'] = null;
 		$this->formData['ref_user_cbox'] = null;
+		$this->formData['ref_posi_cbox'] = null;
 		$this->formData['ref_session_cbox'] = null;
 		$this->formData['ref_region'] = null;
 		$this->formData['ref_organ'] = null;
 		$this->formData['ref_user'] = null;
+		$this->formData['ref_posi'] = null;
 		$this->formData['ref_session'] = null;
 		
 		$this->servicesGestion->initializeFormData($this->formData, $_POST, array(
 			"ref_region_cbox" => "select",
 			"ref_organ_cbox" => "select", 
-			"ref_user_cbox" => "select", 
+			"ref_user_cbox" => "select",
+			"ref_posi_cbox" => "select",
 			"ref_session_cbox" => "select",
 			"select_trigger" => "text"));
 		
@@ -337,6 +341,7 @@ class ServicesPublic extends Main
 		$this->formData['ref_region'] = $this->formData['ref_region_cbox'];
 		$this->formData['ref_organ'] = $this->formData['ref_organ_cbox'];
 		$this->formData['ref_user'] = $this->formData['ref_user_cbox'];
+		$this->formData['ref_posi'] = $this->formData['ref_posi_cbox'];
 		$this->formData['ref_session'] = $this->formData['ref_session_cbox'];
 		
 		if (!isset($_POST['select_trigger']) || $_POST['select_trigger'] == null) 
@@ -359,7 +364,7 @@ class ServicesPublic extends Main
 		
 		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme" en fonction de la region
 
-		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], null);
+		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], null);
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
@@ -402,6 +407,9 @@ class ServicesPublic extends Main
 						// case 'prenom_user':
 						// 	$list['utilisateurs'][$i]['prenom_user'] = $value;
 						// 	break;
+						case 'id_posi':
+							$list['domaines'][$i]['id_posi'] = $value;
+							break;
 
 						case 'id_session':
 							$list['sessions'][$i]['id_session'] = $value;
@@ -679,6 +687,9 @@ class ServicesPublic extends Main
 		}
 
 
+		// Liste des domaines pour le combo-box
+		
+
 		/*** On va chercher les infos pour créer la liste de validation des acquis ***/
 		$valid_acquis = array();
 		$valid_acquis = $this->servicesRestitution->getValidAcquis();
@@ -832,7 +843,8 @@ class ServicesPublic extends Main
 		else 
 		{
 			// Sinon, authentification necessaire
-			ServicesAuth::checkAuthentication("custom");
+			ServicesAuth::login("custom-public");
+			//ServicesAuth::checkAuthentication("custom");
 			$loggedAsAdmin = true;
 		}
 

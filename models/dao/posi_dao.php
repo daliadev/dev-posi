@@ -61,7 +61,7 @@ class PositionnementDAO extends ModelDAO
      * @param int Référence de l'utilisateur
      * @return array Positionnement(s) correspondant à l'utilisateur
      */
-    public function selectByUser($refUser) 
+    public function selectByUser($refUser)
     {
         $this->initialize();
         
@@ -73,7 +73,6 @@ class PositionnementDAO extends ModelDAO
             $request .= "GROUP BY id_posi ORDER BY nom_posi ASC";
             
             $this->resultset['response'] = $this->executeRequest("select", $request, "positionnement", "Positionnement");
-
         }
         else
         {

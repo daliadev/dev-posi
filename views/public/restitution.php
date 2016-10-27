@@ -955,6 +955,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					}
 					refOrgan = null;
 					refUser = null;
+					refPosi = null;
 
 					isFilterable = false;
 					$filterButton.prop('disabled', true);
@@ -966,14 +967,34 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						refOrgan = null;
 					}
 					refUser = null;
+					refPosi = null;
 
 					isFilterable = false;
 					$filterButton.prop('disabled', true);
 				}
 				else if (id == selectUser.id) {
 
-					isFilterable = true;
+					if (selectUser.value == 'select_cbox') {
 
+						refUser = null;
+					}
+
+					if (selectPosi) {
+
+						refPosi = null;
+
+						isFilterable = false;
+						$filterButton.prop('disabled', true);
+					}
+					else
+					{
+						isFilterable = true;
+						$filterButton.prop('disabled', false);
+					}
+				}
+				else if (id == selectPosi.id) {
+
+					isFilterable = true;
 					$filterButton.prop('disabled', false);
 				}
 
@@ -1012,6 +1033,11 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 						//var dateInput = $('#date-session');
 
+						var currentRefOrgan = null;
+						var currentRefUser = null;
+						var currentRefPosi = null;
+						var currentRefSession = null;
+
 						var selected = false;
 
 
@@ -1024,8 +1050,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								selectSession.options.length = 1;
 								selectSession.options[0].selected;
 
-								//refSession = null;
-								var currentRefSession = null;
+								currentRefSession = null;
 
 								var i = 1;
 
@@ -1054,8 +1079,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						}
 						else {
 
-							//self.isFilterActivate = false;
-
 							selectSession.options.length = 1;
 							selectSession.options[0].selected;
 
@@ -1069,9 +1092,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								selectOrgan.options[0].selected;
 								selectUser.options.length = 1;
 								selectUser.options[0].selected;
+								selectPosi.options.length = 1;
+								selectPosi.options[0].selected;
 
  								currentRefOrgan = null;
 								currentRefUser = null;
+								currentRefPosi = null;
  								/*
 								if (id == selectRegion.id) {
 
@@ -1116,8 +1142,13 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								//console.log('Organ selected');
 								selectUser.options.length = 1;
-								selectUser.options[0].selected;
+								selectPosi.options[0].selected;
 
+								if (selectPosi) {
+									selectPosi.options.length = 1;
+									selectPosi.options[0].selected;
+								}
+								
 								currentRefUser = null;
 								var j = 1;
 
@@ -1136,6 +1167,32 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								}
 							}
 							else if (id == selectUser.id) {
+
+								//console.log('User selected');
+								if (selectPosi) {
+									selectPosi.options.length = 1;
+									selectPosi.options[0].selected;
+
+									currentRefPosi = null;
+									var j = 1;
+
+									for (var prop in data.results) {
+										
+										// Changement des utilisateurs
+										if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+
+											var user = data.results[prop];
+											currentRefUser = user.id_user;
+
+											selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+
+											j++;
+										}
+									}
+								}
+								
+							}
+							else if (id == selectPosi.id) {
 
 								//console.log('User selected');
 							}

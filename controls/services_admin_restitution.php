@@ -248,7 +248,7 @@ class ServicesAdminRestitution extends Main
 		// code postaux
 		$codePostalRequest = "";
 
-		if(!empty($refRegion))
+		if (!empty($refRegion))
 		{
 			foreach ($regionsList as $region)
 			{

@@ -372,6 +372,13 @@ class ServicesPublic extends Main
 		
 		/*** Initialisation des infos sur le positionnement ***/
 		
+		$list = array(
+			'organismes' => array(),
+			'utilisateurs' => array(),
+			'domaines' => array(),
+			'sessions' => array()
+		);
+		
 		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme" en fonction de la region
 
 		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
@@ -384,12 +391,7 @@ class ServicesPublic extends Main
 
 			$listings = $resultsListings['response']['restitution'];
 
-			$list = array(
-				'organismes' => array(),
-				'utilisateurs' => array(),
-				'domaines' => array(),
-				'sessions' => array()
-			);
+			
 
 
 			$i = 0;

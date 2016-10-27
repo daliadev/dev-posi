@@ -146,22 +146,28 @@ class SessionDAO extends ModelDAO
      * @param int Référence de l'utilisateur.
      * @return array Sessions correspondantes à l'utilisateur.
      */
-    public function selectByUser($refUser, $refOrganisme) 
+    public function selectByUser($refUser, $refOrganisme, $refPosi = null) 
     {
         $this->initialize();
         
         if(!empty($refUser) && !empty($refOrganisme))
         {
-            $request = "SELECT id_session, ref_user, ref_intervenant, ref_valid_acquis, date_session, session_accomplie, temps_total, score_pourcent FROM session, intervenant ";
+            $request = "SELECT id_session, ref_user, ref_intervenant, ref_valid_acquis, date_session, session_accomplie, temps_total, score_pourcent FROM session, intervenant, positionnement ";
             $request .= "WHERE session.ref_user = ".$refUser." ";
+            if ($ref_posi !== null) 
+            {
+                $request .= "AND positionnement.ref_posi = ".$refPosi." ";
+            }
             $request .= "AND session.ref_intervenant = intervenant.id_intervenant ";
             $request .= "AND intervenant.ref_organ = ".$refOrganisme." ";
             $request .= "AND session_accomplie = 1 ";
 
+            /*
             if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
             {
                 $request .= "AND ref_posi = ".Config::MULTI_POSI_ID." ";
             }
+            */
 
             $request .= "GROUP BY id_session ORDER BY date_session DESC";
             

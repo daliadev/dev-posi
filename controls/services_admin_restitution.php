@@ -4,6 +4,7 @@
 require_once(ROOT.'models/dao/organisme_dao.php');
 require_once(ROOT.'models/dao/intervenant_dao.php');
 require_once(ROOT.'models/dao/utilisateur_dao.php');
+require_once(ROOT.'models/dao/posi_dao.php');
 require_once(ROOT.'models/dao/niveau_etudes_dao.php');
 require_once(ROOT.'models/dao/session_dao.php');
 require_once(ROOT.'models/dao/resultat_dao.php');
@@ -28,6 +29,7 @@ class ServicesAdminRestitution extends Main
 	
 	private $organismeDAO = null;
 	private $utilisateurDAO = null;
+	private $positionnementDAO = null;
 	private $niveauEtudesDAO = null;
 	private $sessionDAO = null;
 	private $intervenantDAO = null;
@@ -55,6 +57,7 @@ class ServicesAdminRestitution extends Main
 
 		$this->organismeDAO = new OrganismeDAO();
 		$this->utilisateurDAO = new UtilisateurDAO();
+		$this->positionnementDAO = new PositionnementDAO();
 		$this->niveauEtudesDAO = new NiveauEtudesDAO();
 		$this->sessionDAO = new SessionDAO();
 		$this->intervenantDAO = new IntervenantDAO();
@@ -70,7 +73,6 @@ class ServicesAdminRestitution extends Main
 
 		$this->customDAO = new CustomDAO();
 
-		//$this->servicesCategories = new ServicesAdminCategorie();
 		$this->servicesResultats = new ServicesPosiResultats();
 	}
 
@@ -82,7 +84,6 @@ class ServicesAdminRestitution extends Main
 	{
 		$resultset = $this->organismeDAO->selectAll();
 
-		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
@@ -98,6 +99,23 @@ class ServicesAdminRestitution extends Main
 	}
 	
 
+	public function getPositionnementsList()
+	{
+		$resultset = $this->positionnementDAO->selectAll();
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['positionnement']) && count($resultset['response']['positionnement']) == 1)
+			{ 
+				$positionnement = $resultset['response']['positionnement'];
+				$resultset['response']['positionnement'] = array($positionnement);
+			}
+
+			return $resultset;
+		}
+
+		return false;
+	}
 
 	
 
@@ -105,7 +123,6 @@ class ServicesAdminRestitution extends Main
 	{
 		$resultset = $this->utilisateurDAO->selectByOrganisme($refOrganisme);
 
-		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
@@ -129,14 +146,33 @@ class ServicesAdminRestitution extends Main
 
 		return false;
 	}
-	
-	
 
 
-
-	public function getUserSessions($refUser, $refOrganisme)
+	public function getPosisFromUser($refUser)
 	{
-		$resultset = $this->sessionDAO->selectByUser($refUser, $refOrganisme);
+		$resultset = $this->positionnementDAO->selectByUser($refUser);
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['positionnement']) && count($resultset['response']['positionnement']) == 1)
+			{ 
+				$positionnement = $resultset['response']['positionnement'];
+				$resultset['response']['positionnement'] = array($positionnement);
+			}
+			
+			return $resultset;
+		}
+
+		return false;
+	}
+	
+	
+
+
+
+	public function getUserSessions($refUser, $refOrganisme, $refPosi)
+	{
+		$resultset = $this->sessionDAO->selectByUser($refUser, $refOrganisme, $refPosi);
 		
 		if (!$this->filterDataErrors($resultset['response']))
 		{
@@ -169,7 +205,6 @@ class ServicesAdminRestitution extends Main
 	{
 		$resultset = $this->sessionDAO->selectById($refSession);
 		
-		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
@@ -190,7 +225,6 @@ class ServicesAdminRestitution extends Main
 	{
 		$resultset = $this->intervenantDAO->selectById($refIntervenant);
 
-		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
@@ -208,7 +242,7 @@ class ServicesAdminRestitution extends Main
 
 
 
-	public function search($regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null)
+	public function search($regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $refPosi = null, $date = null, $codeOrgan = null, $ref_inter = null)
 	{
 
 		// code postaux
@@ -246,7 +280,7 @@ class ServicesAdminRestitution extends Main
 		}
 
 
-		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user ";
+		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user, dom.id_posi ";
 		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
@@ -254,9 +288,9 @@ class ServicesAdminRestitution extends Main
 		$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
 		$query .= "INNER JOIN utilisateur AS user ";
 		$query .= "ON user.id_user = sess.ref_user ";
+		$query .= "INNER JOIN positionnement AS dom ";
+		$query .= "ON dom.id_posi = sess.ref_posi ";
 		$query .= "WHERE sess.session_accomplie = 1 ";
-		//$query .= "WHERE 1 ";
-		////$query .= "AND org.code_postal_organ LIKE '76___' ";
 		if ($refOrgan) 
 		{
 			$query .= "AND org.id_organ = ".$refOrgan." ";
@@ -282,6 +316,10 @@ class ServicesAdminRestitution extends Main
 		if ($refUser) 
 		{
 			$query .= "AND user.id_user = ".$refUser." ";
+		}
+		if ($refPosi) 
+		{
+			$query .= "AND dom.id_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
 		$query .= "GROUP BY user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC";
@@ -309,18 +347,14 @@ class ServicesAdminRestitution extends Main
 		*/
 
 		$resultset = $this->customDAO->read($query, 'restitution');
-		
-		// Traitement des erreurs de la requête
+		//var_dump($resultset);
+
 		if (!$this->filterDataErrors($resultset['response']))
 		{
-			//var_dump($resultset);
-			//exit();
-			
 			return $resultset;
 		}
 
 		return false;
-
 	}
 	
 	

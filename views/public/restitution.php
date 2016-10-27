@@ -9,6 +9,8 @@ $formData['ref_organ_cbox'] = "";
 $formData['ref_organ'] = "";
 $formData['ref_user_cbox'] = "";
 $formData['ref_user'] = "";
+$formData['ref_posi_cbox'] = "";
+$formData['ref_posi'] = "";
 $formData['ref_session_cbox'] = "";
 $formData['ref_session'] = "";
 
@@ -419,30 +421,36 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							</div>
 
 
-							<?php $visible = Config::MULTI_POSI_ID !== null ? '' : 'style="display: none;"' ?>
+							<?php $visible = (isset($response['positionnement']) && !empty($response['positionnement'])) ? '' : 'style=display: none;'; ?>
+
 							<div class="filter-item" <?php echo $visible; ?>>
 								<label for="ref-posi-cbox">Domaine : </label>
 
-								<?php $disabled = (isset($response['posis']) && !empty($response['posis']) && count($response['posis']) <= 1) ? "disabled" : ""; ?>
+								<?php $disabled = (isset($response['positionnement']) && !empty($response['positionnement']) && count($response['positionnement']) <= 1) ? "disabled" : ""; ?>
 								<select name="ref_posi_cbox" id="ref-posi-cbox" class="ajax-list" data-url="<?php echo $form_url; ?>" data-request="posi-session" style="max-width: 170px;" <?php echo $disabled; ?>>
 								
-									<?php if ($disabled == "") : ?>
+									<?php if (empty($disabled)) : ?>
 										<option class="posi-option" value="select_cbox">Tous les domaines</option>
 									<?php endif; ?>
 
 									<?php
-									if (isset($response['posis']) && !empty($response['posis']) && count($response['posis']) > 0)
+									if (isset($response['positionnement']) && !empty($response['positionnement']) && count($response['positionnement']) > 0)
 									{
-	
+										
+										foreach ($response['positionnement'] as $domaine)
 										{
+											$disabled = "" ;
 											$selected = "";
 											
-											if (!empty($_POST['ref_posi_cbox']) && $_POST['ref_posi_cbox'] == $posi['ref'])
+											if (!empty($formData['ref_posi']) && $formData['ref_posi'] == $domaine->getId())
 											{
 												$selected = "selected";
 											}
-											
-											echo '<option class="posi-option" value="'.$posi['ref'].'" '.$selected.'>'.$posi['nom'].'</option>';
+											else if ($domaine->getId() == null) 
+											{
+												$disabled = "disabled";
+											}
+											echo '<option value="'.$domaine->getId().'" '.$selected.' '.$disabled.'>'.$domaine->getNom().'</option>';
 										}
 									}
 									?>

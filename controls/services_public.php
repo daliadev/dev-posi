@@ -60,7 +60,7 @@ class ServicesPublic extends Main
 		$loggedAsAdmin = false;
 		$preSelectOrganisme = null;
 
-		// Lecture du intégration du fichier 'régions'
+		// Lecture du fichier 'régions'
 		$regions = null;
 		$hasRegions = $this->servicesAdminStat->createRegionsList(Config::ANNEE_REGION);
 
@@ -113,8 +113,11 @@ class ServicesPublic extends Main
 		}
 		else 
 		{
-			// Sinon, authentification necessaire
+
+			// Authentification automatique provisoire
 			ServicesAuth::login("custom-public");
+
+			// Sinon, authentification necessaire
 			//ServicesAuth::checkAuthentication("custom");
 			$loggedAsAdmin = true;
 		}
@@ -139,6 +142,7 @@ class ServicesPublic extends Main
 					$refRegion = null;
 					$refOrgan = null;
 					$refUser = null;
+					$refPosi = null;
 					//$dateSession = null;
 					$refSession = null;
 
@@ -154,6 +158,11 @@ class ServicesPublic extends Main
 					{
 						$refUser = $_POST['ref_user'];
 					}
+					if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox')
+					{
+						$refPosi = $_POST['ref_posi'];
+					}
+
 					// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
 					// {
 					// 	$dateSession = $_POST['date_session'];
@@ -166,11 +175,12 @@ class ServicesPublic extends Main
 					//var_dump($refRegion, $refOrgan, $refUser, $dateSession);
 					//exit();
 
-					if ($refRegion != null || $refOrgan != null || $refUser != null) // || $dateSession != null)
+					if ($refRegion != null || $refOrgan != null || $refUser != null || $refPosi != null) // || $dateSession != null)
 					{
-						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-						//var_dump($searchResults);
-							// Recherche des éléments de listes et de champs de filtrage
+						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $refPosi); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+						var_dump($searchResults);
+						exit();
+						// Recherche des éléments de listes et de champs de filtrage
 
 						if ($searchResults)
 						{
@@ -187,13 +197,13 @@ class ServicesPublic extends Main
 						}
 						else
 						{
-							$results = array('error' => "error filter = false");
+							$results = array('error' => "Error filter = false");
 						}
 					}
 					else
 					{
 						// Select all
-						$searchResults = $this->servicesRestitution->search($regions, null, null, null, null); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+						$searchResults = $this->servicesRestitution->search($regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 						
 						//var_dump($searchResults);
 						//exit();
@@ -204,7 +214,7 @@ class ServicesPublic extends Main
 						}
 						else
 						{
-							$results = array('error' => "error no filter attribute");
+							$results = array('error' => "Error, no filter attribute");
 						}
 						
 						//$results = array('error' => "error no filter attribute");
@@ -364,7 +374,10 @@ class ServicesPublic extends Main
 		
 		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme" en fonction de la region
 
-		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], null);
+		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
+
+		//var_dump($resultsListings);
+		//exit();
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
@@ -374,13 +387,12 @@ class ServicesPublic extends Main
 			$list = array(
 				'organismes' => array(),
 				'utilisateurs' => array(),
+				'domaines' => array(),
 				'sessions' => array()
 			);
 
-			$i = 0;
 
-			//var_dump($listings);
-			//exit();
+			$i = 0;
 
 			foreach ($listings as $entity) {
 
@@ -429,10 +441,6 @@ class ServicesPublic extends Main
 			
 		}
 
-		//var_dump($list);
-		//exit();
-
-		//$this->returnData['response'] = array_merge($list['response'], $this->returnData['response']);
 
 		if ($loggedAsViewer)
 		{
@@ -451,7 +459,6 @@ class ServicesPublic extends Main
 		$organismes = array();
 		$organismes['response']['organisme'] = array();
 
-		//var_dump($organismes);
 
 		if (!$organismesList)
 		{
@@ -459,9 +466,6 @@ class ServicesPublic extends Main
 		}
 		else 
 		{
-			//$existing_keys = array();
-
-			//$i = 0;
 			
 			foreach ($organismesList['response']['organisme'] as $organisme)
 			{
@@ -489,11 +493,10 @@ class ServicesPublic extends Main
 				}
 			}
 
-			//var_dump($organismes['response']);
-			//exit();
 
 			$this->returnData['response'] = array_merge($organismes['response'], $this->returnData['response']);
 		}
+
 
 
 		// Pour chaque combo-box sélectionné, on effectue les requetes correspondantes
@@ -566,8 +569,48 @@ class ServicesPublic extends Main
 				$this->returnData['response']['infos_user']['code_organ'] = $codeOrgan;
 				
 
+				/*------   Un domaine/positionnement a été sélectionné   -------*/
+
+				if (!empty($this->formData['ref_posi']))
+				{
+					/*** On va chercher tous les domaines effectués par l'utilisateur qui correspondent à l'organisme ***/
+					if ($this->formData['ref_posi'] != "select_cbox") 
+					{
+						$refDom = $this->formData['ref_posi'];
+					}
+					else
+					{
+						$refDom = null;
+					}
+
+					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($refDom);
+
+					$doms = array('response', array('domaines'));
+
+					if (!$resultsetDomaines)
+					{
+						$this->registerError("form_empty", "Impossible de visualiser les domaines.");
+					}
+					else 
+					{
+						foreach ($resultsetUsers['response']['positionnement'] as $positionnement)
+						{
+							foreach ($list['domaines'] as $dom)
+							{
+								if ($positionnement->getId() == $dom['id_user']) 
+								{
+									$doms['response']['domaines'][] = $positionnement;
+								}
+							}
+						}
+					
+						$this->returnData['response'] = array_merge($doms['response'], $this->returnData['response']);
+					}
+				}
+
+
 				/*** On va chercher toutes les sessions qui correspondent à l'utilisateur sélectionné ***/
-				$resultsetSessions = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ']);
+				$resultsetSessions = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ'], $this->formData['ref_posi']);
 
 
 				$sessions = array('response', array('sessions'));
@@ -591,6 +634,9 @@ class ServicesPublic extends Main
 				
 					$this->returnData['response'] = array_merge($sessions['response'], $this->returnData['response']);
 				}
+				
+
+
 
 				/*
 				if (empty($resultsetSessions['response']))
@@ -610,6 +656,7 @@ class ServicesPublic extends Main
 				$time = Tools::timeToString($timeToSeconds, "h:m");         
 				$this->returnData['response']['infos_user']['date_last_posi'] = "Le ".$date." à ".str_replace(":", "h", $time);
 				*/
+
 
 				/*------   Une session a été sélectionnée   -------*/
 				
@@ -670,13 +717,9 @@ class ServicesPublic extends Main
 					$this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);
 
 				}
-				//}
 
 			}
 		}
-
-		//echo $this->returnData['response']['infos_user']['ref_valid_acquis'];
-		//exit();
 
 
 		// Liste des régions pour le combo-box
@@ -688,6 +731,11 @@ class ServicesPublic extends Main
 
 
 		// Liste des domaines pour le combo-box
+		
+		$domainesList = array();
+		$domainesList = $this->servicesRestitution->getPositionnementsList();
+		$this->returnData['response'] = array_merge($domainesList['response'], $this->returnData['response']);
+		
 		
 
 		/*** On va chercher les infos pour créer la liste de validation des acquis ***/

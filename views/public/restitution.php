@@ -420,7 +420,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								</select>
 							</div>
 
-
+							
 							<?php $visible = (isset($response['positionnement']) && !empty($response['positionnement'])) ? '' : 'style=display: none;'; ?>
 
 							<div class="filter-item" <?php echo $visible; ?>>
@@ -758,7 +758,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 														}
 														else
 														{
-															echo '<td class="white-cell" style="width:8%;"><span style="display:none;">0</span><img src="'.SERVER_URL.'media/images/stylo.png"></td>';
+															echo '<td class="white-cell" style="width:8%;"><span style="display:none;">0</span>';
+																echo '<img src="'.SERVER_URL.'media/images/stylo.png"><input type="checkbox" name="validation_champ"></td>';
+															echo '</td>';
 														}
 
 													echo '</tr>';
@@ -1075,7 +1077,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							}
 
 							filterRequested = false;
-							
+
 						}
 						else {
 
@@ -1281,6 +1283,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					// 	refUser = $select.val() != 'select_cbox' ? $select.val() : null;
 					// 	ref = refUser;
 					// 	break;
+
+					case 'ref-posi-cbox' :
+						hasChanged = $select.val() != refPosi;
+						refPosi = $select.val() != 'select_cbox' ? $select.val() : null;
+						ref = refPosi;
+						break;
 
 					default :
 						break;

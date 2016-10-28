@@ -178,8 +178,7 @@ class ServicesPublic extends Main
 					if ($refRegion != null || $refOrgan != null || $refUser != null || $refPosi != null) // || $dateSession != null)
 					{
 						$searchResults = $this->servicesRestitution->search($regions, $refRegion, $refOrgan, $refUser, $refPosi); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-						var_dump($searchResults);
-						exit();
+						
 						// Recherche des éléments de listes et de champs de filtrage
 
 						if ($searchResults)
@@ -737,7 +736,6 @@ class ServicesPublic extends Main
 		$domainesList = array();
 		$domainesList = $this->servicesRestitution->getPositionnementsList();
 		$this->returnData['response'] = array_merge($domainesList['response'], $this->returnData['response']);
-		
 		
 
 		/*** On va chercher les infos pour créer la liste de validation des acquis ***/

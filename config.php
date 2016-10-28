@@ -29,7 +29,7 @@ class Config
 	const CLIENT_NAME = "Dalia";
 	const CLIENT_NAME_LONG = "Dalia";
 	
-	const MULTI_POSI_ID = 1;
+	const MULTI_POSI_ID = null;
 
 	/* Gestion du niveau régional */
 

@@ -426,7 +426,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							<div class="filter-item" <?php echo $visible; ?>>
 								<label for="ref-posi-cbox">Domaine : </label>
 
-								<?php $disabled = (isset($response['positionnement']) && !empty($response['positionnement']) && count($response['positionnement']) <= 1) ? "disabled" : ""; ?>
+								<?php $disabled = ""; //(isset($response['positionnement']) && !empty($response['positionnement']) && count($response['positionnement']) <= 1) ? "disabled" : ""; ?>
 								<select name="ref_posi_cbox" id="ref-posi-cbox" class="ajax-list" data-url="<?php echo $form_url; ?>" data-request="posi-session" style="max-width: 170px;" <?php echo $disabled; ?>>
 								
 									<?php if (empty($disabled)) : ?>
@@ -1087,19 +1087,25 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							$selectButton.prop('disabled', true);
 
 							if (id == selectRegion.id) {
-							//if (data.results != null)
-							//{
+
 								//console.log('Region selected');
 								selectOrgan.options.length = 1;
 								selectOrgan.options[0].selected;
 								selectUser.options.length = 1;
 								selectUser.options[0].selected;
-								selectPosi.options.length = 1;
-								selectPosi.options[0].selected;
+								// selectPosi.options.length = 1;
+								// selectPosi.options[0].selected;
 
  								currentRefOrgan = null;
 								currentRefUser = null;
-								currentRefPosi = null;
+								//currentRefPosi = null;
+
+								if (selectPosi) {
+
+									selectPosi.options.length = 1;
+									selectPosi.options[0].selected;
+									currentRefPosi = null;
+								}
  								/*
 								if (id == selectRegion.id) {
 
@@ -1112,7 +1118,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									var currentRefUser = null;
 								*/
 								var i = 1;
-								var j = 1;
+								//var j = 1;
 
 								for (var prop in data.results) {
 
@@ -1129,6 +1135,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 										i++;
 									}
+									/*
 									else if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
 
 										var user = data.results[prop];
@@ -1138,65 +1145,76 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 										j++;
 									}
+									*/
 								}
 							}
 							else if (id == selectOrgan.id) {
 
 								//console.log('Organ selected');
 								selectUser.options.length = 1;
-								selectPosi.options[0].selected;
+								selectUser.options[0].selected;
+								currentRefUser = null;
 
 								if (selectPosi) {
 									selectPosi.options.length = 1;
 									selectPosi.options[0].selected;
+									currentRefPosi = null;
 								}
 								
-								currentRefUser = null;
-								var j = 1;
+								var i = 1;
+								//var j = 1;
 
 								for (var prop in data.results) {
 									
 									// Changement des utilisateurs
-									if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
+									if (data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
 
 										var user = data.results[prop];
 										currentRefUser = user.id_user;
 
-										selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+										selectUser.options[i] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+
+										i++;
+									}
+									/*
+									else if (selectPosi && data.results[prop].id_posi != null && data.results[prop].nom_posi != null && data.results[prop].id_posi != currentRefPosi) {
+
+										var posi = data.results[prop];
+										currentRefPosi = posi.id_posi;
+
+										selectUser.options[j] = new Option(user.nom_posi, user.id_posi, false, false);
 
 										j++;
 									}
+									*/
 								}
 							}
+
 							else if (id == selectUser.id) {
 
 								//console.log('User selected');
 								if (selectPosi) {
+
 									selectPosi.options.length = 1;
 									selectPosi.options[0].selected;
-
 									currentRefPosi = null;
-									var j = 1;
+
+									var i = 1;
 
 									for (var prop in data.results) {
-										
-										// Changement des utilisateurs
-										if (!onlyOrgan && data.results[prop].id_user != null && data.results[prop].nom_user != null && data.results[prop].prenom_user != null && data.results[prop].id_user != currentRefUser) {
 
-											var user = data.results[prop];
-											currentRefUser = user.id_user;
+										if (data.results[prop].id_posi != null && data.results[prop].nom_posi != null && data.results[prop].id_posi != currentRefPosi) {
 
-											selectUser.options[j] = new Option(user.nom_user + " " + user.prenom_user, user.id_user, false, false);
+											var posi = data.results[prop];
+											currentRefPosi = posi.id_posi;
 
-											j++;
+											selectPosi.options[i] = new Option(posi.nom_posi, posi.id_posi, false, false);
+
+											i++;
 										}
 									}
 								}
 								
-							}
-							else if (id == selectPosi.id) {
-
-								//console.log('User selected');
 							}
 							else {
 								//console.log('everything\'s set');

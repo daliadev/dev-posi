@@ -457,8 +457,13 @@ class ServicesPublic extends Main
 		
 		$nomOrgan = null;
 		$codeOrgan = null;
-		$organismes = array();
-		$organismes['response']['organisme'] = array();
+		//$organismes = array();
+		//$organismes['response']['organisme'] = array();
+		$organismes = array(
+			'response' => array(
+				'organisme' => array()
+			)
+		);
 
 
 		if (!$organismesList)
@@ -525,7 +530,13 @@ class ServicesPublic extends Main
 			
 			$resultsetUsers = $this->servicesRestitution->getUsersFromOrganisme($this->formData['ref_organ']);
 
-			$users = array('response', array('utilisateurs'));
+			//$users = array('response' => array('utilisateurs'));
+			$users = array(
+				'response' => array(
+					'utilisateurs' => array()
+				)
+			);
+
 
 			if (!$resultsetUsers)
 			{
@@ -584,9 +595,20 @@ class ServicesPublic extends Main
 						$refDom = null;
 					}
 
-					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($refDom);
 
-					$doms = array('response', array('domaines'));
+
+
+
+					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($refDom);
+					//var_dump($resultsetDomaines);
+					//exit();
+
+					//$doms = array('response' => array('domaines'));
+					$doms = array(
+						'response' => array(
+							'domaines' => array()
+						)
+					);
 
 					if (!$resultsetDomaines)
 					{
@@ -594,11 +616,11 @@ class ServicesPublic extends Main
 					}
 					else 
 					{
-						foreach ($resultsetUsers['response']['positionnement'] as $positionnement)
+						foreach ($resultsetDomaines['response']['positionnement'] as $positionnement)
 						{
 							foreach ($list['domaines'] as $dom)
 							{
-								if ($positionnement->getId() == $dom['id_user']) 
+								if ($positionnement->getId() == $dom['id_posi']) 
 								{
 									$doms['response']['domaines'][] = $positionnement;
 								}
@@ -607,14 +629,13 @@ class ServicesPublic extends Main
 					
 						$this->returnData['response'] = array_merge($doms['response'], $this->returnData['response']);
 					}
-				}
-
+				} 
 
 				/*** On va chercher toutes les sessions qui correspondent à l'utilisateur sélectionné ***/
 				$resultsetSessions = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ'], $this->formData['ref_posi']);
 
 
-				$sessions = array('response', array('sessions'));
+				$sessions = array('response' => array('sessions'));
 
 				if (!$resultsetSessions)
 				{
@@ -733,9 +754,9 @@ class ServicesPublic extends Main
 
 		// Liste des domaines pour le combo-box
 		
-		$domainesList = array();
-		$domainesList = $this->servicesRestitution->getPositionnementsList();
-		$this->returnData['response'] = array_merge($domainesList['response'], $this->returnData['response']);
+		// $domainesList = array();
+		// $domainesList = $this->servicesRestitution->getPositionnementsList();
+		// $this->returnData['response'] = array_merge($domainesList['response'], $this->returnData['response']);
 		
 
 		/*** On va chercher les infos pour créer la liste de validation des acquis ***/

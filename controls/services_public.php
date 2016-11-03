@@ -115,7 +115,7 @@ class ServicesPublic extends Main
 		{
 
 			// Authentification automatique provisoire
-			ServicesAuth::login("custom-public");
+			ServicesAuth::login("admin");
 
 			// Sinon, authentification necessaire
 			//ServicesAuth::checkAuthentication("custom");
@@ -700,7 +700,7 @@ class ServicesPublic extends Main
 					
 					/*--------- Statistiques par catégories(temps, score...)-------------*/	
 					$this->returnData['response']['stats'] = array();
-					$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession);
+					$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession, $this->formData['ref_posi']);
 					
 
 					/*------ Validation des acquis -------*/
@@ -736,7 +736,7 @@ class ServicesPublic extends Main
 					
 					/*** On recherche toutes les questions ***/
 					$this->returnData['response']['details']['questions'] = array();
-					$this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession);
+					$this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession, $this->formData['ref_posi']);
 
 				}
 

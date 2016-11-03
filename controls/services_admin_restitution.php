@@ -280,7 +280,7 @@ class ServicesAdminRestitution extends Main
 		}
 
 
-		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
+		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, sess.ref_posi, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
 		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
@@ -291,6 +291,7 @@ class ServicesAdminRestitution extends Main
 		$query .= "INNER JOIN positionnement AS dom ";
 		$query .= "ON dom.id_posi = sess.ref_posi ";
 		$query .= "WHERE sess.session_accomplie = 1 ";
+
 		if ($refOrgan) 
 		{
 			$query .= "AND org.id_organ = ".$refOrgan." ";
@@ -317,9 +318,11 @@ class ServicesAdminRestitution extends Main
 		{
 			$query .= "AND user.id_user = ".$refUser." ";
 		}
+
 		if ($refPosi) 
 		{
-			$query .= "AND dom.id_posi = ".$refPosi." ";
+			$query .= "AND sess.ref_posi = ".$refPosi." ";
+			//$query .= "AND dom.id_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
 		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
@@ -454,7 +457,7 @@ class ServicesAdminRestitution extends Main
 	
 	
 	
-	public function getPosiStats($refSession)
+	public function getPosiStats($refSession, $refPosi = null)
 	{
 
 		$posiStats = array();
@@ -465,7 +468,7 @@ class ServicesAdminRestitution extends Main
 		
 		/*** On récupère la liste des categories ***/
 		
-		$resultsetcategories = $this->getCategories();
+		$resultsetcategories = $this->getCategories($refPosi);
 
 		$categoriesList = $resultsetcategories['response']['categorie'];
 		
@@ -599,20 +602,14 @@ class ServicesAdminRestitution extends Main
 			$categorie->setHasResult($hasResults);
 			
 
-			
-
 			//$categorie->setPreconisations($precos);
 
 			//$categorie->setActionPrecosTotal($precos);
 
 
-
 			$posiStats['categories'][] = $categorie;
 
-			
-
 			//$i++;
-
 		}
 
 		$categories = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
@@ -888,13 +885,13 @@ class ServicesAdminRestitution extends Main
 	
 	
 	
-	public function getQuestionsDetails($refSession)
+	public function getQuestionsDetails($refSession, $refPosi = null)
 	{
 
 		// Etape  1 : Regroupement des données sur toutes les questions du positionnement
 		$questionsDetails = array();
 				
-		$resultsetQuestions = $this->getQuestions();
+		$resultsetQuestions = $this->getQuestions($refPosi);
 
 		if ($resultsetQuestions)
 		{
@@ -1187,9 +1184,9 @@ class ServicesAdminRestitution extends Main
 
 	
 	
-	private function getCategories()
+	private function getCategories($refPosi = null)
 	{
-		$resultset = $this->categorieDAO->selectAll();
+		$resultset = $this->categorieDAO->selectAll($refPosi);
 
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
@@ -1286,9 +1283,9 @@ class ServicesAdminRestitution extends Main
 
 
 
-	private function getQuestions()
+	private function getQuestions($refPosi = null)
 	{
-		$resultset = $this->questionDAO->selectAll();
+		$resultset = $this->questionDAO->selectAll($refPosi);
 
 		// Traitement des erreurs de la requête
 		if (!$this->filterDataErrors($resultset['response']))
@@ -1382,7 +1379,7 @@ class ServicesAdminRestitution extends Main
 		$tabResultats = array();
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
-		$resultsetResultats = $this->getResultatsBySession($refSession);
+		$resultsetResultats = $this->getResultatsBySession($refSession, $refPosi);
 
 		//var_dump($resultsetResultats);
 		//exit();

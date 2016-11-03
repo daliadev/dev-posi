@@ -156,7 +156,7 @@ function recursiveCategories($parent, $level, $datas)
 
 	foreach ($datas as $cat) 
 	{
-		$percent = $cat->getScorePercent();
+		$percent = round($cat->getScorePercent());
 
 		if ($parent == $cat->getParentCode()) 
 		{
@@ -260,7 +260,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 		<!-- Header -->
 		<div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?>
 
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom-admin" || ServicesAuth::getAuthenticationRight() == "custom-public") : ?>
 			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
 		<?php endif; ?>
 

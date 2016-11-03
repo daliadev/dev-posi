@@ -15,12 +15,24 @@ class CategorieDAO extends ModelDAO
 	 * 
 	 * @return array Liste d'objets "Categorie"
 	 */
-	public function selectAll() 
+	public function selectAll($refPosi = null) 
 	{
 		$this->initialize();
-
-		$request = "SELECT * FROM categorie ORDER BY code_cat ASC";
 		
+		if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
+        if ($refPosi !== null)
+		{
+			$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".$refPosi."' ORDER BY code_cat ASC";
+		}
+		else
+		{
+			$request = "SELECT * FROM categorie ORDER BY code_cat ASC";
+		}
+
 		$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 
 		return $this->resultset;
@@ -31,13 +43,18 @@ class CategorieDAO extends ModelDAO
 	 * 
 	 * @return array Liste d'objets "Categorie"
 	 */
-	public function selectByPosi() 
+	public function selectByPosi($refPosi = null) 
 	{
 		$this->initialize();
 
-		if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+		if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
+		if ($refPosi !== null)
 		{
-			$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' ORDER BY code_cat ASC";
+			$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".$refPosi."' ORDER BY code_cat ASC";
 		}
 		else
 		{
@@ -58,13 +75,25 @@ class CategorieDAO extends ModelDAO
 	 * @param string Code de la catégorie
 	 * @return array Catégorie correspondant au code sinon erreurs
 	 */
-	public function selectByCode($codeCat) 
+	public function selectByCode($codeCat, $refPosi = null) 
 	{
 		$this->initialize();
 		
+		if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
 		if (!empty($codeCat))
 		{   
-			$request = "SELECT * FROM categorie WHERE code_cat = ".$codeCat." ORDER BY code_cat ASC";
+			if ($refPosi !== null)
+			{
+				$request = "SELECT * FROM categorie WHERE ref_posi LIKE '".$refPosi."' AND code_cat = ".$codeCat." ORDER BY code_cat ASC";
+			}
+			else
+			{
+				$request = "SELECT * FROM categorie WHERE code_cat = ".$codeCat." ORDER BY code_cat ASC";
+			}
 
 			$this->resultset['response'] = $this->executeRequest("select", $request, "categorie", "Categorie");
 		}
@@ -99,7 +128,7 @@ class CategorieDAO extends ModelDAO
 
 
 
-	public function selectCodesByLevel($parentCode, $level = null)
+	public function selectCodesByLevel($parentCode, $level = null, $refPosi = null)
 	{
 		$this->initialize();
 
@@ -164,9 +193,14 @@ class CategorieDAO extends ModelDAO
 		
 		if (!empty($search) && !$error)
 		{   
-			if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+			if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+	        {
+	            $refPosi = Config::MULTI_POSI_ID;
+	        }
+
+			if ($refPosi !== null)
 			{
-				$request = "SELECT code_cat FROM categorie WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' AND code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
+				$request = "SELECT code_cat FROM categorie WHERE ref_posi LIKE '".$refPosi."' AND code_cat LIKE '".$search."' AND code_cat <> '".$parentCode."' ORDER BY code_cat ASC";
 			}
 			else
 			{
@@ -244,9 +278,14 @@ class CategorieDAO extends ModelDAO
 	 * @param string Code de la catégorie
 	 * @return array Catégorie correspondant au code sinon erreurs
 	 */
-	public function selectByQuestion($refQuestion) 
+	public function selectByQuestion($refQuestion, $refPosi = null) 
 	{
 		$this->initialize();
+
+		if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
 		
 		if (!empty($refQuestion))
 		{   
@@ -272,17 +311,22 @@ class CategorieDAO extends ModelDAO
 	 * @param array Valeurs de la catégorie à inserer
 	 * @return bool Vrai si l'insertion a fonctionné
 	 */
-	public function insert($values) 
+	public function insert($values, $refPosi = null) 
 	{
 		//var_dump($values);
 		//exit();
 		$this->initialize();
+
+		if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
 		
 		if (!empty($values))
 		{     
-			if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '') 
+			if ($refPosi !== null) 
             {
-                $values['ref_posi'] = Config::MULTI_POSI_ID;
+                $values['ref_posi'] = $refPosi;
             }
 
 			$request = $this->createQueryString("insert", $values, "categorie");
@@ -307,7 +351,7 @@ class CategorieDAO extends ModelDAO
 	 * @param array Valeurs de la catégorie à mettre à jour
 	 * @return array Nbre de lignes mises à jour sinon erreurs
 	 */
-	public function update($values, $currentCodeCat = null) 
+	public function update($values, $currentCodeCat = null, $refPosi = null) 
 	{
 		$this->initialize();
 		
@@ -329,13 +373,21 @@ class CategorieDAO extends ModelDAO
 					unset($values['code_cat']);
 				}
 
-				if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
-	            {
-	                $values['ref_posi'] = Config::MULTI_POSI_ID;
-	            }
+				if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+		        {
+		            $refPosi = Config::MULTI_POSI_ID;
+		        }
 				
+				if ($refPosi !== null) 
+	            {
+	                $values['ref_posi'] = $refPosi;
+	            }
+	            else
+	            {
+	            	$values['ref_posi'] = 'NULL';
+	            }
 				//$request = $this->createQueryString("update", $values, "categorie", "WHERE code_cat = ".$codeCat);
-				$request = "UPDATE categorie SET code_cat='".$codeCat."', nom_cat='".$values['nom_cat']."', descript_cat='".$values['descript_cat']."' WHERE code_cat = '".$codeCat."'";
+				$request = "UPDATE categorie SET code_cat='".$codeCat."', ref_posi='".$values['ref_posi']."', nom_cat='".$values['nom_cat']."', descript_cat='".$values['descript_cat']."' WHERE code_cat = '".$codeCat."'";
 
 				//var_dump($request);
 				$this->resultset['response'] = $this->executeRequest("update", $request, "categorie", "Categorie");

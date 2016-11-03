@@ -24,11 +24,23 @@ class QuestionDAO extends ModelDAO
      * 
      * @return array Liste d'objets "Question"
      */
-    public function selectAll() 
+    public function selectAll($refPosi = null) 
     {
         $this->initialize();
 
-        $request = "SELECT * FROM question ORDER BY num_ordre_question ASC";
+        if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
+        if ($refPosi !== null)
+        {
+            $request = "SELECT * FROM question WHERE ref_posi LIKE '".$refPosi."' ORDER BY num_ordre_question ASC";
+        }
+        else
+        {
+            $request = "SELECT * FROM question ORDER BY num_ordre_question ASC";
+        }
         
         $this->resultset['response'] = $this->executeRequest("select", $request, "question", "Question");
         
@@ -44,13 +56,18 @@ class QuestionDAO extends ModelDAO
      * @param int Identifiant de la question
      * @return array Question correspondant à l'identifiant sinon erreurs
      */
-    public function selectByPosi() 
+    public function selectByPosi($refPosi = null) 
     {
         $this->initialize();
         
-        if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+        if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
         {
-            $request = "SELECT * FROM question WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' ORDER BY num_ordre_question ASC";
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
+        if ($refPosi !== null)
+        {
+            $request = "SELECT * FROM question WHERE ref_posi LIKE '".$refPosi."' ORDER BY num_ordre_question ASC";
         }
         else
         {
@@ -98,15 +115,20 @@ class QuestionDAO extends ModelDAO
      * @param int Identifiant de la question
      * @return array Question correspondant à l'identifiant sinon erreurs
      */
-    public function selectByOrdre($numOrdre) 
+    public function selectByOrdre($numOrdre, $refPosi = null) 
     {
         $this->initialize();
         
+        if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
         if (!empty($numOrdre))
         {
-            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            if ($refPosi !== null)
             {
-                $request = "SELECT * FROM question WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' AND num_ordre_question = ".$numOrdre;
+                $request = "SELECT * FROM question WHERE ref_posi LIKE '".$refPosi."' AND num_ordre_question = ".$numOrdre;
             }
             else
             {
@@ -133,9 +155,14 @@ class QuestionDAO extends ModelDAO
      * @param array Valeurs de la question à inserer
      * @return array Dernier identifiant d'insertion sinon erreurs
      */
-    public function insert($values) 
+    public function insert($values, $refPosi = null) 
     {   
         $this->initialize();
+
+        if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
 
         if (!empty($values))
         {
@@ -144,9 +171,9 @@ class QuestionDAO extends ModelDAO
                 unset($values['ref_question']);
             }
             
-            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            if ($refPosi !== null)
             {
-                $values['ref_posi'] = Config::MULTI_POSI_ID;
+                $values['ref_posi'] = $refPosi;
             }
 
             $request = $this->createQueryString("insert", $values, "question");
@@ -171,10 +198,15 @@ class QuestionDAO extends ModelDAO
      * @param array Valeurs de l'organisme à mettre à jour
      * @return array Nbre de lignes mises à jour sinon erreurs
      */
-    public function update($values) 
+    public function update($values, $refPosi = null) 
     {
 
         $this->initialize();
+
+        if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
         
         if (!empty($values))
         {
@@ -183,9 +215,9 @@ class QuestionDAO extends ModelDAO
                 $refQuestion = $values['ref_question'];
                 unset($values['ref_question']);
 
-                if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '') 
+                if ($refPosi !== null) 
                 {
-                    $values['ref_posi'] = Config::MULTI_POSI_ID;
+                    $values['ref_posi'] = $refPosi;
                 }
 
                 $request = $this->createQueryString("update", $values, "question", "WHERE id_question = ".$refQuestion);
@@ -237,7 +269,7 @@ class QuestionDAO extends ModelDAO
     
     
     
-    public function shiftOrder($numOrdre, $offset, $imageName = null, $audioName = null, $videoName = null) 
+    public function shiftOrder($numOrdre, $offset, $imageName = null, $audioName = null, $videoName = null, $refPosi = null) 
     {
         
         $this->resultset['response']['question'] = array();
@@ -259,14 +291,20 @@ class QuestionDAO extends ModelDAO
             $mediasQueryVars .= ", video_question = '".$videoName."'";
         }
         */
+
+        if ($refPosi === null && Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID !== null) 
+        {
+            $refPosi = Config::MULTI_POSI_ID;
+        }
+
         try
         {
             // Connection à la base de données
             $this->connectDB();
 
-            if (Config::MULTI_POSI_ID && Config::MULTI_POSI_ID != 0 && Config::MULTI_POSI_ID != '')
+            if ($refPosi !== null)
             {
-                $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE ref_posi LIKE '".Config::MULTI_POSI_ID."' AND num_ordre_question = ".$numOrdre;
+                $request = "UPDATE question SET num_ordre_question = " . $offsetOrdre .", image_question = '".$imageName."', audio_question = '".$audioName."', video_question = '".$videoName."' WHERE ref_posi LIKE '".$refPosi."' AND num_ordre_question = ".$numOrdre;
             }
             else
             {

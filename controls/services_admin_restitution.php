@@ -280,7 +280,7 @@ class ServicesAdminRestitution extends Main
 		}
 
 
-		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, sess.ref_posi, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
+		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
 		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
@@ -322,7 +322,7 @@ class ServicesAdminRestitution extends Main
 		if ($refPosi) 
 		{
 			$query .= "AND sess.ref_posi = ".$refPosi." ";
-			//$query .= "AND dom.id_posi = ".$refPosi." ";
+			$query .= "AND dom.id_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
 		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
@@ -350,7 +350,7 @@ class ServicesAdminRestitution extends Main
 		*/
 
 		$resultset = $this->customDAO->read($query, 'restitution');
-		//var_dump($resultset);
+
 
 		if (!$this->filterDataErrors($resultset['response']))
 		{

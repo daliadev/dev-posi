@@ -1017,7 +1017,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				var url = $('#form-posi').attr('action');
 
 				//$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
-				$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser}, function(data) {
+				$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'ref_posi': refPosi}, function(data) {
 
 					if (data.error) {
 

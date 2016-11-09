@@ -527,7 +527,7 @@ form input[type="text"][disabled]
 	padding: 5px;
 	margin: 10px 0;
 	/*margin-right: 75px;*/
-	background-color: #f7a22f;
+	background-color: #ec407a;
 	border: 0;
 	border-radius: 5px 5px 5px 5px; 
 	color: #FFF;
@@ -1167,7 +1167,7 @@ form input[type="text"][disabled]
 	position: relative;
 	margin: 20px 30px 0 30px;
 	padding: 15px;
-	background-color: #1fbba6;
+	background-color: #4d8bf4;
 	font-family: Helvetica, Arial, sans-serif;
 	color: #ffffff;
 	font-size: 16px;
@@ -1425,6 +1425,7 @@ fieldset #liste-cat {
 	border: 1px solid #ccc8c8;
 	border-radius: 5px;
 	overflow: auto;
+	width:395px;
 }
 
 fieldset #liste-cat ul {
@@ -1894,7 +1895,7 @@ fieldset .add-link span
 }
 
 #infos-posi .ui-state-active a, #infos-posi .ui-state-active a:link, #infos-posi .ui-state-active a:visited {
-	color: #EB8F00;
+	color: #ec407a;
 	outline: none;
 }
 
@@ -2353,8 +2354,11 @@ fieldset .add-link span
 		width: 100px;
 		margin-right: 20px;
 		padding: 10px;
-		color: #666060;
+		color: #364252;
 		text-align: center;
+		background-color:#eff1f0;
+		border-radius: 11px;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	}
 
 	.stats-detail .last 
@@ -2366,23 +2370,40 @@ fieldset .add-link span
 		{
 			width: 100px;
 			height: 45px;
-			/*padding-bottom: 15px;*/
+			padding-top: 9px;
 			text-align: center;
+			
+			border-radius:0 0px 11px 11px;
+			
 		}
 
-		.bloc-stat .bloc-stat-number
+		/*.bloc-stat .bloc-stat-number
 		{
 			width: 100px;
 			height: 100px;
 			background-color: #43545D;
-			/*border: 1px solid #CCC8C8;*/
 			border-radius: 100px;
 			color: #ffffff;
 			font-size: 20px;
 			font-weight: bold;
 			text-align: center;
 			line-height: 100px;
-		}
+		}*/
+		
+		
+	.bloc-stat .bloc-stat-number {
+    width: 100px;
+    height: 34px;
+    
+    color: #364252;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 34px;
+	border-bottom:#e0e0e0 1px solid;
+	
+}
+		
 
 
 	#infos-posi .bloc-stat {
@@ -2392,6 +2413,7 @@ fieldset .add-link span
 		padding: 10px;
 		color: #666060;
 		text-align: center;
+		
 	}
 
 	#infos-posi .last

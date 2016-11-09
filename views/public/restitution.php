@@ -701,11 +701,11 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												{
 													if ($i % 2 == 0)
 													{
-														echo '<tr style="background-color:#FCE7CA;" >';
+														echo '<tr style="background-color:#a0c4ff;" >';
 													}
 													else
 													{
-														echo '<tr style="background-color:#FFF6EA;">';
+														echo '<tr style="background-color:#d3e4ff;">';
 													}
 													
 														echo '<td style="width:15%;">';

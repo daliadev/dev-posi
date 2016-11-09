@@ -24,35 +24,6 @@ function getColor($percent)
 		$color = "vert";
 	}
 
-	/*
-	$color = "default";
-
-	switch($i) {
-		case 0 :
-			$color="primary";
-			break;
-		case 1 :
-			$color="secondary";
-			break;
-		case 2 :
-			$color="warning";
-			break;
-		case 3 :
-			$color="danger";
-			break;
-		case 4 :
-			$color="success";
-			break;
-		case 5 :
-			$color="info";
-			break;
-		default :
-			$color = "default";
-			break;
-
-	}
-	*/
-
 	return $color;
 }
 
@@ -60,7 +31,7 @@ function getColor($percent)
 // Initialisation par défaut des valeurs du formulaire
 
 $formData = array();
-$formData['ref_organ_cbox'] = "";
+$formData['ref-organ-cbox'] = "";
 $formData['ref_organ'] = "";
 $formData['date_debut'] = "";
 $formData['date_fin'] = "";
@@ -88,6 +59,7 @@ if (isset($response['form_data']) && !empty($response['form_data']))
 
 $form_url = $response['url'];
 
+//var_dump($response);            
 
 ?>
 
@@ -95,15 +67,20 @@ $form_url = $response['url'];
 
 	<div id="content-large">
 
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
-		<a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a>
+		<?php //if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+		<!-- <a href="<?php //echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a> -->
 
-		<div style="clear:both;"></div>
-		<?php endif; ?>
+		<!-- <div style="clear:both;"></div> -->
+		<?php //endif; ?>
 		
 		<!-- Header -->
-		<div id="titre-admin-h2">Statistiques du positionnement</div>
+		<div id="titre-admin-h2">Statistiques du positionnement
+		
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+		<?php endif; ?>
 
+		</div>
 
 		<div id="main-form">
 
@@ -116,25 +93,49 @@ $form_url = $response['url'];
 						<p style="margin-top:0;"><strong>Filtres : </strong></p>
 
 						<hr>
+						
+						<?php $visible = Config::ALLOW_LOCALE ? '' : 'style="display: none;"' ?>
+						<div class="filter-item" <?php echo $visible; ?>>
+							<label for="ref-region-cbox">Région : </label>
 
-						<div class="filter-item">
-							<label for="date_debut">Date de début : </label>
-							<input type="text" name="date_debut" id="date_debut" class="search-date" style="width:120px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
-						</div>
-
-						<div class="filter-item">
-							<label for="date_fin">Date de fin : </label>
-							<input type="text" name="date_fin" id="date_fin" class="search-date" style="width:120px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
-						</div>
-
-						<div class="filter-item">
-							<label for="ref_organ_cbox">Organisme : </label>
-
-							<?php $disabled = (count($response['organisme']) <= 1) ? "disabled" : ""; ?>
-							<select name="ref_organ_cbox" id="ref_organ_cbox" <?php echo $disabled; ?>>
+							<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) == 0) ? "disabled" : ""; ?>
+							<select name="ref_region_cbox" id="ref-region-cbox" class="region-list" style="width:120px;" <?php echo $disabled; ?>>
 							
 								<?php if ($disabled == "") : ?>
-								<option class="organ-option" value="select_cbox">Tous</option>
+									<option class="region-option" value="select_cbox">Toute la France</option>
+								<?php endif; ?>
+
+								<?php
+								
+								if (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) > 0)
+								{
+
+									foreach ($response['regions'] as $region)
+									{
+
+										$selected = "";
+										
+										if (!empty($formData['ref_region']) && $formData['ref_region'] == $region['ref'])
+										{
+											$selected = "selected";
+										}
+										
+										echo '<option class="region-option" value="'.$region['ref'].'" '.$selected.'>'.$region['nom'].'</option>';
+									}
+								}
+								
+								?>
+							</select>
+						</div>
+
+						<div class="filter-item">
+							<label for="ref-organ-cbox">Organisme : </label>
+
+							<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) == 0) ? "disabled" : ""; ?>
+							<select name="ref_organ_cbox" id="ref-organ-cbox" style="width:120px;" <?php echo $disabled; ?>>
+							
+								<?php if ($disabled == "") : ?>
+									<option class="organ-option" value="select_cbox">Tous</option>
 								<?php endif; ?>
 
 								<?php
@@ -157,7 +158,17 @@ $form_url = $response['url'];
 						</div>
 
 						<div class="filter-item">
-							<input type="submit" name="select-form" value="Sélectionner" style="margin: 18px 0 0 0;">
+							<label for="date_debut">Date de début : </label>
+							<input type="text" name="date_debut" id="date_debut" class="search-date" placeholder="jj/mm/aaaa" style="width:100px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
+						</div>
+
+						<div class="filter-item">
+							<label for="date_fin">Date de fin : </label>
+							<input type="text" name="date_fin" id="date_fin" class="search-date" placeholder="jj/mm/aaaa" style="width:100px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
+						</div>
+
+						<div class="filter-item">
+							<input type="submit" name="select-form" value="Sélectionner" style="width:130px; margin: 18px 0 0 0;">
 						</div>
 
 					</div>
@@ -172,7 +183,7 @@ $form_url = $response['url'];
 							<legend>
 
 							<?php 
-								if(count($response['stats']['global']['organismes']) > 1)
+								if(!isset($response['stats']['global']['organismes']) || empty($response['stats']['global']['organismes']) || count($response['stats']['global']['organismes']) > 1)
 								{
 									echo 'Résultats'; 
 								}
@@ -216,7 +227,7 @@ $form_url = $response['url'];
 									<div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['age_moyen']; ?> ans</strong></div>
 								</div>
 								
-								<input type="submit" value="Export global par organisme"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:200px;">
+								<input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:150px;">
 								
 								<div style="clear:both;"></div>
 
@@ -245,7 +256,7 @@ $form_url = $response['url'];
 										
 								</div>
 								
-								<input type="submit" value="Export par niveau"  title="Export nombre de candidats répartis par niveau" name="export_niveau_nombre" style="float:right; margin: 0 3px 0 0; width:200px;">
+								<input type="submit" value="Export niveau"  title="Export nombre de candidats répartis par niveau" name="export_niveau_nombre" style="float:right; margin: 0 3px 0 0; width:150px;">
 								   
 								<div style="clear:both;"></div>
 
@@ -274,12 +285,11 @@ $form_url = $response['url'];
 										
 								</div>
 								
-								<input type="submit" value="Export par score moyen"  title="Export score moyen par compétences" name="export_score_competences" style="float:right; margin:0 3px 0 0; width:200px;">
+								<input type="submit" value="Export score moyen"  title="Export score moyen par compétences" name="export_score_competences" style="float:right; margin:0 3px 0 0; width:150px;">
 
 								<div style="clear:both;"></div>
 
 							</div>
-
 
 
 							<div class="stats-detail">
@@ -390,11 +400,11 @@ $form_url = $response['url'];
 	</div>
 	
 
-	
-	<!-- <script src="<?php //echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script> -->
-	<!-- <script src="<?php //echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script> -->
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery-1.11.2.min.js" type="text/javascript"></script>
+	<script src="<?php echo SERVER_URL; ?>media/js/jquery-ui-1.10.3.custom.all.js" type="text/javascript"></script>
 
-	<script language="javascript" type="text/javascript">
+
+	<script type="text/javascript">
 	   
 		$(function() { 
 			
@@ -404,7 +414,7 @@ $form_url = $response['url'];
 			$(".search-date").focus(function(event) {
 				$(this).val('');
 			});
-
+			
 			$("#date_debut").datepicker({
 				dateFormat: "dd/mm/yy",
 				changeMonth: true, 
@@ -457,12 +467,136 @@ $form_url = $response['url'];
 					var dateUs = new Date(the_date[2], the_date[1]-1, the_date[0]);
 					$("#date_debut").datepicker('option', 'maxDate', dateUs);
 				}
-							
-			
+
 			});
 
-			
-			$("#infos-posi").tabs();
+
+			<?php if (Config::ALLOW_AJAX) : ?>
+
+
+				/* Listes dynamiques en ajax */
+			   
+				$('.region-list').on('change', function(event) {
+
+					/*
+					var select = $(this);
+					var target = '#' + select.data('target');
+					var url = select.data('url');
+					var sortOf = select.data('sort');
+					*/
+					var select = $(this);
+					var target = '#ref-organ-cbox';
+					var url = $('#form-posi').attr('action');
+					//console.log(url);
+					var refRegion = null;
+					//var refUser = null;
+					/*
+					if (sortOf === "user") {
+
+						$("#ref_session_cbox").parents('.filter-item').hide();
+
+						refOrgan = $("#ref_organ_cbox").val();
+					}
+					else if (sortOf === "session") {
+					*/
+						//$('#ref_session_cbox').show();
+					<?php if (Config::ALLOW_LOCALE) : ?>
+
+						$('.region-option').each(function() {
+
+							var option = $(this)[0];
+							
+							if ($(option).prop('selected')) {
+
+								refRegion = $(option).val();
+							}
+						});
+						
+					<?php endif; ?>
+
+						/*
+						refUser = $('#ref_user_cbox').val();
+
+
+						var cbox = $('#ref_session_cbox').get(0);
+
+						if (cbox.options.length > 1) {
+	
+							cbox.options.length = 1;
+							
+						}
+						*/
+					//}
+
+
+					$.post(url, {'ajax_request': 'organ', 'ref_region': refRegion, 'ref_organ': null}, function(data) {
+						
+						var $target = $(target).get(0);
+						$target.options.length = 1;
+						$target.options[0].selected;
+
+						if (data.error) {
+
+							//alert(data.error);
+						}
+						else {
+
+							//$(target).parents('.filter-item').show();
+							
+							//console.log($target.options.length);
+							
+							
+							if (data.results.organisme) {
+								
+								var i = 1;
+								for (var prop in data.results.organisme) {
+								
+									var result = data.results.organisme[prop];
+
+									var selected = false;
+
+									if (data.results.organisme.length <= 1) {
+										selected = true
+									}
+									$target.options[i] = new Option(result.nom_organ, result.id_organ, false, selected);
+
+									i++;
+								}
+							}
+							/*
+							else if (data.results.session) {
+
+								var i = 1;
+								for (var prop in data.results.session) {
+								
+									var result = data.results.session[prop];
+
+									$target.options[i] = new Option(result.date + " " + result.time, result.id, false, false);
+
+									i++;
+								}
+							}
+							*/
+						}
+
+					}, 'json');
+					
+
+				});
+				/*	
+				.each(function() {
+
+					var select = $(this);
+					if (select.val() == "select_cbox")
+					{
+						var target = $('#' + select.data('target'));
+						target.parents('.filter-item').hide();
+					}
+					
+				});
+				*/
+
+			<?php endif; ?>
 
 		});
 

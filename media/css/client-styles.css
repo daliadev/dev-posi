@@ -2,22 +2,140 @@
 
 /* Identité visuelle du client */
 
+
+/* spec dalia - uniformation */
+/*
 #header-form-small.header .logo {
-	/*width: 240px;*/
-	/*height: 200px;*/
 	background: url(../images/logo.png) no-repeat 50% 50%;
 	background-color: #fff;
 }
+*/
 
-#logo{
+/*#logo{*/
+	/*width:260px;*/
+	/*height:200px;*/
+	/*background:url(../images/logo-uniformation.png) center center no-repeat;*/
+	/*background:url(../images/logo.png) center center no-repeat;*/
+    /*background-color:#FFF;*/
+/*}*/
+
+
+/* spec apapp */
+
+body {
+	background: #e0e0e0 url(../images/fond_clea.jpg) repeat top center;
+	font-family: "Open Sans", Helvetica, Arial, sans-serif !default;
+	font-size: 14px !default;
+
+}
+
+#header-form-small.header .logo {
+	/*width: 240px;*/
+	/*height: 200px;*/
+	background: url(../images/logo_clea_260x200.jpg) no-repeat 50% 50%;
+	background-color: #fff;
+}
+
+#logo {
 	width:260px;
 	height:200px;
 	/*background:url(../images/logo-uniformation.png) center center no-repeat;*/
-	background:url(../images/logo.png) center center no-repeat;
+	background:url(../images/logo_clea_260x200.jpg) center center no-repeat;
     background-color:#FFF;
 }
 
+	
+	.header {
+		background-color: #0d47a1;
+	}
+		
+		.form-header {
+			background-color: #4d8bf4;
+		}
+	
+	
 
+	.btn.btn-primary {
+    	background-color: #ec407a !important;
+	}
+	
+	.btn.btn-primary:hover {
+    	background-color: #ec407a !important;
+	}
+
+	.form-control:focus {
+		border-color: #0d47a1;
+	}
+		.form-control option:focus {
+			background-color: #0d47a1;
+		}
+	
+	#speaker #speaker-bg {
+		fill: #4d8bf4;
+	}
+
+
+	.question {
+	    background-color: #0d47a1;
+	}
+
+
+	.media-display #loader .custom-loader {
+		border: 6px solid rgba(77, 139, 244, 0.3) !important;
+	}
+		
+		.media-display #loader .custom-loader:after {
+			border-top-color: #4d8bf4 !important;
+		}
+
+	.radio-group label:after, .radio-group label.success-rb:after, .radio-group label.error-rb:after {
+		color: #0d47a1;
+	}
+
+
+	.content-form .cat-bar .front  { 
+		fill: #4d8bf4 !important;
+	}
+
+
+	
+	/* Layout */
+
+	#titre-admin-h2 {
+		background-color: #0d47a1 !important;
+	}
+
+	#form-posi fieldset legend {
+		background-color: #27497c !important;
+	}
+	
+	
+
+	#infos-posi .ui-state-default {
+		background-color: #27497c !important;
+	}
+
+
+		
+		#buttons input.add {
+		    background: #ec407a;
+		}
+
+		#buttons input.save {
+		    background: #4d8bf4;
+		}
+
+		#table-resultats th {
+			background: #4d8bf4;
+		}
+
+		.filter-item {
+			margin-right: 10px
+
+		}
+			.filter-item select {
+			    width: 172px !important;
+			}
 
 
 

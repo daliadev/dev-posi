@@ -191,7 +191,7 @@ class ServicesPositionnement extends Main
 			}
 		}
 
-		//ServicesAuth::login("user");
+		ServicesAuth::login("user");
 
 		/*** Test d'authentification de l'intervenant/utilisateur ***/
 		//ServicesAuth::checkAuthentication("user");

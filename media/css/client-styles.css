@@ -63,6 +63,14 @@ body {
     	background-color: #ec407a !important;
 	}
 
+	#admin-menu .menu-link {
+		background-color: #ec407a !important;
+	}
+
+	#admin-menu .menu-link:hover {
+		background-color: #ec407a !important;
+	}
+
 	.form-control:focus {
 		border-color: #0d47a1;
 	}
@@ -100,6 +108,10 @@ body {
 
 	
 	/* Layout */
+	
+	#form-posi #submit input, #form-posi #submit input:hover {
+		background-color: #ec407a !important;
+	}
 
 	#titre-admin-h2 {
 		background-color: #0d47a1 !important;

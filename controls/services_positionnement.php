@@ -1170,37 +1170,37 @@ class ServicesPositionnement extends Main
 		
 		$messageBody = '';
 		$messageBody .= '<p>';
-		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
+		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
 		$messageBody .= 'Organisme : <strong>'.//$emailInfos['nom_organ'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br />';
+		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br>';
 		$messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
 		//$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br />';
+		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
 		$messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Score détaillé : <br />';
+		$messageBody .= 'Score détaillé : <br>';
 
 		foreach ($categories as $categorie)
 		{	
 			if (strlen($categorie->getCode()) == 2 && $categorie->getHasResult())
 			{
-				$messageBody .= '</br>';
+				$messageBody .= '<br>';
 				$messageBody .= $categorie->getNom().' / <strong>'.$categorie->getScorePercent().'</strong>% ('.$categorie->getTotalReponsesCorrectes().'/'.$categorie->getTotalReponses().' questions)';
 			}
 		}
 		$messageBody .= '</p>';
-		$messageBody .= '<br />';
+		$messageBody .= '<br>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Votre accès à la page des résultats : <br />'.$emailInfos['url_restitution'].'<br />';
-		$messageBody .= 'Votre accès à la page des statistiques : <br />'.$emailInfos['url_stats'].'<br />';
+		$messageBody .= 'Votre accès à la page des résultats : <br><a href="'.$emailInfos['url_restitution'].'">'.$emailInfos['url_restitution'].'</a><br>';
+		$messageBody .= 'Votre accès à la page des statistiques : <br><a href="'.$emailInfos['url_stats'].'">'.$emailInfos['url_stats'].'</a><br>';
 		$messageBody .= '</p>';
 
 		$style = 'p { font-family: Arial, sans-serif; }';

@@ -261,7 +261,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 		<div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?>
 
 		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom-admin" || ServicesAuth::getAuthenticationRight() == "custom-public") : ?>
-			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+			<!-- <div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div> -->
 		<?php endif; ?>
 
 		</div>
@@ -553,9 +553,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									<div class="info">Nombre de positionnements terminés : <strong><?php echo $infos_user['nbre_positionnements']; ?></strong></div>
 									<div class="info">Date du dernier positionnement : <strong><?php echo $infos_user['date_last_posi']; ?></strong></div>
 									
-									<?php if (!empty($response['infos_user']['ref_selected_session'])) : ?>
+									<?php //if (!empty($response['infos_user']['ref_selected_session'])) : ?>
 										
-									<hr>
+									<!-- <hr>
 									<div class="info">
 										<label for="ref_valid_cbox" style="line-height:40px;"><strong>Interprétation des acquis :</strong> </label>
 										 &nbsp; 
@@ -563,7 +563,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											<option value="select_cbox">Non validé</option>
 
 											<?php
-											
+											/*
 											foreach ($response['valid_acquis'] as $valid_acquis)
 											{
 												$selected = "";
@@ -574,7 +574,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												
 												echo '<option value="'.$valid_acquis->getId().'" '.$selected.'>'.$valid_acquis->getNom().'</option>';
 											}
-											
+											*/
 											?>
 
 										</select>
@@ -586,9 +586,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											<input type="button" value="Annuler" id="clear-acquis" name="clear_acquis" class="del" style="width:100px; margin: 0 0 0 0;" />
 										</div>
 
-									</div>
+									</div> -->
 
-									<?php endif; ?>
+									<?php //endif; ?>
 						
 								<?php else : ?>
 									<div class="info">Aucun utilisateur n'a été sélectionné.</div>
@@ -701,11 +701,11 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												{
 													if ($i % 2 == 0)
 													{
-														echo '<tr style="background-color:#a0c4ff;" >';
+														echo '<tr style="background-color:#FCE7CA;" >';
 													}
 													else
 													{
-														echo '<tr style="background-color:#d3e4ff;">';
+														echo '<tr style="background-color:#FFF6EA;">';
 													}
 													
 														echo '<td style="width:15%;">';

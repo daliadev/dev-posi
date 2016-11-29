@@ -5,3 +5,4 @@
 /uploads/video/
 *.sublime-project
 *.sublime-workspace
+sftp-config.json

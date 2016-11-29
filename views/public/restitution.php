@@ -708,64 +708,62 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 														echo '<tr style="background-color:#d3e4ff;">';
 													}
 													
-														echo '<td style="width:15%;">';
-															echo '<a rel="lightbox" href="'.SERVER_URL.'uploads/img/'.$detail['image'].'" title="'.$detail['intitule'].'" >';
-																echo 'Question n°'.$detail['num_ordre'];
-															echo '</a>';
+													echo '<td style="width:15%;">';
+														echo '<a rel="lightbox" href="'.SERVER_URL.'uploads/img/'.$detail['image'].'" title="'.$detail['intitule'].'" >';
+															echo 'Question n°'.$detail['num_ordre'];
+														echo '</a>';
+													echo '</td>';
+
+													echo '<td style="width:30%; font-size:12px; text-align:left;">';
+														if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
+														{
+															echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
+														}
+														echo '<a title="'.$detail['categories'][0]['descript_cat'].'">'.$detail['categories'][0]['nom_cat'].'</a>';
+													echo '</td>';
+
+													echo '<td style="width:8%;">';
+														echo '<a title="'.$detail['descript_degre'].'">'.$detail['nom_degre'].'</a>';
+													echo '</td>';
+
+													if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
+													{
+														echo '<td style="width:30%;"><a title="'.$detail['intitule_reponse_user'].'">'.$detail['reponse_user_qcm'].'</a></td>';
+													}
+													else if (!empty($detail['reponse_user_champ']))
+													{
+														if ($detail['reponse_user_champ'] == "-")
+														{
+															echo '<td style="width:30%; text-align: center; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
+														}
+														else 
+														{
+															echo '<td style="width:30%; text-align: left; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
+														}
+													}
+													else
+													{
+														echo '<td style="width:30%;"></td>';
+													}
+
+													echo '<td style="width:9%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
+
+													if ($detail['reussite'] === 1)
+													{
+														echo '<td style="width:8%;"><span style="display:none;">2</span><img src="'.SERVER_URL.'media/images/valide.png"></td>';
+													}
+													else if ($detail['reussite'] === 0)
+													{
+														echo '<td class="red-cell" style="width:8%;"><span style="display:none;">1</span><img src="'.SERVER_URL.'media/images/faux.png"></td>';
+													}
+													else
+													{
+														echo '<td class="white-cell" style="width:8%;"><span style="display:none;">0</span>';
+															echo '<img src="'.SERVER_URL.'media/images/stylo.png">';
+															echo '<input type="checkbox" name="validations[]"></td>';
 														echo '</td>';
-
-														echo '<td style="width:30%; font-size:12px; text-align:left;">';
-															if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
-															{
-																echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
-															}
-															echo '<a title="'.$detail['categories'][0]['descript_cat'].'">'.$detail['categories'][0]['nom_cat'].'</a>';
-														echo '</td>';
-
-														echo '<td style="width:8%;">';
-															echo '<a title="'.$detail['descript_degre'].'">'.$detail['nom_degre'].'</a>';
-														echo '</td>';
-
-														if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
-														{
-															echo '<td style="width:30%;"><a title="'.$detail['intitule_reponse_user'].'">'.$detail['reponse_user_qcm'].'</a></td>';
-														}
-														else if (!empty($detail['reponse_user_champ']))
-														{
-															if ($detail['reponse_user_champ'] == "-")
-															{
-																echo '<td style="width:30%; text-align: center; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
-															}
-															else 
-															{
-																echo '<td style="width:30%; text-align: left; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
-															}
-														}
-														else
-														{
-															echo '<td style="width:30%;"></td>';
-														}
-
-														echo '<td style="width:9%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
-
-														if ($detail['reussite'] === 1)
-														{
-															echo '<td style="width:8%;"><span style="display:none;">2</span><img src="'.SERVER_URL.'media/images/valide.png"></td>';
-														}
-														else if ($detail['reussite'] === 0)
-														{
-															echo '<td class="red-cell" style="width:8%;"><span style="display:none;">1</span><img src="'.SERVER_URL.'media/images/faux.png"></td>';
-														}
-														else
-														{
-															echo '<td class="white-cell" style="width:8%;"><span style="display:none;">0</span>';
-																echo '<img src="'.SERVER_URL.'media/images/stylo.png">';
-																echo '<input type="checkbox" name="validation_champ"></td>';
-															echo '</td>';
-														}
-
-
-
+													}
+													
 													echo '</tr>';
 													
 												   $i++;

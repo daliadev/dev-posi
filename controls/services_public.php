@@ -318,17 +318,6 @@ class ServicesPublic extends Main
 					exit();
 				}
 				*/
-
-				if (isset($_POST['validation']) && !empty($_POST['validation']))
-				{
-					$validations = array();
-
-					for ($i = 0; $i < count($_POST['validation']); $i++) { 
-						
-						$refResult = $_POST['validation'][$i];
-					}
-					
-				}
 			}
 		}
 

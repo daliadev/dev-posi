@@ -76,8 +76,8 @@ $form_url = $response['url'];
 		<!-- Header -->
 		<div id="titre-admin-h2">Statistiques du positionnement
 		
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom-admin") : ?>
-			<div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div>
+		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+			<!-- <div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div> -->
 		<?php endif; ?>
 
 		</div>
@@ -99,7 +99,7 @@ $form_url = $response['url'];
 							<label for="ref-region-cbox">Région : </label>
 
 							<?php $disabled = (isset($response['regions']) && !empty($response['regions']) && count($response['regions']) == 0) ? "disabled" : ""; ?>
-							<select name="ref_region_cbox" id="ref-region-cbox" class="region-list" style="width:70px;" <?php echo $disabled; ?>>
+							<select name="ref_region_cbox" id="ref-region-cbox" class="region-list" style="width:120px;" <?php echo $disabled; ?>>
 							
 								<?php if ($disabled == "") : ?>
 									<option class="region-option" value="select_cbox">Toute la France</option>
@@ -129,10 +129,10 @@ $form_url = $response['url'];
 						</div>
 
 						<div class="filter-item">
-							<label for="ref-organ-cbox">Centre : </label>
+							<label for="ref-organ-cbox">Organisme : </label>
 
 							<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) == 0) ? "disabled" : ""; ?>
-							<select name="ref_organ_cbox" id="ref-organ-cbox" style="width:70px;" <?php echo $disabled; ?>>
+							<select name="ref_organ_cbox" id="ref-organ-cbox" style="width:120px;" <?php echo $disabled; ?>>
 							
 								<?php if ($disabled == "") : ?>
 									<option class="organ-option" value="select_cbox">Tous</option>
@@ -156,48 +156,19 @@ $form_url = $response['url'];
 								?>
 							</select>
 						</div>
-						
-						<div class="filter-item">
-							<label for="ref-posi-cbox">Domaines : </label>
-
-							<?php $disabled = (isset($response['domaine']) && !empty($response['domaine']) && count($response['domaine']) == 0) ? "disabled" : ""; ?>
-							<select name="ref_posi_cbox" id="ref-posi-cbox" style="width:70px;" <?php echo $disabled; ?>>
-							
-								<?php if ($disabled == "") : ?>
-									<option class="posi-option" value="select_cbox">Tous</option>
-								<?php endif; ?>
-
-								<?php
-								
-								if (isset($response['domaine']) && !empty($response['domaine']) && count($response['domaine']) > 0)
-								{                       
-									foreach ($response['domaine'] as $dom)
-									{
-										$selected = "";
-										if (!empty($formData['ref_posi']) && $formData['ref_posi'] == $dom->getId())
-										{
-											$selected = "selected";
-										}
-										echo '<option class="posi-option" value="'.$dom->getId().'" '.$selected.'>'.$dom->getNom().'</option>';
-									}
-								}
-								
-								?>
-							</select>
-						</div>
 
 						<div class="filter-item">
 							<label for="date_debut">Date de début : </label>
-							<input type="text" name="date_debut" id="date_debut" class="search-date" placeholder="jj/mm/aaaa" style="width:70px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
+							<input type="text" name="date_debut" id="date_debut" class="search-date" placeholder="jj/mm/aaaa" style="width:100px;" title="Veuillez entrer la date de début" value="<?php echo $formData['date_debut']; ?>">
 						</div>
 
 						<div class="filter-item">
 							<label for="date_fin">Date de fin : </label>
-							<input type="text" name="date_fin" id="date_fin" class="search-date" placeholder="jj/mm/aaaa" style="width:70px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
+							<input type="text" name="date_fin" id="date_fin" class="search-date" placeholder="jj/mm/aaaa" style="width:100px;" title="Veuillez entrer la date de fin" value="<?php echo $formData['date_fin']; ?>">
 						</div>
 
 						<div class="filter-item">
-							<input type="submit" name="select-form" value="Sélectionner" style="width:110px; margin: 18px 0 0 0;">
+							<input type="submit" name="select-form" value="Sélectionner" style="width:130px; margin: 18px 0 0 0;">
 						</div>
 
 					</div>
@@ -233,7 +204,7 @@ $form_url = $response['url'];
 									</svg>
 									
 									<div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['nbre_sessions']; ?></strong></div>
-									<div class="bloc-stat-title">Nombre d'évaluations</div>
+									<div class="bloc-stat-title">Nombre de positionnements</div>
 								</div>
 								
 								<div class="bloc-stat">
@@ -243,7 +214,7 @@ $form_url = $response['url'];
 												<path d="M0 0h24v24H0z" fill="none"/>
 									</svg>
 									<div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['nbre_users']; ?></strong></div>
-									<div class="bloc-stat-title">Nombre de candidats positionnés</div>
+									<div class="bloc-stat-title">Nombre d'utilisateurs positionnés</div>
 								</div>
 								
 								<div class="bloc-stat">
@@ -280,10 +251,10 @@ $form_url = $response['url'];
 												<path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.74.74 2.03.74 2.77 0l2.14-2.13 2.13 2.13c.37.37.86.57 1.38.57 1.08 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z"/>
 									</svg>
 									<div class="bloc-stat-number"><strong><?php echo $response['stats']['global']['age_moyen']; ?> ans</strong></div>
-									<div class="bloc-stat-title">Age moyen des candidats</div>
+									<div class="bloc-stat-title">Age moyen des utilisateurs</div>
 								</div>
 								
-								<input type="submit" value="Export Eval/Centre"  title="Export nombre d'évaluation par centre App" name="export_total_organisme" style="float:right; margin-right:3px; width:150px;">
+								<input type="submit" value="Export Posi/Organ"  title="Export nombre de positionnement par organisme" name="export_total_organisme" style="float:right; margin-right:3px; width:150px;">
 								
 								<div style="clear:both;"></div>
 
@@ -347,8 +318,8 @@ $form_url = $response['url'];
 
 							</div>
 
-
-							<!-- <div class="stats-detail">
+							<!-- 
+							<div class="stats-detail">
 
 								<p><strong>Répartition (des positionnements) par degré</strong></p>
 
@@ -357,45 +328,45 @@ $form_url = $response['url'];
 								<div class="progressbars" style="width:580px;">
 	
 									<?php 
-
+									/*
 									 // Calcul du pourcentage de l'item
-									// $percent = array();
-									// $nonvalid = 100;
-									// $nonvalidNum = $response['stats']['global']['nbre_sessions'];
-									// $nonvalidIndex = 0;
+									$percent = array();
+									$nonvalid = 100;
+									$nonvalidNum = $response['stats']['global']['nbre_sessions'];
+									$nonvalidIndex = 0;
 
 
-									// for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) :
+									for ($i = 0; $i < count($response['stats']['global']['acquis']); $i++) :
 
-									// 	$percent[$i] = round($response['stats']['global']['acquis'][$i]['count'] / $response['stats']['global']['nbre_sessions'] * 100);
-									// 	$nonvalid -= $percent[$i];
-									// 	$nonvalidNum -= $response['stats']['global']['acquis'][$i]['count'];
-									// 	$nonvalidIndex = $i + 1;
+										$percent[$i] = round($response['stats']['global']['acquis'][$i]['count'] / $response['stats']['global']['nbre_sessions'] * 100);
+										$nonvalid -= $percent[$i];
+										$nonvalidNum -= $response['stats']['global']['acquis'][$i]['count'];
+										$nonvalidIndex = $i + 1;
 										
-									// 	switch($i) {
-									// 		case 0 :
-									// 			$colors[$i] = "primary";
-									// 			break;
-									// 		case 1 :
-									// 			$colors[$i] = "secondary";
-									// 			break;
-									// 		case 2 :
-									// 			$colors[$i] = "warning";
-									// 			break;
-									// 		case 3 :
-									// 			$colors[$i] = "danger";
-									// 			break;
-									// 		case 4 :
-									// 			$colors[$i] = "success";
-									// 			break;
-									// 		case 5 :
-									// 			$colors[$i] = "info";
-									// 			break;
-									// 		default :
-									// 			$colors[$i] = "default";
-									// 			break;
-									// 	}
-
+										switch($i) {
+											case 0 :
+												$colors[$i] = "primary";
+												break;
+											case 1 :
+												$colors[$i] = "secondary";
+												break;
+											case 2 :
+												$colors[$i] = "warning";
+												break;
+											case 3 :
+												$colors[$i] = "danger";
+												break;
+											case 4 :
+												$colors[$i] = "success";
+												break;
+											case 5 :
+												$colors[$i] = "info";
+												break;
+											default :
+												$colors[$i] = "default";
+												break;
+										}
+										*/
 										?>
 
 

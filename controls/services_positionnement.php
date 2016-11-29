@@ -132,32 +132,49 @@ class ServicesPositionnement extends Main
 		// echo json_encode($_POST);
 		// exit();
 
-		$postData = jsondecode($_POST, true);
-
-		if (isset($postData['ref_user']) && isset($postData['ref_intervenant']) && isset($postData['ref_organ']) && isset($postData['ref_inscription']))
+		if (isset($_POST['ref_user']) && isset($_POST['ref_intervenant']) && isset($_POST['ref_organ'])) //&& isset($_POST['ref_inscription']))
 		{
+			//echo $_POST['ref_user'];
+			// $deletedParcours = $this->servicesCategorie->deleteParcoursPreco($_POST['ref_parcours']);
+
+			// if ($deletedParcours)
+			// {
+			// 	$response = array('error' => false, 'results' => $deletedParcours);
+			// }
+			// else
+			// {
+			// 	$response = array('error' => "Le parcours n'a pas été supprimé.");
+			// }
+			
+			// echo json_encode($response);
+			// exit();
+
+			// Check user
+
 			// Ouvre session utilisateur
 			ServicesAuth::login("user");
 
 			// Récupération/sauvegarde des données
-			ServicesAuth::setSessionData('ref_organ', $postData['ref_organ']);
-			ServicesAuth::setSessionData('ref_intervenant', $postData['ref_intervenant']);
+			ServicesAuth::setSessionData('ref_organ', $_POST['ref_organ']);
+			ServicesAuth::setSessionData('ref_intervenant', $_POST['ref_intervenant']);
 
-			ServicesAuth::setSessionData('ref_user', $postData['ref_user']);
-			ServicesAuth::setSessionData('ref_inscription', $postData['ref_inscription']);
+			ServicesAuth::setSessionData('ref_user', $_POST['ref_user']);
+			//ServicesAuth::setSessionData('ref_inscription', $_POST['ref_inscription']);
 			
-			$response = array('error' => false, 'result' => 'ok');
+			$response = array('error' => false, 'results' => 'ok');
 		}
 		else
 		{
-			$response = array('error' => true, 'result' => 'User information not provided.');
+			$response = array('error' => true, 'results' => 'User information not provided.');
 		}
 
 		echo json_encode($response);
 		exit();
+
 		
 		// Redirection vers session()
 		//$this->url = SERVER_URL."positionnement/session/";
+
 
 		// Redirection vers le formulaire utilisateurs
 		//header("Location: ".$this->url);
@@ -170,26 +187,8 @@ class ServicesPositionnement extends Main
 	public function session($params = null)
 	{
 
-		$ref_user = null;
-		$ref_intervenant = null;
-		$ref_organ = null;
-		$ref_inscription = null;
-
-		if ($params != null && is_array($params)) 
-		{
-			if (isset($params[0])) {
-				$ref_user = $params[0];
-			}
-			if (isset($params[1])) {
-				$ref_intervenant = $params[1];
-			}
-			if (isset($params[2])) {
-				$ref_organ = $params[2];
-			}
-			if (isset($params[3])) {
-				$ref_inscription = $params[3];
-			}
-		}
+		$ref_user = $params[0];
+		$ref_intervenant = $params[1];
 
 		ServicesAuth::login("user");
 
@@ -197,8 +196,8 @@ class ServicesPositionnement extends Main
 		//ServicesAuth::checkAuthentication("user");
 		
 		// On test si l'utilisateur est déjà dans une session, c-à-d si il a déjà cliqué sur le bouton suite de la page d'intro
-		if (!ServicesAuth::checkUserSession())
-		{
+		//if (!ServicesAuth::checkUserSession())
+		//{
 			// Si ce n'est pas le cas, on ouvre une session
 			ServicesAuth::openUserSession();
 			
@@ -217,8 +216,8 @@ class ServicesPositionnement extends Main
 			/*-----   Enregistrement des infos de départ de la session : ref_user, date, validation  -----*/
 
 			// Récupération des infos necéssaires
-			if ($ref_user != null) 
-			{
+			if ($ref_user != null) {
+
 				$refUser = $ref_user;
 				ServicesAuth::setSessionData("ref_user", $ref_user);
 			}
@@ -227,24 +226,14 @@ class ServicesPositionnement extends Main
 				$refUser = ServicesAuth::getSessionData("ref_user");
 			}
 
-			if ($ref_intervenant != null) 
-			{
+			if ($ref_intervenant != null) {
+				
 				$refIntervenant = $ref_intervenant;
 				ServicesAuth::setSessionData("ref_intervenant", $ref_intervenant);
 			}
 			else
 			{
 				$refIntervenant = ServicesAuth::getSessionData("ref_intervenant");
-			}
-
-			if ($ref_organ != null) 
-			{
-				ServicesAuth::setSessionData("ref_organ", $ref_organ);
-			}
-
-			if ($ref_inscription != null) 
-			{
-				ServicesAuth::setSessionData("ref_inscription", $ref_inscription);
 			}
 
 			  
@@ -290,7 +279,7 @@ class ServicesPositionnement extends Main
 				$resultset = $this->utilisateurDAO->update($dataUser);
 			}
 			
-		}
+		//}
 
 		
 
@@ -308,17 +297,15 @@ class ServicesPositionnement extends Main
 		}
 		else 
 		{
-			/*
 			foreach ($this->errors as $error) {
 				echo $error->message;
 			}
-				
+
 			//exit();
-			*/
 
 			// Redirection vers la page d'erreur interne
-			header("Location: ".SERVER_URL."erreur/page500");
-			exit();
+			//header("Location: ".SERVER_URL."erreur/page500");
+			//exit();
 		}
 
 	}
@@ -531,15 +518,13 @@ class ServicesPositionnement extends Main
 		$this->addStyleSheet("projekktor-dalia.style", SERVER_URL."media/projekktor/themes/dalia");
 
 		// Outils
-		$this->addScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
-		
 		//$this->enqueueScript("placeholders.min");
 		$this->enqueueScript("flash_detect");
 		$this->enqueueScript("navigator-agent");
 
 		// Medias
 		$this->enqueueScript("swfobject");
-		
+		$this->enqueueScript("projekktor-1.3.09.min", SERVER_URL."media/projekktor");
 		$this->enqueueScript("image-controller");
 		$this->enqueueScript("audio-player");
 
@@ -1065,7 +1050,7 @@ class ServicesPositionnement extends Main
 		/*
 		$refOrgan = ServicesAuth::getSessionData('ref_organ');
 		$resultsetOrgan = $this->organismeDAO->selectById($refOrgan);
-
+		
 		if (!$this->filterDataErrors($resultsetOrgan['response']))
 		{
 			// Si le résultat est unique
@@ -1078,13 +1063,16 @@ class ServicesPositionnement extends Main
 			$emailInfos['nom_organ'] = $resultsetOrgan['response']['organisme'][0]->getNom();
 
 			$codeOrgan = $resultsetOrgan['response']['organisme'][0]->getNumeroInterne();
-			$emailInfos['url_restitution'] = SERVER_URL."public/restitution/".$codeOrgan;
-			$emailInfos['url_stats'] = SERVER_URL."public/statistique/".$codeOrgan;
+			$emailInfos['url_restitution'] = "http://positionnement.educationetformation.fr/clea/gestion/public/restitution/".$codeOrgan;
+			$emailInfos['url_stats'] = "http://positionnement.educationetformation.fr/clea/gestion/public/statistique/".$codeOrgan;
 
 			$emailInfos['code_postal_organ'] = $resultsetOrgan['response']['organisme'][0]->getCodePostal();
 			$emailInfos['tel_organ'] = $resultsetOrgan['response']['organisme'][0]->getTelephone();
 		}
 		*/
+		$emailInfos['url_restitution'] = "http://positionnement.educationetformation.fr/clea/gestion/public/restitution/";
+		$emailInfos['url_stats'] = "http://positionnement.educationetformation.fr/clea/gestion/public/statistique/";
+
 
 		// Email -> infos utilisateur
 
@@ -1161,7 +1149,7 @@ class ServicesPositionnement extends Main
 			$destinataires[] = $emailInfos['email_intervenant'];
 		}
 
-		$from = !empty(Config::$main_email_admin) ? Config::$main_email_admin : "f.rampion@educationetformation.fr";
+		$from = !empty(Config::$main_email_admin) ? Config::$main_email_admin : "webmaster@educationetformation.fr";
 		$subject = Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG;
 
 
@@ -1170,37 +1158,37 @@ class ServicesPositionnement extends Main
 		
 		$messageBody = '';
 		$messageBody .= '<p>';
-		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
-		$messageBody .= 'Organisme : <strong>'.//$emailInfos['nom_organ'].'</strong>';
+		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br />';
+		$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br>';
+		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br />';
 		$messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
 		//$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
+		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br />';
 		$messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Score détaillé : <br>';
+		$messageBody .= 'Score détaillé : <br />';
 
 		foreach ($categories as $categorie)
 		{	
-			if (strlen($categorie->getCode()) == 2 && $categorie->getHasResult())
+			if ($categorie->getHasResult())
 			{
 				$messageBody .= '<br>';
-				$messageBody .= $categorie->getNom().' / <strong>'.$categorie->getScorePercent().'</strong>% ('.$categorie->getTotalReponsesCorrectes().'/'.$categorie->getTotalReponses().' questions)';
+				$messageBody .= $categorie->getNom().' / <strong>'.round($categorie->getScorePercent()).'</strong>% ('.$categorie->getTotalReponsesCorrectes().'/'.$categorie->getTotalReponses().' questions)';
 			}
 		}
 		$messageBody .= '</p>';
 		$messageBody .= '<br>';
 		$messageBody .= '<p>';
-		$messageBody .= 'Votre accès à la page des résultats : <br><a href="'.$emailInfos['url_restitution'].'">'.$emailInfos['url_restitution'].'</a><br>';
-		$messageBody .= 'Votre accès à la page des statistiques : <br><a href="'.$emailInfos['url_stats'].'">'.$emailInfos['url_stats'].'</a><br>';
+		$messageBody .= 'Votre accès à la page des résultats :<br><a href="'.$emailInfos['url_restitution'].'">'.$emailInfos['url_restitution'].'</a><br>';
+		$messageBody .= 'Votre accès à la page des statistiques :<br><a href="'.$emailInfos['url_stats'].'">'.$emailInfos['url_stats'].'</a><br>';
 		$messageBody .= '</p>';
 
 		$style = 'p { font-family: Arial, sans-serif; }';

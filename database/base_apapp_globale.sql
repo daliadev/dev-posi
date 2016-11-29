@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `administrateur` (
   `droits` enum('user','custom-public','custom-admin','admin') NOT NULL DEFAULT 'user',
   PRIMARY KEY (`id_admin`),
   UNIQUE KEY `nom_admin` (`nom_admin`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
 -- Contenu de la table `administrateur`

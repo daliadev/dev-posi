@@ -12,24 +12,25 @@ class Config
 {
 
 	/* Version */
-	const POSI_VERSION = "0.30.01";
+	const POSI_VERSION = "0.31.01";
 
 
 	/* Nom et titre du positionnement */
 
 	// Nom du positionnement.
-	const POSI_NAME = "Positionnement";
+	const POSI_NAME = "Evaluation CLéA";
 	
 	// Titre/accroche du positionnement.
-	const POSI_TITLE = "Test de positionnement"; 
+	const POSI_TITLE = "Evaluation CLéA"; 
 	
 	// Titre de la partie admin.
-	const ADMIN_TITLE = "Gestion du positionnement";
+	const ADMIN_TITLE = "Gestion de l'évaluation CLéA";
 
-	const CLIENT_NAME = "Dalia";
-	const CLIENT_NAME_LONG = "Dalia";
-	
+	const CLIENT_NAME = "Certificat CLéA";
+	const CLIENT_NAME_LONG = "Certificat CLéA";
+
 	const MULTI_POSI_ID = null;
+	
 
 	/* Gestion du niveau régional */
 
@@ -98,23 +99,22 @@ class Config
 	const ENVOI_EMAIL_REFERENT = 1; // Envoi (1) / pas d'envoi (0)
 
 	// Email du responsable du positionnement
-	//public static $main_email_admin = "webmaster@educationetformation.fr"; // Evite courrier indesirable
-	//public static $main_email_admin = "f.rampion@educationetformation.fr";
-	public static $main_email_admin = "n.beurion.dev@gmail.com";
+	public static $main_email_admin = "webmaster@educationetformation.fr";
+	//public static $main_email_admin = "n.beurion.dev@gmail.com";
 
 	// Tableau des adresse emails des administrateurs pour la réception des positionnements effectués.
 	public static $emails_admin = array(
-		//"f.rampion@educationetformation.fr",
-		//"g.billard@educationetformation.fr", 
-		//"n.beurion@educationetformation.fr"
-		"n.beurion.dev@gmail.com"
+		"f.rampion@educationetformation.fr",
+		"g.billard@educationetformation.fr", 
+		"n.beurion@educationetformation.fr"
+		//"n.beurion.dev@gmail.com"
 	);
 
 
 	/* Gestion des préconisations de parcours selon connaissance */
 
 	// Active la gestion des préconisations de parcourts pour les compétences
-	const ALLOW_PRECONISATION = 1; // autorisé (1) / non autorisé (0)
+	const ALLOW_PRECONISATION = 0; // autorisé (1) / non autorisé (0)
 
 
 	/* Infos de connexion de la base de données*/
@@ -122,7 +122,7 @@ class Config
 	public static $database = array(
 		'driver'    =>  "mysql",
 		'host'      =>  "127.0.0.1",
-		'schema'    =>  "posi_dev",
+		'schema'    =>  "dev_apapp",
 		'username'  =>  "root",
 		'password'  =>  ""
 	);
@@ -221,12 +221,12 @@ class Config
 
 	/* Gestion du code organisme */
 
-	// code : POSI (à remplacer si besoin).
+	// code : CLEA (à remplacer si besoin).
 	public static function getCodeOrganisme()
 	{
 		$pass = array();
-		$pass[0] = Config::hashPassword("POSI");
-		$pass[1] = Config::hashPassword("nico");
+		$pass[0] = Config::hashPassword("CLEA");
+		//$pass[1] = Config::hashPassword("nico");
 		return $pass;
 	}
 

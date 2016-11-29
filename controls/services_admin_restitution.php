@@ -1008,10 +1008,6 @@ class ServicesAdminRestitution extends Main
 						}
 					}    
 				}
-				else if ($question->getType() == "champ_saisie")
-				{
-					
-				}
 
 				$questionsDetails[$i]['reponses'] = $reponses;
 

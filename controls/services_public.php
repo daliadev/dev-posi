@@ -318,6 +318,17 @@ class ServicesPublic extends Main
 					exit();
 				}
 				*/
+
+				if (isset($_POST['validation']) && !empty($_POST['validation']))
+				{
+					$validations = array();
+
+					for ($i = 0; $i < count($_POST['validation']); $i++) { 
+						
+						$refResult = $_POST['validation'][$i];
+					}
+					
+				}
 			}
 		}
 
@@ -599,7 +610,7 @@ class ServicesPublic extends Main
 
 
 
-					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($refDom);
+					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($this->formData['ref_user']);
 					//var_dump($resultsetDomaines);
 					//exit();
 

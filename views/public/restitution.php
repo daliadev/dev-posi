@@ -250,19 +250,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 	<div id="content-large">
-
-		
-		<!-- <a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a> -->
-
-		<!-- <div class="clear"></div> -->
 		
 		
 		<!-- Header -->
 		<div id="titre-admin-h2">Restitution des résultats - <?php echo Config::POSI_NAME; ?>
 
-		<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom-admin" || ServicesAuth::getAuthenticationRight() == "custom-public") : ?>
-			<!-- <div class="retour-btn"><a href="<?php echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div> -->
-		<?php endif; ?>
+		<?php //if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom-admin" || ServicesAuth::getAuthenticationRight() == "custom-public") : ?>
+			<!-- <div class="retour-btn"><a href="<?php //echo SERVER_URL; ?>admin/menu"><div class="retour-menu">Retour menu</div></a></div> -->
+		<?php //endif; ?>
 
 		</div>
 
@@ -687,11 +682,11 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											<thead>
 												<tr>
 													<th style="width:15%;">Question</th>
-													<th style="width:30%;">Catégorie/<br/>compétence</th>
-													<th style="width:8%;">Degré</th>
-													<th style="width:30%;">Réponse utilisateur</th>
-													<th style="width:9%;">Réponse<br/>correcte</th>
-													<th style="width:8%;">Réussite</th>
+													<th style="width:35%;">Catégorie/<br/>compétence</th>
+													<!-- <th style="width:8%;">Degré</th> -->
+													<th style="width:20%;">Réponse utilisateur</th>
+													<th style="width:10%;">Réponse<br/>correcte</th>
+													<th style="width:20%;" colspan="2">Validation</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -701,67 +696,87 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												{
 													if ($i % 2 == 0)
 													{
-														echo '<tr style="background-color:#FCE7CA;" >';
+														echo '<tr style="background-color:#a0c4ff;" >';
 													}
 													else
 													{
-														echo '<tr style="background-color:#FFF6EA;">';
+														echo '<tr style="background-color:#d3e4ff;">';
 													}
 													
-														echo '<td style="width:15%;">';
-															echo '<a rel="lightbox" href="'.SERVER_URL.'uploads/img/'.$detail['image'].'" title="'.$detail['intitule'].'" >';
-																echo 'Question n°'.$detail['num_ordre'];
-															echo '</a>';
+													echo '<td style="width:15%;">';
+														echo '<a rel="lightbox" href="'.SERVER_URL.'uploads/img/'.$detail['image'].'" title="'.$detail['intitule'].'" >';
+															echo 'Question n°'.$detail['num_ordre'];
+														echo '</a>';
+													echo '</td>';
+
+													echo '<td style="width:35%; font-size:11px; text-align:left;">';
+														if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
+														{
+															echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
+														}
+														echo '<a title="'.$detail['categories'][0]['descript_cat'].'">'.$detail['categories'][0]['nom_cat'].'</a>';
+													echo '</td>';
+
+													// echo '<td style="width:8%;">';
+													// 	echo '<a title="'.$detail['descript_degre'].'">'.$detail['nom_degre'].'</a>';
+													// echo '</td>';
+
+													if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
+													{
+														echo '<td style="width:20%;"><a title="'.$detail['intitule_reponse_user'].'">'.$detail['reponse_user_qcm'].'</a></td>';
+													}
+													else if (!empty($detail['reponse_user_champ']))
+													{
+														if ($detail['reponse_user_champ'] == "-")
+														{
+															echo '<td style="width:20%; text-align: center; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
+														}
+														else 
+														{
+															echo '<td style="width:20%; text-align: left; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
+														}
+													}
+													else
+													{
+														echo '<td style="width:20%;"></td>';
+													}
+
+													echo '<td class="cell-right" style="width:10%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
+
+													if ($detail['reussite'] === 1)
+													{
+														echo '<td style="width:20%;" colspan="2"><span style="display:none;">2</span><img src="'.SERVER_URL.'media/images/valide.png"></td>';
+													}
+													else if ($detail['reussite'] === 0)
+													{
+														echo '<td class="cell-wrong" style="width:20%;" colspan="2"><span style="display:none;">1</span><img src="'.SERVER_URL.'media/images/faux.png"></td>';
+													}
+													else
+													{
+														echo '<td class="valid-right" style="width:10%;">';
+															echo '<p>Vrai</p>';
+															echo '<input type="radio" class="valid" name="valid_reponse" value="1">';
 														echo '</td>';
 
-														echo '<td style="width:30%; font-size:12px; text-align:left;">';
-															if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
-															{
-																echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
-															}
-															echo '<a title="'.$detail['categories'][0]['descript_cat'].'">'.$detail['categories'][0]['nom_cat'].'</a>';
+														echo '<td class="valid-wrong" style="width:10%;">';
+															echo '<p>Faux</p>';
+															echo '<input type="radio" class="valid" name="valid_reponse" value="0">';
 														echo '</td>';
 
-														echo '<td style="width:8%;">';
-															echo '<a title="'.$detail['descript_degre'].'">'.$detail['nom_degre'].'</a>';
+														/*
+														echo '<td class="white-cell" style="width:20%;"><span style="display:none;">0</span>';
+															echo 'vrai- Faux';
+															echo '<input type="radio" name="" value="" placeholder="">';
+															echo '<input type="checkbox" name="validations[]"></td>';
 														echo '</td>';
 
-														if (!empty($detail['reponse_user_qcm']) && $detail['reponse_user_qcm'] != "-")
-														{
-															echo '<td style="width:30%;"><a title="'.$detail['intitule_reponse_user'].'">'.$detail['reponse_user_qcm'].'</a></td>';
-														}
-														else if (!empty($detail['reponse_user_champ']))
-														{
-															if ($detail['reponse_user_champ'] == "-")
-															{
-																echo '<td style="width:30%; text-align: center; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
-															}
-															else 
-															{
-																echo '<td style="width:30%; text-align: left; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
-															}
-														}
-														else
-														{
-															echo '<td style="width:30%;"></td>';
-														}
-
-														echo '<td style="width:9%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
-
-														if ($detail['reussite'] === 1)
-														{
-															echo '<td style="width:8%;"><span style="display:none;">2</span><img src="'.SERVER_URL.'media/images/valide.png"></td>';
-														}
-														else if ($detail['reussite'] === 0)
-														{
-															echo '<td class="red-cell" style="width:8%;"><span style="display:none;">1</span><img src="'.SERVER_URL.'media/images/faux.png"></td>';
-														}
-														else
-														{
-															echo '<td class="white-cell" style="width:8%;"><span style="display:none;">0</span>';
-																echo '<img src="'.SERVER_URL.'media/images/stylo.png"><input type="checkbox" name="validation_champ"></td>';
-															echo '</td>';
-														}
+														echo '<td class="white-cell" style="width:20%;"><span style="display:none;">0</span>';
+															echo 'vrai- Faux';
+															echo '<input type="radio" name="" value="" placeholder="">';
+															echo '<input type="checkbox" name="validations[]"></td>';
+														echo '</td>';
+														*/
+													}
 
 													echo '</tr>';
 													
@@ -769,6 +784,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												} 
 												?>
 											</tbody>
+
 										</table>
 
 									<?php else : ?>

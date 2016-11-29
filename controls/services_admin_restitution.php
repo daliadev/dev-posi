@@ -475,7 +475,7 @@ class ServicesAdminRestitution extends Main
 
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
-		$resultats = $this->getResultatsByCategories($refSession);
+		$resultats = $this->getResultatsByCategories($refSession, $refPosi);
 
 		// Liste des parcours de formation
 		$parcoursPreco = $this->parcoursPrecoDAO->selectAll();
@@ -1008,6 +1008,10 @@ class ServicesAdminRestitution extends Main
 						}
 					}    
 				}
+				else if ($question->getType() == "champ_saisie")
+				{
+					
+				}
 
 				$questionsDetails[$i]['reponses'] = $reponses;
 
@@ -1379,7 +1383,7 @@ class ServicesAdminRestitution extends Main
 		$tabResultats = array();
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
-		$resultsetResultats = $this->getResultatsBySession($refSession, $refPosi);
+		$resultsetResultats = $this->getResultatsBySession($refSession);
 
 		//var_dump($resultsetResultats);
 		//exit();

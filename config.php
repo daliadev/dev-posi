@@ -12,7 +12,7 @@ class Config
 {
 
 	/* Version */
-	const POSI_VERSION = "0.30.01";
+	const POSI_VERSION = "0.31.01";
 
 
 	/* Nom et titre du positionnement */
@@ -29,7 +29,7 @@ class Config
 	const CLIENT_NAME = "Dalia";
 	const CLIENT_NAME_LONG = "Dalia";
 	
-	const MULTI_POSI_ID = null;
+	const MULTI_POSI_ID = 2;
 
 	/* Gestion du niveau régional */
 
@@ -114,7 +114,7 @@ class Config
 	/* Gestion des préconisations de parcours selon connaissance */
 
 	// Active la gestion des préconisations de parcourts pour les compétences
-	const ALLOW_PRECONISATION = 1; // autorisé (1) / non autorisé (0)
+	const ALLOW_PRECONISATION = 0; // autorisé (1) / non autorisé (0)
 
 
 	/* Infos de connexion de la base de données*/

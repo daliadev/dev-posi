@@ -2573,7 +2573,15 @@ fieldset .add-link span
 
 #table-resultats a {
 	text-decoration: none;
-	font-size: 12px
+	font-size: 12px;
+}
+
+#table-resultats td.valid-right {
+	background-color: #B2DFDB;
+}
+
+#table-resultats .valid-wrong {
+	background-color: #FFCDD2;
 }
 	
 

@@ -516,13 +516,13 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 							<legend>Informations du positionnement</legend>
 
 							<ul>
-								<li><a href="#infos">1 - Informations utilisateur</a></li>
-								<li><a href="#stats">2 - Les résultats</a></li>
-								<li><a href="#details">3 - Détails des résultats</a></li>
+								<li><a class="tab-link" href="#infos">1 - Informations utilisateur</a></li>
+								<li><a class="tab-link" href="#stats">2 - Les résultats</a></li>
+								<li><a class="tab-link" href="#details">3 - Détails des résultats</a></li>
 								<?php if (Config::ALLOW_PRECONISATION) : ?>
-									<li><a href="#parcours">4 - Parcours de formation</a></li>
+									<li><a class="tab-link" href="#parcours">4 - Parcours de formation</a></li>
 								<?php endif; ?>
-								<li><a href="#exports">5 - Exports</a></li>
+								<li><a class="tab-link" href="#exports">5 - Exports</a></li>
 							</ul>
 
 							<div id="infos" class="zone-liste-restitution">
@@ -949,6 +949,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			var $selectButton = $('#posi-search #select-posi');
 			$selectButton.prop('disabled', true);
+
+			// Validation des questions ouvertes
+			var resultHasChanged = false;
 
 
 			/* Listes dynamiques en ajax */
@@ -1402,7 +1405,63 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			}
 			
 
+
+			/*=======================================================================
+			=            Gestion de la validation des questions ouvertes            =
+			========================================================================*/
+
+
+			$('.valid').on('click', function(event) {
+				/*
+				var validation = event.currentTarget.value;
+
+				if (validation) {
+
+				}
+				*/
+				resultHasChanged = true;
+
+				var refQuestion = null;
+				var refsession = null;
+				// Requête ajax de changement de validation dans la table 'resultat' de la question
+
+				var url = $('#form-posi').attr('action');
+
+				//$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
+				$.post(url, {'validation': true, 'ref_question': refQuestion, 'ref_session': refsession}, function(data) {
+
+					if (data.error) {
+
+						alert(data.error);
+					}
+					else {
+
+					}
+				});
+			});
+
+
+			// Si click sur une des étiquettes de section
+			$('.tab-link').on('click', function(event) {
+
+				// On vérifie s'il y a des validations qui ont été effectuées
+				if (resultHasChanged) {
+
+					event.preventDefault();
+
+					var message = 'Pour pouvoir visualiser les résultats prenant en compte les modifications que vous avez apporté, veuillez cliquer sur \'ok\'.'
+
+					if (alert(message)) {
+						$('#form-posi').submit();
+					}
+				}
 				
+			});
+
+
+			/*=====  End Gestion de la validation des questions ouvertes  ======*/
+
+
 
 			
 			// Liste des résultats par catégories interactives

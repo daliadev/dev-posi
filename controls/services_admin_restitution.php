@@ -454,6 +454,21 @@ class ServicesAdminRestitution extends Main
 	}
 
 
+
+	
+	public function updateValidResultat($refQuestion, $refSession, $isValid)
+	{
+		$resultset = $this->resultatDAO->updateValidation($refQuestion, $refSession, $isValid);
+
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['resultat']['row_count']) && !empty($resultset['response']['resultat']['row_count']))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	
 	
 	
@@ -931,6 +946,7 @@ class ServicesAdminRestitution extends Main
 				$questionsDetails[$i]['intitule_reponse_correcte'] = "";
 				$questionsDetails[$i]['temps'] = "";
 				$questionsDetails[$i]['reussite'] = "-";
+				//$questionsDetails[$i]['validation'] = "-";
    
 				
 				/*** Degré ***/

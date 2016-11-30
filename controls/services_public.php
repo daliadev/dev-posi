@@ -129,10 +129,13 @@ class ServicesPublic extends Main
 		
 
 
-		/*** Requêtes ajax de filtrage ***/
+		/*** Requêtes ajax de filtrage et de validation ***/
 
 		if (Config::ALLOW_AJAX)
 		{
+
+		/*-------------------- Requêtes de filtrage des positionnements --------------------*/
+
 			if ($loggedAsViewer || $loggedAsAdmin)
 			{
 				if (isset($_POST['filter']))
@@ -319,13 +322,27 @@ class ServicesPublic extends Main
 				}
 				*/
 
+
+			/*-------------------- Validation des questions ouvertes (requête) --------------------*/
+
 				if (isset($_POST['validation']) && !empty($_POST['validation']))
 				{
-					$validations = array();
+					if (isset($_POST['ref_question']) && !empty($_POST['ref_question']) && isset($_POST['ref_session']) && !empty($_POST['ref_session'])) {
 
-					for ($i = 0; $i < count($_POST['validation']); $i++) { 
-						
-						$refResult = $_POST['validation'][$i];
+						$refQuestion = $_POST['ref_question'];
+						$refSession = $_POST['ref_session'];
+						$valid = $_POST['validation'];
+
+						$validation = $this->servicesRestitution->updateValidResultat($refQuestion, $refSession, $valid);
+
+						if ($validation)
+						{
+							$response = array('error' => false, 'result' => $validation);
+						}
+						else
+						{
+							$response = array('error' => "La validation de la question n'a pas été prise en compte.");
+						}
 					}
 					
 				}

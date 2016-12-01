@@ -344,6 +344,12 @@ class ServicesPublic extends Main
 							$response = array('error' => "La validation de la question n'a pas été prise en compte.");
 						}
 					}
+					else {
+						$response = array('error' => "Identifiant de session ou de résultat attendu.");
+					}
+
+					echo json_encode($response);
+					exit();
 					
 				}
 			}

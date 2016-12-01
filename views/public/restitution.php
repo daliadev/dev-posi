@@ -676,11 +676,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								<div id="resultats" class="tab-block">
 									
+									<input type="hidden" id="num_session" name="ref_session" value="<?php echo $formData['ref_session']; ?>">
+									
 									<?php if (!empty($response['details']['questions'])) : ?>
-
+										
 										<table id="table-resultats" class="tablesorter">
 											<thead>
 												<tr>
+													<th style="width:0%;"></th>
 													<th style="width:15%;">Question</th>
 													<th style="width:35%;">Catégorie/<br/>compétence</th>
 													<!-- <th style="width:8%;">Degré</th> -->
@@ -694,15 +697,20 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												$i = 0;
 												foreach($response['details']['questions'] as $detail)
 												{
+													
 													if ($i % 2 == 0)
 													{
-														echo '<tr style="background-color:#a0c4ff;" >';
+														echo '<tr style="background-color:#a0c4ff;">';
 													}
 													else
 													{
 														echo '<tr style="background-color:#d3e4ff;">';
 													}
-													
+
+													echo '<td class="num_question" style="width:0%;">';
+														echo '<input type="hidden" name="ref_question" value="'.$detail['ref_question'].'">';
+													echo '</td>';
+
 													echo '<td style="width:15%;">';
 														echo '<a rel="lightbox" href="'.SERVER_URL.'uploads/img/'.$detail['image'].'" title="'.$detail['intitule'].'" >';
 															echo 'Question n°'.$detail['num_ordre'];
@@ -753,14 +761,24 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 													}
 													else
 													{
+														$checkedRight = "";
+														$checkedWrong = "";
+
+														if ($detail['validation'] == '1') {
+															$checkedRight = "checked";
+														}
+														else if ($detail['validation'] == '0') {
+															$checkedWrong = "checked";
+														}
+														
 														echo '<td class="valid-right" style="width:10%;">';
 															echo '<p>Vrai</p>';
-															echo '<input type="radio" class="valid" name="valid_reponse" value="1">';
+															echo '<input type="radio" class="valid" name="valid_reponse-'.$detail['ref_question'].'" value="1" '.$checkedRight.'>';
 														echo '</td>';
 
 														echo '<td class="valid-wrong" style="width:10%;">';
 															echo '<p>Faux</p>';
-															echo '<input type="radio" class="valid" name="valid_reponse" value="0">';
+															echo '<input type="radio" class="valid" name="valid_reponse-'.$detail['ref_question'].'" value="0" '.$checkedWrong.'>';
 														echo '</td>';
 
 														/*
@@ -949,9 +967,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			var $selectButton = $('#posi-search #select-posi');
 			$selectButton.prop('disabled', true);
-
-			// Validation des questions ouvertes
-			var resultHasChanged = false;
 
 
 			/* Listes dynamiques en ajax */
@@ -1410,25 +1425,28 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			=            Gestion de la validation des questions ouvertes            =
 			========================================================================*/
 
+			var resultHasChanged = false;
+
 
 			$('.valid').on('click', function(event) {
-				/*
-				var validation = event.currentTarget.value;
+				
+				var validation = $(event.currentTarget);
+				var refSession = $('#num_session').val();
+				var refQuestion = validation.parent().siblings('.num_question').children('input').val();
+				var isValid = validation.val();
 
-				if (validation) {
+				console.log(refSession, refQuestion, isValid);
 
+				if (!resultHasChanged) {
+					resultHasChanged = true;
 				}
-				*/
-				resultHasChanged = true;
 
-				var refQuestion = null;
-				var refsession = null;
 				// Requête ajax de changement de validation dans la table 'resultat' de la question
 
 				var url = $('#form-posi').attr('action');
 
 				//$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
-				$.post(url, {'validation': true, 'ref_question': refQuestion, 'ref_session': refsession}, function(data) {
+				$.post(url, {'validation': isValid, 'ref_question': refQuestion, 'ref_session': refSession}, function(data) {
 
 					if (data.error) {
 

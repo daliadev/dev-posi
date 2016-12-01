@@ -20,7 +20,7 @@ require_once(ROOT.'models/dao/valid_acquis_dao.php');
 require_once(ROOT.'models/dao/custom_dao.php');
 
 
-//require_once(ROOT.'controls/services_admin_categorie.php');
+require_once(ROOT.'controls/services_admin_categorie.php');
 require_once(ROOT.'controls/services_resultats.php');
 
 
@@ -45,7 +45,7 @@ class ServicesAdminRestitution extends Main
 
 	private $customDAO = null;
 
-   // private $servicesCategories = null;
+	private $servicesCategories = null;
 	private $servicesResultats = null;
 	
 	
@@ -475,10 +475,9 @@ class ServicesAdminRestitution extends Main
 	public function getPosiStats($refSession, $refPosi = null)
 	{
 
+
 		$posiStats = array();
 		$posiStats['categories'] = array();
-
-		//$posiStats['percent_global'] = null;
 		
 		
 		/*** On récupère la liste des categories ***/
@@ -496,17 +495,14 @@ class ServicesAdminRestitution extends Main
 		$parcoursPreco = $this->parcoursPrecoDAO->selectAll();
 
 
-		//$statsCat = array();
 		
 		$tempsGlobal = 0;
 		$totalGlobal = 0;
 		$totalCorrectGlobal = 0;
 		$percentGlobal = 0;
-		//$countValidCategories = 0;
 		$countPrimeCategories = 0;
 		$maxLevel = 0;
 
-		//$i = 0;
 		
 		foreach ($categoriesList as $categorie)
 		{
@@ -516,7 +512,6 @@ class ServicesAdminRestitution extends Main
 			$percentCategorie = 0;
 			$hasResults = false;
 
-			//$statsCat[$i] = $categorie;
 
 			// On récupére le niveau de la catégorie dans la hiérarchie
 			$level = $categorie->getLevel();
@@ -558,7 +553,7 @@ class ServicesAdminRestitution extends Main
 				   	$tempsGlobal += $resultats[$j]->getTempsReponse();
 					$tempsCat += $resultats[$j]->getTempsReponse();
 
-					if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte() || $resultats[$j]->getReponseChamp() !== null)
+					if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte() || (!empty($resultats[$j]->getReponseChamp()) && $resultats[$j]->getReponseChamp() !== null && !empty($resultats[$j]->getValidationReponseChamp()) && $resultats[$j]->getValidationReponseChamp() !== null && $resultats[$j]->getValidationReponseChamp() === 1))
 					{
 						$totalCorrectCategorie++;
 						$totalCorrectGlobal++;
@@ -567,40 +562,6 @@ class ServicesAdminRestitution extends Main
 					$hasResults = true;
 				}
 
-				/*
-				foreach ($resultsDetails[$i]['codes_cat'] as $code_cat) 
-				{
-					if ($code_cat == $categorie->getCode())
-					{
-						// Attribution du nombre de réponses et de réponses correctes par ajouts successifs sur l'objet 'categorie'
-						$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
-						$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
-
-						$nbreReponses++;
-						$categorie->setTotalReponses($nbreReponses);
-
-						if ($resultsDetails[$i]['correct'])
-						{
-							$nbreReponsesCorrectes++;
-						}
-						$categorie->setTotalReponsesCorrectes($nbreReponsesCorrectes);
-
-						// Calcul du score
-						if ($nbreReponsesCorrectes != 0)
-						{	
-							$scoreCat = round(($nbreReponsesCorrectes / $nbreReponses) * 100);
-							$categorie->setScorePercent($scoreCat);
-						}
-						else
-						{
-							$categorie->setScorePercent(0);
-						}
-
-						$categorie->setHasResult(true);
-					}
-					
-				}
-				*/
 			}
 			
 			// Calcul du score en pourcentage
@@ -615,22 +576,13 @@ class ServicesAdminRestitution extends Main
 			$categorie->setTotalReponsesCorrectes($totalCorrectCategorie);
 			$categorie->setScorePercent($percentCategorie);
 			$categorie->setHasResult($hasResults);
-			
-
-			//$categorie->setPreconisations($precos);
-
-			//$categorie->setActionPrecosTotal($precos);
 
 
 			$posiStats['categories'][] = $categorie;
 
-			//$i++;
 		}
 
 		$categories = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
-		//$categories = $posiStats['categories'];
-
-		//$countCategories = 0;
 
 
 		foreach ($categories as $categorie)
@@ -641,19 +593,16 @@ class ServicesAdminRestitution extends Main
 				$countPrimeCategories++;
 
 				$percentGlobal += $categorie->getScorePercent();
-				//var_dump($percentGlobal);
 			}
 
 
-
-			$volumePrecoCat = 0;
-			
-			//var_dump($categorie->getScorePercent());
 			// Préconisations
+			$volumePrecoCat = 0;
+
+			
 			if (strlen($categorie->getCode()) == 2 && isset($parcoursPreco['response']['parcours_preco']) && !empty($parcoursPreco['response']['parcours_preco']))
 			{
 				// Calcul du score global
-
 
 				$precos = $this->preconisationDAO->selectByCodeCat($categorie->getCode());
 				
@@ -663,7 +612,6 @@ class ServicesAdminRestitution extends Main
 				{
 					foreach ($precos['response']['preconisation'] as $preco) 
 					{
-						//var_dump($preco->getId());
 						$refPreco = $preco->getId();
 						$refParcours = $preco->getRefParcours();
 						$tauxMin = $preco->getTauxMin();
@@ -693,35 +641,19 @@ class ServicesAdminRestitution extends Main
 			$percentTotal = round($percentGlobal / $countPrimeCategories);
 		}
 
-		//var_dump($percentTotal, $percentGlobal, $countPrimeCategories);
-		//exit();
 		
 		$posiStats['percent_global'] = $percentTotal;
 
 		$posiStats['total_correct_global'] = $totalCorrectGlobal;
 		$posiStats['total_global'] = $totalGlobal;
 
-		//$categories = $posiStats['categories'];
 		$posiStats['categories'] = $categories;
-
-
-
-		//var_dump($posiStats['categories']);
-		//exit();
-
-		//$tempsGlobal = 0;
-		//$totalGlobal = 0;
-		//$totalCorrectGlobal = 0;
-		//$percentGlobal = 0;
-		//$countValidCategories = 0;
-		//$countPrimaryCategories = 0;
-
-		/*
 		
 
 		foreach ($categories as $categorie)
 		{
-			$level = $this->servicesCategories->getLevel($categorie->getCode());
+			//$level = $this->servicesCategories->getLevel($categorie->getCode());
+			$level = $categorie->getLevel();
 
 			if ($level > $maxLevel)
 			{
@@ -729,169 +661,7 @@ class ServicesAdminRestitution extends Main
 			}
 		}
 
-		*/
 
-		/*
-		foreach ($categoriesList as $categorie)
-		{
-			$tempsCat = 0;
-			$totalCategorie = 0;
-			$totalCorrectCategorie = 0;
-			$percentCategorie = 0;
-			$hasResults = false;
-
-			$codeCat = $categorie->getCode();
-
-			$statsCat[$i] = $categorie;
-
-			$parents = array();
-
-			if (strlen($codeCat) % 2 === 0 && strlen($codeCat) > 2)
-			{
-				$codeLength = strlen($codeCat) - 2;
-				
-				for ($k = 0; $k <= $codeLength; $k += 2)
-				{
-					if (($codeLength - $k) >= 2)
-					{
-						$parentCode = substr($codeCat, 0, $codeLength - $k);
-						array_push($parents, $parentCode);
-					}
-				}
-			}
-			
-			
-			// Pour chaque resultat attaché à la catégorie.
-			for ($j = 0; $j < count($resultats); $j++)
-			{
-
-				if ($resultats[$j]->getRefCat() == $codeCat)
-				{
-					//$posiStats[$j]['total']++;
-					$totalCategorie++;
-					$totalGlobal++;
-				   	
-				   	$tempsGlobal += $resultats[$j]->getTempsReponse();
-					$tempsCat += $resultats[$j]->getTempsReponse();
-
-					if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte() || $resultats[$j]->getReponseChamp() !== null)
-					{
-						//$posiStats[$j]['total_correct']++;
-						$totalCorrectCategorie++;
-						$totalCorrectGlobal++;
-					}
-
-					$hasResults = true;
-				}  
-			}
-
-			
-			// Calcul du poucentage de réussite dans cette catégorie
-			
-			if ($totalCategorie > 0)
-			{
-				$percentCategorie = round(($totalCorrectCategorie * 100) / $totalCategorie);
-
-				$countValidCategories++;
-			}
-			else 
-			{
-				$percentCategorie = 0;
-			}
-			*/
-
-			// $statsCat[$i]->setTemps($tempsCat);
-			// $statsCat[$i]->setTotalReponses($totalCategorie);
-			// $statsCat[$i]->setTotalReponsesCorrectes($totalCorrectCategorie);
-			// $statsCat[$i]->setScorePercent($percentCategorie);
-			// $statsCat[$i]->setHasResult($hasResults);
-
-			// $posiStats['categories'][$i] = $statsCat[$i];
-
-			/*
-			if (!empty($parents)) {
-				
-				for ($m = 0; $m < count($posiStats['categories']); $m++) 
-				{	
-					for ($n = 0; $n < count($parents); $n++) 
-					{ 
-						if ($posiStats['categories'][$m]->getCode() === $parents[$n]) 
-						{
-							//$posiStats[$i]->setTemps(null);
-
-
-							$totalParent = $posiStats['categories'][$m]->getTotalReponses() + $totalCategorie;
-							$totalParentCorrect = $posiStats['categories'][$m]->getTotalReponsesCorrectes() + $totalCorrectCategorie;
- 
-							//$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
-							
-							if ($totalParentCorrect > 0 && $totalParent > 0 && $percentCategorie > 0)
-							{
-								//$scoreParent = round(($totalParentCorrect * 100) / $totalParent);
-								$scoreParent = ($posiStats['categories'][$m]->getScorePercent() + $percentCategorie) / 2;
-							}
-							else
-							{
-								$scoreParent = 0;
-							}
-							
-							
-							$tempsParent = $posiStats['categories'][$m]->getTemps() + $tempsCat;
-
-							$posiStats['categories'][$m]->setTotalReponses($totalParent);
-							$posiStats['categories'][$m]->setTotalReponsesCorrectes($totalParentCorrect);
-
-							$posiStats['categories'][$m]->setScorePercent($scoreParent);
-							$posiStats['categories'][$m]->setTemps($tempsParent);
-
-						}
-					}
-				}
-			}
-			*/
-
-			//$i++;
-		//}
-		
-
-		/* Score global en pourcentage */
-		/*
-		for ($p = 0; $p < count($posiStats['categories']); $p++) 
-		{ 
-			if (strlen($posiStats['categories'][$p]->getCode()) == 2 && $posiStats['categories'][$p]->getTotalReponses() > 0)
-			{
-				$primaryCatCount++;
-				
-				$posiStats['percent_global'] += $posiStats['categories'][$p]->getScorePercent(); //$posiStats['categories'][$p]->getTotalReponsesCorrectes() / $posiStats['categories'][$p]->getTotalReponses() * 100;
-				
-				//$posiStats['categories'][$p]->setHasResult(true);
-			}
-
-			if ($posiStats['categories'][$p]->getTotalReponses() > 0)
-			{
-				$posiStats['categories'][$p]->setHasResult(true);
-			}
-		}
-		*/
-
-		/*** Stats globales ***/
-		
-		//$posiStats['percent_global'] = 0; //round($posiStats['percent_global'] / $primaryCatCount); //round(($totalCorrectGlobal / $totalGlobal) * 100);
-		//$posiStats['total_global'] = 0; //$totalGlobal;
-		//$posiStats['total_correct_global'] = 0; //$totalCorrectGlobal;
-		//$posiStats['temps-total'] = 0; //$tempsGlobal;
-
-
-		/*** Préconisations simplifiées ***/
-		/*
-		foreach ($categories as $categorie)
-		{
-			$codeCat = $categorie->getCode();
-
-			$precos = $this->preconisationDAO->selectByCodeCat($codeCat);
-
-		}
-		*/
 
 		return  $posiStats;
 	}
@@ -946,7 +716,7 @@ class ServicesAdminRestitution extends Main
 				$questionsDetails[$i]['intitule_reponse_correcte'] = "";
 				$questionsDetails[$i]['temps'] = "";
 				$questionsDetails[$i]['reussite'] = "-";
-				//$questionsDetails[$i]['validation'] = "-";
+				$questionsDetails[$i]['validation'] = null;
    
 				
 				/*** Degré ***/
@@ -1024,11 +794,12 @@ class ServicesAdminRestitution extends Main
 						}
 					}    
 				}
+				/*
 				else if ($question->getType() == "champ_saisie")
 				{
 					
 				}
-
+				*/
 				$questionsDetails[$i]['reponses'] = $reponses;
 
 
@@ -1058,6 +829,7 @@ class ServicesAdminRestitution extends Main
 				$resultatsUser[$i]['ref_reponse_qcm'] = $result->getRefReponseQcm();
 				$resultatsUser[$i]['ref_reponse_qcm_correcte'] = $result->getRefReponseQcmCorrecte();
 				$resultatsUser[$i]['reponse_champ'] = $result->getReponseChamp();
+				$resultatsUser[$i]['validation_reponse_champ'] = $result->getValidationReponseChamp();
 				$resultatsUser[$i]['temps_reponse'] = $result->getTempsReponse();
   
 				$i++;
@@ -1083,7 +855,12 @@ class ServicesAdminRestitution extends Main
 
 					if (!empty($resultatsUser[$j]['reponse_champ']))
 					{
-						$questionsDetails[$i]['reponse_user_champ'] =  $resultatsUser[$j]['reponse_champ'];
+						if (!empty($resultatsUser[$i]['validation_reponse_champ']) && $resultatsUser[$i]['validation_reponse_champ'] !== null)  {
+
+							$questionsDetails[$i]['validation'] = $resultatsUser[$i]['validation_reponse_champ'];
+						}
+
+						$questionsDetails[$i]['reponse_user_champ'] = $resultatsUser[$j]['reponse_champ'];
 					}
 					else if (!empty($resultatsUser[$j]['ref_reponse_qcm']) && !empty($resultatsUser[$j]['ref_reponse_qcm_correcte']))
 					{

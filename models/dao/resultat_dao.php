@@ -134,7 +134,7 @@ class ResultatDAO extends ModelDAO
 			}
 			else
 			{
-				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour la réponse à mettre à jour.");
+				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Il n'y a aucun identifiant pour la mise à jour.");
 			}
 		}
 		else
@@ -157,17 +157,17 @@ class ResultatDAO extends ModelDAO
 	{
 		$this->initialize();
 
-		if (!empty($refQuestion) && !empty($refSession) && !empty($isValid) )
+		if (!empty($refQuestion) && !empty($refSession) && $isValid !== null)
 		{
-			if ($isValid || $isValid === 'true' || $isValid === 1) {
+			if ($isValid === 'true' || $isValid == '1') {
 				$values['validation_reponse_champ'] = 1;
 			}
-			else
-			{
+			else if ($isValid === 'false' || $isValid === '0') {
+
 				$values['validation_reponse_champ'] = 0;
 			}
 
-			$request = $this->createQueryString("update", $values, "resultat", "WHERE ref_question = ".$refQuestion." AND id_reponse=".$refReponse);
+			$request = $this->createQueryString("update", $values, "resultat", "WHERE ref_question = ".$refQuestion." AND ref_session=".$refSession);
 			
 			$this->resultset['response'] = $this->executeRequest("update", $request, "resultat", "Resultat");
 		}

@@ -437,7 +437,7 @@ class ServicesPositionnement extends Main
 				}
 
 				// La validation du résultat de la réponse n'est pas encore effectué
-				$dataResultat['validation_reponse_champ'] = 0;
+				$dataResultat['validation_reponse_champ'] = NULL;
 
 				// Récupération du temps total
 				$dataResultat['temps_reponse'] = $totalTime;

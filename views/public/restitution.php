@@ -696,7 +696,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 												<?php 
 												$i = 0;
 												foreach($response['details']['questions'] as $detail)
-												{
+												{	
 													
 													if ($i % 2 == 0)
 													{
@@ -707,7 +707,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 														echo '<tr style="background-color:#d3e4ff;">';
 													}
 
-													echo '<td class="num_question" style="width:0%;">';
+													echo '<td class="num_question" style="width:0%; display:none;">';
 														echo '<input type="hidden" name="ref_question" value="'.$detail['ref_question'].'">';
 													echo '</td>';
 
@@ -761,13 +761,17 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 													}
 													else
 													{
-														$checkedRight = "";
-														$checkedWrong = "";
 
-														if ($detail['validation'] == '1') {
-															$checkedRight = "checked";
+														if ($detail['validation'] == "null") {
+															$checkedRight = "";
+															$checkedWrong = "";
 														}
-														else if ($detail['validation'] == '0') {
+														else if ($detail['validation'] == 1) {
+															$checkedRight = "checked";
+															$checkedWrong = "";
+														}
+														else if ($detail['validation'] == 0) {
+															$checkedRight = "";
 															$checkedWrong = "checked";
 														}
 														
@@ -1435,9 +1439,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				var refQuestion = validation.parent().siblings('.num_question').children('input').val();
 				var isValid = validation.val();
 
-				console.log(refSession, refQuestion, isValid);
 
 				if (!resultHasChanged) {
+
 					resultHasChanged = true;
 				}
 
@@ -1445,7 +1449,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 				var url = $('#form-posi').attr('action');
 
-				//$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
 				$.post(url, {'validation': isValid, 'ref_question': refQuestion, 'ref_session': refSession}, function(data) {
 
 					if (data.error) {
@@ -1453,6 +1456,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						alert(data.error);
 					}
 					else {
+
+						//alert(data.result);
 
 					}
 				});
@@ -1471,6 +1476,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 					if (alert(message)) {
 						$('#form-posi').submit();
+						resultHasChanged = false;
 					}
 				}
 				

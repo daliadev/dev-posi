@@ -454,7 +454,6 @@ class ServicesAdminRestitution extends Main
 	}
 
 
-
 	
 	public function updateValidResultat($refQuestion, $refSession, $isValid)
 	{
@@ -855,9 +854,13 @@ class ServicesAdminRestitution extends Main
 
 					if (!empty($resultatsUser[$j]['reponse_champ']))
 					{
-						if (!empty($resultatsUser[$i]['validation_reponse_champ']) && $resultatsUser[$i]['validation_reponse_champ'] !== null)  {
+						if ($resultatsUser[$i]['validation_reponse_champ'] !== NULL)  {
 
 							$questionsDetails[$i]['validation'] = $resultatsUser[$i]['validation_reponse_champ'];
+						}
+						else
+						{
+							$questionsDetails[$i]['validation'] = "null";
 						}
 
 						$questionsDetails[$i]['reponse_user_champ'] = $resultatsUser[$j]['reponse_champ'];

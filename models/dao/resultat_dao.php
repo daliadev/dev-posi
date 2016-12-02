@@ -157,19 +157,29 @@ class ResultatDAO extends ModelDAO
 	{
 		$this->initialize();
 
-		if (!empty($refQuestion) && !empty($refSession) && $isValid !== null)
+		if (!empty($refQuestion) && !empty($refSession))
 		{
-			if ($isValid === 'true' || $isValid == '1') {
+			$values['validation_reponse_champ'] = NULL;
+
+			if ($isValid === 1 || $isValid) {
+
 				$values['validation_reponse_champ'] = 1;
 			}
-			else if ($isValid === 'false' || $isValid === '0') {
+			else if ($isValid === 0 || !$isValid) {
 
 				$values['validation_reponse_champ'] = 0;
 			}
 
-			$request = $this->createQueryString("update", $values, "resultat", "WHERE ref_question = ".$refQuestion." AND ref_session=".$refSession);
-			
-			$this->resultset['response'] = $this->executeRequest("update", $request, "resultat", "Resultat");
+			if ($values['validation_reponse_champ'] !== NULL) {
+				
+				$request = $this->createQueryString("update", $values, "resultat", "WHERE ref_question = ".$refQuestion." AND ref_session=".$refSession);
+				
+				$this->resultset['response'] = $this->executeRequest("update", $request, "resultat", "Resultat");
+			}
+			else 
+			{
+				$this->resultset['response']['errors'][] = array('type' => "update", 'message' => "Mise à jour non nécessaire.");
+			}
 		}
 		else
 		{

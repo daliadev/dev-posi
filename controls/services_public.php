@@ -325,16 +325,19 @@ class ServicesPublic extends Main
 
 			/*-------------------- Validation des questions ouvertes (requête) --------------------*/
 
-				if (isset($_POST['validation']) && !empty($_POST['validation']))
+				if (isset($_POST['validation']))
 				{
+
+					$response = array('error' => false, 'result' => $_POST);
+					
 					if (isset($_POST['ref_question']) && !empty($_POST['ref_question']) && isset($_POST['ref_session']) && !empty($_POST['ref_session'])) {
 
 						$refQuestion = $_POST['ref_question'];
 						$refSession = $_POST['ref_session'];
-						$valid = $_POST['validation'];
+						$valid = intval($_POST['validation']);
 
 						$validation = $this->servicesRestitution->updateValidResultat($refQuestion, $refSession, $valid);
-
+						
 						if ($validation)
 						{
 							$response = array('error' => false, 'result' => $validation);
@@ -345,12 +348,13 @@ class ServicesPublic extends Main
 						}
 					}
 					else {
+					
+				
 						$response = array('error' => "Identifiant de session ou de résultat attendu.");
 					}
 
 					echo json_encode($response);
 					exit();
-					
 				}
 			}
 		}

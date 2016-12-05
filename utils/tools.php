@@ -227,8 +227,14 @@ class Tools {
 
     public static function getExtrait($text, $length)
     {
-        $extractString = substr($text, 0, $length);
-        $extractString .= '...';
+        if (strlen($text) > $length) {
+            $extractString = substr($text, 0, $length);
+            $extractString .= '...';
+        }
+        else
+        {
+            $extractString = $text;
+        }
 
         return $extractString;
     }

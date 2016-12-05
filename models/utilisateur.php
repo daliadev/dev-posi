@@ -7,6 +7,7 @@ class Utilisateur
 
     public $id_user = null;
     public $ref_niveau = null;
+    public $num_dossier = null;
     public $nom_user = null;
     public $prenom_user = null;
     public $date_naiss_user = null;
@@ -28,6 +29,11 @@ class Utilisateur
     public function getRefNiveau()
     {
         return $this->ref_niveau;
+    }
+
+    public function getNumeroDossier()
+    {
+        return $this->num_dossier;
     }
     
     public function getNom()

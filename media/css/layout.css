@@ -2548,12 +2548,19 @@ fieldset .add-link span
 	width: 100%;
 	border-collapse: collapse;
 	border-spacing: 0;
+	overflow: hidden;
+}
+
+#table-resultats a {
+	text-decoration: none;
+	font-size: 12px;
 }
 
 #table-resultats th, #table-resultats td {
 	padding: 10px;
 	text-align: center;
 	vertical-align: middle;
+	overflow: hidden;
 }
 
 #table-resultats th {
@@ -2563,24 +2570,25 @@ fieldset .add-link span
 	background-color: #F7A22F;	
 }
 
-#table-resultats td {
-	border: 1px solid #ffffff;
-}
-
 #table-resultats thead tr .headerSortDown, #table-resultats thead tr .headerSortUp {
 	background-color: #ebebeb;
 }
 
-#table-resultats a {
-	text-decoration: none;
-	font-size: 12px;
+#table-resultats td {
+	border: 1px solid #ffffff;
 }
 
-#table-resultats td.valid-right {
+#table-resultats td.rep-ouverte {
+	word-wrap: break-word;
+	word-break: break-all;
+	max-height: 40px;
+}
+
+#table-resultats td.cell-right {
 	background-color: #B2DFDB;
 }
 
-#table-resultats .valid-wrong {
+#table-resultats td.cell-wrong {
 	background-color: #FFCDD2;
 }
 	

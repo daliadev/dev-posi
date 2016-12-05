@@ -246,6 +246,7 @@ class ServicesAdminRestitution extends Main
 	{
 
 		// code postaux
+		
 		$codePostalRequest = "";
 
 		if (!empty($refRegion))
@@ -281,15 +282,15 @@ class ServicesAdminRestitution extends Main
 
 
 		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
-		$query .= "FROM organisme AS org ";
+		$query .= "FROM organisme AS org, positionnement AS dom ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
 		$query .= "INNER JOIN session AS sess ";
 		$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
 		$query .= "INNER JOIN utilisateur AS user ";
 		$query .= "ON user.id_user = sess.ref_user ";
-		$query .= "INNER JOIN positionnement AS dom ";
-		$query .= "ON dom.id_posi = sess.ref_posi ";
+		//$query .= "INNER JOIN positionnement AS dom ";
+		//$query .= "ON dom.id_posi = sess.ref_posi ";
 		$query .= "WHERE sess.session_accomplie = 1 ";
 
 		if ($refOrgan) 
@@ -325,32 +326,17 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND dom.id_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		$query .= "GROUP BY org.id_organ, dom.id_posi, user.id_user ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
 
 		//return $query;
-		//var_dump($query);
-		//exit();
-		/*
-		SELECT org.id_organ, org.nom_organ, inter.email_intervenant, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user 
-		FROM organisme AS org 
-		INNER JOIN intervenant AS inter 
-			ON org.id_organ = inter.ref_organ 
-		INNER JOIN session AS sess 
-			ON sess.ref_intervenant = inter.id_intervenant 
-		INNER JOIN utilisateur AS user 
-			ON user.id_user = sess.ref_user
-		WHERE sess.session_accomplie = 1 
-			AND org.code_postal_organ LIKE '76___' 
-			# AND org.id_organ = $refOrgan
-			# AND org.numero_interne LIKE '$codeOrgan'  
-			# AND user.id_user = $refUser 
-			# AND sess.date_session = '$date'  
-		# GROUP BY user.nom_user 
-		ORDER BY org.nom_organ, user.nom_user, sess.date_session ASC;
-		*/
+		var_dump($query);
+		exit();
+
 
 		$resultset = $this->customDAO->read($query, 'restitution');
 
+		var_dump($resultset);
+		exit();
 
 		if (!$this->filterDataErrors($resultset['response']))
 		{

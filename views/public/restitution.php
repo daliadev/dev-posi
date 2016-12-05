@@ -683,7 +683,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										<table id="table-resultats" class="tablesorter">
 											<thead>
 												<tr>
-													<th style="width:0%;"></th>
+													<!-- <th style="width:0%;"></th> -->
 													<th style="width:15%;">Question</th>
 													<th style="width:35%;">Catégorie/<br/>compétence</th>
 													<!-- <th style="width:8%;">Degré</th> -->
@@ -741,7 +741,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 														}
 														else 
 														{
-															echo '<td style="width:20%; text-align: left; line-height: 1.3em">'.$detail['reponse_user_champ'].'</td>';
+															echo '<td style="width:20%; text-align: left; line-height: 1.3em" class="rep-ouverte" title="'.$detail['reponse_user_champ'].'">'.Tools::getExtrait($detail['reponse_user_champ'], 100).'</td>';
 														}
 													}
 													else
@@ -749,38 +749,44 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 														echo '<td style="width:20%;"></td>';
 													}
 
-													echo '<td class="cell-right" style="width:10%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
+													echo '<td style="width:10%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
 
 													if ($detail['reussite'] === 1)
 													{
-														echo '<td style="width:20%;" colspan="2"><span style="display:none;">2</span><img src="'.SERVER_URL.'media/images/valide.png"></td>';
+														echo '<td style="width:20%;" class="cell-right" colspan="2"><span style="display:none;">2</span><img src="'.SERVER_URL.'media/images/valide.png"></td>';
 													}
 													else if ($detail['reussite'] === 0)
 													{
-														echo '<td class="cell-wrong" style="width:20%;" colspan="2"><span style="display:none;">1</span><img src="'.SERVER_URL.'media/images/faux.png"></td>';
+														echo '<td style="width:20%;" class="cell-wrong" colspan="2"><span style="display:none;">1</span><img src="'.SERVER_URL.'media/images/faux.png"></td>';
 													}
 													else
 													{
 
 														if ($detail['validation'] == "null") {
-															$checkedRight = "";
-															$checkedWrong = "";
+															$checkedRight = '';
+															$checkedWrong = '';
+															$classRignt = '';
+															$classWrong = '';
 														}
 														else if ($detail['validation'] == 1) {
-															$checkedRight = "checked";
-															$checkedWrong = "";
+															$checkedRight = 'checked';
+															$checkedWrong = '';
+															$classRignt = 'class="cell-right"';
+															$classWrong = 'class="cell-right"';
 														}
 														else if ($detail['validation'] == 0) {
-															$checkedRight = "";
-															$checkedWrong = "checked";
+															$checkedRight = '';
+															$checkedWrong = 'checked';
+															$classRignt = 'class="cell-wrong"';
+															$classWrong = 'class="cell-wrong"';
 														}
 														
-														echo '<td class="valid-right" style="width:10%;">';
+														echo '<td style="width:10%;" '.$classRignt.'>';
 															echo '<p>Vrai</p>';
 															echo '<input type="radio" class="valid" name="valid_reponse-'.$detail['ref_question'].'" value="1" '.$checkedRight.'>';
 														echo '</td>';
 
-														echo '<td class="valid-wrong" style="width:10%;">';
+														echo '<td style="width:10%;" '.$classWrong.'>';
 															echo '<p>Faux</p>';
 															echo '<input type="radio" class="valid" name="valid_reponse-'.$detail['ref_question'].'" value="0" '.$checkedWrong.'>';
 														echo '</td>';
@@ -965,12 +971,13 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			var selectSession = $('#posi-search #ref-session-cbox').get(0);
 
 			var $filterButton = $('#posi-search #submit-filter');
-			$filterButton.prop('disabled', true);
+			var $selectButton = $('#posi-search #select-posi');
 			var isFilterable = false;
 			var filterRequested = false;
-
-			var $selectButton = $('#posi-search #select-posi');
+			
+			$filterButton.prop('disabled', true);
 			$selectButton.prop('disabled', true);
+			
 
 
 			/* Listes dynamiques en ajax */
@@ -1434,11 +1441,20 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 			$('.valid').on('click', function(event) {
 				
-				var validation = $(event.currentTarget);
+				var $validation = $(event.currentTarget);
 				var refSession = $('#num_session').val();
-				var refQuestion = validation.parent().siblings('.num_question').children('input').val();
-				var isValid = validation.val();
+				var refQuestion = $validation.parent().siblings('.num_question').children('input').val();
+				var isValid = $validation.val();
+				var $selectedCell = $validation.parent();
 
+				if (isValid === '1') {
+					$selectedCell.prop('class', 'cell-right');
+					$selectedCell.next().prop('class', 'cell-right');
+				}
+				else if (isValid === '0') {
+					$selectedCell.prop('class', 'cell-wrong');
+					$selectedCell.prev().prop('class', 'cell-wrong');
+				}
 
 				if (!resultHasChanged) {
 

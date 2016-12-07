@@ -134,17 +134,17 @@ class ServicesPositionnement extends Main
 
 		$postData = jsondecode($_POST, true);
 
-		if (isset($postData['ref_user']) && isset($postData['ref_intervenant']) && isset($postData['ref_organ']) && isset($postData['ref_inscription']))
+		if (isset($_POST['ref_user']) && isset($_POST['ref_intervenant']) && isset($_POST['ref_organ']) && isset($_POST['ref_inscription']))
 		{
 			// Ouvre session utilisateur
 			ServicesAuth::login("user");
 
 			// Récupération/sauvegarde des données
-			ServicesAuth::setSessionData('ref_organ', $postData['ref_organ']);
-			ServicesAuth::setSessionData('ref_intervenant', $postData['ref_intervenant']);
+			ServicesAuth::setSessionData('ref_organ', $_POST['ref_organ']);
+			ServicesAuth::setSessionData('ref_intervenant', $_POST['ref_intervenant']);
 
-			ServicesAuth::setSessionData('ref_user', $postData['ref_user']);
-			ServicesAuth::setSessionData('ref_inscription', $postData['ref_inscription']);
+			ServicesAuth::setSessionData('ref_user', $_POST['ref_user']);
+			ServicesAuth::setSessionData('ref_inscription', $_POST['ref_inscription']);
 			
 			$response = array('error' => false, 'result' => 'ok');
 		}
@@ -189,9 +189,15 @@ class ServicesPositionnement extends Main
 			if (isset($params[3])) {
 				$ref_inscription = $params[3];
 			}
+
+			ServicesAuth::login("user");
+		}
+		else
+		{
+			ServicesAuth::checkAuthentication("user");
 		}
 
-		ServicesAuth::login("user");
+		
 
 		/*** Test d'authentification de l'intervenant/utilisateur ***/
 		//ServicesAuth::checkAuthentication("user");
@@ -610,10 +616,8 @@ class ServicesPositionnement extends Main
 
 		if ($resultset && !empty($resultset['response']['categorie']))
 		{
-			//$categoriesList = $resultset['response']['categorie'];
 			$categories = $resultset['response']['categorie'];
 			
-			//$this->returnData['response'] = array_merge($resultset['response'], $this->returnData['response']);
 			$this->returnData['response']['categorie'] = $categories;
 		}
 
@@ -662,7 +666,6 @@ class ServicesPositionnement extends Main
 			if ($resultat->getRefReponseQcm() !== null && $resultat->getRefReponseQcmCorrecte() !== null)
 			{
 				$totalReponses++;
-				//$totalReponsesGlobal++;
 
 				// Test si bonne réponse ou non
 
@@ -670,7 +673,6 @@ class ServicesPositionnement extends Main
 				{
 					$resultsDetails[$i]['correct'] = true;
 					$totalReponsesCorrectes++;
-					//$totalReponsesCorrectesGlobal++;
 				}
 				else 
 				{
@@ -680,11 +682,9 @@ class ServicesPositionnement extends Main
 			else if ($resultat->getReponseChamp() !== null)
 			{
 				$totalReponses++;
-				//$totalReponsesGlobal++;
 
 				$resultsDetails[$i]['correct'] = true;
 				$totalReponsesCorrectes++;
-				//$totalReponsesCorrectesGlobal++;
 			}
 			else
 			{
@@ -804,7 +804,6 @@ class ServicesPositionnement extends Main
 
 		// Cette fois-ci, il s'agit de répercuter les résultats de chaque catégorie sur sa propre catégorie parente
 
-		//end($categories);
 		/*
 		foreach ($categories as $categorie)
 		{
@@ -836,6 +835,7 @@ class ServicesPositionnement extends Main
 			}
 		}
 		*/
+	
 		$maxLevel = 0;
 
 		foreach ($categories as $categorie)
@@ -850,8 +850,6 @@ class ServicesPositionnement extends Main
 
 		$recursiveCategoriesResults = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $categories);
 
-		//var_dump($recursiveCategoriesResults);
-		//exit();
 
 
 		// Enfin, on attribue aux resultats les catégories détaillées correspondantes
@@ -914,11 +912,11 @@ class ServicesPositionnement extends Main
 
 		}
 
-		$scoreGlobal = $scoreCats / $nbCats;
+		$scoreGlobal = round($scoreCats / $nbCats);
 
 		$this->returnData['response']['total_reponses'] = $totalReponsesGlobal;
 		$this->returnData['response']['total_reponses_correctes'] = $totalReponsesCorrectesGlobal;
-		$this->returnData['response']['total_score'] = round($scoreGlobal);
+		$this->returnData['response']['total_score'] = $scoreGlobal;
 
 
 		/* Fin score global */
@@ -1006,7 +1004,6 @@ class ServicesPositionnement extends Main
 		   ========================================================================== */
 
 		$dataSession = array();
-		//$dataSession['ref_session'] = $refSession;
 		$dataSession['session_accomplie'] = 1;
 		$dataSession['temps_total'] = $totalTime;
 		$dataSession['score_pourcent'] = $scoreGlobal;
@@ -1085,8 +1082,9 @@ class ServicesPositionnement extends Main
 		}
 		*/
 
-		$emailInfos['url_restitution'] = "http://positionnement.educationetformation.fr/clea/gestion/public/restitution/";
-		$emailInfos['url_stats'] = "http://positionnement.educationetformation.fr/clea/gestion/public/statistique/";
+		$emailInfos['url_restitution'] = 'http://positionnement.educationetformation.fr/clea/gestion/public/restitution/';
+		$emailInfos['url_stats'] = 'http://positionnement.educationetformation.fr/clea/gestion/public/statistique/';
+
 
 		// Email -> infos utilisateur
 
@@ -1181,7 +1179,6 @@ class ServicesPositionnement extends Main
 		$messageBody .= '<p>';
 		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br>';
 		$messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
-		//$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
@@ -1223,9 +1220,6 @@ class ServicesPositionnement extends Main
 
 		$sending = $this->sendMail->send();
 
-		//var_dump($this->sendMail->getIsSend());
-		//var_dump($sending);
-		//exit();
 
 
 		/* ==========================================================================
@@ -1258,8 +1252,6 @@ class ServicesPositionnement extends Main
 		/* Assemblage des données de la réponse à envoyer à la page de résultats
 		   ========================================================================== */
 
-		//$this->returnData['response'] = array_merge($dataView['response'], $this->returnData['response']);
-
 		/*** Gestion des erreurs ***/		
 
 		if (!empty($this->errors))
@@ -1274,16 +1266,8 @@ class ServicesPositionnement extends Main
 		
 
 		/*** Affichage de la page de résultat ***/
-		//$this->setResponse($this->returnData);
-		
-		//$this->setTemplate("tpl_results");
-		//$this->render("resultat");
-
-
 		$this->setResponse($this->returnData);
 		
-		//$this->setTemplate("tpl_page");
-		//$this->render("page");
 
 		$this->setTemplate("tpl_basic_page");
 		$this->setHeader("header_form");

@@ -49,6 +49,8 @@ if (!empty($response['stats']))
 }
 
 $form_url = $response['url'];
+
+$numTab = 1;
 //var_dump($formData);
 //var_dump($_POST);
 
@@ -434,7 +436,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										
 										foreach ($response['positionnement'] as $domaine)
 										{
-											$disabled = "" ;
+											$disabled = "";
 											$selected = "";
 											
 											if (!empty($formData['ref_posi']) && $formData['ref_posi'] == $domaine->getId())
@@ -521,8 +523,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<li><a class="tab-link" href="#details">3 - Détails des résultats</a></li>
 								<?php if (Config::ALLOW_PRECONISATION) : ?>
 									<li><a class="tab-link" href="#parcours">4 - Parcours de formation</a></li>
+									<li><a class="tab-link" href="#exports">5 - Exports</a></li>
 								<?php endif; ?>
-								<li><a class="tab-link" href="#exports">5 - Exports</a></li>
+								<li><a class="tab-link" href="#exports">4 - Exports</a></li>
 							</ul>
 
 							<div id="infos" class="zone-liste-restitution">
@@ -919,7 +922,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 		</div>
 		
 		
-		<div class="clear"></div>
+		<!-- <div class="clear"></div> -->
 
 
 		<?php
@@ -1481,22 +1484,24 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 
 			// Si click sur une des étiquettes de section
+			
 			$('.tab-link').on('click', function(event) {
 
 				// On vérifie s'il y a des validations qui ont été effectuées
 				if (resultHasChanged) {
 
-					event.preventDefault();
+					//event.preventDefault();
+					resultHasChanged = false;
 
-					var message = 'Pour pouvoir visualiser les résultats prenant en compte les modifications que vous avez apporté, veuillez cliquer sur \'ok\'.'
+					var message = 'Pour pouvoir visualiser les résultats prenant en compte les modifications que vous avez apporté, la page va être actualisée.'
 
-					if (alert(message)) {
-						$('#form-posi').submit();
-						resultHasChanged = false;
-					}
+					alert(message);
+					
+					$('#form-posi').submit();
 				}
 				
 			});
+			
 
 
 			/*=====  End Gestion de la validation des questions ouvertes  ======*/

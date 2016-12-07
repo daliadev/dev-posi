@@ -142,16 +142,20 @@ p {
 
 /*----------------------------------------------FOOTER-----------------------------------------*/
 
-#footer{  
-	width:100%;
-	background:url(../images/footer-page.jpg) repeat-x;  
-	text-align:center; 
-	color:#b3b3b3;
-	margin-top:20px;
-	margin-bottom:20px;
+#footer {  
+	/*width: 100%;*/
+	margin: 0 30px 0 30px;
+	/*padding: 16px 24px 0 24px;*/
+	/*background: url(../images/footer-page.jpg) repeat-x; */
+	border-top: 1px solid #bdbdbd; 
+	text-align: center; 
+	color: #b3b3b3;
+	
 }
 
-#txt-footer{ color:#b3b3b3; padding-top:15px; }
+#txt-footer {  
+	padding-top: 16px;
+}
 
 
 
@@ -1425,7 +1429,7 @@ fieldset #liste-cat {
 	border: 1px solid #ccc8c8;
 	border-radius: 5px;
 	overflow: auto;
-	width:395px;
+	width: 395px;
 }
 
 fieldset #liste-cat ul {
@@ -2329,7 +2333,7 @@ fieldset .add-link span
 
 	.stats-global .stat-total-temps {
 		position: absolute;
-		top: 141px;
+		top: 141px;	
 		left: 574px;
 		font-size: 16px;
 	}
@@ -2357,7 +2361,7 @@ fieldset .add-link span
 		color: #364252;
 		text-align: center;
 		background-color:#eff1f0;
-		border-radius: 11px;
+		border-radius: 10px;
 		box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 	}
 
@@ -2370,25 +2374,23 @@ fieldset .add-link span
 		{
 			width: 100px;
 			height: 45px;
-			padding-top: 9px;
+			/*padding-bottom: 15px;*/
 			text-align: center;
-			
-			border-radius:0 0px 11px 11px;
-			
 		}
 
-		/*.bloc-stat .bloc-stat-number
+		.bloc-stat .bloc-stat-number
 		{
 			width: 100px;
 			height: 100px;
 			background-color: #43545D;
+			/*border: 1px solid #CCC8C8;*/
 			border-radius: 100px;
 			color: #ffffff;
 			font-size: 20px;
 			font-weight: bold;
 			text-align: center;
 			line-height: 100px;
-		}*/
+		}
 		
 		
 	.bloc-stat .bloc-stat-number {

@@ -621,22 +621,8 @@ class ServicesPublic extends Main
 
 				/*------   Un domaine/positionnement a été sélectionné   -------*/
 
-				if (!empty($this->formData['ref_posi']))
+				if (!empty($this->formData['ref_posi']) && $this->formData['ref_posi'] != "select_cbox") 
 				{
-					/*** On va chercher tous les domaines effectués par l'utilisateur qui correspondent à l'organisme ***/
-					if ($this->formData['ref_posi'] != "select_cbox") 
-					{
-						$refDom = $this->formData['ref_posi'];
-					}
-					else
-					{
-						$refDom = null;
-					}
-
-
-
-
-
 					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($this->formData['ref_user']);
 					//var_dump($resultsetDomaines);
 					//exit();
@@ -644,7 +630,7 @@ class ServicesPublic extends Main
 					//$doms = array('response' => array('domaines'));
 					$doms = array(
 						'response' => array(
-							'domaines' => array()
+							'positionnement' => array()
 						)
 					);
 
@@ -660,7 +646,7 @@ class ServicesPublic extends Main
 							{
 								if ($positionnement->getId() == $dom['id_posi']) 
 								{
-									$doms['response']['domaines'][] = $positionnement;
+									$doms['response']['positionnement'][] = $positionnement;
 								}
 							}
 						}

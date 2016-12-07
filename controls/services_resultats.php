@@ -485,7 +485,7 @@ class ServicesPosiResultats extends Main
 		{
 			if ($totalPercent > 0) {
 
-				$scoreMoyenne = $totalPercent / $countChildren;
+				$scoreMoyenne = round($totalPercent / $countChildren);
 			}
 			else
 			{

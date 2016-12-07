@@ -282,15 +282,15 @@ class ServicesAdminRestitution extends Main
 
 
 		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
-		$query .= "FROM organisme AS org, positionnement AS dom ";
+		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
 		$query .= "INNER JOIN session AS sess ";
 		$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
 		$query .= "INNER JOIN utilisateur AS user ";
 		$query .= "ON user.id_user = sess.ref_user ";
-		//$query .= "INNER JOIN positionnement AS dom ";
-		//$query .= "ON dom.id_posi = sess.ref_posi ";
+		$query .= "INNER JOIN positionnement AS dom ";
+		$query .= "ON dom.id_posi = sess.ref_posi ";
 		$query .= "WHERE sess.session_accomplie = 1 ";
 
 		if ($refOrgan) 
@@ -326,17 +326,17 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND dom.id_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY org.id_organ, dom.id_posi, user.id_user ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
 
 		//return $query;
-		var_dump($query);
-		exit();
+		//var_dump($query);
+		//exit();
 
 
 		$resultset = $this->customDAO->read($query, 'restitution');
 
-		var_dump($resultset);
-		exit();
+		//var_dump($resultset);
+		//exit();
 
 		if (!$this->filterDataErrors($resultset['response']))
 		{
@@ -538,7 +538,10 @@ class ServicesAdminRestitution extends Main
 				   	$tempsGlobal += $resultats[$j]->getTempsReponse();
 					$tempsCat += $resultats[$j]->getTempsReponse();
 
-					if ($resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte() || (!empty($resultats[$j]->getReponseChamp()) && $resultats[$j]->getReponseChamp() !== null && !empty($resultats[$j]->getValidationReponseChamp()) && $resultats[$j]->getValidationReponseChamp() !== null && $resultats[$j]->getValidationReponseChamp() === 1))
+					//var_dump($resultats[$j]->getRefReponseQcm(), $resultats[$j]->getRefReponseQcmCorrecte(), $resultats[$j]->getReponseChamp(), $resultats[$j]->getValidationReponseChamp());
+
+					if ((!empty($resultats[$j]->getRefReponseQcm()) && $resultats[$j]->getRefReponseQcm() !== null && $resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte()) 
+						|| (!empty($resultats[$j]->getReponseChamp()) && $resultats[$j]->getReponseChamp() !== null && !empty($resultats[$j]->getValidationReponseChamp()) && $resultats[$j]->getValidationReponseChamp() !== null && $resultats[$j]->getValidationReponseChamp() == 1))
 					{
 						$totalCorrectCategorie++;
 						$totalCorrectGlobal++;
@@ -549,6 +552,8 @@ class ServicesAdminRestitution extends Main
 
 			}
 			
+			//exit();
+
 			// Calcul du score en pourcentage
 
 			if ($totalCategorie > 0 && $hasResults)
@@ -657,7 +662,7 @@ class ServicesAdminRestitution extends Main
 	
 	public function getQuestionsDetails($refSession, $refPosi = null)
 	{
-
+		
 		// Etape  1 : Regroupement des données sur toutes les questions du positionnement
 		$questionsDetails = array();
 				

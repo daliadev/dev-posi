@@ -18,7 +18,7 @@ body {
 .main {
 	width: 100%;
 	height: auto;
-	/*margin: 0 auto;*/
+	margin: 0;
 	font-size: 1em;
 }
 
@@ -291,8 +291,6 @@ body {
 
 	.content-form {
 		width: 100%;
-		/*max-width: 1008px;*/
-		/*max-width: 100%;*/
 		height: auto;
 		margin: 0 auto;
 		padding: 0 24px 24px 24px;
@@ -849,7 +847,7 @@ body {
 		}
 		
 			.content-form .main-graph .graph-svg {
-				height: 100%;
+				/*height: 100%;*/
 				min-height: 75%;
 			}
 				
@@ -1129,7 +1127,7 @@ body {
 		max-width: 364px;
 		margin: 0 auto;
 		padding: 16px 24px 0 24px;
-		border-top: 1px solid #bdbdbd;
+		border-top: 1px solid #a5a5a5;
 	}
 
 		.footer p, .footer p a {
@@ -1146,7 +1144,7 @@ body {
 			}
 
 			.footer p a:hover {
-				color: #f57c00;
+				color: #ec407a;
 			}
 		
 	
@@ -1269,9 +1267,9 @@ body {
 
 	.main-container {
 		/*width: 100%;*/
-		/*min-width: 680px;*/
+		max-width: 680px;
 		/*height: auto;*/
-		/*margin: 0 auto;*/
+		margin: 0 auto;
 	}
 
 	.content-form-small {
@@ -1386,26 +1384,36 @@ body {
 	/*margin: 0 auto;*/
 	/*padding: 0;*/
 }
-	.content-form {
-		/*max-width: 1008px;*/
+
+	.main-container {
+		/*width: 100%;*/
+		max-width: 960px;
+		/*height: auto;*/
+		margin: 0 auto;
 	}
 
-	
-	.header {
-		width: 100%;
-		max-width: 980px;
-		height: 32px;
-		margin: 0 auto 0 auto;
-		background-color: #009688;
-	}
 
-		.header .header-wrapper {
-			/*max-width: 412px;*/
-			margin: 0 auto;
-			padding: 0 32px;
+		.header {
+			width: 100%;
+			/*max-width: 960px;*/
+			height: 32px;
+			/*margin: 0 32px;*/
+			background-color: #009688;
 		}
 
+			.header .header-wrapper {
+				/*max-width: 412px;*/
+				margin: 0 auto;
+				padding: 0 32px;
+			}
 
+		
+		.content-form {
+			width: 100%;
+			height: auto;
+			margin: 0 auto;
+			padding: 0;
+		}
 	
 
 

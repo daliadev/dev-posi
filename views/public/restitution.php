@@ -1072,14 +1072,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						alert(data.error);
 					}
 					else {
-						//console.log(id, selectRegion.id);
-						//var selectOrgan = $('#ref-organ-cbox').get(0);
-						//selectOrgan.options.length = 1;
-						//selectOrgan.options[0].selected;
-
-						//var selectUser = $('#ref-user-cbox').get(0);
-						//selectUser.options.length = 1;
-						//selectUser.options[0].selected;
 
 						//var dateInput = $('#date-session');
 
@@ -1093,8 +1085,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 						if (filterRequested) {
 							
-							//console.log('filter activated !');
-
 							if (data.results != null)
 							{
 								selectSession.options.length = 1;
@@ -1102,13 +1092,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								currentRefSession = null;
 
+								var session = null;
 								var i = 1;
 
 								for (var prop in data.results) {
 
 									if (data.results[prop].id_session != null && data.results[prop].date_session != null && data.results[prop].id_user != currentRefSession) {
 
-										var session = data.results[prop];
+										session = data.results[prop];
 										currentRefSession = session.id_session;
 
 										selectSession.options[i] = new Option(session.date_session, session.id_session, false, false);
@@ -1320,7 +1311,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			$('#posi-search .ajax-list').on('change', function(event) {
 
 				var $select = $(this);
-				//var request = $select.data('request');
 				var id = $select.get(0).id;
 				var ref = null;
 				var hasChanged = false;
@@ -1360,11 +1350,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 						break;
 				}
 
-				//self.isFilterActivate = false;
-
 				if (hasChanged) {
 					self.filterRequested = false;
-					//console.log('Filter has changed');
 					self.changeFilter(id, ref);
 				}
 			});
@@ -1408,9 +1395,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				event.preventDefault();
 				
 				if (isFilterable) {
-					//self.isFilterActivate = true;
 					filterRequested = true;
-					//console.log('Filtering !');
 					self.changeFilter('ref-session-cbox', null);
 				}
 			});
@@ -1422,7 +1407,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				if ($('ref-session-cbox').val() != 'select_cbox')
 				{
 					$('#form-posi').submit();
-					//isSelectTriggered = true;
 				}
 			});
 

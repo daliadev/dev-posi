@@ -287,6 +287,8 @@ class ServicesAdminRestitution extends Main
 		$query .= "ON org.id_organ = inter.ref_organ ";
 		$query .= "INNER JOIN session AS sess ";
 		$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
+		//$query .= "INNER JOIN positionnement AS dom ";
+		//$query .= "ON dom.id_posi = sess.ref_posi ";
 		$query .= "INNER JOIN utilisateur AS user ";
 		$query .= "ON user.id_user = sess.ref_user ";
 		$query .= "INNER JOIN positionnement AS dom ";
@@ -322,11 +324,11 @@ class ServicesAdminRestitution extends Main
 
 		if ($refPosi) 
 		{
-			$query .= "AND sess.ref_posi = ".$refPosi." ";
 			$query .= "AND dom.id_posi = ".$refPosi." ";
+			$query .= "AND sess.ref_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		$query .= "GROUP BY user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);

@@ -235,13 +235,9 @@ class ServicesPosiResultats extends Main
 		$countChildren = $count;
 		$totalPercent = $totalScore;
 		$currentParent = $parentCat;
-		//$percentChildren = 0;
 		$scoreMoyenne = 0;
-		//$parentScore = 0;
 
-		//var_dump('');
-		//var_dump('FUNCTION - $currentParent parameter = ' . $currentParent->getCode());
-
+		
 		foreach ($categories as $categorie) 
 		{	
 			$levelCat = strlen($categorie->getCode()) / 2;
@@ -250,17 +246,8 @@ class ServicesPosiResultats extends Main
 			{
 				$parentCat = $categorie->getParent();
 				$parentCat->setHasResult(true);
-				/* new */
-				
-				/*
-				var_dump('*----------------------------------');
-				var_dump('1 - $categorie->getCode() = '.$categorie->getCode());
-				var_dump('1 - $parentCat->getCode() = '.$parentCat->getCode());
-				var_dump('1 - $countChildren = '.$countChildren);
-				var_dump('1 - $categorie->getScorePercent() = '.$categorie->getScorePercent());
-				var_dump('1 - $totalPercent = '.$totalPercent);
-				//var_dump('1 - $currentParent->getCode() : '.$currentParent->getCode());
-				*/
+
+
 				$catScore = $categorie->getScorePercent();
 
 				
@@ -270,31 +257,14 @@ class ServicesPosiResultats extends Main
 					if ($currentParent->getCode() == $parentCat->getCode())
 					{
 						// nouvelle categorie du parent courant
-						//var_dump('-- nouvelle categorie du parent courant');
 						if ($currentCatId != null && $currentCatId != $categorie->getCode()) 
 						{
 							$countChildren++;
 							$totalPercent += $catScore;
 						}
-						/*
-						if ($parentCat->getHasResult()) 
-						{
-							$totalPercent += $parentCat->getScorePercent();
-							$countChildren++;
-							//$scoreMoyenne = ($parentCatScore + $totalPercent) / ($countChildren + 1);
-						}
-						*/
-						/*
-						else
-						{
-							
-						}
-						*/
-
 					}
 					else
 					{
-
 						// Les scores des enfants deviennent la moyenne de leur total et sont attribués au parent
 						if ($totalPercent > 0 && $countChildren > 0)
 						{
@@ -308,139 +278,23 @@ class ServicesPosiResultats extends Main
 						// Les parents ont changés, on assigne le score à l'ancien parent
 						$currentParent->setScorePercent($scoreMoyenne);
 						$currentParent->setHasResult(true);
-						
-
-						// 1er categorie du parent courant
-						//var_dump('-- 1ere categorie du parent courant');
 
 						// Nouvelles valeurs
 						$countChildren = 1;
 						$totalPercent = $catScore;
 						$currentParent = $parentCat;
-						//$currentCatId = $categorie->getCode();
 					}
 				}
 				else
 				{
 					// 1er categorie du premier parent
-					//var_dump('- 1ere categorie du premier parent');
 					$countChildren = 1;
 					$totalPercent = $catScore;
 					$currentParent = $parentCat;
 					
 				}
-				
-				//$parentCat->setHasResult(true);
-				//$parentCat->setScorePercent($totalPercent);
-				
-				
-				/*
-				//var_dump('');
-				//var_dump('2 - Code cat en cours : '.$categorie->getCode());
-				//var_dump('2 - Remonte vers '.$parentCat->getCode());
-				var_dump('2 - $countChildren = '.$countChildren);
-				var_dump('2 - $categorie->getScorePercent() = '.$categorie->getScorePercent());
-				var_dump('2 - $totalPercent = '.$totalPercent);
-				var_dump('2 - $currentParent->getCode() = '.$currentParent->getCode());
-				var_dump('2 - $parentCat->getHasResult() = '.$parentCat->getHasResult());
-				*/
 
 				$currentCatId = $categorie->getCode();
-				
-				/* Fin new */
-
-
-				
-				//if ($currentParent->getCode() !== null)
-				//{
-					/*
-					// Si le parent a changé
-					if ($parentCat->getCode() != $currentParentCode) 
-					{	
-						$percentChildren = 0;
-
-						if ($totalPercent > 0 && $countChildren > 0)
-						{
-							$percentChildren = $totalPercent / $countChildren;
-							//var_dump('Moyenne enfant = '.$percentChildren);
-
-							if ($parentCat->getHasResult())
-							{
-								$percentChildren += $parentCat->getScorePercent();
-								//var_dump('Moyenne enfant + parent = '.$percentChildren);
-							}
-						}
-
-						$currentParentCode = $parentCat->getCode();
-						
-						$totalPercent = 0;
-						$countChildren = 0;
-					}
-					else
-					{
-						//var_dump('$parentCat->getCode() == $currentParentCode');
-					}
-					*/
-					/*
-					if ($percentChildren > 0)
-					{
-						$parentScore = $percentChildren / 2;
-					}
-					else
-					{
-						$parentScore = 0;
-					}
-
-					$parentCat->setScorePercent($parentScore);
-					*/
-					/*
-					$currentParentCode = null;
-					$countChildren = 0;
-					$totalPercent = 0;
-					*/
-				//}
-				//else
-				//{
-					//$currentParentCode = $parentCat->getCode();
-
-					/*
-					// Calcul du score en faisant la moyenne entre le score parent et le score enfant
-					$scorePercent = $categorie->getScorePercent();
-					//$scorePercentParent = $parentCat->getScorePercent();
-
-
-					//if ($scorePercentParent > 0 && $parentCat->getHasResult())
-					//{
-						//$totalParentPercent += $scorePercentParent + $scorePercent;
-					//}
-					//else
-					//{
-						$totalPercent += $scorePercent;
-					//}
-					
-					$countChildren++;
-					*/
-				//}
-				
-				// Calcul du score en faisant la moyenne entre le score parent et le score enfant
-				//$scorePercent = $categorie->getScorePercent();
-				//$scorePercentParent = $parentCat->getScorePercent();
-
-
-
-				//if ($scorePercentParent > 0 && $parentCat->getHasResult())
-				//{
-					//$totalParentPercent += $scorePercentParent + $scorePercent;
-				//}
-				//else
-				//{
-					//$totalPercent += $scorePercent;
-				//}
-				
-				//$countChildren++;
-				
-				//var_dump('$scorePercent = '.$scorePercent.' - $countChildren = '.$countChildren.' - $totalPercent = '.$totalPercent);
-				
 				
 				
 				// Calcul du nombre de réponses totales
@@ -454,16 +308,6 @@ class ServicesPosiResultats extends Main
 				$nbreReponsesCorrectesParent = ($parentCat->getTotalReponsesCorrectes() !== null) ? $parentCat->getTotalReponsesCorrectes() : 0;
 				$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
 				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
-
-
-				/*
-				// Calcul du temps de réponse moyen par question
-				$temps = ($categorie->getTemps() !== null) ? $categorie->getTemps() : 0;
-				$tempsParent = ($parentCat->getTemps() !== null) ? $parentCat->getTemps() : 0;
-				$tempsParent = (($temps + $tempsParent) > 0) ? ($temps + $tempsParent) / 2 : 0;
-				//$tempsParent += $nbreReponses;
-				$parentCat->setTemps($tempsParent);
-				*/
 
 			}
 			else

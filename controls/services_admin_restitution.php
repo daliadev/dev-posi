@@ -328,7 +328,7 @@ class ServicesAdminRestitution extends Main
 			$query .= "AND sess.ref_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);

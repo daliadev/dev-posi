@@ -229,6 +229,7 @@ class ServicesAdmin extends Main
 			"audio_question"     => "text",
 			"video_question"     => "text",
 			"code_cat_cbox"      => "select",
+			"code_cat_cbox2"     => "select",
 			"ref_activites"      => "multi",
 			"ref_degre"          => "multi"
 		);

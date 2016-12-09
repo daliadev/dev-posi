@@ -4,6 +4,9 @@
 // Initialisation par défaut des valeurs du formulaire
 $formData = array();
 
+$formData['ref_question_cat'] = null;
+$formData['ref_question_cat2'] = null;
+
 // S'il y a des valeurs déjà existantes pour le formulaire, on remplace les valeurs par défaut par ces valeurs
 if (isset($response['form_data']) && !empty($response['form_data']))
 {      
@@ -94,6 +97,7 @@ $form_url = $response['url'];
 
 					if (isset($response['errors']) && !empty($response['errors']))
 					{
+						var_dump($response['errors']);
 						echo '<div id="zone-erreur">';
 						echo '<p><strong>Le formulaire n\'est pas correctement rempli :</strong></p>';
 						echo '<ul>';
@@ -414,45 +418,100 @@ $form_url = $response['url'];
 								<fieldset>
 								
 									<legend>Catégories / compétences</legend>
+									
+									<div>
+										
+										<input type="hidden" name="ref_question_cat" value="<?php echo $formData['ref_question_cat']; ?>">
 
-									<select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?>>
-										<option value="select_cbox">---</option>
-										<?php 
+										<select id="code_comp_cbox" name="code_cat_cbox" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?>>
+											<option value="select_cbox">---</option>
+											<?php 
 
-										foreach($response['categorie'] as $categorie)
-										{
-											$selected = "";
-											if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
+											foreach($response['categorie'] as $categorie)
 											{
-												$selected = "selected";
-											}
-
-											$space = '';
-
-											if (strlen($categorie->getCode()) == 2)
-											{
-												$label = '- '.$categorie->getNom();
-
-												$length = 0;
-											}
-											else
-											{
-												
-												$label = $categorie->getNom();
-
-												$length = strlen($categorie->getCode());
-												for ($i = 0; $i < $length; $i++) 
-												{ 
-													$space .= '&nbsp;&nbsp;';
+												$selected = "";
+												if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode())
+												{
+													$selected = "selected";
 												}
-											}
-											
-											echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$space.$label.'</option>';
-											
-										}
 
-										?>
-									</select>
+												$space = '';
+
+												if (strlen($categorie->getCode()) == 2)
+												{
+													$label = '- '.$categorie->getNom();
+
+													$length = 0;
+												}
+												else
+												{
+													
+													$label = $categorie->getNom();
+
+													$length = strlen($categorie->getCode());
+													for ($i = 0; $i < $length; $i++) 
+													{ 
+														$space .= '&nbsp;&nbsp;';
+													}
+												}
+												
+												echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$space.$label.'</option>';
+												
+											}
+
+											?>
+										</select>
+									</div>
+
+									<div>
+
+										<input type="hidden" name="ref_question_cat2" value="<?php echo $formData['ref_question_cat2']; ?>">
+
+										<select id="code_comp_cbox2" name="code_cat_cbox2" class="select-<?php echo $formData['disabled']; ?>" style="margin:10px 0;" <?php echo $formData['disabled']; ?>>
+											<option value="select_cbox">---</option>
+											<?php 
+
+											foreach($response['categorie'] as $categorie)
+											{
+												$selected = "";
+												if (!empty($formData['code_cat2']) && $formData['code_cat2'] == $categorie->getCode())
+												{
+													$selected = "selected";
+												}
+
+												$disabled2 = "";
+												if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode()) 
+												{
+													$disabled2 = "disabled";
+												}
+
+												$space = '';
+
+												if (strlen($categorie->getCode()) == 2)
+												{
+													$label = '- '.$categorie->getNom();
+
+													$length = 0;
+												}
+												else
+												{
+													
+													$label = $categorie->getNom();
+
+													$length = strlen($categorie->getCode());
+													for ($i = 0; $i < $length; $i++) 
+													{ 
+														$space .= '&nbsp;&nbsp;';
+													}
+												}
+												
+												echo '<option value="'.$categorie->getCode().'" '.$selected.' '.$disabled2.'>'.$space.$label.'</option>';
+												
+											}
+
+											?>
+										</select>
+									</div>
 
 								</fieldset>
 
@@ -471,7 +530,7 @@ $form_url = $response['url'];
 
 								<fieldset>
 
-									<legend>Degrés d'aptitude (facultatif)</legend>
+									<legend>Degrés d'aptitude requis (facultatif)</legend>
 
 									<?php 
 

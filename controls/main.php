@@ -240,7 +240,7 @@ class Main
 		{
 			$filteredData = $this->filterData($value, $type);
 			
-			if (!$filteredData)
+			if (!$filteredData && $required)
 			{
 				$filteredData = "";
 				$this->registerError("form_valid", $errorData);

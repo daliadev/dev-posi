@@ -1078,7 +1078,7 @@ class ServicesAdminCategorie extends Main
 					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
 				}
 			}
-			else if ($modeCategorie == "update")
+			else if ($modeCategorie == "update" && $refQuestionCat !== null)
 			{ 
 				$resultset = $this->questionCatDAO->update(array('id_question_cat' => $refQuestionCat, 'ref_question' => $refQuestion, 'ref_cat' => $codeCat));
 

@@ -131,7 +131,7 @@ class ServicesAdminQuestion extends Main
 				{
 					$questionDetails['ref_question_cat'] = $linkedCategories[0]['id_question_cat'];
 					$questionDetails['code_cat'] = $linkedCategories[0]['ref_cat'];
-					$questionDetails['ref_question_cat2'] = $linkedCategories[2]['id_question_cat'];
+					$questionDetails['ref_question_cat2'] = $linkedCategories[1]['id_question_cat'];
 					$questionDetails['code_cat2'] = $linkedCategories[1]['ref_cat'];
 				}
 			}
@@ -245,11 +245,32 @@ class ServicesAdminQuestion extends Main
 		$dataQuestion = array();
 		$dataReponses = array();
 		
+		
+
+
+		/*** Récupèration des categorie ***/
+
+		$formData['code_cat'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
+		$dataQuestion['questions_cat'][0]['code_cat'] = $formData['code_cat'];
+
+		$formData['ref_question_cat'] = $this->validatePostData($postData['ref_question_cat'], "ref_question_cat", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
+		$dataQuestion['questions_cat'][0]['id_question_cat'] = $formData['ref_question_cat'];
+
+		$formData['code_cat2'] = $this->validatePostData($postData['code_cat_cbox2'], "code_cat_cbox2", "integer", false, "Aucune catégorie secondaire n'a été sélectionnée.", "La catégorie secondaire n'est pas correctement sélectionnée.");
+		$dataQuestion['questions_cat'][1]['code_cat'] = $formData['code_cat2'];
+
+		$formData['ref_question_cat2'] = $this->validatePostData($postData['ref_question_cat2'], "ref_question_cat2", "integer", false, "Aucune catégorie secondaire n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
+		$dataQuestion['questions_cat'][1]['id_question_cat'] = $formData['ref_question_cat2'];
+
+
 		/*** Récupération de la référence de la question ***/
 		
 		if (isset($formData['ref_question']) && !empty($formData['ref_question']))
 		{
 			$dataQuestion['ref_question'] = $formData['ref_question'];
+
+			//$dataQuestion['questions_cat'][0]['ref_question'];
+			//$dataQuestion['questions_cat'][1]['ref_question'];
 		}
 		
 		
@@ -265,21 +286,6 @@ class ServicesAdminQuestion extends Main
 			$formData['ref_degre'] = "aucun";
 			$dataQuestion['ref_degre'] = null;
 		}
-
-
-		/*** Récupèration des categorie ***/
-
-		$formData['ref_question_cat'] = $this->validatePostData($postData['ref_question_cat'], "ref_question_cat", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
-		$dataQuestion['id_question_cat'] = $formData['ref_question_cat'];
-
-		$formData['ref_question_cat2'] = $this->validatePostData($postData['ref_question_cat2'], "ref_question_cat2", "integer", false, "Aucune catégorie secondaire n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
-		$dataQuestion['id_question_cat2'] = $formData['ref_question_cat2'];
-
-		$formData['code_cat'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", false, "Aucune catégorie n'a été sélectionnée.", "La catégorie secondaire n'est pas correctement sélectionnée.");
-		$dataQuestion['code_cat'] = $formData['code_cat'];
-
-		$formData['code_cat2'] = $this->validatePostData($postData['code_cat_cbox2'], "code_cat_cbox2", "integer", false, "Aucune catégorie secondaire n'a été sélectionnée.", "La catégorie secondaire n'est pas correctement sélectionnée.");
-		$dataQuestion['code_cat2'] = $formData['code_cat2'];
 
 
 		/*** Récupèration de l'intitule de la question ***/
@@ -508,12 +514,19 @@ class ServicesAdminQuestion extends Main
 	{
 
 		$dataReponses = array();
+		$dataQuestionsCat = array();
 
 		// On commence par extraire les réponses (si elles existent) des données de la question
 		if (isset($dataQuestion['data_reponses']) && !empty($dataQuestion['data_reponses']))
 		{
 			$dataReponses = $dataQuestion['data_reponses'];
 			unset($dataQuestion['data_reponses']);
+		}
+
+		if (isset($dataQuestion['questions_cat']) && !empty($dataQuestion['questions_cat']))
+		{
+			$dataQuestionsCat = $dataQuestion['questions_cat'];
+			unset($dataQuestion['questions_cat']);
 		}
 		
 		
@@ -591,24 +604,32 @@ class ServicesAdminQuestion extends Main
 					}
 
 					// Insertion de la catégorie
-					if (!empty($dataQuestion['code_cat'])) 
+					if (!empty($dataQuestionsCat)) 
 					{
 						$modeQuestionCat = "insert";
 
+						/*
 						if (!empty($dataQuestion['id_question_cat'])) 
 						{
 							$modeQuestionCat = "update";
 						}
+						*/
+						
+						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
 
-						$resultsetCategorie = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestion['id_question_cat'], $dataQuestion['ref_question'], $dataQuestion['code_cat']);
-
-						if (!$resultsetCategorie)
-						{
-							$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
+							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie("insert", null, $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
+						
+							if (!$resultsetQuestionCat)
+							{
+								$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
+								break;
+							}
 						}
+
 					}
 
 					// Insertion de la catégorie supplémentaire
+					/*
 					if (!empty($dataQuestion['code_cat2'])) 
 					{
 						$modeQuestionCat2 = "insert";
@@ -631,6 +652,7 @@ class ServicesAdminQuestion extends Main
 					{
 						$this->registerError("form_request", "L'insertion de la catégorie liée à la question a échoué.");
 					}
+					*/
 				}
 				else 
 				{
@@ -698,6 +720,7 @@ class ServicesAdminQuestion extends Main
 					
 					// Mise à jour de la catégorie
 					// Insertion de la catégorie
+					/*
 					if (!empty($dataQuestion['code_cat'])) 
 					{
 						$modeQuestionCat = "insert";
@@ -737,6 +760,34 @@ class ServicesAdminQuestion extends Main
 					if ((isset($resultsetCategorie) && !$resultsetCategorie) || (isset($resultsetCategorie2) || !$resultsetCategorie2))
 					{
 						$this->registerError("form_request", "L'insertion de la catégorie liée à la question a échoué.");
+					}
+					*/
+				
+					// Insertion de la catégorie
+					if (!empty($dataQuestionsCat)) 
+					{
+						$modeQuestionCat = "insert";
+
+						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
+
+							if (!empty($dataQuestionsCat[$i]['id_question_cat'])) 
+							{
+								$modeQuestionCat = "update";
+							}
+							else
+							{
+								$dataQuestionsCat[$i]['id_question_cat'] = null;
+							}
+
+							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestionsCat[$i]['id_question_cat'], $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
+						
+							if (!$resultsetQuestionCat)
+							{
+								$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
+								break;
+							}
+						}
+
 					}
 				}
 				else 

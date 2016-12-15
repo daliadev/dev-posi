@@ -222,6 +222,10 @@ class QuestionDAO extends ModelDAO
 
                 $request = $this->createQueryString("update", $values, "question", "WHERE id_question = ".$refQuestion);
 
+                //var_dump('update', $request);
+                //exit();
+
+
                 $this->resultset['response'] = $this->executeRequest("update", $request, "question", "Question");
             }
             else

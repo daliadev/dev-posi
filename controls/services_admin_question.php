@@ -243,17 +243,16 @@ class ServicesAdminQuestion extends Main
 	public function filterQuestionData(&$formData, $postData)
 	{
 		$dataQuestion = array();
+		$dataQuestion['questions_cat'] = array();
+
 		$dataReponses = array();
-		
-		
-
-
+	
 		/*** Récupèration des categorie ***/
 
 		$formData['code_cat'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
 		$dataQuestion['questions_cat'][0]['code_cat'] = $formData['code_cat'];
 
-		$formData['ref_question_cat'] = $this->validatePostData($postData['ref_question_cat'], "ref_question_cat", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
+		$formData['ref_question_cat'] = $this->validatePostData($postData['ref_question_cat'], "ref_question_cat", "integer", false, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
 		$dataQuestion['questions_cat'][0]['id_question_cat'] = $formData['ref_question_cat'];
 
 		$formData['code_cat2'] = $this->validatePostData($postData['code_cat_cbox2'], "code_cat_cbox2", "integer", false, "Aucune catégorie secondaire n'a été sélectionnée.", "La catégorie secondaire n'est pas correctement sélectionnée.");
@@ -269,8 +268,8 @@ class ServicesAdminQuestion extends Main
 		{
 			$dataQuestion['ref_question'] = $formData['ref_question'];
 
-			//$dataQuestion['questions_cat'][0]['ref_question'];
-			//$dataQuestion['questions_cat'][1]['ref_question'];
+			$dataQuestion['questions_cat'][0]['ref_question'] = $dataQuestion['ref_question'];
+			$dataQuestion['questions_cat'][1]['ref_question'] = $dataQuestion['ref_question'];
 		}
 		
 		
@@ -606,15 +605,6 @@ class ServicesAdminQuestion extends Main
 					// Insertion de la catégorie
 					if (!empty($dataQuestionsCat)) 
 					{
-						$modeQuestionCat = "insert";
-
-						/*
-						if (!empty($dataQuestion['id_question_cat'])) 
-						{
-							$modeQuestionCat = "update";
-						}
-						*/
-						
 						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
 
 							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie("insert", null, $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
@@ -770,7 +760,7 @@ class ServicesAdminQuestion extends Main
 
 						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
 
-							if (!empty($dataQuestionsCat[$i]['id_question_cat'])) 
+							if (isset($dataQuestionsCat[$i]['id_question_cat']) && !empty($dataQuestionsCat[$i]['id_question_cat'])) 
 							{
 								$modeQuestionCat = "update";
 							}

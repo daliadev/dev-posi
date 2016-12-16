@@ -122,7 +122,9 @@ class QuestionCategorieDAO extends ModelDAO
 				$refQuestionCat = $values['id_question_cat'];
 				unset($values['id_question_cat']);
 				
-				$request = $this->createQueryString("update", $values, "question_cat", "WHERE id_question_cat = ".$refQuestionCat);
+				//$request = $this->createQueryString("update", $values, "question_cat", "WHERE id_question_cat = ".$refQuestionCat);
+
+				$request = "UPDATE question_cat SET ref_question = ".$values['ref_question'].", ref_cat = '".$values['ref_cat']."' WHERE id_question_cat = ".$refQuestionCat;
 				
 				$this->resultset['response'] = $this->executeRequest("update", $request, "question_cat", "QuestionCategorie");
 			}

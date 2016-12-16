@@ -1068,6 +1068,8 @@ class ServicesAdminCategorie extends Main
 			{
 				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
 				
+				var_dump('insert', $resultset);
+				
 				// Traitement des erreurs de la requête
 				if (!$this->filterDataErrors($resultset['response']))
 				{
@@ -1082,6 +1084,7 @@ class ServicesAdminCategorie extends Main
 			{ 
 				$resultset = $this->questionCatDAO->update(array('id_question_cat' => $refQuestionCat, 'ref_question' => $refQuestion, 'ref_cat' => $codeCat));
 
+				var_dump('update', $resultset);
 				// Traitement des erreurs de la requête
 				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
 				{

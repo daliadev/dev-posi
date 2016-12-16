@@ -369,6 +369,8 @@ class ServicesAdmin extends Main
 					$this->formData['mode'] = "edit";
 				}
 			}
+
+			exit();
 		}
 		
 		

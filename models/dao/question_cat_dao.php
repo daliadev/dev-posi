@@ -93,6 +93,8 @@ class QuestionCategorieDAO extends ModelDAO
 			$request = "INSERT INTO question_cat (ref_question, ref_cat) VALUES (".$values['ref_question'].", '".$values['ref_cat']."')";
 			
 			$this->resultset['response'] = $this->executeRequest("insert", $request, "question_cat", "QuestionCategorie");
+
+			//var_dump('insert', $request, $this->resultset['response']);
 		}
 		else
 		{
@@ -122,11 +124,11 @@ class QuestionCategorieDAO extends ModelDAO
 				$refQuestionCat = $values['id_question_cat'];
 				unset($values['id_question_cat']);
 				
-				//$request = $this->createQueryString("update", $values, "question_cat", "WHERE id_question_cat = ".$refQuestionCat);
-
 				$request = "UPDATE question_cat SET ref_question = ".$values['ref_question'].", ref_cat = '".$values['ref_cat']."' WHERE id_question_cat = ".$refQuestionCat;
 				
 				$this->resultset['response'] = $this->executeRequest("update", $request, "question_cat", "QuestionCategorie");
+
+				//var_dump('update', $request, $this->resultset['response']);
 			}
 			else
 			{
@@ -151,13 +153,13 @@ class QuestionCategorieDAO extends ModelDAO
 	 * @param int Identifiant de la question
 	 * @return array Nbre de lignes effacées sinon erreurs
 	 */
-	public function delete($refQuestion) 
+	public function delete($refQuestionCat) 
 	{
 		$this->initialize();
 		
-		if (!empty($refQuestion))
+		if (!empty($refQuestionCat))
 		{
-			$request = "DELETE FROM question_cat WHERE ref_question = ".$refQuestion;
+			$request = "DELETE FROM question_cat WHERE id_question_cat = ".$refQuestionCat;
 
 			$this->resultset['response'] = $this->executeRequest("delete", $request, "question_cat", "QuestionCategorie");
 		}

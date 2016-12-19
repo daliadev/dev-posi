@@ -435,13 +435,21 @@ $form_url = $response['url'];
 													$selected = "selected";
 												}
 
-												$space = '';
+												$disabled = "";
+												if (!empty($formData['code_cat2']) && $formData['code_cat2'] == $categorie->getCode()) 
+												{
+													$disabled = " disabled";
+												}
 
+												$space = '';
+												//$disabled = '';
 												if (strlen($categorie->getCode()) == 2)
 												{
-													$label = '- '.$categorie->getNom();
+													$label = $categorie->getNom();
+													//$label = '- '.$categorie->getNom();
 
 													$length = 0;
+													$disabled = ' disabled';
 												}
 												else
 												{
@@ -455,7 +463,7 @@ $form_url = $response['url'];
 													}
 												}
 												
-												echo '<option value="'.$categorie->getCode().'" '.$selected.'>'.$space.$label.'</option>';
+												echo '<option value="'.$categorie->getCode().'" '.$selected.$disabled.'>'.$space.$label.'</option>';
 												
 											}
 
@@ -479,19 +487,21 @@ $form_url = $response['url'];
 													$selected = "selected";
 												}
 
-												$disabled2 = "";
+												$disabled = "";
 												if (!empty($formData['code_cat']) && $formData['code_cat'] == $categorie->getCode()) 
 												{
-													$disabled2 = "disabled";
+													$disabled = " disabled";
 												}
 
 												$space = '';
 
 												if (strlen($categorie->getCode()) == 2)
 												{
-													$label = '- '.$categorie->getNom();
+													$label = $categorie->getNom();
+													//$label = '- '.$categorie->getNom();
 
 													$length = 0;
+													$disabled = ' disabled';
 												}
 												else
 												{
@@ -505,7 +515,7 @@ $form_url = $response['url'];
 													}
 												}
 												
-												echo '<option value="'.$categorie->getCode().'" '.$selected.' '.$disabled2.'>'.$space.$label.'</option>';
+												echo '<option value="'.$categorie->getCode().'" '.$selected.$disabled.'>'.$space.$label.'</option>';
 												
 											}
 

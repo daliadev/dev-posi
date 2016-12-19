@@ -500,7 +500,8 @@ class ServicesAdminQuestion extends Main
 			$dataQuestion['video_question'] = null;
 		}
 
-		
+		//var_dump($dataQuestion);
+
 		return $dataQuestion;
 
 	}
@@ -602,7 +603,7 @@ class ServicesAdminQuestion extends Main
 						}
 					}
 
-					// Insertion de la catégorie
+					// Insertion des catégories
 					if (!empty($dataQuestionsCat)) 
 					{
 						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
@@ -618,31 +619,6 @@ class ServicesAdminQuestion extends Main
 
 					}
 
-					// Insertion de la catégorie supplémentaire
-					/*
-					if (!empty($dataQuestion['code_cat2'])) 
-					{
-						$modeQuestionCat2 = "insert";
-
-						if (!empty($dataQuestion['id_question_cat2'])) 
-						{
-							$modeQuestionCat2 = "update";
-						}
-
-						$resultsetCategorie2 = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestion['id_question_cat2'], $dataQuestion['ref_question'], $dataQuestion['code_cat2']);
-
-						if (!$resultsetCategorie2)
-						{
-							$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
-						}
-					}
-
-
-					if ((isset($resultsetCategorie) && !$resultsetCategorie) || (isset($resultsetCategorie2) || !$resultsetCategorie2))
-					{
-						$this->registerError("form_request", "L'insertion de la catégorie liée à la question a échoué.");
-					}
-					*/
 				}
 				else 
 				{
@@ -707,53 +683,9 @@ class ServicesAdminQuestion extends Main
 						$this->deleteReponses($formData['ref_question']);
 					}
 
-					
-					// Mise à jour de la catégorie
-					// Insertion de la catégorie
-					/*
-					if (!empty($dataQuestion['code_cat'])) 
-					{
-						$modeQuestionCat = "insert";
-
-						if (!empty($dataQuestion['id_question_cat'])) 
-						{
-							$modeQuestionCat = "update";
-						}
-
-						$resultsetCategorie = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestion['id_question_cat'], $dataQuestion['ref_question'], $dataQuestion['code_cat']);
-
-						if (!$resultsetCategorie)
-						{
-							$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
-						}
-					}
-
-					// Insertion de la catégorie supplémentaire
-					if (!empty($dataQuestion['code_cat2'])) 
-					{
-						$modeQuestionCat2 = "insert";
-
-						if (!empty($dataQuestion['id_question_cat2'])) 
-						{
-							$modeQuestionCat2 = "update";
-						}
-
-						$resultsetCategorie2 = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestion['id_question_cat2'], $dataQuestion['ref_question'], $dataQuestion['code_cat2']);
-
-						if (!$resultsetCategorie2)
-						{
-							$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
-						}
-					}
-
-
-					if ((isset($resultsetCategorie) && !$resultsetCategorie) || (isset($resultsetCategorie2) || !$resultsetCategorie2))
-					{
-						$this->registerError("form_request", "L'insertion de la catégorie liée à la question a échoué.");
-					}
-					*/
+					var_dump($dataQuestionsCat);
 				
-					// Insertion de la catégorie
+					// Mise à jour ou insertion de la catégorie
 					if (!empty($dataQuestionsCat)) 
 					{
 						$modeQuestionCat = "insert";
@@ -762,11 +694,19 @@ class ServicesAdminQuestion extends Main
 
 							if (isset($dataQuestionsCat[$i]['id_question_cat']) && !empty($dataQuestionsCat[$i]['id_question_cat'])) 
 							{
-								$modeQuestionCat = "update";
+								if ($dataQuestion['ref_question'] && !empty($dataQuestion['ref_question']) && $dataQuestionsCat[$i]['code_cat'] && !empty($dataQuestionsCat[$i]['code_cat'])) 
+								{
+									$modeQuestionCat = "update";
+								}
+								else
+								{
+									$modeQuestionCat = "delete";
+								}
 							}
 							else
 							{
 								$dataQuestionsCat[$i]['id_question_cat'] = null;
+								$modeQuestionCat = "insert";
 							}
 
 							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestionsCat[$i]['id_question_cat'], $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
@@ -776,6 +716,8 @@ class ServicesAdminQuestion extends Main
 								$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
 								break;
 							}
+
+							var_dump($resultsetQuestionCat);
 						}
 
 					}
@@ -807,18 +749,7 @@ class ServicesAdminQuestion extends Main
 			
 			if ($modeRequete == "insert")
 			{
-				/*
-				if (isset($dataQuestion['id_question_cat']) && !empty($dataQuestion['id_question_cat']))
-				{
-					unset($dataQuestion['id_question_cat']);
-				}
-
-				if (isset($dataQuestion['id_question_cat2']) && !empty($dataQuestion['id_question_cat2']))
-				{
-					unset($dataQuestion['id_question_cat2']);
-				}
-				*/
-
+				
 				$resultset = $this->questionDAO->insert($dataQuestion);
 
 				// Traitement des erreurs de la requête
@@ -836,18 +767,7 @@ class ServicesAdminQuestion extends Main
 
 				if (!empty($dataQuestion['ref_question']))
 				{
-					/*
-					if (isset($dataQuestion['code_cat']) && !empty($dataQuestion['code_cat']))
-					{
-						unset($dataQuestion['code_cat']);
-					}
-
-					if (isset($dataQuestion['code_cat2']) && !empty($dataQuestion['code_cat2']))
-					{
-						unset($dataQuestion['code_cat2']);
-					}
-					*/
-
+					
 					$resultset = $this->questionDAO->update($dataQuestion);
 					
 					// Traitement des erreurs de la requête

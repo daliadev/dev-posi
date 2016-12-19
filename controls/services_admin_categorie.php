@@ -1058,7 +1058,7 @@ class ServicesAdminCategorie extends Main
 		return $resultset;
 	}
 	
-	
+
 	
 	public function setQuestionCategorie($modeCategorie, $refQuestionCat, $refQuestion, $codeCat)
 	{
@@ -1067,8 +1067,6 @@ class ServicesAdminCategorie extends Main
 			if ($modeCategorie == "insert")
 			{
 				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-				
-				var_dump('insert', $resultset);
 				
 				// Traitement des erreurs de la requête
 				if (!$this->filterDataErrors($resultset['response']))
@@ -1080,11 +1078,10 @@ class ServicesAdminCategorie extends Main
 					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
 				}
 			}
-			else if ($modeCategorie == "update" && $refQuestionCat !== null)
+			else if ($modeCategorie == "update" && !empty($refQuestionCat))
 			{ 
 				$resultset = $this->questionCatDAO->update(array('id_question_cat' => $refQuestionCat, 'ref_question' => $refQuestion, 'ref_cat' => $codeCat));
 
-				var_dump('update', $resultset);
 				// Traitement des erreurs de la requête
 				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
 				{
@@ -1093,6 +1090,20 @@ class ServicesAdminCategorie extends Main
 				else 
 				{
 					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
+				}
+			}
+			else if ($modeCategorie == "delete" && !empty($refQuestionCat))
+			{ 
+				$resultset = $this->deleteQuestionCategorie($refQuestionCat);
+
+				// Traitement des erreurs de la requête
+				if ($resultset)
+				{
+					return $resultset;
+				} 
+				else 
+				{
+					$this->registerError("form_request", "La catégorie liée à la question n'a pu être supprimée.");
 				}
 			}
 		}
@@ -1107,14 +1118,14 @@ class ServicesAdminCategorie extends Main
 	
 	
 	
-	public function deleteQuestionCategorie($refQuestion)
+	public function deleteQuestionCategorie($refQuestionCat)
 	{
 		// On commence par sélectionner les réponses associèes à la question
-		$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestion);
+		//$resultsetSelect = $this->questionCatDAO->selectByRefQuestion($refQuestionCat);
 		
-		if (!$this->filterDataErrors($resultsetSelect['response']))
-		{ 
-			$resultsetDelete = $this->questionCatDAO->delete($refQuestion);
+		//if (!$this->filterDataErrors($resultsetSelect['response']))
+		//{ 
+			$resultsetDelete = $this->questionCatDAO->delete($refQuestionCat);
 		
 			if (!$this->filterDataErrors($resultsetDelete['response']))
 			{
@@ -1124,11 +1135,13 @@ class ServicesAdminCategorie extends Main
 			{
 				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
 			}
+			/*
 		}
 		else
 		{
 		   $this->registerError("form_request", "Cette catégorie n'existe pas."); 
 		}
+		*/
 
 		return false;
 	}

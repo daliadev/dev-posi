@@ -643,7 +643,7 @@ class ServicesPositionnement extends Main
 		}
 
 
-		// Boucle sur tous les résultats de chaque question de la session pour en obtenir les détails utiles
+		// Boucle sur tous les résultats de chaque question de la session pour en obtenir les détails
 
 		$resultsDetails = array();
 		$resultatTime = 0;
@@ -668,7 +668,6 @@ class ServicesPositionnement extends Main
 				$totalReponses++;
 
 				// Test si bonne réponse ou non
-
 				if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
 				{
 					$resultsDetails[$i]['correct'] = true;
@@ -751,8 +750,6 @@ class ServicesPositionnement extends Main
 					if ($searchParentCat->getCode() == $categorie->getParentCode())
 					{
 						// Si catégorie parente, la courante devient son enfant
-						//$searchParentCat->addChild($categorie);
-
 						$categorie->setParent($searchParentCat);
 					}
 				}
@@ -796,46 +793,12 @@ class ServicesPositionnement extends Main
 					
 				}
 			}
-			
-			//unset($categorie);
+
 		}
-		// var_dump($categories);
-		// exit();
+
 
 		// Cette fois-ci, il s'agit de répercuter les résultats de chaque catégorie sur sa propre catégorie parente
 
-		/*
-		foreach ($categories as $categorie)
-		{
-			if ($categorie->getHasResult(true) && $categorie->getParent() !== null) 
-			{
-				$parentCat = $categorie->getParent();
-				$parentCat->setHasResult(true);
-
-				$nbreReponses = ($categorie->getTotalReponses() !== null) ? $categorie->getTotalReponses() : 0;
-				$nbreReponsesParent = ($parentCat->getTotalReponses() !== null) ? $parentCat->getTotalReponses() : 0;
-				$nbreReponsesParent += $nbreReponses;
-				$parentCat->setTotalReponses($nbreReponsesParent);
-
-				$nbreReponsesCorrectes = ($categorie->getTotalReponsesCorrectes() !== null) ? $categorie->getTotalReponsesCorrectes() : 0;
-				$nbreReponsesCorrectesParent = ($parentCat->getTotalReponsesCorrectes() !== null) ? $parentCat->getTotalReponsesCorrectes() : 0;
-				$nbreReponsesCorrectesParent += $nbreReponsesCorrectes;
-				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
-
-				// Calcul du score
-				if ($nbreReponsesCorrectesParent != 0)
-				{	
-					$scoreParentCat = round(($nbreReponsesCorrectesParent / $nbreReponsesParent) * 100);
-					$parentCat->setScorePercent($scoreParentCat);
-				}
-				else
-				{
-					$categorie->setScorePercent(0);
-				}
-			}
-		}
-		*/
-	
 		$maxLevel = 0;
 
 		foreach ($categories as $categorie)
@@ -848,39 +811,9 @@ class ServicesPositionnement extends Main
 			}
 		}
 
+		// Mise à jour des résultats pour chaque catégories en faisant remonter les scores d'nfants en parents (récursivité)
 		$recursiveCategoriesResults = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $categories);
 
-
-
-		// Enfin, on attribue aux resultats les catégories détaillées correspondantes
-		/*
-		for ($i = 0; $i < count($resultsDetails); $i++)  
-		{
-			$resultsDetails[$i]['categories'] = array();
-
-			for ($j = 0; $j < count($resultsDetails[$i]['codes_cat']); $j++)  
-			{
-				foreach ($categories as $categorie)
-				{
-					if ($resultsDetails[$i]['codes_cat'][$j] == $categorie->getCode()) 
-					{	
-						array_push($resultsDetails[$i]['categories'], $categorie);
-					}
-				}
-
-				unset($resultsDetails[$i]['codes_cat'][$j]);
-				
-			}
-			unset($resultsDetails[$i]['codes_cat']);
-		}
-		*/
-		//var_dump($resultsDetails);
-		//exit();
-
-
-		// On injecte le tout dans la réponse
-
-		//$this->returnData['response']['resultats'] = $resultsDetails;
 
 		/* Fin assignation des resultats au catégories */
 
@@ -968,7 +901,6 @@ class ServicesPositionnement extends Main
 		/* 2.2. Mise à jour du nbre de sessions accomplies ds la table "organisme"
 		   ========================================================================== */
 		
-		/*
 		$dataOrgan = array();
 		$refOrgan = ServicesAuth::getSessionData('ref_organ');
 
@@ -995,7 +927,7 @@ class ServicesPositionnement extends Main
 				}
 			}
 		}
-		*/
+
 		/* Fin mise à jour de l'organisme */
 
 		

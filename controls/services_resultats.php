@@ -58,7 +58,6 @@ class ServicesPosiResultats extends Main
 
 	public function getResultats($refSession)
 	{
-
 		$resultset = $this->resultatDAO->selectBySession($refSession);
 		
 
@@ -80,7 +79,6 @@ class ServicesPosiResultats extends Main
 
 	public function getCategorieByQuestion($refQuestion)
 	{
-
 		$resultset = $this->questionCatDAO->selectByRefQuestion($refQuestion);
 		
 		if (!$this->filterDataErrors($resultset['response']))
@@ -103,8 +101,6 @@ class ServicesPosiResultats extends Main
 	{
 		$resultset = $this->utilisateurDAO->selectById($refUser);
 		
-		//return $this->utilisateurDAO->selectById($refUser);
-		
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
@@ -122,8 +118,6 @@ class ServicesPosiResultats extends Main
 
 	public function updateUser($dataUser)
 	{
-		//return $this->utilisateurDAO->update($dataUser);
-
 		$resultset = $this->utilisateurDAO->update($dataUser);
 
 		// Traitement des erreurs de la requête
@@ -143,8 +137,6 @@ class ServicesPosiResultats extends Main
 
 	public function getOrganisme($refOrgan)
 	{
-		//return $this->organismeDAO->selectById($refOrgan);
-
 		$resultset = $this->organismeDAO->selectById($refOrgan);
 
 		if (!$this->filterDataErrors($resultset['response']))
@@ -164,8 +156,6 @@ class ServicesPosiResultats extends Main
 
 	public function updateOrganisme($dataOrgan)
 	{
-		//return $this->organismeDAO->update($dataOrgan);
-
 		$resultset = $this->organismeDAO->update($dataOrgan);
 
 		// Traitement des erreurs de la requête
@@ -185,8 +175,6 @@ class ServicesPosiResultats extends Main
 
 	public function getSession($refSession)
 	{
-		//return $this->sessionDAO->selectById($refSession);
-		
 		$resultset = $this->sessionDAO->selectById($refSession);
 		
 		if (!$this->filterDataErrors($resultset['response']))
@@ -207,8 +195,6 @@ class ServicesPosiResultats extends Main
 
 	public function updateSession($dataSession, $refSession)
 	{
-		//return $this->sessionDAO->update($dataSession, $refSession);
-
 		$resultset = $this->sessionDAO->update($dataSession, $refSession);
 
 		// Traitement des erreurs de la requête
@@ -310,11 +296,6 @@ class ServicesPosiResultats extends Main
 				$parentCat->setTotalReponsesCorrectes($nbreReponsesCorrectesParent);
 
 			}
-			else
-			{
-
-			}	
-
 		}
 
 		$countLevelParent = 0;

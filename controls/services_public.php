@@ -11,7 +11,7 @@ require_once(ROOT.'controls/authentication.php');
 require_once(ROOT.'controls/services_admin_gestion.php');
 require_once(ROOT.'controls/services_admin_restitution.php');
 require_once(ROOT.'controls/services_admin_stat.php');
-require_once(ROOT.'models/dao/organisme_dao.php');
+//require_once(ROOT.'models/dao/organisme_dao.php');
 
 
 
@@ -37,7 +37,7 @@ class ServicesPublic extends Main
 		$this->servicesRestitution = new ServicesAdminRestitution();
 		$this->servicesAdminStat = new ServicesAdminStat();
 
-		$this->organismeDAO = new OrganismeDAO();
+		//$this->organismeDAO = new OrganismeDAO();
 	}
 	
 
@@ -55,13 +55,79 @@ class ServicesPublic extends Main
 
 		$this->initialize();
 
-		$codeOrgan = "";
-		$loggedAsViewer = false;
-		$loggedAsAdmin = false;
-		$preSelectOrganisme = null;
+		$this->servicesRestitution->initialize();
 
-		// Lecture du fichier 'régions'
+		/**
+		 * Description: Gestion des filtres et génération de la page restitution.
+		 * Create: 20/12/2016
+		 * Last update: 20/12/2016
+		 * Author: Dalia Team
+		 *
+		 * Summary:
+		 *
+		 *	1. Gestion du filtrage avant sélection
+		 *		- 1.1. Récupération des paramètres d'URL
+		 *  	- 1.2. Création de la liste des régions
+		 *		- 1.3. Assignation des droits sur les éléments de chaque filtre
+		 * 		- 1.4. Requêtes instantanées sur les filtres
+		 * 
+		 *	2. Requête globale après sélection
+		 *		- 2.1. Récupération des valeurs des filtres ou présélections selon droits
+		 *		- 2.2. Création des listes visualisables
+		 *  	- 2.3.
+		 * 		- 2.4. Gestion de la validation des questions ouvertes
+		 * 
+		 * 	3. Génération des vues
+		 *  	- 3.1. Création des différentes listes
+		 *   	- 3.2. Export PDF
+		 * 		- 3.3. Export PDF
+		 * 		- 3.4. Export CSV - Excel
+		 * 		- 3.5. Génération de la restitution globale et finale
+		 * 
+		 */
+		
+
+
+		/* ==========================================
+		   1. Gestion du filtrage avant sélection
+		   ========================================== */
+		
+
+		/* 1.1. Récupération des paramètres d'URL
+		   ========================================================================== */
+		
+		//$refRegion = null;
+		$numOrgan = null;
+		$refUser = null;
+		$refPosi = null;
+		$refSession = null;
+
+		if ($requestParams != null && is_array($requestParams)) 
+		{
+			if (isset($requestParams[0]) && preg_match("`^[a-zA-Z0-9]*$`", $requestParams[0])) {
+				$numOrgan = $requestParams[0];
+			}
+			if (isset($requestParams[1]) && preg_match("`^[0-9]*$`", $requestParams[1])) {
+				$refUser = $requestParams[1];
+			}
+			if (isset($requestParams[2]) && preg_match("`^[0-9]*$`", $requestParams[2])) {
+				$refPosi = $requestParams[2];
+			}
+			if (isset($requestParams[3]) && preg_match("`^[0-9]*$`", $requestParams[3])) {
+				$refSession = $requestParams[3];
+			}
+
+		}
+
+		/* Fin Récupération des paramètres d'URL */
+
+
+
+		/* 1.2. Création de la liste des régions
+		   ========================================================================== */
+
 		$regions = null;
+
 		$hasRegions = $this->servicesAdminStat->createRegionsList(Config::ANNEE_REGION);
 
 		if ($hasRegions)
@@ -75,6 +141,246 @@ class ServicesPublic extends Main
 			$regions = $regionsList['response']['regions'];
 		}
 
+		/* Fin Création de la liste des régions */
+
+
+
+		/* 1.3. Assignation des droits sur les éléments de chaque filtre
+		   ========================================================================== */
+
+		$preSelectOrgan = null;
+		$preSelectUser = null;
+		$preSelectPosi = null;
+		$preSelectSession = null;
+
+		$loggedAsAdmin = false;
+		$loggedAsOrganViewer = false;
+		$loggedAsUserViewer = false;
+		$loggedAsPosiViewer = false;
+		$loggedAsSessionViewer = false;
+
+		$this->url = SERVER_URL."public/restitution/";
+
+		// On détermine si l'utilisateur est un admin ou non
+		if (ServicesAuth::checkAuthentication('custom-admin') || ServicesAuth::checkAuthentication('custom-public'))
+		{
+			$loggedAsAdmin = true;
+		}
+		
+
+		/* 1.3.1. Filtre "organisme" 
+		   ----------------------------------------------*/
+
+		if ($numOrgan !== null) {
+
+			// On va chercher l'organisme correspondant au code
+			$selectOrgan = $this->servicesRestitution->getOrganByCode($numOrgan);
+
+			if ($selectOrgan['response']['organisme'] && count($selectOrgan['response']['organisme']) > 0) {
+				$loggedAsOrganViewer = true;
+				$preSelectOrgan = $selectUser['response']['organisme'][0];
+
+				$this->url .= $preSelectOrgan->getId()."/";
+			}
+			else
+			{
+				// Redirection vers une page d'erreur non autorisé
+				header("Location: ".SERVER_URL."erreur/page503");
+				exit();
+			}
+		}
+
+
+		/* 1.3.2. Filtre "utilisateur" 
+		   ----------------------------------------------*/
+
+		if ($refUser !== null) {
+
+			// On va chercher l'utilisateur
+			$selectUser = $this->servicesRestitution->getUser($refUser);
+
+			if ($selectUser['response']['utilisateur'] && count($selectUser['response']['utilisateur']) > 0) 
+			{
+				$loggedAsUserViewer = true;
+				$preSelectUser = $selectUser['response']['utilisateur'][0];
+
+				if ($preSelectOrgan !== null) 
+				{
+					$this->url .= $preSelectUser->getId()."/";
+				}
+			}
+			else
+			{
+				// Redirection vers une page d'erreur non autorisé
+				header("Location: ".SERVER_URL."erreur/page503");
+				exit();
+			}
+		}
+
+
+		/* 1.3.3. Filtre "Positionnement/Domaine" 
+		   ----------------------------------------------*/
+
+		if ($refPosi !== null) {
+
+			// On va chercher l'utilisateur
+			$selectPosi = $this->servicesRestitution->getPositionnement($refPosi);
+
+			if ($selectPosi['response']['positionnement'] && count($selectUser['response']['positionnement']) > 0) 
+			{
+				$loggedAsPosiViewer = true;
+				$preSelectPosi = $selectPosi['response']['positionnement'][0];
+
+				if ($preSelectUser !== null) 
+				{
+					$this->url .= $preSelectPosi->getId()."/";
+				}
+			}
+			else
+			{
+				// Redirection vers une page d'erreur non autorisé
+				header("Location: ".SERVER_URL."erreur/page503");
+				exit();
+			}
+		}
+
+
+		/* 1.3.4. Filtre "Session" 
+		   ----------------------------------------------*/
+
+		if ($refSession !== null) {
+
+			// On va chercher l'utilisateur
+			$selectSession = $this->servicesRestitution->getSession($refSession);
+
+			if ($selectSession['response']['session'] && count($selectSession['response']['session']) > 0) 
+			{
+				$loggedAsSessionViewer = true;
+				$preSelectSession = $selectSession['response']['session'][0];
+
+				if ($preSelectPosi !== null) 
+				{
+					$this->url .= $preSelectSession->getId()."/";
+				}
+			}
+			else
+			{
+				// Redirection vers une page d'erreur non autorisé
+				header("Location: ".SERVER_URL."erreur/page503");
+				exit();
+			}
+		}
+		
+
+		/* Fin Assignation des droits */
+
+
+
+		/* 1.4. Requête instantannée sur les filtres
+		   ========================================================================== */
+		
+		if (isset($_POST['filter']))
+		{
+			$results = false;
+
+			$refRegionFilter = null;
+			$refOrganFilter = null;
+			$refUserFilter = null;
+			$refPosiFilter = null;
+			//$dateSession = null;
+			$refSessionFilter = null;
+
+			if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_region']))
+			{
+				$refRegionFilter = $_POST['ref_region'];
+			}
+			if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']))
+			{
+				$refOrganFilter = $_POST['ref_organ'];
+			}
+			if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']))
+			{
+				$refUserFilter = $_POST['ref_user'];
+			}
+			if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']))
+			{
+				$refPosiFilter = $_POST['ref_posi'];
+			}
+
+			// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
+			// {
+			// 	$dateSession = $_POST['date_session'];
+			// }
+			
+			if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox'  && preg_match("`^[0-9]*$`", $_POST['ref_session']))
+			{
+				$refSessionFilter = $_POST['ref_session'];
+			}
+
+
+			if ($refRegionFilter != null || $refOrganFilter != null || $refUserFilter != null || $refPosiFilter != null) // || $dateSession != null)
+			{
+
+				$searchResults = $this->servicesRestitution->search($regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+			
+				// Recherche des éléments de listes et de champs de filtrage
+				if ($searchResults)
+				{
+					if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
+					{
+						$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
+					}
+					else
+					{
+						$results = array('error' => false, 'results' => null);
+					}
+				}
+				else
+				{
+					$results = array('error' => "Error filter = false");
+				}
+			}
+			else
+			{
+				// Select all
+				$searchResults = $this->servicesRestitution->search($regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+
+				
+				if (isset($searchResults['response']) && !empty($searchResults['response']))
+				{
+					$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
+				}
+				else
+				{
+					$results = array('error' => "Error, no filter attribute");
+				}
+			}
+
+			echo json_encode($results);
+			exit();
+		}
+
+		/* Fin Requête instantannée sur les filtres */
+
+
+		/*=====  Fin Gestion du filtrage  ======*/
+		
+
+
+
+
+		
+		
+
+
+
+
+
+		/*
+		$codeOrgan = "";
+		$loggedAsViewer = false;
+		$loggedAsAdmin = false;
+		$preSelectOrganisme = null;
 
 		
 		// on vérifie s'il y a un code dans les parametres url
@@ -135,9 +441,10 @@ class ServicesPublic extends Main
 		{
 
 		/*-------------------- Requêtes de filtrage des positionnements --------------------*/
-
-			if ($loggedAsViewer || $loggedAsAdmin)
-			{
+			
+			//if ($loggedAsViewer || $loggedAsAdmin)
+			//{
+				/*
 				if (isset($_POST['filter']))
 				{
 					$results = false;
@@ -228,6 +535,7 @@ class ServicesPublic extends Main
 					echo json_encode($results);
 					exit();
 				}
+				*/
 				/*
 				else if (isset($_POST['validate_search'])) 
 				{
@@ -356,14 +664,31 @@ class ServicesPublic extends Main
 					echo json_encode($response);
 					exit();
 				}
-			}
+			//}
 		}
 
 		/*** Fin requêtes ajax ***/
 
 
-		   
-		/*** On initialise les données qui vont être validées et renvoyées au formulaire ***/
+		
+
+		/* ==========================================
+		   2. Requête globale après sélection
+		   ========================================== */
+
+			/*		- 2.1. Récupération des valeurs des filtres ou présélections selon droits
+			 *   	- 2.2. Création des listes visualisables
+			 * 		- 3.3. Export PDF
+			 * 		- 3.4. Export CSV - Excel
+			 * 		- 3.5. Génération de la restitution globale et finale
+			 */
+
+
+
+		/* 2.1. Récupération des valeurs des filtres ou présélection selon droits
+		   ========================================================================== */
+		
+		// Iinitialisation les données qui vont être validées et renvoyées au formulaire
 		
 		$this->formData['ref_region_cbox'] = null;
 		$this->formData['ref_organ_cbox'] = null;
@@ -400,14 +725,43 @@ class ServicesPublic extends Main
 			$this->formData['select_trigger'] = "true";
 		}
 
-		// Sauf si c'est un intervenant auquel cas l'organisme est déjà connu
-		if ($loggedAsViewer)
+		// Si les ids sont spécifiés dans l'url, on remplace les valeurs sélectionnées
+		if ($loggedAsOrganViewer)
 		{
-			$this->formData['ref_organ'] = $preSelectOrganisme['response']['organisme'][0]->getId();
+			$this->formData['ref_organ'] = $preSelectOrgan->getId();
 		}
-		
-		
-		/*** Initialisation des infos sur le positionnement ***/
+
+		if ($loggedAsUserViewer)
+		{
+			$this->formData['ref_user'] = $preSelectUser->getId();
+		}
+
+		if ($loggedAsPosiViewer)
+		{
+			$this->formData['ref_posi'] = $preSelectPosi->getId();
+		}
+
+		if ($loggedAsSessionViewer)
+		{
+			$this->formData['ref_session'] = $preSelectSession->getId();
+		}
+
+		/* Fin Récupération des valeurs des filtres */
+
+
+
+		/* 2.2. Création des listes visualisables
+		   ========================================================================== */
+
+		// Création de la liste des régions
+
+		if ($regionsList['response']['regions']) 
+		{
+			$this->returnData['response'] = array_merge($regionsList['response'], $this->returnData['response']);
+		}
+
+
+		// Initialisation des listes
 		
 		$list = array(
 			'organismes' => array(),
@@ -415,20 +769,17 @@ class ServicesPublic extends Main
 			'domaines' => array(),
 			'sessions' => array()
 		);
-		
-		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme" en fonction de la region
+
+
+		// Obtention des valeurs listables selon les filtres sélectionnés
 
 		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
-
-		//var_dump($resultsListings);
-		//exit();
+		
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
 
 			$listings = $resultsListings['response']['restitution'];
-
-			
 
 
 			$i = 0;
@@ -481,49 +832,42 @@ class ServicesPublic extends Main
 		}
 
 
-		if ($loggedAsViewer)
-		{
-			$organismesList = $preSelectOrganisme;
-		}
-		else if ($loggedAsAdmin)
-		{
-			$organismesList = $this->servicesRestitution->getOrganismesList(); 
-		}
+		// Création de la liste des organismes par défaut
 
-
-		
-		
 		$nomOrgan = null;
 		$codeOrgan = null;
-		//$organismes = array();
-		//$organismes['response']['organisme'] = array();
+
 		$organismes = array(
 			'response' => array(
 				'organisme' => array()
 			)
 		);
 
+		if ($loggedAsOrganViewer)
+		{
+			$organismesList = $preSelectOrgan;
+		}
+		else if ($loggedAsAdmin)
+		{
+			$organismesList = $this->servicesRestitution->getOrganismesList(); 
+		}
 
 		if (!$organismesList)
 		{
-			$this->registerError("form_empty", "Aucun organisme n'a été trouvé.");
+			$this->registerError("form_empty", "Aucun organisme existant.");
 		}
 		else 
 		{
-			
 			foreach ($organismesList['response']['organisme'] as $organisme)
 			{
 				$j = 0;
-
 				$exists = false;
 
 				foreach ($list['organismes'] as $organ)
 				{
-					
 					if ($organisme->getId() == $organ['id_organ'] && !$exists) 
 					{
 						$organismes['response']['organisme'][$j] = $organisme;
-						
 						$exists = true;
 					}
 
@@ -537,7 +881,6 @@ class ServicesPublic extends Main
 				}
 			}
 
-
 			$this->returnData['response'] = array_merge($organismes['response'], $this->returnData['response']);
 		}
 
@@ -547,7 +890,7 @@ class ServicesPublic extends Main
 		
 		/*------   Un organisme a été sélectionnée   -------*/
 		
-		if (!empty($this->formData['ref_organ']) && $this->formData['ref_organ'] != "select_cbox")
+		if ($this->formData['ref_organ'] !== null && $this->formData['ref_organ'] != "select_cbox")
 		{
 			// Initialisation des infos principales
 			$this->returnData['response']['infos_user']['nom_organ'] = $nomOrgan;
@@ -562,72 +905,121 @@ class ServicesPublic extends Main
 			$this->returnData['response']['infos_user']['nbre_positionnements'] = "";
 			$this->returnData['response']['infos_user']['date_last_posi'] = "";
 			$this->returnData['response']['infos_user']['ref_selected_session'] = "";
-			
-			
-			/*** On va chercher tous les utilisateurs qui correspondent à l'organisme ***/
-			
-			$resultsetUsers = $this->servicesRestitution->getUsersFromOrganisme($this->formData['ref_organ']);
 
-			//$users = array('response' => array('utilisateurs'));
+
 			$users = array(
 				'response' => array(
-					'utilisateurs' => array()
+					'utilisateur' => array()
 				)
 			);
 
 
-			if (!$resultsetUsers)
+			if ($loggedAsUserViewer)
+			{
+				$usersList = $preSelectUser;
+			}
+			else if ($loggedAsAdmin)
+			{
+				$usersList = $this->servicesRestitution->getUsersFromOrganisme($this->formData['ref_organ']); 
+			}
+
+
+			if (!$usersList)
 			{
 				$this->registerError("form_empty", "Impossible de visualiser les utilisateurs.");
 			}
 			else 
 			{
-				foreach ($resultsetUsers['response']['utilisateur'] as $utilisateur)
+
+				foreach ($usersList['response']['utilisateur'] as $utilisateur)
 				{
+					$j = 0;
+					$exists = false;
+
 					foreach ($list['utilisateurs'] as $user)
 					{
-						if ($utilisateur->getId() == $user['id_user']) 
+						if ($utilisateur->getId() == $user['id_user'] && !$exists) 
 						{
-							$users['response']['utilisateurs'][] = $utilisateur;
+							$users['response']['utilisateur'][$j] = $organisme;
+							$exists = true;
 						}
+
+						$j++;
 					}
+					/*
+					if ($utilistaeur->getId() == $this->formData['ref_user'])
+					{
+						$nomOrgan = $organisme->getNom();
+						$codeOrgan = $organisme->getNumeroInterne();
+					}
+					*/
 				}
-			
+
 				$this->returnData['response'] = array_merge($users['response'], $this->returnData['response']);
 			}
 			
-			/*
-			if (!$resultsetUsers)
-			{
-				$this->registerError("form_data", "Impossible de visualiser les utilisateurs.");
-			}
-			else 
-			{
-				$resultset['response']['utilisateurs'] = $resultsetUsers['response']['utilisateur'];
-			}
-			*/
-			//$this->returnData['response'] = array_merge($resultset['response'], $this->returnData['response']);
 			
-			
+
 			/*------   Un utilisateur a été sélectionné   -------*/
 			
-			if (!empty($this->formData['ref_user']) && $this->formData['ref_user'] != "select_cbox")
+			if ($this->formData['ref_user'] !== null && $this->formData['ref_user'] != "select_cbox")
 			{
-				/*** On commence par rechercher les infos sur l'utilisateur ***/
-				$this->returnData['response']['infos_user'] = $this->servicesRestitution->getInfosUser($this->formData['ref_user']);
-				$this->returnData['response']['infos_user']['nom_organ'] = $nomOrgan;
-				$this->returnData['response']['infos_user']['code_organ'] = $codeOrgan;
+				// Collecte des infos sur l'utilisateur
+				//$this->returnData['response']['infos_user'] = $this->servicesRestitution->getInfosUser($this->formData['ref_user']);
+				//$this->returnData['response']['infos_user']['nom_organ'] = $nomOrgan;
+				//$this->returnData['response']['infos_user']['code_organ'] = $codeOrgan;
 				
+				$posis = array(
+					'response' => array(
+						'positionnement' => array()
+					)
+				);
+
+				if ($loggedAsPosiViewer)
+				{
+					$domsList = $preSelectPosi;
+				}
+				else if ($loggedAsAdmin)
+				{
+					$domsList = $this->servicesRestitution->getPosisFromUser($this->formData['ref_user']); 
+				}
+
+				if (!$domsList)
+				{
+					$this->registerError("form_empty", "Impossible de visualiser les domaines.");
+				}
+				else 
+				{
+					foreach ($domsList['response']['positionnement'] as $positionnement)
+					{
+						$j = 0;
+						$exists = false;
+
+						foreach ($list['domaines'] as $dom)
+						{
+							if ($positionnement->getId() == $dom['id_posi'] && !$exists) 
+							{
+								$posis['response']['positionnement'][$j] = $positionnement;
+								$exists = true;
+							}
+
+							$j++;
+						}
+					}
+				
+					$this->returnData['response'] = array_merge($posis['response'], $this->returnData['response']);
+				}
+
+
+
 
 				/*------   Un domaine/positionnement a été sélectionné   -------*/
 
-				if (!empty($this->formData['ref_posi']) && $this->formData['ref_posi'] != "select_cbox") 
+				if ($this->formData['ref_posi'] !== null && $this->formData['ref_posi'] != "select_cbox") 
 				{
+					/*
 					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($this->formData['ref_user']);
-					//var_dump($resultsetDomaines);
-					//exit();
 
-					//$doms = array('response' => array('domaines'));
 					$doms = array(
 						'response' => array(
 							'positionnement' => array()
@@ -653,9 +1045,52 @@ class ServicesPublic extends Main
 					
 						$this->returnData['response'] = array_merge($doms['response'], $this->returnData['response']);
 					}
+					*/
+				
+					$sess = array(
+						'response' => array(
+							'session' => array()
+						)
+					);
+
+					if ($loggedAsSessionViewer)
+					{
+						$sessionsList = $preSelectSession;
+					}
+					else if ($loggedAsAdmin)
+					{
+						$sessionsList = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ'], $this->formData['ref_posi']); 
+					}
+
+					if (!$sessionsList)
+					{
+						$this->registerError("form_empty", "Aucun positionnement n'a été effectué par l'utilisateur sélectionné.");
+					}
+					else 
+					{
+						foreach ($sessionsList['response']['session'] as $session)
+						{
+							$j = 0;
+							$exists = false;
+
+							foreach ($list['sessions'] as $pass)
+							{
+								if ($session->getId() == $pass['id_session'] && !$exists) 
+								{
+									$sess['response']['session'][$j] = $session;
+									$exists = true;
+								}
+
+								$j++;
+							}
+						}
+					
+						$this->returnData['response'] = array_merge($sess['response'], $this->returnData['response']);
+					}
 				} 
 
 				/*** On va chercher toutes les sessions qui correspondent à l'utilisateur sélectionné ***/
+				/*
 				$resultsetSessions = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ'], $this->formData['ref_posi']);
 
 
@@ -680,7 +1115,7 @@ class ServicesPublic extends Main
 				
 					$this->returnData['response'] = array_merge($sessions['response'], $this->returnData['response']);
 				}
-				
+				*/
 
 
 
@@ -768,12 +1203,218 @@ class ServicesPublic extends Main
 		}
 
 
-		// Liste des régions pour le combo-box
+		/* Fin Création des listes */
 
-		if ($regionsList['response']['regions']) 
+		/*=====  Fin Requête globale après sélection  ======*/
+
+
+
+
+
+
+		/* ==========================================
+		   3. Génération des vues
+		   ========================================== */
+
+			/*		- 3.1. Création des différentes listes
+			 *   	- 3.2. Retour des données traitées
+			 * 		- 3.3. Export PDF
+			 * 		- 3.4. Export CSV - Excel
+			 * 		- 3.5. Génération de la restitution globale et finale
+			 */
+
+		/* 3.1. Création des différentes listes
+		   ========================================================================== */
+		
+		/* Fin Création des listes */
+
+
+		/* 3.2. Retour des données traitées
+		   ========================================================================== */
+		/*
+		$this->returnData['response']['form_data'] = $this->formData;
+		$this->returnData['response']['url'] = $this->url;
+
+		// S'il y a des erreurs, on les injecte dans la réponse
+		if (!empty($this->errors) && count($this->errors) > 0)
 		{
-			$this->returnData['response'] = array_merge($regionsList['response'], $this->returnData['response']);
+			foreach($this->errors as $error)
+			{
+				$this->returnData['response']['errors'][] = $error;
+			}
 		}
+		
+		$this->setResponse($this->returnData);
+		*/
+	
+
+		/* Fin Retour des données traitées */
+
+
+		/*=====  Fin Génération des vues  ======*/
+
+
+
+
+
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		/*** Initialisation des infos sur le positionnement ***/
+		/*
+		$list = array(
+			'organismes' => array(),
+			'utilisateurs' => array(),
+			'domaines' => array(),
+			'sessions' => array()
+		);
+		
+		// On commence par obtenir le nom et l'id de chaque organisme de la table "organisme" en fonction de la region
+
+		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
+		*/
+		//var_dump($resultsListings);
+		//exit();
+		/*
+		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
+		{
+
+			$listings = $resultsListings['response']['restitution'];
+
+
+			$i = 0;
+
+			foreach ($listings as $entity) {
+
+				foreach ($entity as $key => $value) {
+				
+					switch ($key) {
+
+						case 'id_organ':
+							$list['organismes'][$i]['id_organ'] = $value;
+							break;
+
+						// case 'nom_organ':
+						// 	$list['organismes'][$i]['nom_organ'] = $value;
+						// 	break;
+
+						case 'id_user':
+							$list['utilisateurs'][$i]['id_user'] = $value;
+							break;
+
+						// case 'nom_user':
+						// 	$list['utilisateurs'][$i]['nom_user'] = $value;
+						// 	break;
+
+						// case 'prenom_user':
+						// 	$list['utilisateurs'][$i]['prenom_user'] = $value;
+						// 	break;
+						case 'id_posi':
+							$list['domaines'][$i]['id_posi'] = $value;
+							break;
+
+						case 'id_session':
+							$list['sessions'][$i]['id_session'] = $value;
+							break;
+
+						// case 'date_session':
+						// 	$list['sessions'][$i]['date_session'] = $value;
+						// 	break;
+
+						default :
+							break;
+					}
+				}
+
+				$i++;
+			}
+			
+		}
+		*/
+
+
+		/*
+		if ($loggedAsViewer)
+		{
+			$organismesList = $preSelectOrganisme;
+		}
+		else if ($loggedAsAdmin)
+		{
+			$organismesList = $this->servicesRestitution->getOrganismesList(); 
+		}
+
+
+		
+		
+		$nomOrgan = null;
+		$codeOrgan = null;
+		//$organismes = array();
+		//$organismes['response']['organisme'] = array();
+		$organismes = array(
+			'response' => array(
+				'organisme' => array()
+			)
+		);
+
+
+		if (!$organismesList)
+		{
+			$this->registerError("form_empty", "Aucun organisme n'a été trouvé.");
+		}
+		else 
+		{
+			
+			foreach ($organismesList['response']['organisme'] as $organisme)
+			{
+				$j = 0;
+
+				$exists = false;
+
+				foreach ($list['organismes'] as $organ)
+				{
+					
+					if ($organisme->getId() == $organ['id_organ'] && !$exists) 
+					{
+						$organismes['response']['organisme'][$j] = $organisme;
+						
+						$exists = true;
+					}
+
+					$j++;
+				}
+
+				if ($organisme->getId() == $this->formData['ref_organ'])
+				{
+					$nomOrgan = $organisme->getNom();
+					$codeOrgan = $organisme->getNumeroInterne();
+				}
+			}
+
+
+			$this->returnData['response'] = array_merge($organismes['response'], $this->returnData['response']);
+		}
+		*/
+
+
+
 
 
 		// Liste des domaines pour le combo-box
@@ -796,7 +1437,7 @@ class ServicesPublic extends Main
 
 		
 		/*-----   Retour des données traitées du formulaire   -----*/
-		
+		/*
 		$this->returnData['response']['form_data'] = $this->formData;
 		$this->returnData['response']['url'] = $this->url;
 
@@ -811,7 +1452,7 @@ class ServicesPublic extends Main
 		
 		
 		$this->setResponse($this->returnData);
-		
+		*/
 
 		if (isset($_POST['export_pdf']) && !empty($_POST['export_pdf']))
 		{

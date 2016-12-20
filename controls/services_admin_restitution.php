@@ -97,11 +97,72 @@ class ServicesAdminRestitution extends Main
 
 		return false;
 	}
-	
+
+	public function getOrganByCode($codeOrgan)
+	{
+		$resultset = $this->organismeDAO->selectByCodeInterne($codeOrgan);
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['organisme']) && count($resultset['response']['organisme']) == 1)
+			{ 
+				$organisme = $resultset['response']['organisme'];
+				$resultset['response']['organisme'] = array($organisme);
+			}
+
+			return $resultset;
+		}
+
+		return false;
+	}
+
+
+
+
+	public function getUser($refUser)
+	{
+		$resultset = $this->utilisateurDAO->selectById($refUser);
+
+		// Traitement des erreurs de la requête
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
+			{ 
+				$utilisateur = $resultset['response']['utilisateur'];
+				$resultset['response']['utilisateur'] = array($utilisateur);
+			}
+
+			return $resultset;
+		}
+
+		return false;
+	}
+
+
+
 
 	public function getPositionnementsList()
 	{
 		$resultset = $this->positionnementDAO->selectAll();
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['positionnement']) && count($resultset['response']['positionnement']) == 1)
+			{ 
+				$positionnement = $resultset['response']['positionnement'];
+				$resultset['response']['positionnement'] = array($positionnement);
+			}
+
+			return $resultset;
+		}
+
+		return false;
+	}
+
+
+	public function getPositionnement()
+	{
+		$resultset = $this->positionnementDAO->selectById();
 
 		if (!$this->filterDataErrors($resultset['response']))
 		{
@@ -168,6 +229,21 @@ class ServicesAdminRestitution extends Main
 	
 	
 
+	public function getSession($refSession)
+	{
+		$resultset = $this->sessionDAO->selectById($refSession);
+		
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
+			{ 
+				$session = $resultset['response']['session'];
+				$resultset['response']['session'] = array($session);
+			}
+		}
+
+		return $resultset;
+	}
 
 
 	public function getUserSessions($refUser, $refOrganisme, $refPosi)
@@ -195,26 +271,6 @@ class ServicesAdminRestitution extends Main
 		}
 		
 		return false;
-	}
-
-
-	
-
-
-	public function getSession($refSession)
-	{
-		$resultset = $this->sessionDAO->selectById($refSession);
-		
-		if (!$this->filterDataErrors($resultset['response']))
-		{
-			if (!empty($resultset['response']['session']) && count($resultset['response']['session']) == 1)
-			{ 
-				$session = $resultset['response']['session'];
-				$resultset['response']['session'] = array($session);
-			}
-		}
-
-		return $resultset;
 	}
 
 
@@ -462,7 +518,6 @@ class ServicesAdminRestitution extends Main
 	public function getPosiStats($refSession, $refPosi = null)
 	{
 
-
 		$posiStats = array();
 		$posiStats['categories'] = array();
 		
@@ -477,6 +532,7 @@ class ServicesAdminRestitution extends Main
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
 		$resultats = $this->getResultatsByCategories($refSession, $refPosi);
+
 
 		// Liste des parcours de formation
 		$parcoursPreco = $this->parcoursPrecoDAO->selectAll();
@@ -509,6 +565,7 @@ class ServicesAdminRestitution extends Main
 			}
 
 
+
 			// Test d'existence d'une catégorie parente
 			
 			if ($level > 1)
@@ -528,33 +585,35 @@ class ServicesAdminRestitution extends Main
 			}
 			
 			
+
 			// On attribut à chaque catégorie, les réponses et les scores à partir des résultats
 			
 			for ($j = 0; $j < count($resultats); $j++)  
 			{
-				if ($resultats[$j]->getRefCat() == $categorie->getCode())
+				if ($resultats[$j]['result'] && $resultats[$j]['codes_cat']) //$resultats[$j]->getRefCat() == $categorie->getCode())
 				{
-					$totalCategorie++;
-					$totalGlobal++;
-				   	
-				   	$tempsGlobal += $resultats[$j]->getTempsReponse();
-					$tempsCat += $resultats[$j]->getTempsReponse();
+					
+				   	$tempsGlobal += $resultats[$j]['result']->getTempsReponse();
+					$tempsCat += $resultats[$j]['result']->getTempsReponse();
 
-					//var_dump($resultats[$j]->getRefReponseQcm(), $resultats[$j]->getRefReponseQcmCorrecte(), $resultats[$j]->getReponseChamp(), $resultats[$j]->getValidationReponseChamp());
+					foreach ($resultats[$j]['codes_cat'] as $resultCodeCat) {
+						
+						$totalCategorie++;
+						$totalGlobal++;
 
-					if ((!empty($resultats[$j]->getRefReponseQcm()) && $resultats[$j]->getRefReponseQcm() !== null && $resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte()) 
-						|| (!empty($resultats[$j]->getReponseChamp()) && $resultats[$j]->getReponseChamp() !== null && !empty($resultats[$j]->getValidationReponseChamp()) && $resultats[$j]->getValidationReponseChamp() !== null && $resultats[$j]->getValidationReponseChamp() == 1))
-					{
-						$totalCorrectCategorie++;
-						$totalCorrectGlobal++;
+						if ((!empty($resultats[$j]['result']->getRefReponseQcm()) && $resultats[$j]['result']->getRefReponseQcm() !== null && $resultats[$j]['result']->getRefReponseQcm() == $resultats[$j]['result']->getRefReponseQcmCorrecte()) 
+							|| (!empty($resultats[$j]['result']->getReponseChamp()) && $resultats[$j]['result']->getReponseChamp() !== null && !empty($resultats[$j]['result']->getValidationReponseChamp()) && $resultats[$j]['result']->getValidationReponseChamp() !== null && $resultats[$j]['result']->getValidationReponseChamp() == 1))
+						{
+							$totalCorrectCategorie++;
+							$totalCorrectGlobal++;
+						}
 					}
 
 					$hasResults = true;
 				}
-
 			}
-			
-			//exit();
+
+
 
 			// Calcul du score en pourcentage
 
@@ -594,7 +653,6 @@ class ServicesAdminRestitution extends Main
 			
 			if (strlen($categorie->getCode()) == 2 && isset($parcoursPreco['response']['parcours_preco']) && !empty($parcoursPreco['response']['parcours_preco']))
 			{
-				// Calcul du score global
 
 				$precos = $this->preconisationDAO->selectByCodeCat($categorie->getCode());
 				
@@ -641,7 +699,7 @@ class ServicesAdminRestitution extends Main
 
 		$posiStats['categories'] = $categories;
 		
-
+		/*
 		foreach ($categories as $categorie)
 		{
 			//$level = $this->servicesCategories->getLevel($categorie->getCode());
@@ -652,8 +710,7 @@ class ServicesAdminRestitution extends Main
 				$maxLevel = $level;
 			}
 		}
-
-
+		*/
 
 		return  $posiStats;
 	}
@@ -664,11 +721,13 @@ class ServicesAdminRestitution extends Main
 	
 	public function getQuestionsDetails($refSession, $refPosi = null)
 	{
+
 		
 		// Etape  1 : Regroupement des données sur toutes les questions du positionnement
 		$questionsDetails = array();
 				
 		$resultsetQuestions = $this->getQuestions($refPosi);
+
 
 		if ($resultsetQuestions)
 		{
@@ -909,28 +968,6 @@ class ServicesAdminRestitution extends Main
 		return $questionsDetails;
 	}
 
-
-
-
-   
-	private function getUser($refUser)
-	{
-		$resultset = $this->utilisateurDAO->selectById($refUser);
-
-		// Traitement des erreurs de la requête
-		if (!$this->filterDataErrors($resultset['response']))
-		{
-			if (!empty($resultset['response']['utilisateur']) && count($resultset['response']['utilisateur']) == 1)
-			{ 
-				$utilisateur = $resultset['response']['utilisateur'];
-				$resultset['response']['utilisateur'] = array($utilisateur);
-			}
-
-			return $resultset;
-		}
-
-		return false;
-	}
 	
 	
 	
@@ -1174,62 +1211,29 @@ class ServicesAdminRestitution extends Main
 		// On sélectionne tous les résultats correspondant à la session en cours
 		$resultsetResultats = $this->getResultatsBySession($refSession);
 
-		//var_dump($resultsetResultats);
-		//exit();
-
 		if ($resultsetResultats)
 		{
 			$i = 0;
 			
 			foreach ($resultsetResultats['response']['resultat'] as $resultat)
-			{     
+			{
+				$tabResultats[$i]['result'] = $resultat;
 
-				$tabResultats[$i] = $resultat;
+				$tabResultats[$i]['codes_cat'] = array();
+				$catResultats = $this->getQuestionCategorie($resultat->getRefQuestion());
 
-				// On établit si le résultat est correct ou non
-				/*
-				if ($resultat->getRefReponseQcm() && $resultat->getRefReponseQcmCorrecte())
-				{
-					if ($resultat->getRefReponseQcm() == $resultat->getRefReponseQcmCorrecte())
-					{
-						$tabResultats[$i]['correct'] = true;
+				if ($catResultats) {
+
+					foreach ($catResultats as $cat) {
+
+						$tabResultats[$i]['codes_cat'][] = $cat;
 					}
-					else 
-					{
-						$tabResultats[$i]['correct'] = false;
-					}
-					*/
-					//var_dump($resultat->getRefCat());
 					
-					//$resultsetCategories = $this->getCatFromQuestion($resultat->getRefCat());
+				}
 
+				//$tabResultats[$i] = $resultat;
 
-					/*
-					// Ensuite on va chercher les données sur la question correspondant au résultat
-					$resultsetQuestion = $this->getQuestion($resultat->getRefQuestion());
-
-					if ($resultsetQuestion)
-					{        
-						// On va chercher la compétence liée à la question dont dépend le résultat (est-ce clair !)
-						$resultsetCatQuestion = $this->getQuestionCategorie($resultsetQuestion['response']['question'][0]->getId());
-
-						if ($resultsetCatQuestion)
-						{
-							$tabResultats[$i]['code_cat'] = $resultsetCatQuestion['response']['question_cat'][0]->getCodeCat();
-						}
-						else 
-						{
-							$this->registerError("form_request", "Aucune categorie ne correspond à la question.");
-						}
-					}
-					else 
-					{
-						$this->registerError("form_request", "Aucune question n'a été trouvée.");
-					}
-					*/
-
-					$i++;
-				//}
+				$i++;
 			}
 		}
 		else
@@ -1237,11 +1241,7 @@ class ServicesAdminRestitution extends Main
 			$this->registerError("form_request", "Aucun resultat n'a été trouvé.");
 		}
 		
-		//var_dump($tabResultats);
-		//exit();
-		
 		return $tabResultats;
-		
 	}
 	
 

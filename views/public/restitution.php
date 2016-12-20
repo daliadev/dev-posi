@@ -50,38 +50,10 @@ if (!empty($response['stats']))
 
 $form_url = $response['url'];
 
-$numTab = 1;
-//var_dump($formData);
-//var_dump($_POST);
 
-// Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage
-/*
-function getColor($percent)
-{
-	$percent = intval($percent);
-	
-	$color = "gris";
 
-	if ($percent < 50)
-	{
-		$color = "rouge";
-	}
-	else if ($percent >= 50 && $percent < 75)
-	{
-		$color = "orange2";
-	}
-	else if ($percent >= 75 && $percent < 90)
-	{
-		$color = "jaune";
-	}
-	else if ($percent >= 90)
-	{
-		$color = "vert";
-	}
-
-	return $color;
-}
-*/
+// Function permettant d'attribuer aux barres un fond de couleur selon le pourcentage de réussite
+// 
 function getProgressColor($percent)
 {
 	$percent = intval($percent);
@@ -107,40 +79,6 @@ function getProgressColor($percent)
 
 	return $color;
 }
-/*
-function getProgressBar($percent)
-{
-	$progressbar = '';
-
-	if ($percent < 50)
-	{
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: '.$percent.'%;"></div>';
-	}
-	else if ($percent >= 50 && $percent < 75)
-	{
-		$percent -= 50;
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 50%;"></div>';
-		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: '.$percent.'%;"></div>';
-	}
-	else if ($percent >= 75 && $percent < 90)
-	{
-		$percent -= 75;
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 50%;"></div>';
-		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: 25%;"></div>';
-		$progressbar .= '<div class="progress-bar progress-bar-warning" style="width: '.$percent.'%;"></div>';
-	}
-	else if ($percent >= 90)
-	{
-		$percent -= 90;
-		$progressbar .= '<div class="progress-bar progress-bar-danger" style="width: 50%;"></div>';
-		$progressbar .= '<div class="progress-bar progress-bar-secondary" style="width: 25%;"></div>';
-		$progressbar .= '<div class="progress-bar progress-bar-warning" style="width: 15%;"></div>';
-		$progressbar .= '<div class="progress-bar progress-bar-success" style="width: '.$percent.'%;"></div>';
-	}
-
-	return $progressbar;
-}
-*/
 
 
 
@@ -169,8 +107,6 @@ function recursiveCategories($parent, $level, $datas)
 
 			if ($level == 0)
 			{
-				//var_dump($cat->getCode());
-
 				if (!$cat->getHasResult())
 				{
 					$list .= '<li class="disabled">';
@@ -179,7 +115,6 @@ function recursiveCategories($parent, $level, $datas)
 				{
 					$list .= '<li>';
 				}
-				//$list .= '<li'.$disabled.'>'; //<h3><a>'.$cat->getNom().'</a></h3>';
 
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
 				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a></h3>';
@@ -187,7 +122,6 @@ function recursiveCategories($parent, $level, $datas)
 				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
-				//$list .= getProgressBar($cat->getScorePercent());
 				$list .= '</div>';
 
 				$isMainListOpen = true;
@@ -198,7 +132,7 @@ function recursiveCategories($parent, $level, $datas)
 				{
 					$list .= '</li>';
 				}
-				//$list .= '<li>';
+				
 				if (!$cat->getHasResult())
 				{
 					$list .= '<li class="disabled">';
@@ -207,16 +141,15 @@ function recursiveCategories($parent, $level, $datas)
 				{
 					$list .= '<li>';
 				}
+
 				$list .= '<div class="progress-title" title="'.$cat->getDescription().'">';
 				$list .= '<a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a>';
 				$list .= '<span>Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
 				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
-				//$list .= getProgressBar($cat->getScorePercent());
 				$list .= '</div>';
 				
-
 				$isListOpen = true;
 			}
 
@@ -244,8 +177,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 	$catList = recursiveCategories(0, 0, $response['stats']['categories']);
 }
 
-
-//var_dump($response['organisme']);
 
 ?>
 
@@ -290,6 +221,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 			<form id="form-posi" action="<?php echo $form_url; ?>" method="post" name="formu_admin_com_act">
 				
 				<input type="hidden" id="select-trigger" name="select_trigger" value="<?php echo $formData['select_trigger']; ?>" />
+
 				<div class="zone-formu2">
 
 					<div class="form-full">
@@ -337,42 +269,15 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
 								<?php $disabled = "" ?>
-								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" data-target="ref_user_cbox" data-url="<?php echo $form_url; ?>" data-sort="user" data-request="organ-user" style="max-width: 170px;" <?php echo $disabled; ?>>
+								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" style="max-width: 170px;" <?php echo $disabled; ?>>
 									
 									<?php if ($disabled == "") : ?>
 									<option class="organ-option" value="select_cbox">---</option>
 									<?php endif; ?>
+
 									<?php
-									
 									if (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) > 0)
 									{	
-										//$response['organisme'] = 
-										/*
-										$already_exists = false;
-										$organs = array();
-
-										foreach ($response['organisme'] as $organisme)
-										{
-											foreach ($response['organisme'] as $org)
-											{
-												if ($organisme->getId() == $org->getId()) 
-												{
-													$already_exists = true;
-												}
-											}
-
-											if ($already_exists) 
-											{
-												$already_exists = false;
-											}
-											else
-											{
-												$organs[] = $organisme;
-											}
-										}
-
-										$response['organisme'] = $organs;
-										*/
 										foreach ($response['organisme'] as $organisme)
 										{
 											$selected = "";
@@ -385,8 +290,8 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 											echo '<option class="organ-option" value="'.$organisme->getId().'" '.$selected.'>'.$organisme->getNom().'</option>';
 										}
 									}
-									
 									?>
+
 								</select>
 							</div>
 							
@@ -394,7 +299,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 							<div class="filter-item" id="combo-user">
 								<label for="ref-user-cbox">Utilisateur :</label>
-								<select name="ref_user_cbox" id="ref-user-cbox" class="ajax-list" data-target="ref-session-cbox" data-url="<?php echo $form_url; ?>" data-sort="session" data-request="user-posi" style="max-width: 170px;">
+								<select name="ref_user_cbox" id="ref-user-cbox" class="ajax-list" style="max-width: 170px;">
 									<option value="select_cbox">---</option>
 
 									<?php
@@ -424,7 +329,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<label for="ref-posi-cbox">Domaine : </label>
 
 								<?php $disabled = ""; //(isset($response['positionnement']) && !empty($response['positionnement']) && count($response['positionnement']) <= 1) ? "disabled" : ""; ?>
-								<select name="ref_posi_cbox" id="ref-posi-cbox" class="ajax-list" data-url="<?php echo $form_url; ?>" data-request="posi-session" style="max-width: 170px;" <?php echo $disabled; ?>>
+								<select name="ref_posi_cbox" id="ref-posi-cbox" class="ajax-list" style="max-width: 170px;" <?php echo $disabled; ?>>
 								
 									<?php if (empty($disabled)) : ?>
 										<option class="posi-option" value="select_cbox">Tous les domaines</option>
@@ -468,12 +373,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 							<div class="filter-item" id="combo-posi" style="margin-top: 0;">
 								<label for="ref-session-cbox"><strong>Positionnement(s) trouvé(s) :</strong></label>
-								<select name="ref_session_cbox" id="ref-session-cbox" class="ajax-list" data-request="session" style="margin: 10px 0 0 0; width: 160px;">
+								<select name="ref_session_cbox" id="ref-session-cbox" class="ajax-list" style="margin: 10px 0 0 0; width: 160px;">
 									<option value="select_cbox">---</option>
 
 									<?php
 									
-									if (isset($response['sessions'])) 
+									if (isset($response['sessions']) && !empty($response['sessions']) && count($response['sessions']) > 0) 
 									{
 										foreach ($response['sessions'] as $session)
 										{
@@ -1049,19 +954,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				}
 
 				
-				
-
-				
-				//console.log('Filter changed for : ' + id + ' = ' + value);
-				//console.log('ref_region = ' + refRegion + ' - ref_organ = ' + refOrgan + ' - ref_user = ' + refUser); // + ' - date_session = ' + dateSession);
-				//console.log('isFilterActivate : ' + isFilterActivate);
-				
-				
-
-
-
-				<?php if (Config::ALLOW_AJAX) : ?>
-				
 				var url = $('#form-posi').attr('action');
 
 				//$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
@@ -1301,9 +1193,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					}
 				}, 'json');
 				
-				<?php endif; ?>
-
-				
 			};
 
 
@@ -1465,7 +1354,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 					}
 				});
 			});
-
 
 			// Si click sur une des étiquettes de section
 			

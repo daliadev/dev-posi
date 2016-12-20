@@ -571,7 +571,8 @@ class ServicesPositionnement extends Main
 
 		/**
 		 * Description: Gestion et génération de la page résultat et de l'envoi d'email à l'intervenant.
-		 * Last update: 07/01/2016
+		 * Create: 07/01/2016
+		 * Last update: 20/12/2016
 		 * Author: Dalia Team
 		 *
 		 * Summary:

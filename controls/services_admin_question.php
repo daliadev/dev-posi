@@ -538,8 +538,8 @@ class ServicesAdminQuestion extends Main
 			$questionExist = false;
 			$shiftOrdre = false;
 
-			if (!$numsOrdreList || $numsOrdreList == 0) 
-			{
+			//if (!$numsOrdreList || $numsOrdreList == 0) 
+			//{
 				for ($i = 0; $i < count($numsOrdreList); $i++) 
 				{
 					if ($numsOrdreList[$i] == $formData['num_ordre_question'])
@@ -551,7 +551,7 @@ class ServicesAdminQuestion extends Main
 						break;
 					}
 				}
-			}
+			//}
 			
 			if ($shiftOrdre || !$questionExist)
 			{
@@ -683,12 +683,13 @@ class ServicesAdminQuestion extends Main
 						$this->deleteReponses($formData['ref_question']);
 					}
 
-					var_dump($dataQuestionsCat);
+					//var_dump($dataQuestionsCat);
+					//exit();
 				
 					// Mise à jour ou insertion de la catégorie
 					if (!empty($dataQuestionsCat)) 
 					{
-						$modeQuestionCat = "insert";
+						$modeQuestionCat = null;
 
 						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
 
@@ -709,6 +710,8 @@ class ServicesAdminQuestion extends Main
 								$modeQuestionCat = "insert";
 							}
 
+							//var_dump($modeQuestionCat, $dataQuestionsCat[$i]['id_question_cat'], $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
+
 							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestionsCat[$i]['id_question_cat'], $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
 						
 							if (!$resultsetQuestionCat)
@@ -717,7 +720,7 @@ class ServicesAdminQuestion extends Main
 								break;
 							}
 
-							var_dump($resultsetQuestionCat);
+							//var_dump($resultsetQuestionCat);
 						}
 
 					}

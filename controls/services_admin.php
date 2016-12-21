@@ -370,7 +370,6 @@ class ServicesAdmin extends Main
 				}
 			}
 
-			exit();
 		}
 		
 		

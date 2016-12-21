@@ -720,7 +720,6 @@ class ServicesAdminCategorie extends Main
 	public function setCategorieProperties($previousMode, $dataCategorie, &$formData)
 	{
 
-		
 		unset($dataCategorie['parent_code_cat']);
 		unset($dataCategorie['ordre_cat']);
 		/*
@@ -1062,54 +1061,48 @@ class ServicesAdminCategorie extends Main
 	
 	public function setQuestionCategorie($modeCategorie, $refQuestionCat, $refQuestion, $codeCat)
 	{
-		if (!empty($refQuestion) && !empty($codeCat))
+
+		if ($modeCategorie == "insert")
 		{
-			if ($modeCategorie == "insert")
+			$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+			
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']))
 			{
-				$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-				
-				// Traitement des erreurs de la requête
-				if (!$this->filterDataErrors($resultset['response']))
-				{
-					return $resultset;
-				}
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
-				}
+				return $resultset;
 			}
-			else if ($modeCategorie == "update" && !empty($refQuestionCat))
-			{ 
-				$resultset = $this->questionCatDAO->update(array('id_question_cat' => $refQuestionCat, 'ref_question' => $refQuestion, 'ref_cat' => $codeCat));
-
-				// Traitement des erreurs de la requête
-				if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
-				{
-					return $resultset;
-				} 
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
-				}
-			}
-			else if ($modeCategorie == "delete" && !empty($refQuestionCat))
-			{ 
-				$resultset = $this->deleteQuestionCategorie($refQuestionCat);
-
-				// Traitement des erreurs de la requête
-				if ($resultset)
-				{
-					return $resultset;
-				} 
-				else 
-				{
-					$this->registerError("form_request", "La catégorie liée à la question n'a pu être supprimée.");
-				}
+			else 
+			{
+				$this->registerError("form_request", "La catégorie liée à la question n'a pas pu être insérée.");
 			}
 		}
-		else 
-		{
-			$this->registerError("form_request", "Le code categorie ou la reférence de la question sont manquants.");
+		else if ($modeCategorie == "update" && !empty($refQuestionCat))
+		{ 
+			$resultset = $this->questionCatDAO->update(array('id_question_cat' => $refQuestionCat, 'ref_question' => $refQuestion, 'ref_cat' => $codeCat));
+
+			// Traitement des erreurs de la requête
+			if (!$this->filterDataErrors($resultset['response']) && isset($resultset['response']['question_cat']['row_count']))
+			{
+				return $resultset;
+			} 
+			else 
+			{
+				$this->registerError("form_request", "La catégorie liée à la question n'a pu être mise à jour.");
+			}
+		}
+		else if ($modeCategorie == "delete" && !empty($refQuestionCat))
+		{ 
+			$resultset = $this->deleteQuestionCategorie($refQuestionCat);
+
+			// Traitement des erreurs de la requête
+			if ($resultset)
+			{
+				return $resultset;
+			} 
+			else 
+			{
+				$this->registerError("form_request", "La catégorie liée à la question n'a pu être supprimée.");
+			}
 		}
 
 		return false;
@@ -1125,8 +1118,14 @@ class ServicesAdminCategorie extends Main
 		
 		//if (!$this->filterDataErrors($resultsetSelect['response']))
 		//{ 
+
 			$resultsetDelete = $this->questionCatDAO->delete($refQuestionCat);
-		
+
+			if ($resultsetDelete)
+			{
+				return $resultsetDelete;
+			} 
+			/*
 			if (!$this->filterDataErrors($resultsetDelete['response']))
 			{
 				return true;
@@ -1135,6 +1134,7 @@ class ServicesAdminCategorie extends Main
 			{
 				$this->registerError("form_request", "La catégorie n'a pas pu être supprimée.");
 			}
+			*/
 			/*
 		}
 		else

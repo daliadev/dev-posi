@@ -7,6 +7,7 @@ class Positionnement
     
     public $id_posi = null;
     public $nom_posi = null;
+    public $lien_posi = null;
     public $descript_posi = null;
 
     
@@ -19,6 +20,11 @@ class Positionnement
     public function getNom()
     {
         return $this->nom_posi;
+    }
+
+    public function getLienPosi()
+    {
+        return $this->lien_posi;
     }
 
     public function getDescription()

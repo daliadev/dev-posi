@@ -750,10 +750,46 @@ class ServicesPublic extends Main
 
 
 
-		/* 2.2. Création des listes visualisables
-		   ========================================================================== */
 
-		// Création de la liste des régions
+		/* 2.2. Initialisation des informations sur la restitution affichable
+		   ============================================================================= */
+
+
+			$this->returnData['response']['infos_user']['nom_organ'] = "";
+			$this->returnData['response']['infos_user']['code_organ'] = "";
+			$this->returnData['response']['infos_user']['nom'] = "";
+			$this->returnData['response']['infos_user']['prenom'] = "";
+			$this->returnData['response']['infos_user']['date_naiss'] = "";
+			$this->returnData['response']['infos_user']['nom_niveau'] = "";
+			$this->returnData['response']['infos_user']['descript_niveau'] = "";
+			$this->returnData['response']['infos_user']['nbre_positionnements'] = "";
+			//$this->returnData['response']['infos_user']['date_last_posi'] = "";
+			//$this->returnData['response']['infos_user']['ref_selected_session'] = "";
+			$this->returnData['response']['infos_user']['nom_intervenant'] = "";
+			$this->returnData['response']['infos_user']['email_intervenant'] = "";
+
+			$nomOrgan = "";
+			$codeOrgan = "";
+			$nomUser = "";
+			$prenomUser = "";
+			$dateNaissUser = "";
+			$nbrePassTotales = "";
+			$nbrePassAccomplies = "";
+			$nomNiveau = "";
+			$descriptNiveau = "";
+			$nomInter = "";
+			$emailInter = "";
+
+
+		/* Fin Initialisation des informations sur la restitution */
+
+
+
+
+		/* 2.3. Création des listes visualisables (restrictions des listes selon droits)
+		   ============================================================================= */
+
+		// Incorporation de la liste des régions (toujours complète)
 
 		if ($regionsList['response']['regions']) 
 		{
@@ -852,6 +888,7 @@ class ServicesPublic extends Main
 			$organismesList = $this->servicesRestitution->getOrganismesList(); 
 		}
 
+		// Si la liste des organismes est disponible, uniquement les valeurs autorisées sont sélectionnées
 		if (!$organismesList)
 		{
 			$this->registerError("form_empty", "Aucun organisme existant.");
@@ -888,23 +925,13 @@ class ServicesPublic extends Main
 
 		// Pour chaque combo-box sélectionné, on effectue les requetes correspondantes
 		
-		/*------   Un organisme a été sélectionnée   -------*/
+		// Un organisme a été sélectionnée
 		
 		if ($this->formData['ref_organ'] !== null && $this->formData['ref_organ'] != "select_cbox")
 		{
-			// Initialisation des infos principales
+			// Assignation des infos disponibles sur la restitution
 			$this->returnData['response']['infos_user']['nom_organ'] = $nomOrgan;
 			$this->returnData['response']['infos_user']['code_organ'] = $codeOrgan;
-			$this->returnData['response']['infos_user']['nom_intervenant'] = "";
-			$this->returnData['response']['infos_user']['email_intervenant'] = "";
-			$this->returnData['response']['infos_user']['nom'] = "";
-			$this->returnData['response']['infos_user']['prenom'] = "";
-			$this->returnData['response']['infos_user']['date_naiss'] = "";
-			$this->returnData['response']['infos_user']['nom_niveau'] = "";
-			$this->returnData['response']['infos_user']['descript_niveau'] = "";
-			$this->returnData['response']['infos_user']['nbre_positionnements'] = "";
-			$this->returnData['response']['infos_user']['date_last_posi'] = "";
-			$this->returnData['response']['infos_user']['ref_selected_session'] = "";
 
 
 			$users = array(
@@ -940,19 +967,31 @@ class ServicesPublic extends Main
 					{
 						if ($utilisateur->getId() == $user['id_user'] && !$exists) 
 						{
-							$users['response']['utilisateur'][$j] = $organisme;
+							$users['response']['utilisateur'][$j] = $utilisateur;
 							$exists = true;
 						}
 
 						$j++;
 					}
-					/*
-					if ($utilistaeur->getId() == $this->formData['ref_user'])
+					
+					if ($utilisateur->getId() == $this->formData['ref_user'])
 					{
-						$nomOrgan = $organisme->getNom();
-						$codeOrgan = $organisme->getNumeroInterne();
+						$numDossier = $utilisateur->getNumeroDossier();
+						$nomUser = $utilisateur->getNom();
+						$prenomUser = $utilisateur->getPrenom();
+						$dateNaissUser = $utilisateur->getDateNaiss();
+						$nbrePassTotales = $utilisateur->getSessionsTotales();
+						$nbrePassAccomplies = $utilisateur->getSessionsAccomplies();
+
+						$resultsetNiveau = $this->servicesRestitution->getNiveau($utilisateur->getRefNiveau());
+
+						if ($resultsetNiveau)
+						{
+							$nomNiveau = $resultsetNiveau['response']['niveau_etudes'][0]->getNom();
+							$descriptNiveau = $resultsetNiveau['response']['niveau_etudes'][0]->getDescription();
+						}
 					}
-					*/
+					
 				}
 
 				$this->returnData['response'] = array_merge($users['response'], $this->returnData['response']);
@@ -964,10 +1003,13 @@ class ServicesPublic extends Main
 			
 			if ($this->formData['ref_user'] !== null && $this->formData['ref_user'] != "select_cbox")
 			{
-				// Collecte des infos sur l'utilisateur
-				//$this->returnData['response']['infos_user'] = $this->servicesRestitution->getInfosUser($this->formData['ref_user']);
-				//$this->returnData['response']['infos_user']['nom_organ'] = $nomOrgan;
-				//$this->returnData['response']['infos_user']['code_organ'] = $codeOrgan;
+				
+				$this->returnData['response']['infos_user']['nom'] = $nomUser;
+				$this->returnData['response']['infos_user']['prenom'] = $prenomUser;
+				$this->returnData['response']['infos_user']['date_naiss'] = $dateNaissUser;
+				$this->returnData['response']['infos_user']['nom_niveau'] = $nomNiveau;
+				$this->returnData['response']['infos_user']['descript_niveau'] = $descriptNiveau;
+
 				
 				$posis = array(
 					'response' => array(
@@ -1005,8 +1047,14 @@ class ServicesPublic extends Main
 
 							$j++;
 						}
+
+						if ($positionnement->getId() == $this->formData['ref_user'])
+						{
+							$nomPosi = $positionnement->getNom();
+							$descriptPosi = $positionnement->getDescription();
+						}
 					}
-				
+
 					$this->returnData['response'] = array_merge($posis['response'], $this->returnData['response']);
 				}
 
@@ -1017,6 +1065,8 @@ class ServicesPublic extends Main
 
 				if ($this->formData['ref_posi'] !== null && $this->formData['ref_posi'] != "select_cbox") 
 				{
+					//$this->returnData['response']['infos_user']['nom_intervenant'] = "";
+					//$this->returnData['response']['infos_user']['email_intervenant'] = "";
 					/*
 					$resultsetDomaines = $this->servicesRestitution->getPosisFromUser($this->formData['ref_user']);
 
@@ -1083,6 +1133,17 @@ class ServicesPublic extends Main
 
 								$j++;
 							}
+
+							if ($session->getId() == $this->formData['ref_session'])
+							{
+								$resultsetInter = $this->servicesRestitution->getIntervenant($session->getRefIntervenant());
+
+								if ($resultsetInter)
+								{
+									$nomInter = $resultsetNiveau['response']['intervenant'][0]->getEmail();
+									$emailInter = $resultsetNiveau['response']['intervenant'][0]->getEmail();
+								}
+							}
 						}
 					
 						$this->returnData['response'] = array_merge($sess['response'], $this->returnData['response']);
@@ -1144,27 +1205,28 @@ class ServicesPublic extends Main
 				if (!empty($this->formData['ref_session']) && $this->formData['ref_session'] != "select_cbox")
 				{
 					/*** On va chercher les infos sur la session qui correspondent à la référence de la session sélectionné ***/
-					$resultsetSession = $this->servicesRestitution->getSession($this->formData['ref_session']);
-					$this->returnData['response'] = array_merge($resultsetSession['response'], $this->returnData['response']);
+					//$resultsetSession = $this->servicesRestitution->getSession($this->formData['ref_session']);
+					//$this->returnData['response'] = array_merge($resultsetSession['response'], $this->returnData['response']);
 
 					
 					/*** On récupère également les infos sur l'intervenant ***/
-					$resultsetIntervenant = $this->servicesRestitution->getIntervenant($resultsetSession['response']['session'][0]->getRefIntervenant());
-					$this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
-					$this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
+					//$resultsetIntervenant = $this->servicesRestitution->getIntervenant($resultsetSession['response']['session'][0]->getRefIntervenant());
+					//$this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
+					//$this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
 
-					$refSession = $resultsetSession['response']['session'][0]->getId();
-					$this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
-					$this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
+					//$refSession = $resultsetSession['response']['session'][0]->getId();
+					//$this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
+					//$this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
 					
 					/*--------- Statistiques par catégories(temps, score...)-------------*/	
 					$this->returnData['response']['stats'] = array();
-					$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($refSession, $this->formData['ref_posi']);
+					$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($this->formData['ref_session'], $this->formData['ref_posi']);
 					
 
 					/*------ Validation des acquis -------*/
 
 					$refValidAcquis = '';
+
 					if (isset($_POST['ref_valid_cbox']) && !empty($_POST['ref_valid_cbox'])) 
 					{
 						$refValidAcquis = $_POST['ref_valid_cbox'];
@@ -1437,7 +1499,7 @@ class ServicesPublic extends Main
 
 		
 		/*-----   Retour des données traitées du formulaire   -----*/
-		/*
+		
 		$this->returnData['response']['form_data'] = $this->formData;
 		$this->returnData['response']['url'] = $this->url;
 
@@ -1452,7 +1514,7 @@ class ServicesPublic extends Main
 		
 		
 		$this->setResponse($this->returnData);
-		*/
+		
 
 		if (isset($_POST['export_pdf']) && !empty($_POST['export_pdf']))
 		{

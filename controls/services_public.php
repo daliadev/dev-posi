@@ -57,6 +57,9 @@ class ServicesPublic extends Main
 
 		$this->servicesRestitution->initialize();
 
+
+			
+
 		/**
 		 * Description: Gestion des filtres et génération de la page restitution.
 		 * Create: 20/12/2016
@@ -104,16 +107,16 @@ class ServicesPublic extends Main
 
 		if ($requestParams != null && is_array($requestParams)) 
 		{
-			if (isset($requestParams[0]) && preg_match("`^[a-zA-Z0-9]*$`", $requestParams[0])) {
+			if (isset($requestParams[0]) && preg_match("`^[a-zA-Z0-9]*$`", $requestParams[0]) && !empty($requestParams[0])) {
 				$numOrgan = $requestParams[0];
 			}
-			if (isset($requestParams[1]) && preg_match("`^[0-9]*$`", $requestParams[1])) {
+			if (isset($requestParams[1]) && preg_match("`^[0-9]*$`", $requestParams[1]) && !empty($requestParams[1])) {
 				$refUser = $requestParams[1];
 			}
-			if (isset($requestParams[2]) && preg_match("`^[0-9]*$`", $requestParams[2])) {
+			if (isset($requestParams[2]) && preg_match("`^[0-9]*$`", $requestParams[2]) && !empty($requestParams[2])) {
 				$refPosi = $requestParams[2];
 			}
-			if (isset($requestParams[3]) && preg_match("`^[0-9]*$`", $requestParams[3])) {
+			if (isset($requestParams[3]) && preg_match("`^[0-9]*$`", $requestParams[3]) && !empty($requestParams[3])) {
 				$refSession = $requestParams[3];
 			}
 
@@ -281,6 +284,7 @@ class ServicesPublic extends Main
 		
 		if (isset($_POST['filter']))
 		{
+		
 			$results = false;
 
 			$refRegionFilter = null;
@@ -1140,8 +1144,8 @@ class ServicesPublic extends Main
 
 								if ($resultsetInter)
 								{
-									$nomInter = $resultsetNiveau['response']['intervenant'][0]->getEmail();
-									$emailInter = $resultsetNiveau['response']['intervenant'][0]->getEmail();
+									$nomInter = $resultsetInter['response']['intervenant'][0]->getNom();
+									$emailInter = $resultsetInter['response']['intervenant'][0]->getEmail();
 								}
 							}
 						}

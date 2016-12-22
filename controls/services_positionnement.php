@@ -1101,7 +1101,7 @@ class ServicesPositionnement extends Main
 
 		/* Création du mail */
 		
-		$messageBody = '';
+		$messageBody = '<table><tr><td>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
 		$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
@@ -1138,6 +1138,7 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Votre accès à la page des résultats : <br><a href="'.$emailInfos['url_restitution'].'">'.$emailInfos['url_restitution'].'</a><br>';
 		$messageBody .= 'Votre accès à la page des statistiques : <br><a href="'.$emailInfos['url_stats'].'">'.$emailInfos['url_stats'].'</a><br>';
 		$messageBody .= '</p>';
+		$messageBody .= '</td></tr></table>';
 
 		$style = 'p { font-family: Arial, sans-serif; }';
 

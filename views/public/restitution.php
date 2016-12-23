@@ -304,9 +304,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									<?php
 									
-									if (isset($response['utilisateurs']) && !empty($response['utilisateurs']) && count($response['utilisateurs']) > 0)
+									if (isset($response['utilisateur']) && !empty($response['utilisateur']) && count($response['utilisateur']) > 0)
 									{
-										foreach ($response['utilisateurs'] as $utilisateur)
+										foreach ($response['utilisateur'] as $utilisateur)
 										{
 											$selected = "";
 											if (!empty($formData['ref_user']) && $formData['ref_user'] == $utilisateur->getId())
@@ -378,9 +378,9 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									<?php
 									
-									if (isset($response['sessions']) && !empty($response['sessions']) && count($response['sessions']) > 0) 
+									if (isset($response['session']) && !empty($response['session']) && count($response['sessions']) > 0) 
 									{
-										foreach ($response['sessions'] as $session)
+										foreach ($response['session'] as $session)
 										{
 											$selected = "";
 											if (!empty($formData['ref_session']) && $formData['ref_session'] == $session->getId())

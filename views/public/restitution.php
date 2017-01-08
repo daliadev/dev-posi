@@ -378,7 +378,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 									<?php
 									
-									if (isset($response['session']) && !empty($response['session']) && count($response['sessions']) > 0) 
+									if (isset($response['session']) && !empty($response['session']) && count($response['session']) > 0) 
 									{
 										foreach ($response['session'] as $session)
 										{

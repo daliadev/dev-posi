@@ -341,12 +341,17 @@ class ServicesAdminRestitution extends Main
 		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
-		$query .= "INNER JOIN session AS sess ";
-		$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
+		$query .= "INNER JOIN inscription AS inscript ";
+		$query .= "ON inter.id_intervenant = inscript.ref_intervenant ";
+		//$query .= "INNER JOIN session AS sess ";
+		//$query .= "ON inter.id_intervenant = sess.ref_intervenant ";
 		$query .= "INNER JOIN utilisateur AS user ";
+		$query .= "ON inscript.ref_user = user.id_user ";
+		//$query .= "ON sess.ref_user = user.id_user ";
+		$query .= "INNER JOIN session AS sess ";
 		$query .= "ON user.id_user = sess.ref_user ";
 		$query .= "INNER JOIN positionnement AS dom ";
-		$query .= "ON dom.id_posi = sess.ref_posi ";
+		$query .= "ON sess.ref_posi = dom.id_posi ";
 		$query .= "WHERE sess.session_accomplie = 1 ";
 
 		if ($refOrgan) 
@@ -374,15 +379,16 @@ class ServicesAdminRestitution extends Main
 		if ($refUser) 
 		{
 			$query .= "AND user.id_user = ".$refUser." ";
+			//$query .= "AND sess.ref_user = ".$refUser." ";
 		}
 
 		if ($refPosi) 
 		{
 			$query .= "AND dom.id_posi = ".$refPosi." ";
-			$query .= "AND sess.ref_posi = ".$refPosi." ";
+			//$query .= "AND sess.ref_posi = ".$refPosi." ";
 		}
 		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ, sess.id_session ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
 
 		//return $query;
 		//var_dump($query);
@@ -529,7 +535,8 @@ class ServicesAdminRestitution extends Main
 
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
-		$resultats = $this->getResultatsByCategories($refSession, $refPosi);
+		$resultats = $this->getResultatsByCategories($refSession);
+
 
 
 		// Liste des parcours de formation

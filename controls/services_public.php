@@ -294,21 +294,55 @@ class ServicesPublic extends Main
 			//$dateSession = null;
 			$refSessionFilter = null;
 
+
 			if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_region']))
 			{
 				$refRegionFilter = $_POST['ref_region'];
-			}
-			if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']))
-			{
-				$refOrganFilter = $_POST['ref_organ'];
-			}
-			if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']))
-			{
-				$refUserFilter = $_POST['ref_user'];
-			}
-			if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']))
-			{
-				$refPosiFilter = $_POST['ref_posi'];
+
+				if ($loggedAsOrganViewer) 
+				{
+					$refOrganFilter = $preSelectOrgan;
+				}
+				else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']) && $loggedAsOrganViewer)
+				{
+					$refOrganFilter = $_POST['ref_organ'];
+				}
+
+				if ($refOrganFilter !== null)
+				{
+					if ($loggedAsUserViewer) 
+					{
+						$refUserFilter = $preSelectUser;
+					}
+					else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']) && $loggedAsOrganViewer)
+					{
+						$refUserFilter = $_POST['ref_user'];
+					}
+
+					if ($refUserFilter !== null)
+					{
+						if ($loggedAsPosiViewer) 
+						{
+							$refPosiFilter = $preSelectPosi;
+						}
+						else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']) && $loggedAsOrganViewer)
+						{
+							$refPosiFilter = $_POST['ref_posi'];
+						}
+
+						if ($refPosiFilter !== null)
+						{
+							if ($loggedAsSessionViewer) 
+							{
+								$refSessionFilter = $preSelectSession;
+							}
+							else if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox'  && preg_match("`^[0-9]*$`", $_POST['ref_session']))
+							{
+								$refSessionFilter = $_POST['ref_session'];
+							}
+						}
+					}
+				}
 			}
 
 			// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
@@ -316,10 +350,7 @@ class ServicesPublic extends Main
 			// 	$dateSession = $_POST['date_session'];
 			// }
 			
-			if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox'  && preg_match("`^[0-9]*$`", $_POST['ref_session']))
-			{
-				$refSessionFilter = $_POST['ref_session'];
-			}
+			
 
 
 			if ($refRegionFilter != null || $refOrganFilter != null || $refUserFilter != null || $refPosiFilter != null) // || $dateSession != null)
@@ -341,7 +372,7 @@ class ServicesPublic extends Main
 				}
 				else
 				{
-					$results = array('error' => "Error filter = false");
+					$results = array('error' => "Aucun résultat avec les identifiants fournis.");
 				}
 			}
 			else
@@ -356,7 +387,7 @@ class ServicesPublic extends Main
 				}
 				else
 				{
-					$results = array('error' => "Error, no filter attribute");
+					$results = array('error' => "Aucune données dans la sélection globale.");
 				}
 			}
 

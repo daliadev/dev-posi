@@ -169,117 +169,120 @@ class ServicesPublic extends Main
 		{
 			$loggedAsAdmin = true;
 		}
+
+
+		if (!$loggedAsAdmin) {
 		
 
-		/* 1.3.1. Filtre "organisme" 
-		   ----------------------------------------------*/
+			/* 1.3.1. Filtre "organisme" 
+			   ----------------------------------------------*/
 
-		if ($numOrgan !== null) {
+			if ($numOrgan !== null) {
 
-			// On va chercher l'organisme correspondant au code
-			$selectOrgan = $this->servicesRestitution->getOrganByCode($numOrgan);
+				// On va chercher l'organisme correspondant au code
+				$selectOrgan = $this->servicesRestitution->getOrganByCode($numOrgan);
 
-			if ($selectOrgan['response']['organisme'] && count($selectOrgan['response']['organisme']) > 0) {
-				$loggedAsOrganViewer = true;
-				$preSelectOrgan = $selectUser['response']['organisme'][0];
+				if ($selectOrgan['response']['organisme'] && count($selectOrgan['response']['organisme']) > 0) {
+					$loggedAsOrganViewer = true;
+					$preSelectOrgan = $selectUser['response']['organisme'][0];
 
-				$this->url .= $preSelectOrgan->getId()."/";
-			}
-			else
-			{
-				// Redirection vers une page d'erreur non autorisé
-				header("Location: ".SERVER_URL."erreur/page503");
-				exit();
-			}
-		}
-
-
-		/* 1.3.2. Filtre "utilisateur" 
-		   ----------------------------------------------*/
-
-		if ($refUser !== null) {
-
-			// On va chercher l'utilisateur
-			$selectUser = $this->servicesRestitution->getUser($refUser);
-
-			if ($selectUser['response']['utilisateur'] && count($selectUser['response']['utilisateur']) > 0) 
-			{
-				$loggedAsUserViewer = true;
-				$preSelectUser = $selectUser['response']['utilisateur'][0];
-
-				if ($preSelectOrgan !== null) 
+					$this->url .= $preSelectOrgan->getId()."/";
+				}
+				else
 				{
-					$this->url .= $preSelectUser->getId()."/";
+					// Redirection vers une page d'erreur non autorisé
+					header("Location: ".SERVER_URL."erreur/page503");
+					exit();
 				}
 			}
-			else
-			{
-				// Redirection vers une page d'erreur non autorisé
-				header("Location: ".SERVER_URL."erreur/page503");
-				exit();
-			}
-		}
 
 
-		/* 1.3.3. Filtre "Positionnement/Domaine" 
-		   ----------------------------------------------*/
+			/* 1.3.2. Filtre "utilisateur" 
+			   ----------------------------------------------*/
 
-		if ($refPosi !== null) {
+			if ($refUser !== null) {
 
-			// On va chercher l'utilisateur
-			$selectPosi = $this->servicesRestitution->getPositionnement($refPosi);
+				// On va chercher l'utilisateur
+				$selectUser = $this->servicesRestitution->getUser($refUser);
 
-			if ($selectPosi['response']['positionnement'] && count($selectUser['response']['positionnement']) > 0) 
-			{
-				$loggedAsPosiViewer = true;
-				$preSelectPosi = $selectPosi['response']['positionnement'][0];
-
-				if ($preSelectUser !== null) 
+				if ($selectUser['response']['utilisateur'] && count($selectUser['response']['utilisateur']) > 0) 
 				{
-					$this->url .= $preSelectPosi->getId()."/";
+					$loggedAsUserViewer = true;
+					$preSelectUser = $selectUser['response']['utilisateur'][0];
+
+					if ($preSelectOrgan !== null) 
+					{
+						$this->url .= $preSelectUser->getId()."/";
+					}
+				}
+				else
+				{
+					// Redirection vers une page d'erreur non autorisé
+					header("Location: ".SERVER_URL."erreur/page503");
+					exit();
 				}
 			}
-			else
-			{
-				// Redirection vers une page d'erreur non autorisé
-				header("Location: ".SERVER_URL."erreur/page503");
-				exit();
-			}
-		}
 
 
-		/* 1.3.4. Filtre "Session" 
-		   ----------------------------------------------*/
+			/* 1.3.3. Filtre "Positionnement/Domaine" 
+			   ----------------------------------------------*/
 
-		if ($refSession !== null) {
+			if ($refPosi !== null) {
 
-			// On va chercher l'utilisateur
-			$selectSession = $this->servicesRestitution->getSession($refSession);
+				// On va chercher l'utilisateur
+				$selectPosi = $this->servicesRestitution->getPositionnement($refPosi);
 
-			if ($selectSession['response']['session'] && count($selectSession['response']['session']) > 0) 
-			{
-				$loggedAsSessionViewer = true;
-				$preSelectSession = $selectSession['response']['session'][0];
-
-				if ($preSelectPosi !== null) 
+				if ($selectPosi['response']['positionnement'] && count($selectUser['response']['positionnement']) > 0) 
 				{
-					$this->url .= $preSelectSession->getId()."/";
+					$loggedAsPosiViewer = true;
+					$preSelectPosi = $selectPosi['response']['positionnement'][0];
+
+					if ($preSelectUser !== null) 
+					{
+						$this->url .= $preSelectPosi->getId()."/";
+					}
+				}
+				else
+				{
+					// Redirection vers une page d'erreur non autorisé
+					header("Location: ".SERVER_URL."erreur/page503");
+					exit();
 				}
 			}
-			else
-			{
-				// Redirection vers une page d'erreur non autorisé
-				header("Location: ".SERVER_URL."erreur/page503");
-				exit();
+
+
+			/* 1.3.4. Filtre "Session" 
+			   ----------------------------------------------*/
+
+			if ($refSession !== null) {
+
+				// On va chercher l'utilisateur
+				$selectSession = $this->servicesRestitution->getSession($refSession);
+
+				if ($selectSession['response']['session'] && count($selectSession['response']['session']) > 0) 
+				{
+					$loggedAsSessionViewer = true;
+					$preSelectSession = $selectSession['response']['session'][0];
+
+					if ($preSelectPosi !== null) 
+					{
+						$this->url .= $preSelectSession->getId()."/";
+					}
+				}
+				else
+				{
+					// Redirection vers une page d'erreur non autorisé
+					header("Location: ".SERVER_URL."erreur/page503");
+					exit();
+				}
 			}
 		}
-		
 
 		/* Fin Assignation des droits */
 
 
 
-		/* 1.4. Requête instantannée sur les filtres
+		/* 1.4. Requête instantanée sur les filtres
 		   ========================================================================== */
 		
 		if (isset($_POST['filter']))
@@ -303,7 +306,7 @@ class ServicesPublic extends Main
 				{
 					$refOrganFilter = $preSelectOrgan;
 				}
-				else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']) && $loggedAsOrganViewer)
+				else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']))
 				{
 					$refOrganFilter = $_POST['ref_organ'];
 				}
@@ -314,7 +317,7 @@ class ServicesPublic extends Main
 					{
 						$refUserFilter = $preSelectUser;
 					}
-					else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']) && $loggedAsOrganViewer)
+					else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']))
 					{
 						$refUserFilter = $_POST['ref_user'];
 					}
@@ -325,11 +328,12 @@ class ServicesPublic extends Main
 						{
 							$refPosiFilter = $preSelectPosi;
 						}
-						else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']) && $loggedAsOrganViewer)
+						else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']))
 						{
 							$refPosiFilter = $_POST['ref_posi'];
 						}
 
+						/*
 						if ($refPosiFilter !== null)
 						{
 							if ($loggedAsSessionViewer) 
@@ -341,9 +345,13 @@ class ServicesPublic extends Main
 								$refSessionFilter = $_POST['ref_session'];
 							}
 						}
+						*/
 					}
 				}
 			}
+
+			//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter, $refSessionFilter);
+
 
 			// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
 			// {
@@ -356,8 +364,15 @@ class ServicesPublic extends Main
 			if ($refRegionFilter != null || $refOrganFilter != null || $refUserFilter != null || $refPosiFilter != null) // || $dateSession != null)
 			{
 
-				$searchResults = $this->servicesRestitution->search($regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-			
+				if ($refRegionFilter != null && $refOrganFilter != null && $refUserFilter != null && $refPosiFilter != null) 
+				{
+					$searchResults = $this->servicesRestitution->search(false, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
+				}
+				else 
+				{
+					$searchResults = $this->servicesRestitution->search(true, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+				}
+
 				// Recherche des éléments de listes et de champs de filtrage
 				if ($searchResults)
 				{
@@ -374,11 +389,12 @@ class ServicesPublic extends Main
 				{
 					$results = array('error' => "Aucun résultat avec les identifiants fournis.");
 				}
+			
 			}
 			else
 			{
 				// Select all
-				$searchResults = $this->servicesRestitution->search($regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+				$searchResults = $this->servicesRestitution->search(true, $regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
 
 				
 				if (isset($searchResults['response']) && !empty($searchResults['response']))
@@ -761,24 +777,30 @@ class ServicesPublic extends Main
 		}
 
 		// Si les ids sont spécifiés dans l'url, on remplace les valeurs sélectionnées
-		if ($loggedAsOrganViewer)
-		{
-			$this->formData['ref_organ'] = $preSelectOrgan->getId();
-		}
 
-		if ($loggedAsUserViewer)
-		{
-			$this->formData['ref_user'] = $preSelectUser->getId();
-		}
 
-		if ($loggedAsPosiViewer)
-		{
-			$this->formData['ref_posi'] = $preSelectPosi->getId();
-		}
+		if (!$loggedAsAdmin) {
 
-		if ($loggedAsSessionViewer)
-		{
-			$this->formData['ref_session'] = $preSelectSession->getId();
+			if ($loggedAsOrganViewer)
+			{
+				$this->formData['ref_organ'] = $preSelectOrgan->getId();
+			}
+
+			if ($loggedAsUserViewer)
+			{
+				$this->formData['ref_user'] = $preSelectUser->getId();
+			}
+
+			if ($loggedAsPosiViewer)
+			{
+				$this->formData['ref_posi'] = $preSelectPosi->getId();
+			}
+
+			if ($loggedAsSessionViewer)
+			{
+				$this->formData['ref_session'] = $preSelectSession->getId();
+			}
+
 		}
 
 		/* Fin Récupération des valeurs des filtres */
@@ -790,30 +812,32 @@ class ServicesPublic extends Main
 		   ============================================================================= */
 
 
-			$this->returnData['response']['infos_user']['nom_organ'] = "";
-			$this->returnData['response']['infos_user']['code_organ'] = "";
-			$this->returnData['response']['infos_user']['nom'] = "";
-			$this->returnData['response']['infos_user']['prenom'] = "";
-			$this->returnData['response']['infos_user']['date_naiss'] = "";
-			$this->returnData['response']['infos_user']['nom_niveau'] = "";
-			$this->returnData['response']['infos_user']['descript_niveau'] = "";
-			$this->returnData['response']['infos_user']['nbre_positionnements'] = "";
-			//$this->returnData['response']['infos_user']['date_last_posi'] = "";
-			//$this->returnData['response']['infos_user']['ref_selected_session'] = "";
-			$this->returnData['response']['infos_user']['nom_intervenant'] = "";
-			$this->returnData['response']['infos_user']['email_intervenant'] = "";
+		$this->returnData['response']['infos_user']['nom_organ'] = "";
+		$this->returnData['response']['infos_user']['code_organ'] = "";
+		$this->returnData['response']['infos_user']['nom'] = "";
+		$this->returnData['response']['infos_user']['prenom'] = "";
+		$this->returnData['response']['infos_user']['date_naiss'] = "";
+		$this->returnData['response']['infos_user']['nom_niveau'] = "";
+		$this->returnData['response']['infos_user']['descript_niveau'] = "";
+		$this->returnData['response']['infos_user']['nbre_positionnements'] = "";
 
-			$nomOrgan = "";
-			$codeOrgan = "";
-			$nomUser = "";
-			$prenomUser = "";
-			$dateNaissUser = "";
-			$nbrePassTotales = "";
-			$nbrePassAccomplies = "";
-			$nomNiveau = "";
-			$descriptNiveau = "";
-			$nomInter = "";
-			$emailInter = "";
+		$this->returnData['response']['infos_user']['date_last_posi'] = "";
+		$this->returnData['response']['infos_user']['ref_selected_session'] = "";
+		
+		$this->returnData['response']['infos_user']['nom_intervenant'] = "";
+		$this->returnData['response']['infos_user']['email_intervenant'] = "";
+
+		$nomOrgan = "";
+		$codeOrgan = "";
+		$nomUser = "";
+		$prenomUser = "";
+		$dateNaissUser = "";
+		$nbrePassTotales = "";
+		$nbrePassAccomplies = "";
+		$nomNiveau = "";
+		$descriptNiveau = "";
+		$nomInter = "";
+		$emailInter = "";
 
 
 		/* Fin Initialisation des informations sur la restitution */
@@ -844,14 +868,21 @@ class ServicesPublic extends Main
 
 		// Obtention des valeurs listables selon les filtres sélectionnés
 
-		$resultsListings = $this->servicesRestitution->search($regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
-		
+		if ($this->formData['ref_region'] != null || $this->formData['ref_organ'] != null || $this->formData['ref_user'] != null || $this->formData['ref_posi'] != null || $this->formData['ref_session'] != null)
+		{
+			$resultsListings = $this->servicesRestitution->search(false, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], $this->formData['ref_session']);
+		}
+		else
+		{
+			$resultsListings = $this->servicesRestitution->search(false, $regions);
+		}
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
-
 			$listings = $resultsListings['response']['restitution'];
 
+			//var_dump($listings);
+			//exit();
 
 			$i = 0;
 
@@ -903,6 +934,7 @@ class ServicesPublic extends Main
 		}
 
 
+
 		// Création de la liste des organismes par défaut
 
 		$nomOrgan = null;
@@ -914,14 +946,15 @@ class ServicesPublic extends Main
 			)
 		);
 
-		if ($loggedAsOrganViewer)
-		{
-			$organismesList = $preSelectOrgan;
-		}
-		else if ($loggedAsAdmin)
+		if ($loggedAsAdmin)
 		{
 			$organismesList = $this->servicesRestitution->getOrganismesList(); 
 		}
+		else if ($loggedAsOrganViewer)
+		{
+			$organismesList = $preSelectOrgan;
+		}
+		 
 
 		// Si la liste des organismes est disponible, uniquement les valeurs autorisées sont sélectionnées
 		if (!$organismesList)
@@ -976,14 +1009,14 @@ class ServicesPublic extends Main
 			);
 
 
-			if ($loggedAsUserViewer)
-			{
-				$usersList = $preSelectUser;
-			}
-			else if ($loggedAsAdmin)
+			if ($loggedAsAdmin)
 			{
 				$usersList = $this->servicesRestitution->getUsersFromOrganisme($this->formData['ref_organ']); 
 			}
+			else if ($loggedAsUserViewer)
+			{
+				$usersList = $preSelectUser;
+			} 
 
 
 			if (!$usersList)
@@ -1052,14 +1085,15 @@ class ServicesPublic extends Main
 					)
 				);
 
-				if ($loggedAsPosiViewer)
-				{
-					$domsList = $preSelectPosi;
-				}
-				else if ($loggedAsAdmin)
+				if ($loggedAsAdmin)
 				{
 					$domsList = $this->servicesRestitution->getPosisFromUser($this->formData['ref_user']); 
 				}
+				else if ($loggedAsPosiViewer)
+				{
+					$domsList = $preSelectPosi;
+				}
+				 
 
 				if (!$domsList)
 				{
@@ -1138,14 +1172,15 @@ class ServicesPublic extends Main
 						)
 					);
 
-					if ($loggedAsSessionViewer)
-					{
-						$sessionsList = $preSelectSession;
-					}
-					else if ($loggedAsAdmin)
+					if ($loggedAsAdmin)
 					{
 						$sessionsList = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ'], $this->formData['ref_posi']); 
 					}
+					else if ($loggedAsSessionViewer)
+					{
+						$sessionsList = $preSelectSession;
+					}
+					 
 
 					if (!$sessionsList)
 					{
@@ -1256,6 +1291,7 @@ class ServicesPublic extends Main
 					/*--------- Statistiques par catégories(temps, score...)-------------*/	
 					$this->returnData['response']['stats'] = array();
 					$this->returnData['response']['stats'] = $this->servicesRestitution->getPosiStats($this->formData['ref_session'], $this->formData['ref_posi']);
+					
 					
 
 					/*------ Validation des acquis -------*/

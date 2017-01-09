@@ -298,9 +298,11 @@ class ServicesAdminRestitution extends Main
 
 
 
-	public function search($regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $refPosi = null, $date = null, $codeOrgan = null, $ref_inter = null)
+	public function search($groupBy = false, $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $refPosi = null, $refSession = null, $date = null, $codeOrgan = null, $ref_inter = null)
 	{
 
+		//var_dump($refRegion, $refOrgan, $refUser, $refPosi, $refSession);
+		//exit();
 		// code postaux
 		
 		$codePostalRequest = "";
@@ -336,8 +338,30 @@ class ServicesAdminRestitution extends Main
 			}
 		}
 
+		/* ok
+		SELECT org.id_organ, org.nom_organ, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi, sess.id_session, sess.date_session 
+		FROM organisme AS org 
+		INNER JOIN intervenant AS inter 
+		ON org.id_organ = inter.ref_organ 
+		INNER JOIN inscription AS inscript 
+		ON inter.id_intervenant = inscript.ref_intervenant 
+		INNER JOIN utilisateur AS user 
+		ON inscript.ref_user = user.id_user 
+		INNER JOIN session AS sess 
+		ON user.id_user = sess.ref_user 
+		INNER JOIN positionnement AS dom 
+		ON sess.ref_posi = dom.id_posi 
+		WHERE sess.session_accomplie = 1
 
-		$query = "SELECT org.id_organ, org.nom_organ, sess.id_session, sess.date_session, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi ";
+		AND org.id_organ = 2
+		AND user.id_user = 42
+		AND sess.id_session = 5
+
+		GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC;
+		*/
+	
+
+		$query = "SELECT org.id_organ, org.nom_organ, user.id_user, user.nom_user, user.prenom_user, dom.id_posi, dom.nom_posi, sess.id_session, sess.date_session ";
 		$query .= "FROM organisme AS org ";
 		$query .= "INNER JOIN intervenant AS inter ";
 		$query .= "ON org.id_organ = inter.ref_organ ";
@@ -379,16 +403,31 @@ class ServicesAdminRestitution extends Main
 		if ($refUser) 
 		{
 			$query .= "AND user.id_user = ".$refUser." ";
-			//$query .= "AND sess.ref_user = ".$refUser." ";
+			$query .= "AND sess.ref_user = ".$refUser." ";
 		}
 
 		if ($refPosi) 
 		{
 			$query .= "AND dom.id_posi = ".$refPosi." ";
-			//$query .= "AND sess.ref_posi = ".$refPosi." ";
+			$query .= "AND sess.ref_posi = ".$refPosi." ";
 		}
-		//$query .= "GROUP BY user.id_user ";
-		$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ, sess.id_session ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+
+		if ($refSession) {
+			$query .= "AND sess.id_session = ".$refSession." ";
+		}
+
+
+		if ($groupBy) {
+
+			$query .= "GROUP BY dom.id_posi, user.id_user, org.id_organ ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		}
+		else
+		{
+			$query .= "GROUP BY sess.id_session ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+		}
+
+		
+
 
 		//return $query;
 		//var_dump($query);
@@ -522,6 +561,7 @@ class ServicesAdminRestitution extends Main
 	public function getPosiStats($refSession, $refPosi = null)
 	{
 
+
 		$posiStats = array();
 		$posiStats['categories'] = array();
 		
@@ -536,8 +576,6 @@ class ServicesAdminRestitution extends Main
 		
 		// On sélectionne tous les résultats correspondant à la session en cours
 		$resultats = $this->getResultatsByCategories($refSession);
-
-
 
 		// Liste des parcours de formation
 		$parcoursPreco = $this->parcoursPrecoDAO->selectAll();
@@ -637,6 +675,7 @@ class ServicesAdminRestitution extends Main
 			$posiStats['categories'][] = $categorie;
 
 		}
+		
 
 		$categories = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
 

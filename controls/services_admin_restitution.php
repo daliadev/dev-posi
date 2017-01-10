@@ -635,20 +635,27 @@ class ServicesAdminRestitution extends Main
 			{
 				if ($resultats[$j]['result'] && $resultats[$j]['codes_cat']) //$resultats[$j]->getRefCat() == $categorie->getCode())
 				{
-					
 				   	$tempsGlobal += $resultats[$j]['result']->getTempsReponse();
 					$tempsCat += $resultats[$j]['result']->getTempsReponse();
-
+					
 					foreach ($resultats[$j]['codes_cat'] as $resultCodeCat) {
 						
-						$totalCategorie++;
-						$totalGlobal++;
+						//var_dump($resultCodeCat);
 
-						if ((!empty($resultats[$j]['result']->getRefReponseQcm()) && $resultats[$j]['result']->getRefReponseQcm() !== null && $resultats[$j]['result']->getRefReponseQcm() == $resultats[$j]['result']->getRefReponseQcmCorrecte()) 
-							|| (!empty($resultats[$j]['result']->getReponseChamp()) && $resultats[$j]['result']->getReponseChamp() !== null && !empty($resultats[$j]['result']->getValidationReponseChamp()) && $resultats[$j]['result']->getValidationReponseChamp() !== null && $resultats[$j]['result']->getValidationReponseChamp() == 1))
-						{
-							$totalCorrectCategorie++;
-							$totalCorrectGlobal++;
+						if ($resultCodeCat->getCodeCat() == $categorie->getCode()) {
+
+							$totalCategorie++;
+							$totalGlobal++;
+
+							if ((!empty($resultats[$j]['result']->getRefReponseQcm()) && $resultats[$j]['result']->getRefReponseQcm() !== null && $resultats[$j]['result']->getRefReponseQcm() == $resultats[$j]['result']->getRefReponseQcmCorrecte()) 
+								|| (!empty($resultats[$j]['result']->getReponseChamp()) && $resultats[$j]['result']->getReponseChamp() !== null && !empty($resultats[$j]['result']->getValidationReponseChamp()) && $resultats[$j]['result']->getValidationReponseChamp() !== null && $resultats[$j]['result']->getValidationReponseChamp() == 1))
+							{
+								$totalCorrectCategorie++;
+								$totalCorrectGlobal++;
+							}
+
+							break;
+
 						}
 					}
 
@@ -946,7 +953,7 @@ class ServicesAdminRestitution extends Main
 					$questionsDetails[$i]['reponse_qcm_correcte'] = "-";
 					$questionsDetails[$i]['intitule_reponse_correcte'] = "-";
 					$questionsDetails[$i]['temps'] = "-";
-					$questionsDetails[$i]['reussite'] = "-";   
+					$questionsDetails[$i]['reussite'] = "-";
 
 					if (!empty($resultatsUser[$j]['reponse_champ']))
 					{
@@ -1266,16 +1273,14 @@ class ServicesAdminRestitution extends Main
 				$tabResultats[$i]['codes_cat'] = array();
 				$catResultats = $this->getQuestionCategorie($resultat->getRefQuestion());
 
-				if ($catResultats) {
+				if ($catResultats['response']['question_cat']) {
 
-					foreach ($catResultats as $cat) {
+					foreach ($catResultats['response']['question_cat'] as $cat) {
 
 						$tabResultats[$i]['codes_cat'][] = $cat;
 					}
 					
 				}
-
-				//$tabResultats[$i] = $resultat;
 
 				$i++;
 			}

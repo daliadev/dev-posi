@@ -332,7 +332,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<select name="ref_posi_cbox" id="ref-posi-cbox" class="ajax-list" style="max-width: 170px;" <?php echo $disabled; ?>>
 								
 									<?php if (empty($disabled)) : ?>
-										<option class="posi-option" value="select_cbox">Tous les domaines</option>
+										<option class="posi-option" value="select_cbox">---</option>
 									<?php endif; ?>
 
 									<?php
@@ -688,6 +688,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 															$classRignt = 'class="cell-wrong"';
 															$classWrong = 'class="cell-wrong"';
 														}
+
 														
 														echo '<td style="width:10%;" '.$classRignt.'>';
 															echo '<p>Vrai</p>';

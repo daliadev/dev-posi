@@ -403,13 +403,13 @@ class ServicesAdminRestitution extends Main
 		if ($refUser) 
 		{
 			$query .= "AND user.id_user = ".$refUser." ";
-			$query .= "AND sess.ref_user = ".$refUser." ";
+			//$query .= "AND sess.ref_user = ".$refUser." ";
 		}
 
 		if ($refPosi) 
 		{
 			$query .= "AND dom.id_posi = ".$refPosi." ";
-			$query .= "AND sess.ref_posi = ".$refPosi." ";
+			//$query .= "AND sess.ref_posi = ".$refPosi." ";
 		}
 
 		if ($refSession) {
@@ -424,13 +424,14 @@ class ServicesAdminRestitution extends Main
 		else
 		{
 			$query .= "GROUP BY sess.id_session ORDER BY org.nom_organ, user.nom_user, dom.nom_posi, sess.date_session ASC";
+			//echo $query;
 		}
 
 		
 
 
 		//return $query;
-		//var_dump($query);
+		//echo $query;
 		//exit();
 
 

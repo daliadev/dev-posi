@@ -287,7 +287,6 @@ class ServicesPublic extends Main
 		
 		if (isset($_POST['filter']))
 		{
-		
 			$results = false;
 
 			$refRegionFilter = null;
@@ -301,56 +300,57 @@ class ServicesPublic extends Main
 			if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_region']))
 			{
 				$refRegionFilter = $_POST['ref_region'];
+			}
 
-				if ($loggedAsOrganViewer) 
+			if ($loggedAsOrganViewer) 
+			{
+				$refOrganFilter = $preSelectOrgan;
+			}
+			else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']))
+			{
+				$refOrganFilter = $_POST['ref_organ'];
+			}
+
+
+			if ($refOrganFilter !== null)
+			{
+				if ($loggedAsUserViewer) 
 				{
-					$refOrganFilter = $preSelectOrgan;
+					$refUserFilter = $preSelectUser;
 				}
-				else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']))
+				else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']))
 				{
-					$refOrganFilter = $_POST['ref_organ'];
+					$refUserFilter = $_POST['ref_user'];
 				}
 
-				if ($refOrganFilter !== null)
+				if ($refUserFilter !== null)
 				{
-					if ($loggedAsUserViewer) 
+					if ($loggedAsPosiViewer) 
 					{
-						$refUserFilter = $preSelectUser;
+						$refPosiFilter = $preSelectPosi;
 					}
-					else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']))
+					else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']))
 					{
-						$refUserFilter = $_POST['ref_user'];
+						$refPosiFilter = $_POST['ref_posi'];
 					}
 
-					if ($refUserFilter !== null)
+					
+					if ($refPosiFilter !== null)
 					{
-						if ($loggedAsPosiViewer) 
+						if ($loggedAsSessionViewer) 
 						{
-							$refPosiFilter = $preSelectPosi;
+							$refSessionFilter = $preSelectSession;
 						}
-						else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']))
+						else if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_session']))
 						{
-							$refPosiFilter = $_POST['ref_posi'];
+							$refSessionFilter = $_POST['ref_session'];
 						}
-
-						/*
-						if ($refPosiFilter !== null)
-						{
-							if ($loggedAsSessionViewer) 
-							{
-								$refSessionFilter = $preSelectSession;
-							}
-							else if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox'  && preg_match("`^[0-9]*$`", $_POST['ref_session']))
-							{
-								$refSessionFilter = $_POST['ref_session'];
-							}
-						}
-						*/
 					}
+					
 				}
 			}
 
-			//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter, $refSessionFilter);
+			//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
 
 
 			// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
@@ -359,12 +359,16 @@ class ServicesPublic extends Main
 			// }
 			
 			
+			//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
 
 
 			if ($refRegionFilter != null || $refOrganFilter != null || $refUserFilter != null || $refPosiFilter != null) // || $dateSession != null)
 			{
 
-				if ($refRegionFilter != null && $refOrganFilter != null && $refUserFilter != null && $refPosiFilter != null) 
+				//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
+
+
+				if ($refOrganFilter != null && $refUserFilter != null && $refPosiFilter != null) 
 				{
 					$searchResults = $this->servicesRestitution->search(false, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
 				}
@@ -870,11 +874,11 @@ class ServicesPublic extends Main
 
 		if ($this->formData['ref_region'] != null || $this->formData['ref_organ'] != null || $this->formData['ref_user'] != null || $this->formData['ref_posi'] != null || $this->formData['ref_session'] != null)
 		{
-			$resultsListings = $this->servicesRestitution->search(false, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], $this->formData['ref_session']);
+			$resultsListings = $this->servicesRestitution->search(true, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], $this->formData['ref_session']);
 		}
 		else
 		{
-			$resultsListings = $this->servicesRestitution->search(false, $regions);
+			$resultsListings = $this->servicesRestitution->search(true, $regions);
 		}
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
@@ -1311,7 +1315,7 @@ class ServicesPublic extends Main
 					if (!empty($refValidAcquis) && $refValidAcquis != $this->returnData['response']['infos_user']['ref_valid_acquis'])
 					{
 						 // Sauvegarde du niveau des acquis sélectionné par l'utilisateur
-						$validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $refSession);
+						$validRequest = $this->servicesRestitution->setValidAcquis($refValidAcquis, $this->formData['ref_session']);
 
 						if ($validRequest) 
 						{
@@ -1328,7 +1332,10 @@ class ServicesPublic extends Main
 					
 					/*** On recherche toutes les questions ***/
 					$this->returnData['response']['details']['questions'] = array();
-					$this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($refSession, $this->formData['ref_posi']);
+					$this->returnData['response']['details']['questions'] = $this->servicesRestitution->getQuestionsDetails($this->formData['ref_session'], $this->formData['ref_posi']);
+
+					//var_dump($this->returnData['response']['details']['questions']);
+					//exit();
 
 				}
 

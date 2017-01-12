@@ -872,14 +872,29 @@ class ServicesPublic extends Main
 
 		// Obtention des valeurs listables selon les filtres sélectionnés
 
-		if ($this->formData['ref_region'] != null || $this->formData['ref_organ'] != null || $this->formData['ref_user'] != null || $this->formData['ref_posi'] != null || $this->formData['ref_session'] != null)
+		if ($this->formData['ref_region'] != null || $this->formData['ref_organ'] != null || $this->formData['ref_user'] != null || $this->formData['ref_posi'] != null)
 		{
-			$resultsListings = $this->servicesRestitution->search(true, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], $this->formData['ref_session']);
+			//$resultsListings = $this->servicesRestitution->search(false, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], $this->formData['ref_session']);
+			
+
+			//if ($this->formData['ref_organ'] != null && $this->formData['ref_user'] != null && $this->formData['ref_posi'] != null) 
+			//{
+				//$searchResults = $this->servicesRestitution->search(false, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
+				$resultsListings = $this->servicesRestitution->search(true, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
+			//}
+			//else 
+			//{
+				//$searchResults = $this->servicesRestitution->search(true, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+				//$resultsListings = $this->servicesRestitution->search(true, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
+			//}
 		}
 		else
 		{
 			$resultsListings = $this->servicesRestitution->search(true, $regions);
 		}
+
+		//var_dump($resultsListings);
+		//exit();
 
 		if (isset($resultsListings['response']['restitution']) && !empty($resultsListings['response']['restitution']))
 		{
@@ -1004,6 +1019,16 @@ class ServicesPublic extends Main
 			// Assignation des infos disponibles sur la restitution
 			$this->returnData['response']['infos_user']['nom_organ'] = $nomOrgan;
 			$this->returnData['response']['infos_user']['code_organ'] = $codeOrgan;
+			$this->returnData['response']['infos_user']['nom_intervenant'] = "";
+			$this->returnData['response']['infos_user']['email_intervenant'] = "";
+			$this->returnData['response']['infos_user']['nom'] = "";
+			$this->returnData['response']['infos_user']['prenom'] = "";
+			$this->returnData['response']['infos_user']['date_naiss'] = "";
+			$this->returnData['response']['infos_user']['nom_niveau'] = "";
+			$this->returnData['response']['infos_user']['descript_niveau'] = "";
+			$this->returnData['response']['infos_user']['nbre_positionnements'] = "";
+			$this->returnData['response']['infos_user']['date_last_posi'] = "";
+			$this->returnData['response']['infos_user']['ref_selected_session'] = "";
 
 
 			$users = array(
@@ -1020,7 +1045,7 @@ class ServicesPublic extends Main
 			else if ($loggedAsUserViewer)
 			{
 				$usersList = $preSelectUser;
-			} 
+			}
 
 
 			if (!$usersList)
@@ -1176,6 +1201,8 @@ class ServicesPublic extends Main
 						)
 					);
 
+					
+
 					if ($loggedAsAdmin)
 					{
 						$sessionsList = $this->servicesRestitution->getUserSessions($this->formData['ref_user'], $this->formData['ref_organ'], $this->formData['ref_posi']); 
@@ -1279,18 +1306,18 @@ class ServicesPublic extends Main
 				if (!empty($this->formData['ref_session']) && $this->formData['ref_session'] != "select_cbox")
 				{
 					/*** On va chercher les infos sur la session qui correspondent à la référence de la session sélectionné ***/
-					//$resultsetSession = $this->servicesRestitution->getSession($this->formData['ref_session']);
-					//$this->returnData['response'] = array_merge($resultsetSession['response'], $this->returnData['response']);
+					$resultsetSession = $this->servicesRestitution->getSession($this->formData['ref_session']);
+					$this->returnData['response'] = array_merge($resultsetSession['response'], $this->returnData['response']);
 
 					
 					/*** On récupère également les infos sur l'intervenant ***/
-					//$resultsetIntervenant = $this->servicesRestitution->getIntervenant($resultsetSession['response']['session'][0]->getRefIntervenant());
-					//$this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
-					//$this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
+					$resultsetIntervenant = $this->servicesRestitution->getIntervenant($resultsetSession['response']['session'][0]->getRefIntervenant());
+					$this->returnData['response']['infos_user']['nom_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getNom();
+					$this->returnData['response']['infos_user']['email_intervenant'] = $resultsetIntervenant['response']['intervenant'][0]->getEmail();
 
-					//$refSession = $resultsetSession['response']['session'][0]->getId();
-					//$this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
-					//$this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
+					$refSession = $resultsetSession['response']['session'][0]->getId();
+					$this->returnData['response']['infos_user']['ref_selected_session'] = $refSession;
+					$this->returnData['response']['infos_user']['ref_valid_acquis'] = $resultsetSession['response']['session'][0]->getRefValidAcquis();
 					
 					/*--------- Statistiques par catégories(temps, score...)-------------*/	
 					$this->returnData['response']['stats'] = array();

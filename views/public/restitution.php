@@ -109,7 +109,7 @@ function recursiveCategories($parent, $level, $datas)
 			{
 				if (!$cat->getHasResult())
 				{
-					$list .= '<li class="disabled">';
+					$list .= '<li class="disabled" style="display:none;">';
 				}
 				else
 				{
@@ -118,7 +118,7 @@ function recursiveCategories($parent, $level, $datas)
 
 				$list .= '<div class="progressbar-title" title="'.$cat->getDescription().'">';
 				$list .= '<h3><a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a></h3>';
-				$list .= '<span>Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
+				$list .= '<span style="display:none;">Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
 				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
@@ -135,7 +135,7 @@ function recursiveCategories($parent, $level, $datas)
 				
 				if (!$cat->getHasResult())
 				{
-					$list .= '<li class="disabled">';
+					$list .= '<li class="disabled" style="display:none;">';
 				}
 				else
 				{
@@ -144,7 +144,7 @@ function recursiveCategories($parent, $level, $datas)
 
 				$list .= '<div class="progress-title" title="'.$cat->getDescription().'">';
 				$list .= '<a>'.$cat->getNom().' / <strong>'.$percent.'</strong>%</a>';
-				$list .= '<span>Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
+				$list .= '<span style="display:none;">Réponses '.$cat->getTotalReponsesCorrectes().'/'.$cat->getTotalReponses().'</span><div class="clear"></div>';
 				$list .= '</div>';
 				$list .= '<div class="progress">';
 				$list .= '<div class="progress-bar '.getProgressColor($percent).'" style="width: '.$percent.'%;"></div>';
@@ -441,7 +441,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 									
 									<div class="info">Nom de l'organisme : <strong><?php echo $infos_user['nom_organ']; ?></strong></div>
 
-									<?php if (ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") : ?>
+									<?php if ((ServicesAuth::getAuthenticationRight() == "admin" || ServicesAuth::getAuthenticationRight() == "custom") && isset($infos_user['code_organ'])) : ?>
 									<div class="info">Code de l'organisme : <?php echo $infos_user['code_organ']; ?> (<a href="<?php echo $form_url.$infos_user['code_organ']; ?>" target="_blank"><?php echo $form_url.$infos_user['code_organ']; ?></a>)</div>
 									<?php endif; ?>
 
@@ -514,7 +514,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 										<div class="info">Positionnement du : <strong><?php echo $dateSession; ?> à <?php echo $time; ?></strong></div>
 										<div class="info">Temps total : <strong><?php echo $tempsTotal; ?></strong></div>
 										<?php if (!empty($stats['percent_global'])) : ?>
-											<div class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</div>
+											<div class="info">Taux de réussite global : <strong><?php echo $stats['percent_global']; ?>%</strong><span style="display: none;"> (<strong><?php echo $stats['total_correct_global']; ?></strong> réponses correctes sur <strong><?php echo $stats['total_global']; ?></strong> questions)</span></div>
 										<?php endif; ?>
 											
 										<br/>
@@ -626,10 +626,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 													echo '</td>';
 
 													echo '<td style="width:35%; font-size:11px; text-align:left;">';
+														/*
 														if (isset($detail['categories'][0]['nom_cat_parent']) && !empty($detail['categories'][0]['nom_cat_parent']))
 														{
 															echo '<strong>'.$detail['categories'][0]['nom_cat_parent']." : </strong><br/>";
 														}
+														*/
 														echo '<a title="'.$detail['categories'][0]['descript_cat'].'">'.$detail['categories'][0]['nom_cat'].'</a>';
 													echo '</td>';
 
@@ -658,6 +660,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 													}
 
 													echo '<td style="width:10%;"><a title="'.$detail['intitule_reponse_correcte'].'">'.$detail['reponse_qcm_correcte'].'</a></td>';
+
 
 													if ($detail['reussite'] === 1)
 													{
@@ -688,7 +691,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 															$classRignt = 'class="cell-wrong"';
 															$classWrong = 'class="cell-wrong"';
 														}
-
 														
 														echo '<td style="width:10%;" '.$classRignt.'>';
 															echo '<p>Vrai</p>';
@@ -699,7 +701,6 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 															echo '<p>Faux</p>';
 															echo '<input type="radio" class="valid" name="valid_reponse-'.$detail['ref_question'].'" value="0" '.$checkedWrong.'>';
 														echo '</td>';
-
 														/*
 														echo '<td class="white-cell" style="width:20%;"><span style="display:none;">0</span>';
 															echo 'vrai- Faux';

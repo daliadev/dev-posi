@@ -257,7 +257,7 @@ class ServicesAdminRestitution extends Main
 				$session = $resultset['response']['session'];
 				$resultset['response']['session'] = array($session);
 			}
-			
+			/*
 			for ($i = 0; $i < count($resultset['response']['session']); $i++)
 			{
 				$sessionsAccomplie = $resultset['response']['session'][$i]->getSessionAccomplie();
@@ -266,6 +266,7 @@ class ServicesAdminRestitution extends Main
 					unset($resultset['response']['session'][$i]);
 				}
 			}
+			*/
 
 			return $resultset;
 		}
@@ -609,7 +610,6 @@ class ServicesAdminRestitution extends Main
 			}
 
 
-
 			// Test d'existence d'une catégorie parente
 			
 			if ($level > 1)
@@ -636,14 +636,36 @@ class ServicesAdminRestitution extends Main
 			{
 				if ($resultats[$j]['result'] && $resultats[$j]['codes_cat']) //$resultats[$j]->getRefCat() == $categorie->getCode())
 				{
-				   	$tempsGlobal += $resultats[$j]['result']->getTempsReponse();
-					$tempsCat += $resultats[$j]['result']->getTempsReponse();
+				   	
 					
 					foreach ($resultats[$j]['codes_cat'] as $resultCodeCat) {
 						
 						//var_dump($resultCodeCat);
+						/*
+						if ($resultats[$j]->getRefCat() == $categorie->getCode())
+						{
+							$totalCategorie++;
+							$totalGlobal++;
+						   	
+						   	$tempsGlobal += $resultats[$j]->getTempsReponse();
+							$tempsCat += $resultats[$j]->getTempsReponse();
 
+							//var_dump($resultats[$j]->getRefReponseQcm(), $resultats[$j]->getRefReponseQcmCorrecte(), $resultats[$j]->getReponseChamp(), $resultats[$j]->getValidationReponseChamp());
+
+							if ((!empty($resultats[$j]->getRefReponseQcm()) && $resultats[$j]->getRefReponseQcm() !== null && $resultats[$j]->getRefReponseQcm() == $resultats[$j]->getRefReponseQcmCorrecte()) 
+								|| (!empty($resultats[$j]->getReponseChamp()) && $resultats[$j]->getReponseChamp() !== null && !empty($resultats[$j]->getValidationReponseChamp()) && $resultats[$j]->getValidationReponseChamp() !== null && $resultats[$j]->getValidationReponseChamp() == 1))
+							{
+								$totalCorrectCategorie++;
+								$totalCorrectGlobal++;
+							}
+
+							$hasResults = true;
+						}
+						*/
 						if ($resultCodeCat->getCodeCat() == $categorie->getCode()) {
+
+							$tempsGlobal += $resultats[$j]['result']->getTempsReponse();
+							$tempsCat += $resultats[$j]['result']->getTempsReponse();
 
 							$totalCategorie++;
 							$totalGlobal++;
@@ -655,12 +677,14 @@ class ServicesAdminRestitution extends Main
 								$totalCorrectGlobal++;
 							}
 
-							break;
+							$hasResults = true;
+
+							//break;
 
 						}
 					}
 
-					$hasResults = true;
+					
 				}
 			}
 
@@ -684,6 +708,8 @@ class ServicesAdminRestitution extends Main
 
 		}
 		
+		//var_dump($posiStats);
+
 
 		$categories = $this->servicesResultats->getRecursiveCategoriesResults($maxLevel, $posiStats['categories'], null, 0);
 
@@ -956,11 +982,12 @@ class ServicesAdminRestitution extends Main
 					$questionsDetails[$i]['temps'] = "-";
 					$questionsDetails[$i]['reussite'] = "-";
 
+
 					if (!empty($resultatsUser[$j]['reponse_champ']))
 					{
-						if ($resultatsUser[$i]['validation_reponse_champ'] !== NULL)  {
+						if ($resultatsUser[$j]['validation_reponse_champ'] !== NULL)  {
 
-							$questionsDetails[$i]['validation'] = $resultatsUser[$i]['validation_reponse_champ'];
+							$questionsDetails[$i]['validation'] = $resultatsUser[$j]['validation_reponse_champ'];
 						}
 						else
 						{
@@ -1015,6 +1042,8 @@ class ServicesAdminRestitution extends Main
 				}
 			}
 		}
+
+		//var_dump($questionsDetails);
 
 
 		return $questionsDetails;

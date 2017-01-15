@@ -282,17 +282,6 @@ class ServicesAdminRestitution extends Main
 	{
 		$resultset = $this->intervenantDAO->selectById($refIntervenant);
 
-		if (!$this->filterDataErrors($resultset['response']))
-		{
-			if (!empty($resultset['response']['intervenant']) && count($resultset['response']['intervenant']) == 1)
-			{ 
-				$intervenant = $resultset['response']['intervenant'];
-				$resultset['response']['intervenant'] = array($intervenant);
-			}
-
-			return $resultset;
-		}
-
 		return false;
 	}
 
@@ -438,13 +427,27 @@ class ServicesAdminRestitution extends Main
 
 		$resultset = $this->customDAO->read($query, 'restitution');
 
-		//var_dump($resultset);
-		//exit();
-
+		
+		/*
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			return $resultset;
 		}
+		*/
+
+		if (!$this->filterDataErrors($resultset['response']))
+		{
+			if (!empty($resultset['response']['restitution']) && count($resultset['response']['restitution']) == 1)
+			{ 
+				$result = $resultset['response']['restitution'];
+				$resultset['response']['restitution'] = array($result);
+			}
+			//var_dump($resultset);
+			//exit();
+
+			return $resultset;
+		}
+
 
 		return false;
 	}

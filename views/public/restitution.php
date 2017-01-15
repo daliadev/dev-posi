@@ -268,7 +268,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 								<label for="ref-organ-cbox">Organisme :</label>
 
 								<?php $disabled = (isset($response['organisme']) && !empty($response['organisme']) && count($response['organisme']) <= 1) ? "disabled" : ""; ?>
-								<?php $disabled = "" ?>
+								<?php $disabled = ""; ?>
 								<select name="ref_organ_cbox" id="ref-organ-cbox" class="ajax-list" style="max-width: 170px;" <?php echo $disabled; ?>>
 									
 									<?php if ($disabled == "") : ?>
@@ -299,8 +299,14 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 							<div class="filter-item" id="combo-user">
 								<label for="ref-user-cbox">Utilisateur :</label>
+
+								<?php $disabled = (isset($response['utilisateur']) && !empty($response['utilisateur']) && count($response['utilisateur']) <= 1) ? "disabled" : ""; ?>
+								<?php $disabled = ""; ?>
 								<select name="ref_user_cbox" id="ref-user-cbox" class="ajax-list" style="max-width: 170px;">
-									<option value="select_cbox">---</option>
+
+									<?php if ($disabled == "") : ?>
+									<option class="user-option" value="select_cbox">---</option>
+									<?php endif; ?>
 
 									<?php
 									
@@ -958,8 +964,12 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 				
 				var url = $('#form-posi').attr('action');
 
-				//$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'date_session': dateSession}, function(data) {
+				//console.log(refRegion, refOrgan, refUser, refPosi);
+
+				// Requête XHR POST
 				$.post(url, {'filter': true, 'ref_region': refRegion, 'ref_organ': refOrgan, 'ref_user': refUser, 'ref_posi': refPosi}, function(data) {
+
+					console.log(data);
 
 					if (data.error) {
 
@@ -991,7 +1001,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 								for (var prop in data.results) {
 
-									if (data.results[prop].id_session != null && data.results[prop].date_session != null && data.results[prop].id_user != currentRefSession) {
+									if (data.results[prop].id_session != null && data.results[prop].date_session != null && data.results[prop].id_session != currentRefSession) {
 
 										session = data.results[prop];
 										currentRefSession = session.id_session;

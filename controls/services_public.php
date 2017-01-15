@@ -287,7 +287,7 @@ class ServicesPublic extends Main
 		
 		if (isset($_POST['filter']))
 		{
-			$results = false;
+			$results = array();
 
 			$refRegionFilter = null;
 			$refOrganFilter = null;
@@ -297,7 +297,7 @@ class ServicesPublic extends Main
 			$refSessionFilter = null;
 
 
-			if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_region']))
+			if (isset($_POST['ref_region']) && !empty($_POST['ref_region']) && $_POST['ref_region'] != 'select_cbox')
 			{
 				$refRegionFilter = $_POST['ref_region'];
 			}
@@ -306,7 +306,7 @@ class ServicesPublic extends Main
 			{
 				$refOrganFilter = $preSelectOrgan;
 			}
-			else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_organ']))
+			else if (isset($_POST['ref_organ']) && !empty($_POST['ref_organ']) && $_POST['ref_organ'] != 'select_cbox')
 			{
 				$refOrganFilter = $_POST['ref_organ'];
 			}
@@ -318,7 +318,7 @@ class ServicesPublic extends Main
 				{
 					$refUserFilter = $preSelectUser;
 				}
-				else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_user']))
+				else if (isset($_POST['ref_user']) && !empty($_POST['ref_user']) && $_POST['ref_user'] != 'select_cbox')
 				{
 					$refUserFilter = $_POST['ref_user'];
 				}
@@ -329,7 +329,7 @@ class ServicesPublic extends Main
 					{
 						$refPosiFilter = $preSelectPosi;
 					}
-					else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_posi']))
+					else if (isset($_POST['ref_posi']) && !empty($_POST['ref_posi']) && $_POST['ref_posi'] != 'select_cbox')
 					{
 						$refPosiFilter = $_POST['ref_posi'];
 					}
@@ -341,7 +341,7 @@ class ServicesPublic extends Main
 						{
 							$refSessionFilter = $preSelectSession;
 						}
-						else if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox' && preg_match("`^[0-9]*$`", $_POST['ref_session']))
+						else if (isset($_POST['ref_session']) && !empty($_POST['ref_session']) && $_POST['ref_session'] != 'select_cbox')
 						{
 							$refSessionFilter = $_POST['ref_session'];
 						}
@@ -349,9 +349,6 @@ class ServicesPublic extends Main
 					
 				}
 			}
-
-			//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
-
 
 			// if (isset($_POST['date_session']) && !empty($_POST['date_session']))
 			// {
@@ -371,10 +368,12 @@ class ServicesPublic extends Main
 				if ($refOrganFilter != null && $refUserFilter != null && $refPosiFilter != null) 
 				{
 					$searchResults = $this->servicesRestitution->search(false, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
+					//var_dump('allset', $searchResults);
 				}
 				else 
 				{
 					$searchResults = $this->servicesRestitution->search(true, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
+					//var_dump('notallset', $searchResults);
 				}
 
 				// Recherche des éléments de listes et de champs de filtrage
@@ -383,15 +382,18 @@ class ServicesPublic extends Main
 					if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
 					{
 						$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
+						//var_dump('restitution ok', $searchResults);
 					}
 					else
 					{
 						$results = array('error' => false, 'results' => null);
+						//var_dump('restitution not ok', $searchResults);
 					}
 				}
 				else
 				{
-					$results = array('error' => "Aucun résultat avec les identifiants fournis.");
+					$results = array('error' => true, 'results' => "Aucun résultat avec les identifiants fournis.");
+					//var_dump('restitution no result', $searchResults);
 				}
 			
 			}
@@ -399,18 +401,22 @@ class ServicesPublic extends Main
 			{
 				// Select all
 				$searchResults = $this->servicesRestitution->search(true, $regions); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-
+				//var_dump('notset', $searchResults);
 				
-				if (isset($searchResults['response']) && !empty($searchResults['response']))
+				if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution']))
 				{
 					$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
 				}
 				else
 				{
-					$results = array('error' => "Aucune données dans la sélection globale.");
+					$results = array('error' => true,  'results' => "Aucune données dans la sélection globale.");
 				}
 			}
 
+			//var_dump($searchResults['response']['restitution']);
+
+			//var_dump(json_encode($results));
+			
 			echo json_encode($results);
 			exit();
 		}

@@ -359,13 +359,13 @@ class ServicesPublic extends Main
 			//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
 
 
-			if ($refRegionFilter != null || $refOrganFilter != null || $refUserFilter != null || $refPosiFilter != null) // || $dateSession != null)
+			if ($refRegionFilter !== null || $refOrganFilter !== null || $refUserFilter !== null || $refPosiFilter !== null) // || $dateSession != null)
 			{
 
 				//var_dump($refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
 
 
-				if ($refOrganFilter != null && $refUserFilter != null && $refPosiFilter != null) 
+				if ($refOrganFilter !== null && $refUserFilter !== null && $refPosiFilter !== null) 
 				{
 					$searchResults = $this->servicesRestitution->search(false, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
 					//var_dump('allset', $searchResults);
@@ -381,19 +381,19 @@ class ServicesPublic extends Main
 				{
 					if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution'])) 
 					{
-						$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
-						//var_dump('restitution ok', $searchResults);
+						$results = array('err' => false, 'res' => $searchResults['response']['restitution']);
+						//var_dump('restitution ok', $results);
 					}
 					else
 					{
-						$results = array('error' => false, 'results' => null);
-						//var_dump('restitution not ok', $searchResults);
+						$results = array('err' => false, 'res' => "null");
+						//var_dump('restitution not ok', $results);
 					}
 				}
 				else
 				{
-					$results = array('error' => true, 'results' => "Aucun résultat avec les identifiants fournis.");
-					//var_dump('restitution no result', $searchResults);
+					$results = array('err' => "Aucun résultat avec les identifiants fournis.");
+					//var_dump('restitution no result', $results);
 				}
 			
 			}
@@ -405,19 +405,19 @@ class ServicesPublic extends Main
 				
 				if (isset($searchResults['response']['restitution']) && !empty($searchResults['response']['restitution']))
 				{
-					$results = array('error' => false, 'results' => $searchResults['response']['restitution']);
+					$results = array('err' => false, 'res' => $searchResults['response']['restitution']);
 				}
 				else
 				{
-					$results = array('error' => true,  'results' => "Aucune données dans la sélection globale.");
+					$results = array('err' => "Aucune données dans la sélection globale.");
 				}
 			}
 
-			//var_dump($searchResults['response']['restitution']);
-
-			//var_dump(json_encode($results));
+			$resultsToJSON = array('error' => $results['err'], 'results' => $results['res']);
 			
-			echo json_encode($results);
+			//var_dump($results['res']);
+			
+			echo json_encode($resultsToJSON);
 			exit();
 		}
 

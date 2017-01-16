@@ -971,7 +971,7 @@ if (isset($response['stats']['categories']) && !empty($response['stats']['catego
 
 					console.log(data);
 
-					if (data.error) {
+					if (data.error == true) {
 
 						alert(data.error);
 					}

@@ -434,7 +434,11 @@ class ServicesAdminRestitution extends Main
 			return $resultset;
 		}
 		*/
-
+	
+		//var_dump($resultset);
+		//exit();
+	
+		
 		if (!$this->filterDataErrors($resultset['response']))
 		{
 			if (!empty($resultset['response']['restitution']) && count($resultset['response']['restitution']) == 1)
@@ -442,14 +446,14 @@ class ServicesAdminRestitution extends Main
 				$result = $resultset['response']['restitution'];
 				$resultset['response']['restitution'] = array($result);
 			}
-			//var_dump($resultset);
-			//exit();
 
 			return $resultset;
 		}
+		else
+		{
+			return false;
+		}
 
-
-		return false;
 	}
 	
 	

@@ -395,7 +395,7 @@ INSERT INTO `niveau_etudes` (`id_niveau`, `nom_niveau`, `descript_niveau`) VALUE
 
 CREATE TABLE IF NOT EXISTS `organisme` (
   `id_organ` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `num_interne` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `numero_interne` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `nom_organ` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `adresse_organ` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `code_postal_organ` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -412,7 +412,7 @@ CREATE TABLE IF NOT EXISTS `organisme` (
 -- Contenu de la table `organisme`
 --
 
-INSERT INTO `organisme` (`id_organ`, `num_interne`, `nom_organ`, `adresse_organ`, `code_postal_organ`, `ville_organ`, `tel_organ`, `email_organ`, `nbre_posi_total`, `nbre_posi_max`) VALUES
+INSERT INTO `organisme` (`id_organ`, `numero_interne`, `nom_organ`, `adresse_organ`, `code_postal_organ`, `ville_organ`, `tel_organ`, `email_organ`, `nbre_posi_total`, `nbre_posi_max`) VALUES
 (1, 'f5be2ca6', 'Dalia', NULL, '76000', 'Petit-Quevilly', '00 00 00 00 00', NULL, 0, 0),
 (2, 'f5be2c82', 'apAPP', NULL, '76000', NULL, '00 00 00 00 00', NULL, 0, 0);
 

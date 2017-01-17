@@ -877,16 +877,14 @@ class ServicesPublic extends Main
 			//$resultsListings = $this->servicesRestitution->search(false, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi'], $this->formData['ref_session']);
 			
 
-			//if ($this->formData['ref_organ'] != null && $this->formData['ref_user'] != null && $this->formData['ref_posi'] != null) 
-			//{
-				//$searchResults = $this->servicesRestitution->search(false, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter);
+			if ($this->formData['ref_organ'] != null && $this->formData['ref_user'] != null && $this->formData['ref_posi'] != null) 
+			{
+				$resultsListings = $this->servicesRestitution->search(false, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
+			}
+			else 
+			{
 				$resultsListings = $this->servicesRestitution->search(true, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
-			//}
-			//else 
-			//{
-				//$searchResults = $this->servicesRestitution->search(true, $regions, $refRegionFilter, $refOrganFilter, $refUserFilter, $refPosiFilter); // params : $regionsList, $refRegion = null, $refOrgan = null, $refUser = null, $date = null, $codeOrgan = null, $ref_inter = null
-				//$resultsListings = $this->servicesRestitution->search(true, $regions, $this->formData['ref_region'], $this->formData['ref_organ'], $this->formData['ref_user'], $this->formData['ref_posi']);
-			//}
+			}
 		}
 		else
 		{

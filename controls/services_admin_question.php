@@ -243,10 +243,21 @@ class ServicesAdminQuestion extends Main
 	public function filterQuestionData(&$formData, $postData)
 	{
 		$dataQuestion = array();
-		$dataQuestion['questions_cat'] = array();
+		$dataQuestion['questions_cat'] = array(
+			0 => array(
+				'id_question_cat' => null,
+				'code_cat' => null,
+				'ref_question' => null
+			),
+			1 => array(
+				'id_question_cat' => null,
+				'code_cat' => null,
+				'ref_question' => null
+			)
+		);
 
 		$dataReponses = array();
-	
+		
 		/*** Récupèration des categorie ***/
 
 		$formData['code_cat'] = $this->validatePostData($postData['code_cat_cbox'], "code_cat_cbox", "integer", true, "Aucune catégorie n'a été sélectionnée.", "La catégorie n'est pas correctement sélectionnée.");
@@ -706,15 +717,22 @@ class ServicesAdminQuestion extends Main
 							}
 							else
 							{
-								$dataQuestionsCat[$i]['id_question_cat'] = null;
-								$modeQuestionCat = "insert";
+								if ($dataQuestion['ref_question'] && !empty($dataQuestion['ref_question']) && $dataQuestionsCat[$i]['code_cat'] && !empty($dataQuestionsCat[$i]['code_cat'])) 
+								{
+									$dataQuestionsCat[$i]['id_question_cat'] = null;
+									$modeQuestionCat = "insert";
+								}
+								else
+								{
+									$modeQuestionCat = "none";
+								}
 							}
 
 							//var_dump($modeQuestionCat, $dataQuestionsCat[$i]['id_question_cat'], $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
 
 							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie($modeQuestionCat, $dataQuestionsCat[$i]['id_question_cat'], $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
 						
-							if (!$resultsetQuestionCat)
+							if (!$resultsetQuestionCat && $modeQuestionCat != "none")
 							{
 								$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
 								break;

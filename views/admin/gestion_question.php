@@ -97,16 +97,16 @@ $form_url = $response['url'];
 
 					if (isset($response['errors']) && !empty($response['errors']))
 					{
-						var_dump($response['errors']);
+						//var_dump($response['errors']);
 						echo '<div id="zone-erreur">';
 						echo '<p><strong>Le formulaire n\'est pas correctement rempli :</strong></p>';
 						echo '<ul>';
 						foreach($response['errors'] as $error)
 						{
-							if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
-							{
+							//if ($error['type'] == "form_valid" || $error['type'] == "form_empty")
+							//{
 								echo '<li>'.$error['message'].'</li>';
-							}
+							//}
 						}
 						echo '</ul>';
 						echo '</div>';

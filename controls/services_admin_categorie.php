@@ -1061,7 +1061,6 @@ class ServicesAdminCategorie extends Main
 	
 	public function setQuestionCategorie($modeCategorie, $refQuestionCat, $refQuestion, $codeCat)
 	{
-
 		if ($modeCategorie == "insert")
 		{
 			$resultset = $this->questionCatDAO->insert(array('ref_question' => $refQuestion, 'ref_cat' => $codeCat));

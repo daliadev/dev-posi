@@ -591,7 +591,8 @@ class ServicesAdminQuestion extends Main
 
 
 				if (isset($resultsetQuestion['response']['question']['last_insert_id']) && !empty($resultsetQuestion['response']['question']['last_insert_id']))
-				{
+				{	
+					//var_dump($resultsetQuestion['response']['question']['last_insert_id']);
 					// Insertion des réponses si le type est QCM
 					$formData['ref_question'] = $resultsetQuestion['response']['question']['last_insert_id'];
 					$dataQuestion['ref_question'] = $formData['ref_question'];
@@ -618,14 +619,18 @@ class ServicesAdminQuestion extends Main
 					if (!empty($dataQuestionsCat)) 
 					{
 						for ($i = 0; $i < count($dataQuestionsCat); $i++) { 
-
-							$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie("insert", null, $dataQuestion['ref_question'], $dataQuestionsCat[$i]['code_cat']);
-						
-							if (!$resultsetQuestionCat)
+							
+							if ($dataQuestionsCat[$i]['code_cat'] && $dataQuestionsCat[$i]['code_cat'] !== null) 
 							{
-								$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
-								break;
+								$resultsetQuestionCat = $this->servicesCategorie->setQuestionCategorie("insert", null, $formData['ref_question'], $dataQuestionsCat[$i]['code_cat']);
+								
+								if (empty($resultsetQuestionCat) || !$resultsetQuestionCat)
+								{
+									$this->registerError("form_request", "La catégorie liée à la question n'a pas été enregistrée.");
+									break;
+								}
 							}
+							
 						}
 
 					}

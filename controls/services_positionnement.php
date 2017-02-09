@@ -297,7 +297,6 @@ class ServicesPositionnement extends Main
 			
 		}
 
-		
 
 		
 
@@ -313,13 +312,6 @@ class ServicesPositionnement extends Main
 		}
 		else 
 		{
-			/*
-			foreach ($this->errors as $error) {
-				echo $error->message;
-			}
-				
-			//exit();
-			*/
 
 			// Redirection vers la page d'erreur interne
 			header("Location: ".SERVER_URL."erreur/page500");
@@ -846,7 +838,15 @@ class ServicesPositionnement extends Main
 
 		}
 
-		$scoreGlobal = round($scoreCats / $nbCats);
+		if ($scoreCats > 0 && $nbCats > 0) 
+		{
+			$scoreGlobal = round($scoreCats / $nbCats);
+		}
+		else
+		{
+			$scoreGlobal = 0;
+		}
+		
 
 		$this->returnData['response']['total_reponses'] = $totalReponsesGlobal;
 		$this->returnData['response']['total_reponses_correctes'] = $totalReponsesCorrectesGlobal;
@@ -1095,16 +1095,36 @@ class ServicesPositionnement extends Main
 		}
 
 		$from = !empty(Config::$main_email_admin) ? Config::$main_email_admin : "webmaster@educationetformation.fr";
-		$subject = Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG;
+		//$subject = Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG;
+		$subject = Config::POSI_NAME;
 
 
 
 		/* Création du mail */
 		
 		$messageBody = '<table><tr><td>';
+		// $messageBody .= '<p>';
+		// $messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
+		// $messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
+		// $messageBody .= '</p>';
+		// $messageBody .= '<p>';
+		// $messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
+		// $messageBody .= '</p>';
+		// $messageBody .= '<p>';
+		// $messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br>';
+		// $messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
+		// $messageBody .= '</p>';
+		// $messageBody .= '<p>';
+		// $messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
+		// $messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
+		// $messageBody .= '</p>';
+		// $messageBody .= '<p>';
+		// $messageBody .= 'Score détaillé : <br>';
+
+
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
-		$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
+		//$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
 		$messageBody .= '</p>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
@@ -1117,9 +1137,10 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
 		$messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
 		$messageBody .= '</p>';
-		$messageBody .= '<p>';
-		$messageBody .= 'Score détaillé : <br>';
+		//$messageBody .= '<p>';
+		//$messageBody .= 'Score détaillé : <br>';
 
+		/*
 		foreach ($categories as $categorie)
 		{	
 			if (strlen($categorie->getCode()) == 2 && $categorie->getHasResult())
@@ -1138,6 +1159,7 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Votre accès à la page des résultats : <br><a href="'.$emailInfos['url_restitution'].'">'.$emailInfos['url_restitution'].'</a><br>';
 		$messageBody .= 'Votre accès à la page des statistiques : <br><a href="'.$emailInfos['url_stats'].'">'.$emailInfos['url_stats'].'</a><br>';
 		$messageBody .= '</p>';
+		*/
 		$messageBody .= '</td></tr></table>';
 
 		$style = 'p { font-family: Arial, sans-serif; }';

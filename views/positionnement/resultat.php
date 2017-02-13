@@ -67,7 +67,7 @@
 						<span class="result-title">Score global</span>
 						<div class="clear"></div>
 					</div>
-					<div class="reponses">Nombre de bonnes réponses : <span id="reponses-ok" class="score"><?php echo $totalCorrectGlobal; ?></span> sur <span id="reponses-global" class="score" style="font-size: 1em;"><?php echo $totalGlobal; ?></span></div>
+					<!--<div class="reponses">Nombre de bonnes réponses : <span id="reponses-ok" class="score"><?php //echo $totalCorrectGlobal; ?></span> sur <span id="reponses-global" class="score" style="font-size: 1em;"><?php //echo $totalGlobal; ?></span></div>-->
 				</div>
 					
 				
@@ -206,7 +206,7 @@
 								echo '<g class="cat-bar">';
 									echo '<line class="cat-line" x1="1" y1="'.$vert_line_y1.'" x2="1" y2="'.$vert_line_y2.'" />';
 									echo '<text class="cat-text" x="9" y="'.$name_y.'" title="'.$descript.'">'.$name.'</text>';
-									echo '<text class="reponses" x="'.$reponse_x.'" y="'.$reponse_y.'">Réponses : '.$nbre_reponses_ok.'/'.$nbre_reponses.'</text>';
+									//echo '<text class="reponses" x="'.$reponse_x.'" y="'.$reponse_y.'">Réponses : '.$nbre_reponses_ok.'/'.$nbre_reponses.'</text>';
 									echo '<rect class="back" x="9" y="'.$bar_y.'" width="701" height="32" />';
 									echo '<rect class="front" x="9" y="'.$bar_y.'" width="'.$front_bar_width.'" height="32" />';
 									echo '<text class="percent-cat" x="'.$percent_x.'" y="'.$percent_y.'">'.$score_percent.'<tspan class="percent">%<tspan></text>';

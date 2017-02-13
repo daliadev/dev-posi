@@ -1102,7 +1102,7 @@ class ServicesPositionnement extends Main
 
 		/* Création du mail */
 		
-		$messageBody = '<table><tr><td>';
+		//$messageBody = '<table><tr><td>';
 		// $messageBody .= '<p>';
 		// $messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
 		// $messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
@@ -1122,6 +1122,7 @@ class ServicesPositionnement extends Main
 		// $messageBody .= 'Score détaillé : <br>';
 
 
+		$messageBody = '<body>';
 		$messageBody .= '<p>';
 		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
 		//$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
@@ -1160,17 +1161,20 @@ class ServicesPositionnement extends Main
 		$messageBody .= 'Votre accès à la page des statistiques : <br><a href="'.$emailInfos['url_stats'].'">'.$emailInfos['url_stats'].'</a><br>';
 		$messageBody .= '</p>';
 		*/
-		$messageBody .= '</td></tr></table>';
+		//$messageBody .= '</td></tr></table>';
+		$messageBody .= '</body>';
 
 		$style = 'p { font-family: Arial, sans-serif; }';
 
-
-
-
+		/*
 		$this->sendMail = new MailSender($destinataires, $from, $subject);
 		$this->sendMail->setHeader('1.0', 'text/html', 'utf-8');
 		$this->sendMail->setMessage($messageBody, 'html', Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG, $style);
-		
+		*/
+	
+		$this->sendMail = new MailSender($destinataires, $from, $subject);
+		$this->sendMail->setHeader('1.0', 'text/html', 'utf-8');
+		$this->sendMail->setMessage($messageBody, 'html', Config::POSI_NAME.' '.Config::CLIENT_NAME_LONG, $style);
 
 		/*** Envoi du mail ***/
 

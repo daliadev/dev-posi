@@ -689,7 +689,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 CREATE TABLE IF NOT EXISTS `utilisateur` (
   `id_user` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ref_niveau` int(10) unsigned DEFAULT NULL,
-  `num_dossier` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `num_dossier` varchar(255) COLLATE utf8_unicode_ci UNIQUE NOT NULL,
   `nom_user` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `prenom_user` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `date_naiss_user` date NOT NULL,

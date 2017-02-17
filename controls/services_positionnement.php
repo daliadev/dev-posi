@@ -165,11 +165,20 @@ class ServicesPositionnement extends Main
 
 	}
 	
+	public function unregister()
+	{
+		ServicesAuth::closeUserSession();
+		ServicesAuth::logout();
+
+		return true;
+	}
 	
 
 	public function session($params = null)
 	{
 
+		ServicesAuth::logout();
+		
 		$ref_user = null;
 		$ref_intervenant = null;
 		$ref_organ = null;
@@ -299,7 +308,6 @@ class ServicesPositionnement extends Main
 
 
 		
-
 		// S'il n'y a aucune erreur
 		if (empty($this->errors)) 
 		{
@@ -1102,6 +1110,26 @@ class ServicesPositionnement extends Main
 
 		/* Création du mail */
 		
+		$messageBody = '<body>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
+		//$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br>';
+		$messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
+		$messageBody .= '</p>';
+		$messageBody .= '<p>';
+		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
+		$messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
+		$messageBody .= '</p>';
+		//$messageBody .= '<p>';
+		//$messageBody .= 'Score détaillé : <br>';
+		//
+		
 		//$messageBody = '<table><tr><td>';
 		// $messageBody .= '<p>';
 		// $messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
@@ -1121,25 +1149,6 @@ class ServicesPositionnement extends Main
 		// $messageBody .= '<p>';
 		// $messageBody .= 'Score détaillé : <br>';
 
-
-		$messageBody = '<body>';
-		$messageBody .= '<p>';
-		$messageBody .= 'Date du positionnement : <strong>'.$emailInfos['date_posi'].'</strong><br>';
-		//$messageBody .= 'Organisme : <strong>'.$emailInfos['nom_organ'].'</strong>';
-		$messageBody .= '</p>';
-		$messageBody .= '<p>';
-		$messageBody .= 'Email intervenant : <strong>'.$emailInfos['email_intervenant'].'</strong>';
-		$messageBody .= '</p>';
-		$messageBody .= '<p>';
-		$messageBody .= 'Nom : <strong>'.$emailInfos['nom_user'].'</strong><br>';
-		$messageBody .= 'Prénom : <strong>'.$emailInfos['prenom_user'].'</strong>';
-		$messageBody .= '</p>';
-		$messageBody .= '<p>';
-		$messageBody .= 'Temps : <strong>'.$emailInfos['temps_posi'].'</strong><br>';
-		$messageBody .= 'Score globale : <strong>'.round($scoreGlobal).' %</strong>';
-		$messageBody .= '</p>';
-		//$messageBody .= '<p>';
-		//$messageBody .= 'Score détaillé : <br>';
 
 		/*
 		foreach ($categories as $categorie)

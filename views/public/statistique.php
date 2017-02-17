@@ -198,7 +198,7 @@ $form_url = $response['url'];
 							<div class="stats-detail">
 
 								<div class="bloc-stat">
-									<svg fill="#364252" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+									<svg fill="#949494" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
 												<path d="M0 0h24v24H0z" fill="none"/>
 												<path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
 									</svg>
@@ -208,7 +208,7 @@ $form_url = $response['url'];
 								</div>
 								
 								<div class="bloc-stat">
-									<svg fill="#364252" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+									<svg fill="#949494" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
 												 <!--<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>-->
 												 <path d="M11.99 2C6.47 2 2 6.47 2 12s4.47 10 9.99 10S22 17.53 22 12 17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm1-10.06L14.06 11l1.06-1.06L16.18 11l1.06-1.06-2.12-2.12zm-4.12 0L9.94 11 11 9.94 8.88 7.82 6.76 9.94 7.82 11zM12 17.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"/>
 												<path d="M0 0h24v24H0z" fill="none"/>
@@ -218,7 +218,7 @@ $form_url = $response['url'];
 								</div>
 								
 								<div class="bloc-stat">
-									<svg fill="#364252" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+									<svg fill="#949494" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
 												  <path d="M0 0h24v24H0z" fill="none"/>
 												  <!--<path d="M15.9 5c-.17 0-.32.09-.41.23l-.07.15-5.18 11.65c-.16.29-.26.61-.26.96 0 1.11.9 2.01 2.01 2.01.96 0 1.77-.68 1.96-1.59l.01-.03L16.4 5.5c0-.28-.22-.5-.5-.5zM1 9l2 2c2.88-2.88 6.79-4.08 10.53-3.62l1.19-2.68C9.89 3.84 4.74 5.27 1 9zm20 2l2-2c-1.64-1.64-3.55-2.82-5.59-3.57l-.53 2.82c1.5.62 2.9 1.53 4.12 2.75zm-4 4l2-2c-.8-.8-1.7-1.42-2.66-1.89l-.55 2.92c.42.27.83.59 1.21.97zM5 13l2 2c1.13-1.13 2.56-1.79 4.03-2l1.28-2.88c-2.63-.08-5.3.87-7.31 2.88z"/>-->
 												  <path d="M8 19h3v4h2v-4h3l-4-4-4 4zm8-14h-3V1h-2v4H8l4 4 4-4zM4 11v2h16v-2H4z"/>
@@ -228,7 +228,7 @@ $form_url = $response['url'];
 								</div>
 
 								<div class="bloc-stat">
-									<svg fill="#364252" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+									<svg fill="#949494" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
 												<path d="M0 0h24v24H0z" fill="none"/>
 												<path d="M12,20C8.13,20 5,16.87 5,13C5,9.13 8.13,6 12,6C15.87,6 19,9.13 19,13C19,16.87 15.87,20 12,20M19.03,7.39L20.45,5.97C20,5.46 19.55,5 19.04,4.56L17.62,6C16.07,4.74 14.12,4 12,4C7.03,4 3,8.03 3,13C3,17.97 7.03,22 12,22C17,22 21,17.97 21,13C21,10.88 20.26,8.93 19.03,7.39M11,14H13V8H11M15,1H9V3H15V1Z" />
 									</svg>
@@ -237,7 +237,7 @@ $form_url = $response['url'];
 								</div>
 
 								<div class="bloc-stat">
-									<svg fill="#364252" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+									<svg fill="#949494" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
 												<path d="M0 0h24v24H0z" fill="none"/>
 												<path d="M20,2V4H18V8.41L14.41,12L18,15.59V20H20V22H4V20H6V15.59L9.59,12L6,8.41V4H4V2H20M16,16.41L13,13.41V10.59L16,7.59V4H8V7.59L11,10.59V13.41L8,16.41V17H10L12,15L14,17H16V16.41M12,9L10,7H14L12,9Z" />
 									</svg>
@@ -246,7 +246,7 @@ $form_url = $response['url'];
 								</div>
 
 								<div class="bloc-stat last">
-									<svg fill="#364252" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
+									<svg fill="#949494" height="40" viewBox="0 0 24 24" width="40" xmlns="http://www.w3.org/2000/svg">
 												<path d="M0 0h24v24H0z" fill="none"/>
 												<path d="M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm4.6 9.99l-1.07-1.07-1.08 1.07c-1.3 1.3-3.58 1.31-4.89 0l-1.07-1.07-1.09 1.07C6.75 16.64 5.88 17 4.96 17c-.73 0-1.4-.23-1.96-.61V21c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-4.61c-.56.38-1.23.61-1.96.61-.92 0-1.79-.36-2.44-1.01zM18 9h-5V7h-2v2H6c-1.66 0-3 1.34-3 3v1.54c0 1.08.88 1.96 1.96 1.96.52 0 1.02-.2 1.38-.57l2.14-2.13 2.13 2.13c.74.74 2.03.74 2.77 0l2.14-2.13 2.13 2.13c.37.37.86.57 1.38.57 1.08 0 1.96-.88 1.96-1.96V12C21 10.34 19.66 9 18 9z"/>
 									</svg>
@@ -262,13 +262,13 @@ $form_url = $response['url'];
 							
 							<div class="stats-detail">
 
-								<p><strong>Nombre de candidats répartis par niveau de formation</strong></p>
+								<!--<p><strong>Nombre de candidats répartis par niveau de formation</strong></p>
 
 								<hr>
 
 								<div class="progressbars" style="width:580px;">
 
-									<?php for ($i = 0; $i < count($response['stats']['global']['niveaux']); $i++) : ?>
+									<?php/* for ($i = 0; $i < count($response['stats']['global']['niveaux']); $i++) : ?>
 
 										<div class="progressbar">
 											<div class="progressbar-title" title="<?php echo $response['stats']['global']['niveaux'][$i]['descript_niveau']; ?>">
@@ -279,7 +279,7 @@ $form_url = $response['url'];
 											</div>
 										</div>
 
-									<?php endfor; ?>
+									<?php endfor;*/ ?>
 										
 								</div>
 								
@@ -287,7 +287,7 @@ $form_url = $response['url'];
 								   
 								<div style="clear:both;"></div>
 
-							</div>	
+							</div>	-->
 							
 							<div class="stats-detail">
 
